@@ -7,7 +7,7 @@ public class LeaderCard {
     private boolean enabled;
 
     public int getPV() {
-
+        return PV;
     }
 
     public Requirement getRequirement() {
