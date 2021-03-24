@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Model;
 
-public enum MarketMarble {
-    BLUE_M, WHITE_M, YELLOW_M, GREY_M, RED_M, PURPLE_M,
+import java.util.ArrayList;
+
+public interface MarketMarble
+{
+    public boolean doAction(ArrayList<Resource> List, Player player);
 }
