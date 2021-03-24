@@ -13,8 +13,9 @@ public class RedMarble implements MarketMarble {
     public RedMarble() { color = Color.RED; }
 
     public boolean doAction(ArrayList<Resource> ResourceList, Player player) {
-        Game.
-        FaithTrack.advance(player);
+
+        //?????????????????????????//
+
         return true;
     }
 

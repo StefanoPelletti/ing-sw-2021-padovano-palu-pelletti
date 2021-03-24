@@ -8,13 +8,13 @@ public class Player {
     private LeaderCard[] leaderCards;
     //private DevelopmentSlot developmentSlot;
     private int position;   //used for FaithTrack tracking
-    private final int playerNumber;
+    private int playerNumber;
 
-    public Player( String nickname, int FaithPoints, int playerNumber ) //universal constructor, playerNumbers can be 1..4, FaithPoints can be 0 or 1
+    public Player( String nickname, int playerNumber )
     {
         this.nickname = nickname;
         this.VP = 0;
-        this.position = 1 + FaithPoints;
+        this.position = 1;
         this.playerNumber = playerNumber;
         LeaderCard[] leaderCards = new LeaderCard[2];
         /* Depot, StrongBox, LeaderCards */
@@ -27,6 +27,7 @@ public class Player {
     public int getPlayerNumber()            { return playerNumber; }
     public int getPosition()                { return position; }
     public void setPosition(int position)   { this.position = position; }
+    public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
 
     private void associateLeaderCards(LeaderCard L1, LeaderCard L2)
     {
