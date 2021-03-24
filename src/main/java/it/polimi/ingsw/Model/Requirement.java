@@ -1,4 +1,4 @@
 package it.polimi.ingsw.Model;
 
-public interface Requirement {
+public abstract class Requirement {
 }

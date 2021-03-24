@@ -6,9 +6,7 @@ public class LeaderCard {
     private SpecialAbility specialAbility;
     private boolean enabled;
 
-    public int getPV() {
-        return PV;
-    }
+    public int getPV() { return PV; }
 
     public Requirement getRequirement() {
         return requirement;
@@ -25,4 +23,5 @@ public class LeaderCard {
     public boolean getEnable() {
         return enabled;
     }
+
 }
