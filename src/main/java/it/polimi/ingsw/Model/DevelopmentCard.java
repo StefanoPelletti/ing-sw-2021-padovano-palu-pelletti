@@ -9,7 +9,7 @@ public class DevelopmentCard {
     private int VP;
     private Power power;
 
-    public DevelopmentCard(int level, Color color, HashMap<Resource, Integer> cost, int VP, Power power) {
+    public DevelopmentCard(int level, Color color, int VP, HashMap<Resource, Integer> cost, Power power) {
         this.level = level;
         this.color = color;
         this.cost = cost;
