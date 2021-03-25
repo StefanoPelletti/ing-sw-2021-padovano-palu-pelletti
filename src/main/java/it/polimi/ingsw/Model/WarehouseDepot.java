@@ -1,16 +1,17 @@
 package it.polimi.ingsw.Model;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class WarehouseDepot {
-    private Resource[][] depot;
+    private Map<Resource, Integer> depot;
 
-    public WarehouseDepot(Resource[][] depot) {
+    public WarehouseDepot() { this.depot = new HashMap<>(); }
+    public WarehouseDepot(Map<Resource, Integer> depot) {
         this.depot = depot;
     }
 
-    public boolean move(Resource[][] dep) {
-        return true;
+    public boolean validateConfig(Map<Resource, Integer> test) {
+        return (8==8);
     }
 
     public static boolean validateNewConf(Resource[][] dep, Resource ris) {
@@ -22,7 +23,7 @@ public class WarehouseDepot {
         return true;
     }
 
-    public Resource[][] getResources() {
+    public Map<Resource, Integer> getResources() {
         return depot;
     }
 

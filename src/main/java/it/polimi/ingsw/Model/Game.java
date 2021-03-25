@@ -5,11 +5,13 @@ import java.util.ArrayList;
 public class Game {
     private Status status;
     int num_of_players;
+    int turn;
 
-    private ArrayList<Player> playerList;
-    private LeaderCardsDeck leaderCardsDeck;
-    private Market market;
-    private FaithTrack faithTrack;
+    private final ArrayList<Player> playerList;
+    private final LeaderCardsDeck leaderCardsDeck;
+    private final Market market;
+    private final FaithTrack faithTrack;
+    private final DevelopmentCardsDeck developmentCardsDeck;
 
 
 
@@ -21,15 +23,14 @@ public class Game {
         leaderCardsDeck = new LeaderCardsDeck();
         market = new Market();
         faithTrack = new FaithTrack(this);
-
+        developmentCardsDeck = new DevelopmentCardsDeck();
     }
 
     public void changeStatus(Status status) { this.status = status; }
     public Status getStatus() { return this.status; }
 
     public ArrayList<Player> getPlayerList() {
-        ArrayList<Player> newList = new ArrayList<Player>(playerList);
-        return newList;
+        return new ArrayList<Player>(playerList);
     }
 
     public void addPlayer( String nickname )
@@ -46,7 +47,7 @@ public class Game {
 
     public void removePlayer( String nickname )
     {
-        Boolean result = playerList.removeIf(x -> (x.getNickname()).equals(nickname));
+        boolean result = playerList.removeIf(x -> (x.getNickname()).equals(nickname));
         if ( result )
         {
             for ( int i = 0; i < playerList.size(); i++)

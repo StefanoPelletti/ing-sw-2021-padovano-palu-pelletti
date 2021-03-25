@@ -46,4 +46,9 @@ public class FaithTrack {
         zones[pos] = value;
     }
 
+    public void resetZones()
+    {
+        zones[0] = zones[1] = zones[2] = false;
+    }
+
 }
