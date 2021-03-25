@@ -17,7 +17,7 @@ public class DevelopmentCardsDeck {
 
     public DevelopmentCard[][] getVisible() {
         //ci ho provato -Tom <3
-        DevelopmentCard[][] temporaryDeck = null;
+        DevelopmentCard[][] temporaryDeck= null;
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 4; j++) {
                 temporaryDeck[i][j] = cards[i][j][0];
