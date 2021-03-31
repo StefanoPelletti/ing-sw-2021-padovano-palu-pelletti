@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Model.Requirements.Requirement;
 import it.polimi.ingsw.Model.SpecialAbilities.SpecialAbility;
 
 public class LeaderCard {
@@ -7,6 +8,13 @@ public class LeaderCard {
     private Requirement requirement;
     private SpecialAbility specialAbility;
     private boolean enabled;
+
+    public LeaderCard(int PV, Requirement requirement, SpecialAbility specialAbility) {
+        this.PV = PV;
+        this.requirement = requirement;
+        this.specialAbility = specialAbility;
+        this.enabled = false;
+    }
 
     public int getPV() { return PV; }
 
