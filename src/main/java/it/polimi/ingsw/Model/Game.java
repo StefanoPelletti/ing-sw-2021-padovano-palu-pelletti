@@ -1,11 +1,13 @@
 package it.polimi.ingsw.Model;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Game {
     private Status status;
     int num_of_players;
     int turn;
+    int blackCrossPosition;
 
     private final ArrayList<Player> playerList;
     private final LeaderCardsDeck leaderCardsDeck;
@@ -13,35 +15,55 @@ public class Game {
     private final FaithTrack faithTrack;
     private final DevelopmentCardsDeck developmentCardsDeck;
 
-
-
     public Game()
     {
         status = Status.INIT;
         num_of_players = 0;
-        playerList = new ArrayList<Player>();
+        blackCrossPosition = 1;
+        playerList = new ArrayList<>();
         leaderCardsDeck = new LeaderCardsDeck();
         market = new Market();
         faithTrack = new FaithTrack(this);
         developmentCardsDeck = new DevelopmentCardsDeck();
     }
 
-    public void changeStatus(Status status) { this.status = status; }
     public Status getStatus() { return this.status; }
+    public int getNum_of_players() { return this.num_of_players; }
+    public int getTurn() { return this.turn; }
+    public int getBlackCrossPosition() { return this.blackCrossPosition; }
 
     public ArrayList<Player> getPlayerList() {
-        return new ArrayList<Player>(playerList);
+        return new ArrayList<>(playerList);
+    }
+    public LeaderCardsDeck getLeaderCardsDeck() { return this.leaderCardsDeck; }
+    public Market getMarket() { return this.market; }
+    public FaithTrack getFaithTrack() { return this.faithTrack; }
+    public DevelopmentCardsDeck getDevelopmentCardsDeck() { return this.developmentCardsDeck; }
+
+    public void setBlackCrossPosition(int blackCrossPosition) {
+        this.blackCrossPosition = blackCrossPosition;
+    }
+
+    public void changeStatus(Status status) { this.status = status; }
+    public Player getPlayer( String nickname )
+    {
+        Optional<Player> result = playerList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
+        return result.orElse(null);
     }
 
     public void addPlayer( String nickname )
     {
-        if(num_of_players < 4) {
-            playerList.add(new Player(nickname, num_of_players));
-            num_of_players++;
+        if (getPlayer(nickname) == null) {
+            if (num_of_players < 4) {
+                playerList.add(new Player(nickname, num_of_players));
+                num_of_players++;
+            } else {
+                System.out.println("Max number of player reached!");
+            }
         }
         else
         {
-            System.out.println("Max number of player reached!");
+            System.out.println("Player already present!");
         }
     }
 
@@ -50,6 +72,7 @@ public class Game {
         boolean result = playerList.removeIf(x -> (x.getNickname()).equals(nickname));
         if ( result )
         {
+            num_of_players = num_of_players-1;
             for ( int i = 0; i < playerList.size(); i++)
                 playerList.get(i).setPlayerNumber(i);
         }
@@ -86,9 +109,7 @@ public class Game {
                     changeStatus(Status.LAST_TURN);
                     break;
                 case -1:
-                    return;
-            }
-        }
-
-
+                    break;
+          }
+    }
 }

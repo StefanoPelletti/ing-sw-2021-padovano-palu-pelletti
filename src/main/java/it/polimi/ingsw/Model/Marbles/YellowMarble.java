@@ -11,9 +11,8 @@ public class YellowMarble implements MarketMarble {
 
     public YellowMarble() { color = Color.YELLOW; }
 
-    public boolean doAction(ArrayList<Resource> ResourceList, Player player) {
+    public void addResource(ArrayList<Resource> ResourceList) {
         ResourceList.add(Resource.COIN);
-        return true;
     }
 
     @Override

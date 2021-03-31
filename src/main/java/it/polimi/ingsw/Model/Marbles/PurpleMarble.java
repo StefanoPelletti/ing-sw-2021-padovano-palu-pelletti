@@ -11,13 +11,11 @@ public class PurpleMarble implements MarketMarble {
 
     public PurpleMarble() { color = Color.PURPLE; }
 
-    public boolean doAction(ArrayList<Resource> ResourceList, Player player) {
+    public void addResource(ArrayList<Resource> ResourceList) {
         ResourceList.add(Resource.SERVANT);
-        return true;
     }
 
     @Override
     public String toString() { return " " + color + "Marble  "; }
-
     public String toAbbreviation() { return color.toAbbreviation(); }
 }

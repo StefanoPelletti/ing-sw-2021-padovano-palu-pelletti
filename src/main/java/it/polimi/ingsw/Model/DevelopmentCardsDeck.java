@@ -8,7 +8,7 @@ public class DevelopmentCardsDeck {
 
     public DevelopmentCardsDeck() {
         cards = new DevelopmentCard[3][4][4];
-        internalList = new ArrayList<DevelopmentCard>();
+        internalList = new ArrayList<>();
 
 
         cards[0][0][0] = new DevelopmentCard(3, Color.GREEN, 10,
@@ -17,8 +17,6 @@ public class DevelopmentCardsDeck {
                            new HashMap<Resource, Integer>() {{ put(Resource.SHIELD,2); put(Resource.STONE,2); put(Resource.FAITH,1); }})
 
         );
-
-
 
         shuffle();
     }

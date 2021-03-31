@@ -7,7 +7,7 @@ public class WarehouseDepot {
     private Resource[] shelf2;
     private Resource[] shelf3;
 
-    private WarehouseDepot(){
+    public WarehouseDepot(){
         this.shelf1 =Resource.NONE;
         this.shelf2=new Resource[2];
         this.shelf3 =new Resource[3];

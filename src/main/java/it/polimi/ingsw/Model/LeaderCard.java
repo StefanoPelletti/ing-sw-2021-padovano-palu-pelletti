@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Model.SpecialAbilities.SpecialAbility;
+
 public class LeaderCard {
     private int PV;
     private Requirement requirement;
