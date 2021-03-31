@@ -51,6 +51,20 @@ public class DevelopmentCardsDeck {
         return card;
     }
 
+    public void removeCard(int column){
+        int removed=0;
+        for(int row=2; row>=0; row--){
+            for(int i=3; i>=0; i--){
+                if(cards[row][column][i]!=null){
+                    cards[row][column][i]=null;
+                    removed++;
+                }
+                if(removed==2) break;
+            }
+            if(removed==2) break;
+        }
+    }
+
     public DevelopmentCard[][] getVisible() {
 
         DevelopmentCard[][] temporaryDeck = new DevelopmentCard[3][4];
