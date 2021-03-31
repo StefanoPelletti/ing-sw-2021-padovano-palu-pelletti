@@ -6,7 +6,7 @@ public class Strongbox {
     private Map<Resource, Integer> resources;
 
     public Strongbox() {
-        this.resources = new HashMap<Resource,Integer>();
+        this.resources = new HashMap<>();
     }
 
     public boolean addResource(Resource resource, int quantity) {
@@ -29,14 +29,15 @@ public class Strongbox {
         }
         else
         {
-            if( (tmp - quantity) > 0) {
+            if( (tmp - quantity) > 0) /*there will be resources after the remove */
+                {
                 resources.put(resource, tmp - quantity);
                 return false;
             }
             else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
             {
-                resources.remove(resource);
-                return true;
+                //resources.remove(resource);
+                return false;
             }
 
         }

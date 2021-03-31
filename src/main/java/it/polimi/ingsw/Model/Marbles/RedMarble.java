@@ -13,15 +13,11 @@ public class RedMarble implements MarketMarble {
 
     public RedMarble() { color = Color.RED; }
 
-    public boolean doAction(ArrayList<Resource> ResourceList, Player player) {
-
-        //?????????????????????????//
-
-        return true;
+    public void addResource(ArrayList<Resource> ResourceList)  {
+        throw new RedMarbleException("Red Marble detected!");
     }
 
     @Override
     public String toString() { return " " + color + "Marble  "; }
-
     public String toAbbreviation() { return color.toAbbreviation(); }
 }

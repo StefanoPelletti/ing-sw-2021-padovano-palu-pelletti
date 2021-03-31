@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public interface MarketMarble
 {
-
-    boolean doAction(ArrayList<Resource> List, Player player);
+    //note that the Red Marble throws a RedMarbleException (unchecked) if called
+    void addResource(ArrayList<Resource> List);
 
     String toString();
     String toAbbreviation();

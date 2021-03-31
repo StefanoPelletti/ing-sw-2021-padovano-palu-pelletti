@@ -3,11 +3,11 @@ package it.polimi.ingsw.Model;
 import java.util.HashMap;
 
 public class DevelopmentCard {
-    private int level;
-    private Color color;
-    private HashMap<Resource, Integer> cost;
-    private int VP;
-    private Power power;
+    private final int level;
+    private final Color color;
+    private final HashMap<Resource, Integer> cost;
+    private final int VP;
+    private final Power power;
 
     public DevelopmentCard(int level, Color color, int VP, HashMap<Resource, Integer> cost, Power power) {
         this.level = level;
@@ -17,7 +17,6 @@ public class DevelopmentCard {
         this.power = power;
     }
 
-    //vanno ovviamente cambiati tutti i return, che sono messi solo per non avere errori
     public HashMap<Resource, Integer> getCost() {
         return cost;
     }
@@ -35,10 +34,10 @@ public class DevelopmentCard {
     }
 
     public HashMap<Resource, Integer> getPowerInput() {
-        return cost;
+        return power.getInput();
     }
 
     public HashMap<Resource, Integer> getPowerOutput() {
-        return cost;
+        return power.getOutput();
     }
 }
