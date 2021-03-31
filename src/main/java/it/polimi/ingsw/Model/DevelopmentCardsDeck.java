@@ -7,24 +7,302 @@ public class DevelopmentCardsDeck {
     private List<DevelopmentCard> internalList;
 
     public DevelopmentCardsDeck() {
-        cards = new DevelopmentCard[3][4][4];
+        cards = new DevelopmentCard[3][4][4]; //rows, col, depth
         internalList = new ArrayList<DevelopmentCard>();
 
+        cards[0][0][0] = new DevelopmentCard(3, Color.GREEN, 12,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 4); put(Resource.COIN, 4); }},
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 3); put(Resource.SHIELD, 1);}})
+        );
 
-        cards[0][0][0] = new DevelopmentCard(3, Color.GREEN, 10,
+        cards[0][0][1] = new DevelopmentCard(3, Color.GREEN, 11,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 7); }},
+                new Power(new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.FAITH, 3);}})
+        );
+
+        cards[0][0][2] = new DevelopmentCard(3, Color.GREEN, 10,
                 new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 5); put(Resource.SERVANT, 2); }} ,
                 new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SERVANT, 1); }},
                            new HashMap<Resource, Integer>() {{ put(Resource.SHIELD,2); put(Resource.STONE,2); put(Resource.FAITH,1); }})
-
         );
 
+        cards[0][0][3] = new DevelopmentCard(3, Color.GREEN, 9,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 6); }},
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.STONE, 3); put(Resource.FAITH, 2); }})
+        );
 
+        cards[0][1][0] = new DevelopmentCard(3, Color.BLUE, 12,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 4); put(Resource.STONE, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.COIN,1); put(Resource.SHIELD,3); }})
+        );
+
+        cards[0][1][1] = new DevelopmentCard(3, Color.BLUE, 11,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 7); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SHIELD,1); put(Resource.FAITH,3); }})
+        );
+
+        cards[0][1][2] = new DevelopmentCard(3, Color.BLUE, 10,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 5); put(Resource.STONE, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SHIELD, 1); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.SERVANT,2); put(Resource.STONE,2); put(Resource.FAITH,1); }})
+        );
+
+        cards[0][1][3] = new DevelopmentCard(3, Color.BLUE, 9,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 6); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 2); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.SHIELD,3); put(Resource.FAITH,2); }})
+        );
+
+        cards[0][2][0] = new DevelopmentCard(3, Color.YELLOW, 12,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 4); put(Resource.SERVANT, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); put(Resource.SERVANT, 3); }})
+        );
+
+        cards[0][2][1] = new DevelopmentCard(3, Color.YELLOW, 11,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 7);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); put(Resource.FAITH, 3); }})
+        );
+
+        cards[0][2][2] = new DevelopmentCard(3, Color.YELLOW, 10,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 5); put(Resource.SERVANT, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); put(Resource.SERVANT, 1); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); put(Resource.SHIELD, 2); put(Resource.FAITH, 1);}})
+        );
+
+        cards[0][2][3] = new DevelopmentCard(3, Color.YELLOW, 9,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 6); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 2); }},
+                           new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 3); put(Resource.FAITH, 2); }})
+        );
+
+        cards[0][3][0] = new DevelopmentCard(3, Color.PURPLE, 12,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 4); put(Resource.SHIELD, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 3); put(Resource.SERVANT, 1); }})
+        );
+
+        cards[0][3][1] = new DevelopmentCard(3, Color.PURPLE, 11,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 7);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); put(Resource.FAITH, 3); }})
+        );
+
+        cards[0][3][2] = new DevelopmentCard(3, Color.PURPLE, 10,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 5); put(Resource.COIN, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); put(Resource.SERVANT, 2); put(Resource.FAITH, 1);}})
+        );
+
+        cards[0][3][3] = new DevelopmentCard(3, Color.PURPLE, 9,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 6); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 3); put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][0][0] = new DevelopmentCard(2, Color.GREEN, 8,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 3); put(Resource.COIN, 3); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[1][0][1] = new DevelopmentCard(2, Color.GREEN, 7,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 5);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 2); put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][0][2] = new DevelopmentCard(2, Color.GREEN, 6,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 3); put(Resource.SERVANT, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 3); }})
+        );
+
+        cards[1][0][3] = new DevelopmentCard(2, Color.GREEN, 5,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][1][0] = new DevelopmentCard(2, Color.BLUE, 8,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 3); put(Resource.STONE, 3); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[1][1][1] = new DevelopmentCard(2, Color.BLUE, 7,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 5);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 2); put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][1][2] = new DevelopmentCard(2, Color.BLUE, 6,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 3); put(Resource.STONE, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 3); }})
+        );
+
+        cards[1][1][3] = new DevelopmentCard(2, Color.BLUE, 5,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][2][0] = new DevelopmentCard(2, Color.YELLOW, 8,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 3); put(Resource.SERVANT, 3); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[1][2][1] = new DevelopmentCard(2, Color.YELLOW, 7,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 5);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 2); put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][2][2] = new DevelopmentCard(2, Color.YELLOW, 6,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 3); put(Resource.SHIELD, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 3); }})
+        );
+
+        cards[1][2][3] = new DevelopmentCard(2, Color.YELLOW, 5,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][3][0] = new DevelopmentCard(2, Color.PURPLE, 8,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 3); put(Resource.SHIELD, 3); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[1][3][1] = new DevelopmentCard(2, Color.PURPLE, 7,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 5);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); put(Resource.FAITH, 2); }})
+        );
+
+        cards[1][3][2] = new DevelopmentCard(2, Color.PURPLE, 6,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 3); put(Resource.COIN, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 3); }})
+        );
+
+        cards[1][3][3] = new DevelopmentCard(2, Color.PURPLE, 5,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 4); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 2); }})
+        );
+
+        cards[2][0][0] = new DevelopmentCard(1, Color.GREEN, 4,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 2); put(Resource.COIN, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][0][1] = new DevelopmentCard(1, Color.GREEN, 3,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 3);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SHIELD, 1); put(Resource.STONE, 1);}})
+        );
+
+        cards[2][0][2] = new DevelopmentCard(1, Color.GREEN, 2,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }})
+        );
+
+        cards[2][0][3] = new DevelopmentCard(1, Color.GREEN, 1,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][1][0] = new DevelopmentCard(1, Color.BLUE, 4,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 2); put(Resource.SERVANT, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][1][1] = new DevelopmentCard(1, Color.BLUE, 3,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 3);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SERVANT, 1); put(Resource.SHIELD, 1);}})
+        );
+
+        cards[2][1][2] = new DevelopmentCard(1, Color.BLUE, 2,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 1); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }})
+        );
+
+        cards[2][1][3] = new DevelopmentCard(1, Color.BLUE, 1,
+                new HashMap<Resource,Integer>() {{ put(Resource.COIN, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][2][0] = new DevelopmentCard(1, Color.YELLOW, 4,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 2); put(Resource.SHIELD, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][2][1] = new DevelopmentCard(1, Color.YELLOW, 3,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 3);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}})
+        );
+
+        cards[2][2][2] = new DevelopmentCard(1, Color.YELLOW, 2,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 1); put(Resource.STONE, 1); put(Resource.COIN, 1);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }})
+        );
+
+        cards[2][2][3] = new DevelopmentCard(1, Color.YELLOW, 1,
+                new HashMap<Resource,Integer>() {{ put(Resource.STONE, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][3][0] = new DevelopmentCard(1, Color.PURPLE, 4,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 2); put(Resource.STONE, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); put(Resource.SHIELD, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 2); put(Resource.FAITH, 1); }})
+        );
+
+        cards[2][3][1] = new DevelopmentCard(1, Color.PURPLE, 3,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 3);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 2); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); put(Resource.SHIELD, 1); put(Resource.STONE, 1);}})
+        );
+
+        cards[2][3][2] = new DevelopmentCard(1, Color.PURPLE, 2,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); put(Resource.COIN, 1);}} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.COIN, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); }})
+        );
+
+        cards[2][3][3] = new DevelopmentCard(1, Color.PURPLE, 1,
+                new HashMap<Resource,Integer>() {{ put(Resource.SERVANT, 2); }} ,
+                new Power( new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.FAITH, 1); }})
+        );
 
         shuffle();
     }
 
 
-
+    //method that shuffles the 12 small decks at once
     public void shuffle() {
         for (int r = 0; r < 3; r++ )
         {
