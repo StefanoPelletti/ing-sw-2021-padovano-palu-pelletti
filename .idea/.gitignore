@@ -1,0 +1,14 @@
+# Default ignored files
+/shelf/
+/compiler.xml
+/encodings.xml
+/ing-sw-2021-padovano-palu-pelletti.iml
+/jarRepositories.xml
+/misc.xml
+/vcs.xml
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../:\Users\pelle\Downloads\untitled\ing-sw-2021-padovano-palu-pelletti\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
