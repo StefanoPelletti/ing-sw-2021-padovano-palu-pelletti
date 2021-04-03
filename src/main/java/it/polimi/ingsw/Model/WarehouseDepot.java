@@ -58,12 +58,14 @@ public class WarehouseDepot {
     public int getTotal(){
         int result=0;
         if(this.shelf1 !=Resource.NONE) result++;
-        result+= Arrays.stream(shelf2).filter(r->r!=Resource.NONE).count();
-        result+= Arrays.stream(shelf3).filter(r->r!=Resource.NONE).count();
+        for(int i=0; i<3; i++){
+            if(i<2 && this.shelf2[i]!=Resource.NONE) result++;
+            if(this.shelf3[i]!=Resource.NONE) result++;
+        }
         return result;
     }
 
-    //????? to discuss
+    //could be not used, but will remain here for now
     public boolean consume(ArrayList<Resource> resToDiscard){
         boolean result=true;
         boolean found=false;
@@ -106,8 +108,29 @@ public class WarehouseDepot {
 
         if(result) {
             this.setConfig(tmpShelf1, tmpShelf2, tmp3Shelf);
-            return result;
         }
+        return result;
+    }
+
+    //used when the player buys a devCard or activates production
+    public boolean consume(Resource resource){
+        if(this.shelf1==resource){
+            this.shelf1=Resource.NONE;
+            return true;
+        }
+        else{
+            for(int i=2; i>=0; i--){
+                if(i<2 && this.shelf2[i]==resource){
+                    this.shelf2[i]=Resource.NONE;
+                    return true;
+                }
+                else if(this.shelf3[i]==resource){
+                    this.shelf3[i]=Resource.NONE;
+                    return true;
+                }
+            }
+        }
+        //no such resource in the depot
         return false;
     }
 

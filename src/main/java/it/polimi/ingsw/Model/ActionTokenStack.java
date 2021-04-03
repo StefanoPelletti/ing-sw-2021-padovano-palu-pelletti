@@ -1,13 +1,18 @@
 package it.polimi.ingsw.Model;
-import it.polimi.ingsw.Model.ActionTokens.ActionToken;
-
+import it.polimi.ingsw.Model.ActionTokens.*;
 import java.util.*;
 
 public class ActionTokenStack {
     private ArrayList<ActionToken> stack;
 
-    public ActionTokenStack(ArrayList<ActionToken> stack) {
-        this.stack = stack;
+    public ActionTokenStack() {
+        this.stack=new ArrayList<>();
+        this.stack.add(0, new RemoverToken(Color.BLUE));
+        this.stack.add(1, new RemoverToken(Color.YELLOW));
+        this.stack.add(2, new RemoverToken(Color.GREEN));
+        this.stack.add(3, new RemoverToken(Color.PURPLE));
+        this.stack.add(4, new Forward2Token());
+        this.stack.add(5, new ForwardAndShuffleToken());
         this.shuffle();
     }
 

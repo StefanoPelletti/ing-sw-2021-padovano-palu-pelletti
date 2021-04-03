@@ -9,6 +9,7 @@ public class Game {
     int turn;
     int blackCrossPosition;
 
+    private final ActionTokenStack actionTokenStack;
     private final ArrayList<Player> playerList;
     private final LeaderCardsDeck leaderCardsDeck;
     private final Market market;
@@ -25,6 +26,7 @@ public class Game {
         market = new Market();
         faithTrack = new FaithTrack(this);
         developmentCardsDeck = new DevelopmentCardsDeck();
+        actionTokenStack=new ActionTokenStack();
     }
 
     public Status getStatus() { return this.status; }
@@ -39,7 +41,7 @@ public class Game {
     public Market getMarket() { return this.market; }
     public FaithTrack getFaithTrack() { return this.faithTrack; }
     public DevelopmentCardsDeck getDevelopmentCardsDeck() { return this.developmentCardsDeck; }
-
+    public ActionTokenStack getActionTokenStack(){return this.actionTokenStack;}
     public void setBlackCrossPosition(int blackCrossPosition) {
         this.blackCrossPosition = blackCrossPosition;
     }
