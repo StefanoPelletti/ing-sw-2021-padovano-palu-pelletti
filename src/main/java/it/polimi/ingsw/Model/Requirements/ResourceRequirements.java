@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.Requirements;
 
-import it.polimi.ingsw.Model.Requirements.Requirement;
-import it.polimi.ingsw.Model.Resource;
+import it.polimi.ingsw.Model.Enumerators.Resource;
 
 import java.util.HashMap;
 

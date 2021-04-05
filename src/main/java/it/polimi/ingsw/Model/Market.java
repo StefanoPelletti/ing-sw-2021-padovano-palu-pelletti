@@ -72,6 +72,14 @@ public class Market {
         return result;
     }
 
+    public ArrayList<MarketMarble> getRow( int row )
+    {
+        ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
+        for( int i = 0; i < 4; i++ )
+            result.add( grid[row][i] );
+        return result;
+    }
+
     public ArrayList<MarketMarble> pushColumn( int column )
     {
         ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
@@ -87,6 +95,13 @@ public class Market {
         return result;
     }
 
+    public ArrayList<MarketMarble> getColumn( int column )
+    {
+        ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
+        for( int i = 0; i < 3; i++ )
+            result.add( grid[i][column] );
+        return result;
+    }
     @Override
     public String toString() {
         return " -- Market: -- " +

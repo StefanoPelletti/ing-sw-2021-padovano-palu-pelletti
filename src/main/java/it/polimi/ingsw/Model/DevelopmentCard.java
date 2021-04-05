@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Model.Enumerators.Color;
+import it.polimi.ingsw.Model.Enumerators.Resource;
+
 import java.util.HashMap;
 
 public class DevelopmentCard {

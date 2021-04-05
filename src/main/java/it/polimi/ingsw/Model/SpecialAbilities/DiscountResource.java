@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.SpecialAbilities;
 
-import it.polimi.ingsw.Model.Resource;
-import it.polimi.ingsw.Model.SpecialAbilities.SpecialAbility;
+import it.polimi.ingsw.Model.Enumerators.Resource;
 
 public class DiscountResource implements SpecialAbility {
     private Resource resource;

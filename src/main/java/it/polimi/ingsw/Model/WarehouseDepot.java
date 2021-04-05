@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Model.Enumerators.Resource;
+
 import java.util.*;
 public class WarehouseDepot {
 

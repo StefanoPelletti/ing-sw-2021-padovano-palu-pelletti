@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.ActionTokens;
 
 import it.polimi.ingsw.Model.ActionTokenStack;
-import it.polimi.ingsw.Model.Color;
+import it.polimi.ingsw.Model.Enumerators.Color;
 import it.polimi.ingsw.Model.DevelopmentCardsDeck;
 import it.polimi.ingsw.Model.FaithTrack;
 

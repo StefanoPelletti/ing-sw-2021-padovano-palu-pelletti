@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.Requirements;
 
-import it.polimi.ingsw.Model.Color;
-import it.polimi.ingsw.Model.Requirements.Requirement;
+import it.polimi.ingsw.Model.Enumerators.Color;
 
 import java.util.HashMap;
 
