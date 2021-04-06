@@ -9,12 +9,12 @@ public class ActionTokenStack {
 
     public ActionTokenStack() {
         this.stack=new ArrayList<>();
-        this.stack.add(0, new RemoverToken(Color.BLUE));
-        this.stack.add(1, new RemoverToken(Color.YELLOW));
-        this.stack.add(2, new RemoverToken(Color.GREEN));
-        this.stack.add(3, new RemoverToken(Color.PURPLE));
-        this.stack.add(4, new Forward2Token());
-        this.stack.add(5, new ForwardAndShuffleToken());
+        this.stack.add(new RemoverToken(Color.BLUE));
+        this.stack.add(new RemoverToken(Color.YELLOW));
+        this.stack.add(new RemoverToken(Color.GREEN));
+        this.stack.add(new RemoverToken(Color.PURPLE));
+        this.stack.add(new Forward2Token());
+        this.stack.add(new ForwardAndShuffleToken());
         this.shuffle();
     }
 

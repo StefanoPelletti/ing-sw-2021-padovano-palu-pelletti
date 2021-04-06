@@ -19,6 +19,7 @@ public class WarehouseDepot {
         }
     }
 
+    //returns true if the rules for the depot given by the game are met by the given configuration
     public static boolean validateNewConfig(Resource shelf1, Resource[] shelf2, Resource[] shelf3){
         return shelf1 != null && shelf2 != null && shelf3 != null
                 && (shelf2.length == 2 && shelf3.length == 3)
@@ -30,6 +31,8 @@ public class WarehouseDepot {
                 && (Arrays.stream(shelf3).filter(r -> r != Resource.NONE).distinct().count() <= 1);
     }
 
+
+    //sets the given configuration if valid
     public boolean setConfig(Resource shelf1, Resource[] shelf2, Resource[] shelf3){
         if(!validateNewConfig(shelf1,shelf2,shelf3)) return false;
         this.shelf1 = shelf1;
@@ -72,10 +75,10 @@ public class WarehouseDepot {
         boolean result=true;
         boolean found=false;
         Resource tmpShelf1=this.shelf1;
-        Resource[] tmpShelf2=new Resource[2], tmp3Shelf=new Resource[3];
+        Resource[] tmpShelf2=new Resource[2], tmpShelf3=new Resource[3];
         for(int i=0;i<3;i++){
             if(i<2) tmpShelf2[i]=this.shelf2[i];
-            tmp3Shelf[i]=this.shelf3[i];
+            tmpShelf3[i]=this.shelf3[i];
         }
 
         for(Resource r:resToDiscard){
@@ -94,8 +97,8 @@ public class WarehouseDepot {
                         found=true;
                         break;
                     }
-                    else if (tmp3Shelf[i] == r) {
-                        tmp3Shelf[i] = Resource.NONE;
+                    else if (tmpShelf3[i] == r) {
+                        tmpShelf3[i] = Resource.NONE;
                         found=true;
                         break;
                     }
@@ -109,7 +112,7 @@ public class WarehouseDepot {
         }
 
         if(result) {
-            this.setConfig(tmpShelf1, tmpShelf2, tmp3Shelf);
+            this.setConfig(tmpShelf1, tmpShelf2, tmpShelf3);
         }
         return result;
     }
@@ -133,6 +136,64 @@ public class WarehouseDepot {
             }
         }
         //no such resource in the depot
+        return false;
+    }
+
+    //tries to add the given resource to the current configuration
+    public boolean add(Resource resource){
+        Resource[] tmpShelf2=new Resource[2], tmpShelf3=new Resource[3];
+        for(int i=0; i<3; i++){
+            if(i<2) tmpShelf2[i]=this.shelf2[i];
+            tmpShelf3[i]=this.shelf3[i];
+        }
+
+        if(this.shelf1==Resource.NONE){
+            if(setConfig(resource, this.shelf2, this.shelf3)) return true;
+        }
+        for(int i=0; i<2; i++){
+            if(tmpShelf2[i]==Resource.NONE) {
+                tmpShelf2[i]=resource;
+                if(setConfig(this.shelf1, tmpShelf2, this.shelf3)) return true;
+                else tmpShelf2[i]=Resource.NONE;
+            }
+        }
+        for(int i=0; i<3; i++){
+            if(tmpShelf3[i]==Resource.NONE) {
+                tmpShelf3[i]=resource;
+                if(setConfig(this.shelf1, this.shelf2, tmpShelf3)) return true;
+                else tmpShelf3[i]=Resource.NONE;
+            }
+        }
+        //not possible to add resource in the depot
+        return false;
+    }
+
+    //checks if the given resource is addable in any position in the depot
+    public boolean isAddable(Resource resource){
+        Resource[] tmpShelf2=new Resource[2], tmpShelf3=new Resource[3];
+        for(int i=0; i<3; i++){
+            if(i<2) tmpShelf2[i]=this.shelf2[i];
+            tmpShelf3[i]=this.shelf3[i];
+        }
+
+        if(this.shelf1==Resource.NONE){
+            if(validateNewConfig(resource, this.shelf2, this.shelf3)) return true;
+        }
+        for(int i=0; i<2; i++){
+            if(tmpShelf2[i]==Resource.NONE) {
+                tmpShelf2[i]=resource;
+                if(validateNewConfig(this.shelf1, tmpShelf2, this.shelf3)) return true;
+                else tmpShelf2[i]=Resource.NONE;
+            }
+        }
+        for(int i=0; i<3; i++){
+            if(tmpShelf3[i]==Resource.NONE) {
+                tmpShelf3[i]=resource;
+                if(validateNewConfig(this.shelf1, this.shelf2, tmpShelf3)) return true;
+                else tmpShelf3[i]=Resource.NONE;
+            }
+        }
+        //not possible to add resource in the depot
         return false;
     }
 
