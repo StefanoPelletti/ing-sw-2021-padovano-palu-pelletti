@@ -305,14 +305,15 @@ public class DevelopmentCardsDeck {
     }
 
 
-
+//DO NOT CALL AFTER A REMOVE!
     public void shuffle() {
         for (int r = 0; r < 3; r++ )
         {
             for( int c = 0; c < 4; c++)
             {
                 internalList.clear();
-                internalList = Arrays.asList(cards[r][c]);
+                internalList = new ArrayList<>(Arrays.asList(cards[r][c]));
+
                 Collections.shuffle(internalList);
                 for ( int i = 0 ; i < 4; i++ )
                     cards[r][c][i] = internalList.get(i);
@@ -327,12 +328,15 @@ public class DevelopmentCardsDeck {
             if ( cards[row][column][i] != null ) {
                 card = cards[row][column][i];
                 cards[row][column][i] = null;
+                break;
             }
         }
         return card;
     }
 
-    public void removeCard(int column){
+    public boolean removeCard(int column) {
+        if(column <0 || column>3) return false;
+
         int removed=0;
         for(int row=2; row>=0; row--){
             for(int i=3; i>=0; i--){
@@ -344,6 +348,7 @@ public class DevelopmentCardsDeck {
             }
             if(removed==2) break;
         }
+        return true;
     }
 
     public DevelopmentCard[][] getVisible() {
@@ -367,5 +372,13 @@ public class DevelopmentCardsDeck {
         }
 
         return temporaryDeck;
+    }
+
+    public DevelopmentCard[] getStack( int row, int column )
+    {
+        if( row<0 || row>2 || column < 0 || column > 3 ) return null;
+        DevelopmentCard[] result = new DevelopmentCard[4];
+        System.arraycopy(cards[row][column], 0, result, 0, 4);
+        return result;
     }
 }

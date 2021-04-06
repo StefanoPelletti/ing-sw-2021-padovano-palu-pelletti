@@ -43,4 +43,15 @@ public class DevelopmentCard {
     public HashMap<Resource, Integer> getPowerOutput() {
         return power.getOutput();
     }
+
+    public boolean internalCheck()
+    {
+        if(level<1 || level>3) return false;
+        if(color!=Color.BLUE && color!=Color.GREEN && color!=Color.YELLOW && color!=Color.PURPLE) return false;
+        if(VP<1 || VP>12) return false;
+        if(cost.isEmpty()) return false;
+        if(power.getInput() == null ) return false;
+        if(power.getOutput() == null ) return false;
+        return true;
+    }
 }
