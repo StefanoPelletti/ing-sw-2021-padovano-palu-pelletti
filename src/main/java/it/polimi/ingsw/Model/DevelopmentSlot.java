@@ -31,14 +31,14 @@ public class DevelopmentSlot {
 
         if( cardLevel == 3 ) //then this stack is full
         {
-            System.out.println("Error, this stack is full!");
+            //System.out.println("Error, this stack is full!");
             return false;
         }
         else
         {
             if ( newCardLevel != cardLevel +1 ) //then level is not ok!
             {
-                System.out.println("Error, you cannot add a card on this deck!");
+                //System.out.println("Error, you cannot add a card on this deck!");
                 return false;
             }
             else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
@@ -54,6 +54,9 @@ public class DevelopmentSlot {
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
+        if(newCard == null) {
+            return false;
+        }
         if ( onTop[selectedDeck] == null )
             cardLevel = 0;
         else
@@ -61,19 +64,19 @@ public class DevelopmentSlot {
 
         if( cardLevel == 3 ) //then this stack is full
         {
-            System.out.println("Nope, this stack is full!");
+            //System.out.println("Nope, this stack is full!");
             return false;
         }
         else
         {
             if ( newCardLevel != cardLevel +1 ) //then level is not ok!
             {
-                System.out.println("Nope, you cannot add a card on this deck, levels are different!");
+                //System.out.println("Nope, you cannot add a card on this deck, levels are different!");
                 return false;
             }
             else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
             {
-                System.out.println("Yes, adding in this position is possible!");
+                //System.out.println("Yes, adding in this position is possible!");
                 return true;
             }
         }
