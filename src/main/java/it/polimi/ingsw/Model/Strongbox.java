@@ -11,7 +11,8 @@ public class Strongbox {
         this.resources = new HashMap<>();
     }
 
-    public boolean addResource(Resource resource, int quantity) {
+    public boolean addResource(Resource resource, int quantity) throws IllegalArgumentException{
+        if(resource==Resource.FAITH || resource==Resource.EXTRA || resource==Resource.NONE || resource==null || quantity<0)  return false;
         Integer tmp = resources.get(resource);
         if ( tmp == null ) {
             resources.put(resource, quantity);

@@ -95,6 +95,10 @@ public class Market {
         return result;
     }
 
+    public MarketMarble getSlideMarble(){
+        return this.slideMarble;
+    }
+
     public ArrayList<MarketMarble> getColumn( int column )
     {
         ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();

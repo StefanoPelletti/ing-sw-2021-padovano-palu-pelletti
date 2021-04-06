@@ -15,6 +15,6 @@ public class PurpleMarble implements MarketMarble {
     }
 
     @Override
-    public String toString() { return " " + color + "Marble  "; }
+    public String toString() { return " " + color + " Marble  "; }
     public String toAbbreviation() { return color.toAbbreviation(); }
 }
