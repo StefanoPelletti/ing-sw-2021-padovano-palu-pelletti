@@ -14,4 +14,13 @@ public class ResourceRequirements implements Requirement {
     public HashMap<Resource, Integer> getRequirements() {
         return requirements;
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this) return false;
+        if(!(obj instanceof ResourceRequirements)) return false;
+        ResourceRequirements o = (ResourceRequirements) obj;
+        return (o.getRequirements().equals(this.requirements));
+    }
 }

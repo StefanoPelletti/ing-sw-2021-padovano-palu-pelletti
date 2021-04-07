@@ -13,6 +13,32 @@ public class Production implements SpecialAbility {
         return input;
     }
 
+    public boolean isProduction()
+    {
+        return true;
+    }
+    public boolean isMarketResource()
+    {
+        return false;
+    }
+    public boolean isExtraDepot()
+    {
+        return false;
+    }
+    public boolean isDiscountResource()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this) return false;
+        if(!(obj instanceof Production)) return false;
+        Production o = (Production) obj;
+        return (this.input.equals(o.input));
+    }
+
     @Override
     public String toString()
     {

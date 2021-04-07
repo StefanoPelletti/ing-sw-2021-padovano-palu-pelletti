@@ -4,9 +4,9 @@ import it.polimi.ingsw.Model.Requirements.Requirement;
 import it.polimi.ingsw.Model.SpecialAbilities.SpecialAbility;
 
 public class LeaderCard {
-    private int PV;
-    private Requirement requirement;
-    private SpecialAbility specialAbility;
+    private final int PV;
+    private final Requirement requirement;
+    private final SpecialAbility specialAbility;
     private boolean enabled;
 
     public LeaderCard(int PV, Requirement requirement, SpecialAbility specialAbility) {
@@ -32,6 +32,19 @@ public class LeaderCard {
 
     public boolean getEnable() {
         return enabled;
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if(obj == this) return false;
+        if(!(obj instanceof LeaderCard)) return false;
+        LeaderCard o = (LeaderCard) obj;
+        return(this.PV == o.PV &&
+                this.requirement.equals(o.requirement) &&
+                        this.specialAbility.equals(o.specialAbility) &&
+                                this.enabled==o.enabled);
+
     }
 
 }

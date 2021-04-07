@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Model.Requirements;
 
 import it.polimi.ingsw.Model.Enumerators.Color;
+import it.polimi.ingsw.Model.LeaderCard;
+
 
 import java.util.HashMap;
 
@@ -13,5 +15,14 @@ public class CardRequirements implements Requirement {
 
     public HashMap<Color, Integer[]> getRequirements() {
         return requirements;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this) return false;
+        if(!(obj instanceof CardRequirements)) return false;
+        CardRequirements o = (CardRequirements) obj;
+        return (o.getRequirements().equals(this.requirements));
     }
 }

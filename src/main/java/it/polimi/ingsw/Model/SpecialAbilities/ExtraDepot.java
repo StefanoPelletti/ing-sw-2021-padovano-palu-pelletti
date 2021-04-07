@@ -32,6 +32,32 @@ public class ExtraDepot implements SpecialAbility {
         return true;
     }
 
+    public boolean isProduction()
+    {
+        return false;
+    }
+    public boolean isMarketResource()
+    {
+        return false;
+    }
+    public boolean isExtraDepot()
+    {
+        return true;
+    }
+    public boolean isDiscountResource()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this) return false;
+        if(!(obj instanceof ExtraDepot)) return false;
+        ExtraDepot o = (ExtraDepot) obj;
+        return (this.resource.equals(o.resource) && this.number==o.number);
+    }
+
     @Override
     public String toString()
     {

@@ -54,4 +54,18 @@ public class DevelopmentCard {
         if(power.getOutput() == null ) return false;
         return true;
     }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if(obj == this) return false;
+        if(!(obj instanceof DevelopmentCard)) return false;
+        DevelopmentCard o = (DevelopmentCard) obj;
+        return(this.level == o.level &&
+                this.color.equals(o.color) &&
+                this.cost.equals(o.cost) &&
+                this.VP==o.VP &&
+                this.power.equals(o.power));
+
+    }
 }

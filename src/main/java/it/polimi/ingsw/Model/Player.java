@@ -1,5 +1,9 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Model.SpecialAbilities.*;
+
+import java.util.ArrayList;
+
 public class Player {
     private final String nickname;
     private int VP;
@@ -48,4 +52,43 @@ public class Player {
         leaderCards[0] = L1;
         leaderCards[1] = L2;
     }
+
+    public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()
+    {
+        ArrayList<LeaderCard> result = new ArrayList<>();
+        if (leaderCards[0].getSpecialAbility().isDiscountResource())
+            result.add(leaderCards[0]);
+        if (leaderCards[1].getSpecialAbility().isDiscountResource())
+            result.add(leaderCards[1]);
+        return result;
+    }
+
+    public ArrayList<LeaderCard> getCardsWithExtraDepotAbility()
+    {
+        ArrayList<LeaderCard> result = new ArrayList<>();
+        if (leaderCards[0].getSpecialAbility().isExtraDepot())
+            result.add(leaderCards[0]);
+        if (leaderCards[1].getSpecialAbility().isExtraDepot())
+            result.add(leaderCards[1]);
+        return result;
+    }
+    public ArrayList<LeaderCard> getCardsWithProductionAbility()
+    {
+        ArrayList<LeaderCard> result = new ArrayList<>();
+        if (leaderCards[0].getSpecialAbility().isProduction())
+            result.add(leaderCards[0]);
+        if (leaderCards[1].getSpecialAbility().isProduction())
+            result.add(leaderCards[1]);
+        return result;
+    }
+    public ArrayList<LeaderCard> getCardsWithMarketResourceAbility()
+    {
+        ArrayList<LeaderCard> result = new ArrayList<>();
+        if (leaderCards[0].getSpecialAbility().isMarketResource())
+            result.add(leaderCards[0]);
+        if (leaderCards[1].getSpecialAbility().isMarketResource())
+            result.add(leaderCards[1]);
+        return result;
+    }
+
 }
