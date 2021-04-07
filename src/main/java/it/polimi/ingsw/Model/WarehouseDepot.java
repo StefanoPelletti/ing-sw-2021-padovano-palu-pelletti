@@ -70,7 +70,7 @@ public class WarehouseDepot {
         return result;
     }
 
-    //could be not used, but will remain here for now, not tested
+    //could be not used, but will remain here for now. NOT TESTED
     public boolean consume(ArrayList<Resource> resToDiscard){
         boolean result=true;
         boolean found=false;
@@ -138,29 +138,31 @@ public class WarehouseDepot {
     //tries to add the given resource to the current configuration
     public boolean add(Resource resource){
         if(!this.isAddable(resource)) return false;
+        boolean found=false;
         Resource[] tmpShelf2=this.getShelf2(), tmpShelf3=this.getShelf3();
 
         if(this.shelf1==Resource.NONE){
-                this.setConfig(resource, tmpShelf2, tmpShelf3);
+            if(this.setConfig(resource, tmpShelf2, tmpShelf3)) found=true;
         }
-        for(int i=0; i<2; i++){
-            if(tmpShelf2[i]==Resource.NONE){
-                tmpShelf2[i]=resource;
-                if(validateNewConfig(this.shelf1, tmpShelf2, tmpShelf3)){
-                    this.setConfig(this.shelf1, tmpShelf2, tmpShelf3);
-                    break;
+        if(!found) {
+            for (int i = 0; i < 2; i++) {
+                if (tmpShelf2[i] == Resource.NONE) {
+                    tmpShelf2[i] = resource;
+                    if (this.setConfig(this.shelf1, tmpShelf2, tmpShelf3)) {
+                        found=true;
+                        break;
+                    }
+                    tmpShelf2[i] = Resource.NONE;
                 }
-                else tmpShelf2[i]=Resource.NONE;
             }
         }
-        for(int i=0; i<3; i++){
-            if(tmpShelf3[i]==Resource.NONE){
-                tmpShelf3[i]=resource;
-                if(validateNewConfig(this.shelf1, tmpShelf2, tmpShelf3)){
-                    this.setConfig(this.shelf1, tmpShelf2, tmpShelf3);
-                    break;
+        if(!found) {
+            for (int i = 0; i < 3; i++) {
+                if (tmpShelf3[i] == Resource.NONE) {
+                    tmpShelf3[i] = resource;
+                    if (this.setConfig(this.shelf1, tmpShelf2, tmpShelf3)) break;
+                    tmpShelf3[i] = Resource.NONE;
                 }
-                else tmpShelf3[i]=Resource.NONE;
             }
         }
         return true;
@@ -197,17 +199,13 @@ public class WarehouseDepot {
 
     public Resource[] getShelf2(){
         Resource[] result=new Resource[2];
-        for(int i=0; i<2; i++){
-            result[i]=this.shelf2[i];
-        }
+        System.arraycopy(this.shelf2, 0, result, 0, 2);
         return result;
     }
 
     public Resource[] getShelf3(){
         Resource[] result=new Resource[3];
-        for(int i=0; i<3; i++){
-            result[i]=this.shelf3[i];
-        }
+        System.arraycopy(this.shelf3, 0, result, 0, 3);
         return result;
     }
 
