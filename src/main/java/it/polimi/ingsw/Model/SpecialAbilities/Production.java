@@ -33,7 +33,7 @@ public class Production implements SpecialAbility {
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof Production)) return false;
         Production o = (Production) obj;
         return (this.input.equals(o.input));

@@ -37,7 +37,7 @@ public class LeaderCard {
     @Override
     public boolean equals( Object obj )
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof LeaderCard)) return false;
         LeaderCard o = (LeaderCard) obj;
         return(this.PV == o.PV &&

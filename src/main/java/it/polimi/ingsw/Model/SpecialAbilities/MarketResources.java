@@ -33,7 +33,7 @@ public class MarketResources implements SpecialAbility {
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof MarketResources)) return false;
         MarketResources o = (MarketResources) obj;
         return (this.resource.equals(o.resource));

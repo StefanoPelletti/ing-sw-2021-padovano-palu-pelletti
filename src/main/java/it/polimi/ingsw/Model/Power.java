@@ -24,7 +24,7 @@ public class Power {
     @Override
     public boolean equals( Object obj )
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof Power)) return false;
         Power o = (Power) obj;
         return(this.input.equals(o.input) && this.output.equals(o.output));

@@ -4,6 +4,7 @@ import it.polimi.ingsw.Model.Marbles.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 public class Market {
     private MarketMarble[][] grid;
@@ -58,9 +59,8 @@ public class Market {
 
     public ArrayList<MarketMarble> pushRow( int row ) //row must be between 0 and 2 (included) (or refactored)
     {
-        ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
-        for( int i = 0; i < 4; i++ )
-            result.add( grid[row][i] );
+        if(row<0||row>2) return null;
+        ArrayList<MarketMarble> result = getRow(row);
 
         MarketMarble tmp = grid[row][0];
         grid[row][0] = grid[row][1];
@@ -74,6 +74,7 @@ public class Market {
 
     public ArrayList<MarketMarble> getRow( int row )
     {
+        if(row<0||row>2) return null;
         ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
         for( int i = 0; i < 4; i++ )
             result.add( grid[row][i] );
@@ -82,9 +83,8 @@ public class Market {
 
     public ArrayList<MarketMarble> pushColumn( int column )
     {
-        ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
-        for( int i = 0; i < 3; i++ )
-            result.add( grid[i][column] );
+        if(column<0||column>3) return null;
+        ArrayList<MarketMarble> result= getColumn(column);
 
         MarketMarble tmp = grid[0][column];
         grid[0][column] = grid[1][column];
@@ -95,17 +95,27 @@ public class Market {
         return result;
     }
 
-    public MarketMarble getSlideMarble(){
-        return this.slideMarble;
-    }
-
     public ArrayList<MarketMarble> getColumn( int column )
     {
+        if(column<0||column>3) return null;
         ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
         for( int i = 0; i < 3; i++ )
             result.add( grid[i][column] );
         return result;
     }
+
+    public MarketMarble getSlideMarble(){
+        return this.slideMarble;
+    }
+
+    public MarketMarble[][] getGrid(){
+        MarketMarble[][] result= new MarketMarble[3][4];
+        for(int i=0; i<3; i++) {
+            System.arraycopy(grid[i], 0, result[i], 0, 4);
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return " -- Market: -- " +

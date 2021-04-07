@@ -18,7 +18,7 @@ public class ResourceRequirements implements Requirement {
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof ResourceRequirements)) return false;
         ResourceRequirements o = (ResourceRequirements) obj;
         return (o.getRequirements().equals(this.requirements));

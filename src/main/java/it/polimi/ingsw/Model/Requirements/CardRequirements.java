@@ -20,7 +20,7 @@ public class CardRequirements implements Requirement {
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof CardRequirements)) return false;
         CardRequirements o = (CardRequirements) obj;
         return (o.getRequirements().equals(this.requirements));

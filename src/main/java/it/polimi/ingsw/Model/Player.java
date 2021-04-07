@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model;
 
-import it.polimi.ingsw.Model.SpecialAbilities.*;
 
 import java.util.ArrayList;
 
@@ -21,24 +20,39 @@ public class Player {
         this.VP = 0;
         this.position = 1;
         this.playerNumber = playerNumber;
-        LeaderCard[] leaderCards = new LeaderCard[2];
-        strongbox = new Strongbox();
-        depot = new WarehouseDepot();
-        developmentSlot = new DevelopmentSlot();
+        this.leaderCards = new LeaderCard[2];
+        this.strongbox = new Strongbox();
+        this.depot = new WarehouseDepot();
+        this.developmentSlot = new DevelopmentSlot();
 
     }
 
     public String getNickname() { return nickname; }
     public int getVP() { return VP; }
-    public void setVP(int VP) { this.VP = VP; }
-    public void addVP(int VP) { this.VP = this.VP + VP; }
+
+    public boolean setVP(int VP) {
+        if(VP<0) return false;
+        this.VP = VP;
+        return true;
+    }
+
+    public boolean addVP(int VP) {
+        if(VP<0) return false;
+        this.VP = this.VP + VP;
+        return true;
+    }
     public int getPosition() { return position; }
-    public void setPosition(int position) { this.position = position; }
+    public boolean setPosition(int position) {
+        if(position<0) return false;
+        this.position = position;
+        return true;
+    }
     public int getPlayerNumber() { return playerNumber; }
     public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
 
     public Strongbox getStrongbox() { return this.strongbox; }
     public WarehouseDepot getDepot() { return this.depot; }
+
     public LeaderCard[] getLeaderCards() {
         LeaderCard[] result = new LeaderCard[2];
         result[0] = leaderCards[0];

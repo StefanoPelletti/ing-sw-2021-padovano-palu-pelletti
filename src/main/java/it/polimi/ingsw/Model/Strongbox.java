@@ -16,26 +16,25 @@ public class Strongbox {
         Integer tmp = resources.get(resource);
         if ( tmp == null ) {
             resources.put(resource, quantity);
-            return true;
         }
         else
         {
             resources.put(resource, tmp + quantity);
-            return false;
         }
+        return true;
     }
 
     public boolean remove(Resource resource, int quantity) {
         Integer tmp = resources.get(resource);
-        if ( tmp == null ) {
-            return true;
+        if ( tmp == null || quantity<0) {
+            return false;
         }
         else
         {
             if( (tmp - quantity) > 0) /*there will be resources after the remove */
                 {
                 resources.put(resource, tmp - quantity);
-                return false;
+                return true;
             }
             else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
             {

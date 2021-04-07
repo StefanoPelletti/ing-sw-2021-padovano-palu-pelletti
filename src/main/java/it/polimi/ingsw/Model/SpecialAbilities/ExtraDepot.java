@@ -52,7 +52,7 @@ public class ExtraDepot implements SpecialAbility {
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof ExtraDepot)) return false;
         ExtraDepot o = (ExtraDepot) obj;
         return (this.resource.equals(o.resource) && this.number==o.number);

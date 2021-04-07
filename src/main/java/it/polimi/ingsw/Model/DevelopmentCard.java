@@ -58,7 +58,7 @@ public class DevelopmentCard {
     @Override
     public boolean equals( Object obj )
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof DevelopmentCard)) return false;
         DevelopmentCard o = (DevelopmentCard) obj;
         return(this.level == o.level &&

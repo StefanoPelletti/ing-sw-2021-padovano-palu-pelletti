@@ -34,7 +34,7 @@ public class DiscountResource implements SpecialAbility {
     @Override
     public boolean equals(Object obj)
     {
-        if(obj == this) return false;
+        if(obj == this) return true;
         if(!(obj instanceof DiscountResource)) return false;
         DiscountResource o = (DiscountResource) obj;
         return (this.resource.equals(o.resource));
