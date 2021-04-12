@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Model.Game;
+import it.polimi.ingsw.Server.Model.Game;
 
 /**
  * Hello world!

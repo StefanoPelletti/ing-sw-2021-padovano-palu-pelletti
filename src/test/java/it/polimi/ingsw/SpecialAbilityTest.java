@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Model.Enumerators.Resource;
-import it.polimi.ingsw.Model.SpecialAbilities.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

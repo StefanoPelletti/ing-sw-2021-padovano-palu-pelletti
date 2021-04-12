@@ -3,8 +3,8 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-import it.polimi.ingsw.Model.Enumerators.Resource;
-import it.polimi.ingsw.Model.Marbles.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Marbles.*;
 
 import java.util.ArrayList;
 

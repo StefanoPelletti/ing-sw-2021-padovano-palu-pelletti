@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
-import it.polimi.ingsw.Model.Enumerators.Resource;
-import it.polimi.ingsw.Model.WarehouseDepot;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.WarehouseDepot;
 
 public class WarehouseDepotTest {
     WarehouseDepot w;

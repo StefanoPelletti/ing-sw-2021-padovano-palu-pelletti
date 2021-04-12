@@ -2,8 +2,8 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import it.polimi.ingsw.Model.Strongbox;
-import it.polimi.ingsw.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Strongbox;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 public class StrongboxTest {
     Strongbox s;

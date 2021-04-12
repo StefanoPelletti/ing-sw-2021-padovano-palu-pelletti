@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.Server.Model.*;
 
 import java.util.ArrayList;
 import java.util.List;

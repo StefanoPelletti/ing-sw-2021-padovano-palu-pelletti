@@ -2,8 +2,7 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import it.polimi.ingsw.Model.ActionTokenStack;
-import it.polimi.ingsw.Model.ActionTokens.*;
+import it.polimi.ingsw.Server.Model.ActionTokenStack;
 
 
 public class ActionTokenStackTest {

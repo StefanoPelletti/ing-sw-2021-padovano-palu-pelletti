@@ -1,12 +1,9 @@
 package it.polimi.ingsw;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import it.polimi.ingsw.Model.Enumerators.Resource;
-import it.polimi.ingsw.Model.SpecialAbilities.ExtraDepot;
-import it.polimi.ingsw.Model.SpecialAbilities.SpecialAbility;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
 import org.junit.jupiter.api.*;
-import it.polimi.ingsw.Model.*;
 
 public class ExtraDepotTest {
 

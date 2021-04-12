@@ -2,10 +2,8 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.Model.Requirements.CardRequirements;
-import it.polimi.ingsw.Model.Requirements.ResourceRequirements;
 import org.junit.jupiter.api.*;
-import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.Server.Model.*;
 
 public class PlayerTest {
     Player player;

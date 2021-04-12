@@ -2,13 +2,11 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.Model.Marbles.MarketMarble;
-import it.polimi.ingsw.Model.Marbles.RedMarble;
+import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import org.junit.jupiter.api.*;
-import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.Server.Model.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MarketTest {
     Market market=new Market();

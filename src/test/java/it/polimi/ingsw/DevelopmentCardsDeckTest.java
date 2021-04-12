@@ -3,10 +3,8 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-import it.polimi.ingsw.Model.DevelopmentCard;
-import it.polimi.ingsw.Model.DevelopmentCardsDeck;
-
-import java.util.Arrays;
+import it.polimi.ingsw.Server.Model.DevelopmentCard;
+import it.polimi.ingsw.Server.Model.DevelopmentCardsDeck;
 
 public class DevelopmentCardsDeckTest {
 
