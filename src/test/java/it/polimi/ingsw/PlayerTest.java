@@ -29,9 +29,9 @@ public class PlayerTest {
     //verifies that when the player is created his attributes are initialized correctly
     @Test
     public void onInitTest(){
-        assertNotNull(player.getDepot());
+        assertNotNull(player.getWarehouseDepot());
         assertNotNull(player.getDevelopmentSlot());
-        assertNotNull(player.getDepot());
+        assertNotNull(player.getWarehouseDepot());
         assertNotNull(player.getStrongbox());
         assertEquals(player.getVP(), 0);
         assertEquals(player.getPosition(), 1);

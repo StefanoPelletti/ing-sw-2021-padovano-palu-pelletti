@@ -24,4 +24,7 @@ public class ResourceRequirements implements Requirement, Serializable {
         ResourceRequirements o = (ResourceRequirements) obj;
         return (o.getRequirements().equals(this.requirements));
     }
+
+    public boolean isCardRequirement() { return false; }
+    public boolean isResourceRequirement() { return true; }
 }

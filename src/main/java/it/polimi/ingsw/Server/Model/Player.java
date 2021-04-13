@@ -10,7 +10,7 @@ public class Player {
     private int playerNumber;
 
     private final Strongbox strongbox;
-    private final WarehouseDepot depot;
+    private final WarehouseDepot warehouseDepot;
     private LeaderCard[] leaderCards;
     private final DevelopmentSlot developmentSlot;
 
@@ -22,7 +22,7 @@ public class Player {
         this.playerNumber = playerNumber;
         this.leaderCards = new LeaderCard[2];
         this.strongbox = new Strongbox();
-        this.depot = new WarehouseDepot();
+        this.warehouseDepot = new WarehouseDepot();
         this.developmentSlot = new DevelopmentSlot();
 
     }
@@ -51,7 +51,7 @@ public class Player {
     public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
 
     public Strongbox getStrongbox() { return this.strongbox; }
-    public WarehouseDepot getDepot() { return this.depot; }
+    public WarehouseDepot getWarehouseDepot() { return this.warehouseDepot; }
 
     public LeaderCard[] getLeaderCards() {
         LeaderCard[] result = new LeaderCard[2];

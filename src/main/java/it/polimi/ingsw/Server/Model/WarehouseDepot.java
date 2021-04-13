@@ -197,15 +197,170 @@ public class WarehouseDepot {
         return this.shelf1;
     }
 
+    public int getShelf1ResourceNumber() {
+        if (shelf1 != Resource.NONE) return 1;
+        return 0;
+    }
+
     public Resource[] getShelf2(){
         return this.shelf2.clone();
+    }
+
+    public int getShelf2ResourceNumber() {
+        int result=0;
+        if (shelf2[0] != Resource.NONE) result++;
+        if (shelf2[1] != Resource.NONE) result++;
+        return result;
     }
 
     public Resource[] getShelf3(){
         return this.shelf3.clone();
     }
 
+    public int getShelf3ResourceNumber() {
+        int result=0;
+        if (shelf3[0] != Resource.NONE) result++;
+        if (shelf3[1] != Resource.NONE) result++;
+        if (shelf3[2] != Resource.NONE) result++;
+        return result;
+    }
+
     public String toString(){
         return "Shelf 1:"+this.shelf1.toString()+"\nShelf 2:"+this.shelf2[0].toString()+","+this.shelf2[1].toString()+"\nShelf 3:"+this.shelf3[0].toString()+","+this.shelf3[1].toString()+","+this.shelf3[2].toString();
+    }
+
+    public boolean swapRow(int r1, int r2)
+    {
+        if (r1 <= 0 || r1>=4) return false;
+        if (r2 <= 0 || r2>=4) return false;
+        if (r1 == r2) return true;
+
+        if( (r1==1&&r2==2) || (r1==2&&r2==1) )
+        {
+            if(shelf2[0] != Resource.NONE && shelf2[1] != Resource.NONE) return false;
+            Resource tmp = shelf1;
+            if(shelf2[0] != Resource.NONE) {
+                shelf1 = shelf2[0];
+                shelf2[0]=tmp;
+            }
+            else if(shelf2[1] != Resource.NONE) {
+                shelf1 = shelf2[1];
+                shelf2[1]=tmp;
+            }
+            else if(shelf2[0] == Resource.NONE && shelf2[1] == Resource.NONE )
+            {
+                shelf1 = shelf2[0];
+                shelf2[0] = tmp;
+            }
+        }
+        else if( ( r1==1&&r2==3) || (r1==3&&r2==1) )
+        {
+            if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE ) return false;
+            if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE) return false;
+            if(shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
+            if(shelf3[0] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
+
+            Resource tmp = shelf1;
+            if(shelf3[0] != Resource.NONE)
+            {
+                shelf1 = shelf3[0];
+                shelf3[0] = tmp;
+            }
+            else if(shelf3[1] != Resource.NONE)
+            {
+                shelf1 = shelf3[1];
+                shelf3[1] = tmp;
+            }
+            else if(shelf3[2] != Resource.NONE)
+            {
+                shelf1 = shelf3[2];
+                shelf3[2] = tmp;
+            }
+            else if(shelf3[0] == Resource.NONE && shelf3[1] == Resource.NONE && shelf3[2] == Resource.NONE)
+            {
+                shelf1 = shelf3[0];
+                shelf3[0] = tmp;
+            }
+        }
+        else if( ( r1==2&&r2==3) || (r1==3&&r2==2) )
+        {
+            if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
+            Resource tmp1 = shelf2[0];
+            Resource tmp2 = shelf2[1];
+            if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE)
+            {
+                shelf2[0]=shelf3[0];
+                shelf2[1]=shelf3[1];
+                shelf3[0]=tmp1;
+                shelf3[1]=tmp2;
+            }
+            else if( shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE)
+            {
+                shelf2[0]=shelf3[1];
+                shelf2[1]=shelf3[2];
+                shelf3[1]=tmp1;
+                shelf3[2]=tmp2;
+            }
+            else if( shelf3[0] != Resource.NONE && shelf3[2] != Resource.NONE)
+            {
+                shelf2[0]=shelf3[0];
+                shelf2[1]=shelf3[2];
+                shelf3[0]=tmp1;
+                shelf3[2]=shelf3[1];
+                shelf3[1]=tmp2;
+            }
+            else if ( shelf3[0] != Resource.NONE)
+            {
+                shelf2[0]=shelf3[0];
+                shelf2[1]=shelf3[1];
+                shelf3[0]=tmp1;
+                shelf3[1]=tmp2;
+            }
+            else if ( shelf3[2] != Resource.NONE)
+            {
+                shelf2[0]=shelf3[1];
+                shelf2[1]=shelf3[2];
+                shelf3[1]=tmp1;
+                shelf3[2]=tmp2;
+            }
+            else if ( shelf3[1] != Resource.NONE)
+            {
+                shelf2[0]=shelf3[1];
+                shelf2[1]=shelf3[0];
+                shelf3[0]=tmp1;
+                shelf3[1]=tmp2;
+            }
+            else if (shelf3[0] == Resource.NONE && shelf3[1] == Resource.NONE && shelf3[2] == Resource.NONE )
+            {
+                shelf2[0]=shelf3[0];
+                shelf2[1]=shelf3[1];
+                shelf3[0]=tmp1;
+                shelf3[1]=tmp2;
+            }
+        }
+        return true;
+    }
+
+
+    public boolean swap(){
+        if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
+        Resource[] tmp2= new Resource[2];
+        Resource[] tmp3= new Resource[3];
+        Resource[] g2=getShelf2();
+        Resource[] g3=getShelf3();
+        int num=0;
+        for(int i=0; i<3 && num<2; i++){
+            if(i<2) tmp3[i]=g2[i];
+            if(g3[i]!=Resource.NONE){
+                tmp2[num]=g3[i];
+                num++;
+            }
+        }
+        while(num<2){
+            tmp2[num]=Resource.NONE;
+            num++;
+        }
+        tmp3[2]=Resource.NONE;
+        return true;
     }
 }

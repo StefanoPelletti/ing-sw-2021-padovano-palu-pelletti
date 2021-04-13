@@ -3,5 +3,5 @@ package it.polimi.ingsw.Server.Model.Enumerators;
 import java.io.Serializable;
 
 public enum Resource implements Serializable {
-    SHIELD, COIN, SERVANT, STONE, NONE, EXTRA
+    SHIELD, COIN, SERVANT, STONE, NONE, EXTRA, FAITH
 }
