@@ -278,12 +278,14 @@ public class WarehouseDepot {
             else if(shelf3[1] != Resource.NONE)
             {
                 shelf1 = shelf3[1];
-                shelf3[1] = tmp;
+                shelf3[0] = tmp;
+                shelf3[1] = Resource.NONE;
             }
             else if(shelf3[2] != Resource.NONE)
             {
                 shelf1 = shelf3[2];
-                shelf3[2] = tmp;
+                shelf3[0] = tmp;
+                shelf3[2] = Resource.NONE;
             }
             else if(shelf3[0] == Resource.NONE && shelf3[1] == Resource.NONE && shelf3[2] == Resource.NONE)
             {
@@ -294,8 +296,20 @@ public class WarehouseDepot {
         else if( ( r1==2&&r2==3) || (r1==3&&r2==2) )
         {
             if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
-            Resource tmp1 = shelf2[0];
-            Resource tmp2 = shelf2[1];
+            Resource tmp1;
+            Resource tmp2;
+
+            if(shelf2[0]==Resource.NONE)
+            {
+                tmp1 = shelf2[1];
+                tmp2 = shelf2[0];
+            }
+            else
+            {
+                tmp1 = shelf2[0];
+                tmp2 = shelf2[1];
+            }
+
             if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE)
             {
                 shelf2[0]=shelf3[0];
@@ -307,44 +321,49 @@ public class WarehouseDepot {
             {
                 shelf2[0]=shelf3[1];
                 shelf2[1]=shelf3[2];
-                shelf3[1]=tmp1;
-                shelf3[2]=tmp2;
+                shelf3[0]=tmp1;
+                shelf3[1]=tmp2;
+                shelf3[2]=Resource.NONE;
             }
             else if( shelf3[0] != Resource.NONE && shelf3[2] != Resource.NONE)
             {
                 shelf2[0]=shelf3[0];
                 shelf2[1]=shelf3[2];
                 shelf3[0]=tmp1;
-                shelf3[2]=shelf3[1];
                 shelf3[1]=tmp2;
+                shelf3[2]=Resource.NONE;
             }
             else if ( shelf3[0] != Resource.NONE)
             {
                 shelf2[0]=shelf3[0];
-                shelf2[1]=shelf3[1];
+                shelf2[1]=Resource.NONE;
                 shelf3[0]=tmp1;
                 shelf3[1]=tmp2;
-            }
-            else if ( shelf3[2] != Resource.NONE)
-            {
-                shelf2[0]=shelf3[1];
-                shelf2[1]=shelf3[2];
-                shelf3[1]=tmp1;
-                shelf3[2]=tmp2;
+                shelf3[2]=Resource.NONE;
             }
             else if ( shelf3[1] != Resource.NONE)
             {
                 shelf2[0]=shelf3[1];
-                shelf2[1]=shelf3[0];
+                shelf2[1]=Resource.NONE;
                 shelf3[0]=tmp1;
                 shelf3[1]=tmp2;
+                shelf3[2]=Resource.NONE;
+            }
+            else if ( shelf3[2] != Resource.NONE)
+            {
+                shelf2[0] = shelf3[2];
+                shelf2[1]= Resource.NONE;
+                shelf3[0]=tmp1;
+                shelf3[1]=tmp2;
+                shelf3[2]=Resource.NONE;
             }
             else if (shelf3[0] == Resource.NONE && shelf3[1] == Resource.NONE && shelf3[2] == Resource.NONE )
             {
-                shelf2[0]=shelf3[0];
-                shelf2[1]=shelf3[1];
-                shelf3[0]=tmp1;
-                shelf3[1]=tmp2;
+                shelf2[0] = Resource.NONE;
+                shelf2[1] = Resource.NONE;
+                shelf3[0] = tmp1;
+                shelf3[1] = tmp2;
+                shelf3[2]=Resource.NONE;
             }
         }
         return true;
@@ -372,4 +391,17 @@ public class WarehouseDepot {
         tmp3[2]=Resource.NONE;
         return true;
     }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if(obj == this) return true;
+        if(!(obj instanceof WarehouseDepot)) return false;
+        WarehouseDepot o = (WarehouseDepot) obj;
+        return(this.shelf1 == o.shelf1
+                && Arrays.equals(this.shelf2, o.shelf2)
+                && Arrays.equals(this.shelf3, o.shelf3));
+    }
+
+
 }

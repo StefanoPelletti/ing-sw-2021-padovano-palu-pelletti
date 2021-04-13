@@ -446,9 +446,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf1() == Resource.SHIELD );
         assert ( warehouseDepot.getShelf2()[0] == Resource.NONE );
         assert ( warehouseDepot.getShelf2()[1] == Resource.NONE );
-        assert ( warehouseDepot.getShelf3()[0] == Resource.NONE );
+        assert ( warehouseDepot.getShelf3()[0] == Resource.COIN );
         assert ( warehouseDepot.getShelf3()[1] == Resource.NONE );
-        assert ( warehouseDepot.getShelf3()[2] == Resource.COIN );
+        assert ( warehouseDepot.getShelf3()[2] == Resource.NONE );
         assert ( warehouseDepot.getShelf1ResourceNumber() == 1);
         assert ( warehouseDepot.getShelf2ResourceNumber() == 0);
         assert ( warehouseDepot.getShelf3ResourceNumber() == 1);
@@ -486,9 +486,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.swapRow(2,3));
         assert ( warehouseDepot.getShelf2()[0] == Resource.SHIELD );
         assert ( warehouseDepot.getShelf2()[1] == Resource.SHIELD );
-        assert ( warehouseDepot.getShelf3()[0] == Resource.NONE );
+        assert ( warehouseDepot.getShelf3()[0] == Resource.COIN );
         assert ( warehouseDepot.getShelf3()[1] == Resource.COIN );
-        assert ( warehouseDepot.getShelf3()[2] == Resource.COIN );
+        assert ( warehouseDepot.getShelf3()[2] == Resource.NONE );
         assert ( warehouseDepot.getShelf1ResourceNumber() == 0);
         assert ( warehouseDepot.getShelf2ResourceNumber() == 2);
         assert ( warehouseDepot.getShelf3ResourceNumber() == 2);
@@ -557,6 +557,55 @@ public class WarehouseDepotTest {
 
     }
 
+    @Test
+    public void swapPreviewUnchanged()
+    {
+        warehouseDepot.setConfig(Resource.STONE, new Resource[]{Resource.COIN, Resource.NONE}, new Resource[]{Resource.SHIELD, Resource.NONE, Resource.SHIELD});
+        WarehouseDepot result = warehouseDepot.getSwapPreview(1,3);
+        assert (warehouseDepot.equals(result));
+    }
+
+    @Test
+    public void swapPreviewTest()
+    {
+        warehouseDepot.setConfig(Resource.STONE, new Resource[]{Resource.NONE, Resource.SERVANT}, new Resource[]{Resource.NONE, Resource.NONE, Resource.SHIELD});
+        WarehouseDepot startingDepot = new WarehouseDepot();
+        startingDepot.setConfig(warehouseDepot.getShelf1(),
+                new Resource[] { warehouseDepot.getShelf2()[0], warehouseDepot.getShelf2()[1] },
+                new Resource[] { warehouseDepot.getShelf3()[0], warehouseDepot.getShelf3()[1], warehouseDepot.getShelf3()[2]});
+
+        WarehouseDepot result = warehouseDepot.getSwapPreview(2,3);
+        assert ( result.getShelf1() == Resource.STONE);
+
+        assert ( result.getShelf2()[0] == Resource.SHIELD);
+        assert ( result.getShelf2()[1] == Resource.NONE);
+
+        assert ( result.getShelf3()[0] == Resource.SERVANT);
+        assert ( result.getShelf3()[1] == Resource.NONE);
+        assert ( result.getShelf3()[2] == Resource.NONE);
+
+        WarehouseDepot result2 = result.getSwapPreview(1,3);
+        assert ( result2.getShelf1() == Resource.SERVANT);
+
+        assert ( result2.getShelf2()[0] == Resource.SHIELD);
+        assert ( result2.getShelf2()[1] == Resource.NONE);
+
+        assert ( result2.getShelf3()[0] == Resource.STONE);
+        assert ( result2.getShelf3()[1] == Resource.NONE);
+        assert ( result2.getShelf3()[2] == Resource.NONE);
+
+        result  = result2.getSwapPreview(3,2);
+        assert ( result.getShelf1() == Resource.SERVANT);
+
+        assert ( result.getShelf2()[0] == Resource.STONE);
+        assert ( result.getShelf2()[1] == Resource.NONE);
+
+        assert ( result.getShelf3()[0] == Resource.SHIELD);
+        assert ( result.getShelf3()[1] == Resource.NONE);
+        assert ( result.getShelf3()[2] == Resource.NONE);
+
+        assert ( warehouseDepot.equals(startingDepot));
+    }
 
 
 }
