@@ -65,4 +65,19 @@ public class ExtraDepotTest {
         assert(!ed.removeResource(1));
         assert(ed.getNumber()==0);
     }
+
+    @Test
+    public void correctSetting()
+    {
+        ExtraDepot ed = new ExtraDepot(Resource.COIN);
+        assert (ed.setResource(2));
+        assert (ed.getNumber()==2);
+        assert (ed.setResource(1));
+        assert (ed.getNumber()==1);
+        assert (ed.setResource(0));
+        assert (ed.getNumber()==0);
+        assert(!ed.setResource(3));
+        assert(!ed.setResource(-1));
+
+    }
 }

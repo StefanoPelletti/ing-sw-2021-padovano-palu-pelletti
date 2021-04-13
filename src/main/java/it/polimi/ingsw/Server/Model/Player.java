@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Model;
 
 import java.util.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 
 public class Player {
     private final String nickname;
@@ -75,15 +76,20 @@ public class Player {
                 resources.put(resource, resources.get(resource) + this.strongbox.getQuantity(resource));
             }
         }
+        for(LeaderCard l: this.getCardsWithExtraDepotAbility()){
+            ExtraDepot depotAbility = (ExtraDepot) l.getSpecialAbility();
+            Resource extraResource = depotAbility.getResourceType();
+            resources.put(extraResource, resources.get(extraResource) + depotAbility.getNumber());
+        }
         return resources;
     }
 
     public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isDiscountResource())
+        if (leaderCards[0].getSpecialAbility().isDiscountResource() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isDiscountResource())
+        if (leaderCards[1].getSpecialAbility().isDiscountResource() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
@@ -91,27 +97,27 @@ public class Player {
     public ArrayList<LeaderCard> getCardsWithExtraDepotAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isExtraDepot())
+        if (leaderCards[0].getSpecialAbility().isExtraDepot() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isExtraDepot())
+        if (leaderCards[1].getSpecialAbility().isExtraDepot() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
     public ArrayList<LeaderCard> getCardsWithProductionAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isProduction())
+        if (leaderCards[0].getSpecialAbility().isProduction() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isProduction())
+        if (leaderCards[1].getSpecialAbility().isProduction() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
     public ArrayList<LeaderCard> getCardsWithMarketResourceAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isMarketResource())
+        if (leaderCards[0].getSpecialAbility().isMarketResource() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isMarketResource())
+        if (leaderCards[1].getSpecialAbility().isMarketResource() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }

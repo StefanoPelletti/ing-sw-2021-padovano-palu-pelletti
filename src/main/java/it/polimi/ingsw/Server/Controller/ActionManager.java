@@ -8,7 +8,6 @@ import it.polimi.ingsw.Server.Model.Requirements.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
 
-import java.sql.Array;
 import java.util.*;
 
 
@@ -234,7 +233,49 @@ public class ActionManager {
         return true;
     }
 
-    public boolean changeDepotConfig(Resource slot1, Resource[] slot2, Resource[] slot3, int i, int j) {
+    // if player has two LeaderCards with ExtraDepot SpecialAbility and only one is activated, only firstExtraDepot is considered
+    // if player has two LeaderCards with ExtraDepot SpecialAbility and both are activated, firstExtraDepot is referred to leaderCard[0] and secondExtraDepot is referred to leaderCard[1]
+    public boolean changeDepotConfig(Player player, Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot ) {
+        Map<Resource, Integer> initialResources = player.getWarehouseDepot().getResources();
+        Map<Resource, Integer> newResources;
+
+        ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
+
+        WarehouseDepot demoDepot = new WarehouseDepot();
+        ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
+        if(demoDepot.setConfig(slot1, slot2, slot3) == false) return false;
+        if(demoExtraDepot.setResource(firstExtraDepot) == false) return false;
+        if(demoExtraDepot.setResource(secondExtraDepot) == false) return false;
+
+        //let's check if the new configuration has the same resources as the one before!
+        newResources = demoDepot.getResources();
+
+        if(playerLeaderCards.size()>0 && firstExtraDepot>0){
+            ExtraDepot ability = (ExtraDepot) playerLeaderCards.get(0).getSpecialAbility();
+            Resource resource = ability.getResourceType();
+            newResources.put(resource, newResources.get(resource) + firstExtraDepot);
+        }
+
+        if(playerLeaderCards.size()==2 && secondExtraDepot>0){
+            ExtraDepot ability = (ExtraDepot) playerLeaderCards.get(1).getSpecialAbility();
+            Resource resource = ability.getResourceType();
+            newResources.put(resource, newResources.get(resource) + secondExtraDepot);
+        }
+
+        for(Resource resToControl : Resource.values()){
+            if(initialResources.get(resToControl) != newResources.get(resToControl)) return false;
+        }
+
+        //after all those controls, player really deserves a new depot!
+        player.getWarehouseDepot().setConfig(slot1, slot2, slot3);
+        if(playerLeaderCards.size()>0){
+            ExtraDepot ability1 = (ExtraDepot) playerLeaderCards.get(0).getSpecialAbility();
+            ability1.setResource(firstExtraDepot);
+        }
+        if(playerLeaderCards.size()==2){
+            ExtraDepot ability2 = (ExtraDepot) playerLeaderCards.get(1).getSpecialAbility();
+            ability2.setResource(secondExtraDepot);
+        }
         return true;
     }
 

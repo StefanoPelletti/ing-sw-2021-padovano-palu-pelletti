@@ -37,6 +37,7 @@ public class StrongboxTest {
     public void addInvalidResource(){
         assertFalse(s.addResource(Resource.EXTRA, 3));
         assertFalse(s.addResource(Resource.NONE, 3));
+        assertFalse(s.addResource(Resource.FAITH, 3));
     }
 
     //tests if method add(resource, quantity) returns true when resource is valid
