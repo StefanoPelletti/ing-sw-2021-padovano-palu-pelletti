@@ -63,4 +63,21 @@ public class MarblesTest {
         RedMarbleException exception= new RedMarbleException("a");
         assertThrows(exception.getClass(),()->redMarble.addResource(resources));
     }
+
+    //test with multiple marbles
+    @Test
+    public void multipleMarble(){
+        YellowMarble yellowMarble= new YellowMarble();
+        WhiteMarble whiteMarble= new WhiteMarble();
+        GreyMarble greyMarble= new GreyMarble();
+        BlueMarble blueMarble= new BlueMarble();
+        PurpleMarble purpleMarble= new PurpleMarble();
+        yellowMarble.addResource(resources);
+        whiteMarble.addResource(resources);
+        greyMarble.addResource(resources);
+        blueMarble.addResource(resources);
+        purpleMarble.addResource(resources);
+        Resource[] expectedResources={Resource.COIN, Resource.EXTRA, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
+        assertArrayEquals(resources.toArray(), expectedResources);
+    }
 }

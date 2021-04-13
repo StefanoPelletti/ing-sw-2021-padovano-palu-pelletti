@@ -23,9 +23,9 @@ public class WarehouseDepot {
     public static boolean validateNewConfig(Resource shelf1, Resource[] shelf2, Resource[] shelf3){
         return shelf1 != null && shelf2 != null && shelf3 != null
                 && (shelf2.length == 2 && shelf3.length == 3)
-                && shelf1 != Resource.FAITH && shelf1 !=Resource.EXTRA
-                && (Arrays.stream(shelf2).noneMatch(r -> r == null || r == Resource.FAITH || r==Resource.EXTRA || (shelf1 != Resource.NONE && r == shelf1)))
-                && (Arrays.stream(shelf3).noneMatch(r -> r == null || r == Resource.FAITH || r==Resource.EXTRA || (shelf1 != Resource.NONE && r == shelf1)))
+                && shelf1 !=Resource.EXTRA
+                && (Arrays.stream(shelf2).noneMatch(r -> r == null || r==Resource.EXTRA || (shelf1 != Resource.NONE && r == shelf1)))
+                && (Arrays.stream(shelf3).noneMatch(r -> r == null || r==Resource.EXTRA || (shelf1 != Resource.NONE && r == shelf1)))
                 && (Arrays.stream(shelf2).filter(r -> r != Resource.NONE).noneMatch(d -> (Arrays.stream(shelf3).anyMatch(t -> t == d))))
                 && (Arrays.stream(shelf2).filter(r -> r != Resource.NONE).distinct().count() <= 1)
                 && (Arrays.stream(shelf3).filter(r -> r != Resource.NONE).distinct().count() <= 1);
@@ -78,7 +78,7 @@ public class WarehouseDepot {
         Resource[] tmpShelf2=this.getShelf2(), tmpShelf3=this.getShelf3();
 
         for(Resource r:resToDiscard){
-            if((r==Resource.NONE)||(r==Resource.FAITH)){
+            if((r==Resource.NONE)||(r==null)){
                 result=false;
                 break;
             }
@@ -198,15 +198,11 @@ public class WarehouseDepot {
     }
 
     public Resource[] getShelf2(){
-        Resource[] result=new Resource[2];
-        System.arraycopy(this.shelf2, 0, result, 0, 2);
-        return result;
+        return this.shelf2.clone();
     }
 
     public Resource[] getShelf3(){
-        Resource[] result=new Resource[3];
-        System.arraycopy(this.shelf3, 0, result, 0, 3);
-        return result;
+        return this.shelf3.clone();
     }
 
     public String toString(){

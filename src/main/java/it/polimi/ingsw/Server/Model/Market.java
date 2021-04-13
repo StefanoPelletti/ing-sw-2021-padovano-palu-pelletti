@@ -110,7 +110,7 @@ public class Market {
     public MarketMarble[][] getGrid(){
         MarketMarble[][] result= new MarketMarble[3][4];
         for(int i=0; i<3; i++) {
-            System.arraycopy(grid[i], 0, result[i], 0, 4);
+            result[i]=grid[i].clone();
         }
         return result;
     }

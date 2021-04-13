@@ -36,7 +36,6 @@ public class StrongboxTest {
     @Test
     public void addInvalidResource(){
         assertFalse(s.addResource(Resource.EXTRA, 3));
-        assertFalse(s.addResource(Resource.FAITH, 3));
         assertFalse(s.addResource(Resource.NONE, 3));
     }
 
@@ -82,7 +81,6 @@ public class StrongboxTest {
     @Test
     public void removeInvalidResource(){
         assertFalse(s.remove(Resource.EXTRA,1));
-        assertFalse(s.remove(Resource.FAITH, 1));
         assertFalse(s.remove(Resource.NONE, 1));
     }
 
@@ -110,7 +108,6 @@ public class StrongboxTest {
         s.addResource(Resource.STONE, 23);
         s.addResource(Resource.SERVANT, 1);
         assertNull(s.getQuantity(Resource.NONE));
-        assertNull(s.getQuantity(Resource.FAITH));
         assertNull(s.getQuantity(Resource.EXTRA));
     }
 
