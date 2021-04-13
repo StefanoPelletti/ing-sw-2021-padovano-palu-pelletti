@@ -19,6 +19,8 @@ public class ActionManager {
         ArrayList<MarketMarble> temp;
         WarehouseDepot depot = p.getWarehouseDepot();
 
+        Scanner myInput = new Scanner(System.in);
+
         if(column)
             temp = game.getMarket().getColumn(number);
         else
@@ -32,24 +34,25 @@ public class ActionManager {
                 faithTrackManager.advance(p);
             }
         }
-    while(R.size()!=0) {
-        int size = R.size();
-        for (int i = 0; i <= size; i++) {
+
+        int i = 0;
+        while(R.size()>0) {
             Resource r = R.get(i);
+
             if (r == Resource.EXTRA) {
                 ArrayList<LeaderCard> a = p.getCardsWithMarketResourceAbility();
                 if (a.size() == 0) {
-                    R.remove(i);
+                    R.remove(i); //Player cannot use the White Marble
                 } else if (a.size() == 1) {
                     R.set(i, ((MarketResources) a.get(0).getSpecialAbility()).getConvertedResource());
                 } else if (a.size() == 2) {
                     Resource r1 = ((MarketResources) a.get(0).getSpecialAbility()).getConvertedResource();
                     Resource r2 = ((MarketResources) a.get(1).getSpecialAbility()).getConvertedResource();
                     Resource chosenResource;
-//MYSTERY FROM THIS POINT ONWARD
+//MYSTERY FROM THIS POINT ONWARD -------------------------------------------------------------------------------------------------------------------
                     boolean done = false;
                     int x = 0;
-                    Scanner myInput = new Scanner(System.in);
+
 
                     while (!done) {
                         System.out.println("hai una risorsa extra! che vuoi?");
@@ -60,19 +63,22 @@ public class ActionManager {
 
                     }
                     //askForResource ???
-                    myInput.close();
+
                     if (x == 1) chosenResource = r1;
                     else chosenResource = r2;
-//END OF THE MYSTERY!
+//END OF THE MYSTERY! -------------------------------------------------------------------------------------------------------------------
                     R.set(i, chosenResource);
                 }
-                i--;
-            } else if (r == Resource.COIN || r == Resource.STONE || r == Resource.SHIELD || r == Resource.SERVANT) {
-                boolean[] choices = new boolean[6];
-                choices[0] = choices[1] = choices[2] = choices[3] = choices[4] = choices[5] = false;
+            }
+            r = R.get(i);
+
+            if (r == Resource.COIN || r == Resource.STONE || r == Resource.SHIELD || r == Resource.SERVANT)
+            {
+                boolean[] choices = new boolean[7];
+                choices[0] = choices[1] = choices[2] = choices[3] = choices[4] = choices[5] = choices[6] = false;
 
                 //choice 0: put in depot
-                if (p.getWarehouseDepot().isAddable(r)) choices[0] = true;
+                if (depot.isAddable(r)) choices[0] = true;
 
                 //choice 1: put in extra depot
                 ArrayList<LeaderCard> list = p.getCardsWithExtraDepotAbility();
@@ -80,24 +86,24 @@ public class ActionManager {
                 if (list.size() == 0) {
                     choices[1] = false;
                 } else if (list.size() == 1) {
-                    if (((ExtraDepot) list.get(0).getSpecialAbility()).getResourceType().equals(r)) {
-                        e = ((ExtraDepot) list.get(0).getSpecialAbility());
-                        if (e.getNumber() < 2)
-                            choices[1] = true;
-                    }
+                    e = ((ExtraDepot) list.get(0).getSpecialAbility());
+                    if (e.getResourceType()==r && e.getNumber() < 2)
+                        choices[1] = true;
                 } else if (list.size() == 2) {
-                    if (((ExtraDepot) list.get(0).getSpecialAbility()).getResourceType().equals(r)) {
-                        e = ((ExtraDepot) list.get(0).getSpecialAbility());
-                        if (e.getNumber() < 2)
-                             choices[1] = true;
-                    } else if (((ExtraDepot) list.get(1).getSpecialAbility()).getResourceType().equals(r)) {
+                    e = ((ExtraDepot) list.get(0).getSpecialAbility());
+                    if (e.getResourceType() != r) {
                         e = ((ExtraDepot) list.get(1).getSpecialAbility());
+                        if (e.getResourceType() != r) {
+                            e = null;
+                        }
+                    }
+                    if (e != null) {
                         if (e.getNumber() < 2)
                             choices[1] = true;
                     }
                 }
 
-                //choice 2: discard resource
+                //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
                 if (!choices[0] && !choices[1]) choices[2] = true;
 
                 //choice 3-4-5: swap rows
@@ -105,11 +111,16 @@ public class ActionManager {
                 if (depot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
                 if (depot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
 
-//MYSTERY FROM THIS POINT ONWARD
+                //choice 6: skip this resource
+                if ( R.size() > 1 ) {
+                    choices[6] = true;
+                }
+
+
+//MYSTERY FROM THIS POINT ONWARD -------------------------------------------------------------------------------------------------------------------
 
                 boolean done = false;
                 int x = 0;
-                Scanner myInput = new Scanner(System.in);
 
                 while (!done) {
                     if(choices[0]) System.out.println("1: METTI NEL DEPOSITO");
@@ -118,44 +129,44 @@ public class ActionManager {
                     if(choices[3]) System.out.println("4: SWAP RIGA 1-2 DEPOT");
                     if(choices[4]) System.out.println("5: SWAP RIGA 1-3 DEPOT");
                     if(choices[5]) System.out.println("6: SWAP RIGA 2-3 DEPOT");
+                    if(choices[6]) System.out.println("7: SKIPPA THIS RISOURSA");
                     x = myInput.nextInt();
-                    if ((x==1&&choices[0]) || (x==2&&choices[1]) || (x==3&&choices[2]) || (x==4&&choices[3]) || (x==5&&choices[4]) || (x==6&&choices[5])) done = true;
+                    if ((x==1&&choices[0]) || (x==2&&choices[1]) || (x==3&&choices[2]) || (x==4&&choices[3]) || (x==5&&choices[4]) || (x==6&&choices[5]) || (x==7)&&choices[6]) done = true;
 
                 }
                 //askForCHOICE?
-                myInput.close();
+
                 switch (x)
                 {
                     case 1:
                         depot.add(r);
+                        R.remove(i);
                         break;
                     case 2:
                         e.addResource(1);
+                        R.remove(i);
                         break;
                     case 3:
                         faithTrackManager.advanceAllExcept(p);
+                        R.remove(i);
                         break;
                     case 4:
                         depot.swapRow(1,2);
-                        i--;
                         break;
                     case 5:
                         depot.swapRow(1,3);
-                        i--;
                         break;
                     case 6:
                         depot.swapRow(2,3);
-                        i--;
+                        break;
+                    case 7:
+                        i = (i+1)%R.size();
                         break;
                 }
-//END OF THE MYSTERY!
+//END OF THE MYSTERY! -------------------------------------------------------------------------------------------------------------------
 
             }
-
         }
-    }
-
-
         return true;
     }
 

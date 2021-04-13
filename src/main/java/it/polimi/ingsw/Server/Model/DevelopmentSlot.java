@@ -51,12 +51,13 @@ public class DevelopmentSlot {
     }
 
     public boolean validateNewCard(DevelopmentCard newCard, int selectedDeck) {
-        int newCardLevel = newCard.getLevel();
-        int cardLevel;
-
         if(newCard == null) {
             return false;
         }
+        int newCardLevel = newCard.getLevel();
+        int cardLevel;
+
+
         if ( onTop[selectedDeck] == null )
             cardLevel = 0;
         else

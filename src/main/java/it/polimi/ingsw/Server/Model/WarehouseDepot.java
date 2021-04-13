@@ -225,8 +225,17 @@ public class WarehouseDepot {
         return result;
     }
 
+    @Override
     public String toString(){
         return "Shelf 1:"+this.shelf1.toString()+"\nShelf 2:"+this.shelf2[0].toString()+","+this.shelf2[1].toString()+"\nShelf 3:"+this.shelf3[0].toString()+","+this.shelf3[1].toString()+","+this.shelf3[2].toString();
+    }
+
+    public WarehouseDepot getSwapPreview(int r1, int r2)
+    {
+        WarehouseDepot result = new WarehouseDepot();
+        result.setConfig(this.shelf1, new Resource[] { this.shelf2[0], this.shelf2[1] }, new Resource[] { this.shelf3[0], this.shelf3[1], this.shelf3[2]});
+        result.swapRow(r1,r2);
+        return result;
     }
 
     public boolean swapRow(int r1, int r2)
@@ -341,7 +350,7 @@ public class WarehouseDepot {
         return true;
     }
 
-
+    @Deprecated
     public boolean swap(){
         if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
         Resource[] tmp2= new Resource[2];
