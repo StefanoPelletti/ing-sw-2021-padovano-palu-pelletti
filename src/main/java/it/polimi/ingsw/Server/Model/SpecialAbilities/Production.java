@@ -2,7 +2,9 @@ package it.polimi.ingsw.Server.Model.SpecialAbilities;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
-public class Production implements SpecialAbility {
+import java.io.Serializable;
+
+public class Production implements SpecialAbility, Serializable {
     private Resource input;
 
     public Production(Resource input) {

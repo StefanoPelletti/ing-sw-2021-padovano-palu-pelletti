@@ -3,9 +3,10 @@ package it.polimi.ingsw.Server.Model.Requirements;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class CardRequirements implements Requirement {
+public class CardRequirements implements Requirement, Serializable {
     private HashMap<Color, Integer[]> requirements;
 
     public CardRequirements(HashMap<Color, Integer[]> requirements) {

@@ -2,11 +2,12 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Power {
-    private HashMap<Resource, Integer> input;
-    private HashMap<Resource, Integer> output;
+public class Power implements Serializable {
+    private final HashMap<Resource, Integer> input;
+    private final HashMap<Resource, Integer> output;
 
     public Power(HashMap<Resource, Integer> input, HashMap<Resource, Integer> output) {
         this.input = input;

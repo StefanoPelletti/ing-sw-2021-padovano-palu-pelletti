@@ -3,7 +3,9 @@ package it.polimi.ingsw.Server.Model;
 import it.polimi.ingsw.Server.Model.Requirements.Requirement;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
 
-public class LeaderCard {
+import java.io.Serializable;
+
+public class LeaderCard implements Serializable {
     private final int PV;
     private final Requirement requirement;
     private final SpecialAbility specialAbility;
@@ -26,8 +28,8 @@ public class LeaderCard {
         return specialAbility;
     }
 
-    public void setEnable(boolean new_enabled) {
-        this.enabled = new_enabled;
+    public void setEnable(boolean enable) {
+        this.enabled = enable;
     }
 
     public boolean getEnable() {

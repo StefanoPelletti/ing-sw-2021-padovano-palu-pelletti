@@ -2,9 +2,10 @@ package it.polimi.ingsw.Server.Model.Requirements;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class ResourceRequirements implements Requirement {
+public class ResourceRequirements implements Requirement, Serializable {
     private HashMap<Resource, Integer> requirements;
 
     public ResourceRequirements(HashMap<Resource, Integer> requirements) {

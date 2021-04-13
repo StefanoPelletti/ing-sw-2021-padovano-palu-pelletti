@@ -1,4 +1,6 @@
 package it.polimi.ingsw.Server.Model.Requirements;
 
-public interface Requirement {
+import java.io.Serializable;
+
+public interface Requirement extends Serializable {
 }

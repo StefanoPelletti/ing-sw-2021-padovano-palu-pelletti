@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Model.SpecialAbilities;
 
-public interface SpecialAbility {
+import java.io.Serializable;
+
+public interface SpecialAbility extends Serializable {
 
     public boolean isProduction();
     public boolean isMarketResource();

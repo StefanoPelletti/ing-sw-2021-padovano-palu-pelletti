@@ -3,9 +3,10 @@ package it.polimi.ingsw.Server.Model;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class DevelopmentCard {
+public class DevelopmentCard implements Serializable {
     private final int level;
     private final Color color;
     private final HashMap<Resource, Integer> cost;

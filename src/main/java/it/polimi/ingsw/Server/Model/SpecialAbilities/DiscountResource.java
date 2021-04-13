@@ -2,7 +2,9 @@ package it.polimi.ingsw.Server.Model.SpecialAbilities;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
-public class DiscountResource implements SpecialAbility {
+import java.io.Serializable;
+
+public class DiscountResource implements SpecialAbility, Serializable {
     private Resource resource;
 
     public DiscountResource(Resource resource) {
