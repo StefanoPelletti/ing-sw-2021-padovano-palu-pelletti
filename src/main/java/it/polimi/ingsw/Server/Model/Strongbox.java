@@ -12,7 +12,7 @@ public class Strongbox {
     }
 
     public boolean addResource(Resource resource, int quantity) throws IllegalArgumentException{
-        if(resource==Resource.EXTRA || resource==Resource.NONE || resource==null || quantity<0)  return false;
+        if(resource==Resource.EXTRA || resource==Resource.NONE || resource==Resource.FAITH ||resource==null || quantity<0)  return false;
         Integer tmp = resources.get(resource);
         if ( tmp == null ) {
             resources.put(resource, quantity);

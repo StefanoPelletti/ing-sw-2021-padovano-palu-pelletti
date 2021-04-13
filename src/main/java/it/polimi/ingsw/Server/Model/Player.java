@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Server.Model;
 
 
-import java.util.ArrayList;
+import java.util.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 public class Player {
     private final String nickname;
@@ -67,6 +68,16 @@ public class Player {
         leaderCards[1] = L2;
     }
 
+    public Map<Resource, Integer> getResources(){
+        Map<Resource, Integer> resources= this.warehouseDepot.getResources();
+        for(Resource resource: Resource.values()){
+            if(this.strongbox.getQuantity(resource)!=null) {
+                resources.put(resource, resources.get(resource) + this.strongbox.getQuantity(resource));
+            }
+        }
+        return resources;
+    }
+
     public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
@@ -104,5 +115,4 @@ public class Player {
             result.add(leaderCards[1]);
         return result;
     }
-
 }

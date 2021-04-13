@@ -96,6 +96,18 @@ public class DevelopmentSlot {
         return tempDeck;
     }
 
+    public ArrayList<DevelopmentCard> getCards(){
+        ArrayList<DevelopmentCard> result= new ArrayList<>();
+        for( int n = 0; n < 3; n++ )
+        {
+            for ( int h = 0; h < 3; h++ )
+            {
+                if(cards[n][h]!=null) result.add(cards[n][h]);
+            }
+        }
+        return result;
+    }
+
     public ArrayList<DevelopmentCard> getTopCards() {
         ArrayList<DevelopmentCard> List = new ArrayList<>();
         for ( int i = 0; i < 3; i++ )

@@ -36,6 +36,7 @@ public class WarehouseDepotTest {
     @Test
     public void shelf1AndResourcesNotPermitted(){
         assertFalse(WarehouseDepot.validateNewConfig(Resource.EXTRA, warehouseDepot.getShelf2(), warehouseDepot.getShelf3()));
+        assertFalse(WarehouseDepot.validateNewConfig(Resource.FAITH, warehouseDepot.getShelf2(), warehouseDepot.getShelf3()));
     }
 
     //tries to put invalid resources in shelf2
@@ -45,6 +46,9 @@ public class WarehouseDepotTest {
         assertFalse(WarehouseDepot.validateNewConfig(warehouseDepot.getShelf1(), tmpShelf2, warehouseDepot.getShelf3()));
         tmpShelf2[0]=Resource.EXTRA;
         assertFalse(WarehouseDepot.validateNewConfig(warehouseDepot.getShelf1(), tmpShelf2, warehouseDepot.getShelf3()));
+        tmpShelf2[0]=Resource.FAITH;
+        assertFalse(WarehouseDepot.validateNewConfig(warehouseDepot.getShelf1(), tmpShelf2, warehouseDepot.getShelf3()));
+
     }
 
     //tries to put invalid resources in shelf3
@@ -53,6 +57,8 @@ public class WarehouseDepotTest {
         Resource[] tmpShelf3=new Resource[]{null, Resource.NONE, Resource.NONE};
         assertFalse(WarehouseDepot.validateNewConfig(warehouseDepot.getShelf1(), warehouseDepot.getShelf2(), tmpShelf3));
         tmpShelf3[0]=Resource.EXTRA;
+        assertFalse(WarehouseDepot.validateNewConfig(warehouseDepot.getShelf1(), warehouseDepot.getShelf2(), tmpShelf3));
+        tmpShelf3[0]=Resource.FAITH;
         assertFalse(WarehouseDepot.validateNewConfig(warehouseDepot.getShelf1(), warehouseDepot.getShelf2(), tmpShelf3));
     }
 
