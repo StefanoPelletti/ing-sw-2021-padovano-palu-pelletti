@@ -26,8 +26,9 @@ public class ClientApp {
         System.out.println("Welcome to MASTER OF RENAISSANCE\n\nOPTIONS: QUIT, CREATE, JOIN");
         while (!quit) {
             text = input.nextLine();
+
             textList.clear();
-            textList = Arrays.asList(text.split("\\s+"));
+            textList = new ArrayList<>( (Arrays.asList(text.split("\\s+"))));
 
             switch(textList.get(0))
             {
