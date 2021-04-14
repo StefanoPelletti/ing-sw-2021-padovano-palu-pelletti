@@ -3,7 +3,7 @@ package it.polimi.ingsw.Networking.Message;
 import java.io.Serializable;
 
 public class MSG_ACTION_GET_MARKET_RESOURCES extends Message implements Serializable {
-    private MessageType messageType;
+
     private final boolean column;
     private final int number;
 
@@ -16,7 +16,7 @@ public class MSG_ACTION_GET_MARKET_RESOURCES extends Message implements Serializ
         this.number = number;
     }
 
-    public MessageType getMessageType() { return messageType; }
+    public MessageType getMessageType() { return super.getMessageType();}
     public boolean getColumn() { return this.column; }
     public int getNumber() { return this.number; }
 }

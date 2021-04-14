@@ -3,7 +3,7 @@ package it.polimi.ingsw.Networking.Message;
 import java.io.Serializable;
 
 public class MSG_OK_JOIN extends Message implements Serializable {
-    private MessageType messageType;
+
     private final String assignedNickname;
 
     public MSG_OK_JOIN(String assignedNickname)
@@ -12,6 +12,6 @@ public class MSG_OK_JOIN extends Message implements Serializable {
         this.assignedNickname=assignedNickname;
     }
 
-    public MessageType getMessageType() { return messageType; }
+    public MessageType getMessageType() { return super.getMessageType();}
     public String getAssignedNickname() { return this.assignedNickname; }
 }

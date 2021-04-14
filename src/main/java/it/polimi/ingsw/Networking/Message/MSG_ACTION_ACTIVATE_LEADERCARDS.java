@@ -11,6 +11,6 @@ public class MSG_ACTION_ACTIVATE_LEADERCARDS extends Message implements Serializ
         this.cardNumber=cardNumber;
     }
 
-    public MessageType getMessageType() { return super.getMessageType(); }
+    public MessageType getMessageType() { return super.getMessageType();}
     public int getCardNumber() { return cardNumber;}
 }

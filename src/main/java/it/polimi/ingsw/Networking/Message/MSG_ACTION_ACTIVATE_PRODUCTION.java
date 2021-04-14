@@ -5,7 +5,6 @@ import it.polimi.ingsw.Networking.OBJ_PRODUCTION;
 import java.io.Serializable;
 
 public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializable {
-    private MessageType messageType;
 
 
     private final boolean[] standardProduction; //refers to the DevelopmentSlot
@@ -50,5 +49,5 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
 
 
 
-    public MessageType getMessageType() { return messageType; }
+    public MessageType getMessageType() { return super.getMessageType();}
 }

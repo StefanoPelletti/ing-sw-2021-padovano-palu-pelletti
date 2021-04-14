@@ -3,7 +3,7 @@ package it.polimi.ingsw.Networking.Message;
 import java.io.Serializable;
 
 public class MSG_OK_GENERIC extends Message implements Serializable {
-    private MessageType messageType;
+
     private final String message;
 
     public MSG_OK_GENERIC(String message)
@@ -12,6 +12,6 @@ public class MSG_OK_GENERIC extends Message implements Serializable {
         this.message=message;
     }
 
-    public MessageType getMessageType() { return messageType; }
+    public MessageType getMessageType() { return super.getMessageType();}
     public String getMessage() { return this.message; }
 }
