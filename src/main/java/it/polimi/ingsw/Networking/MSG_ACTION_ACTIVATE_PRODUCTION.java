@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Networking;
 
-import org.graalvm.compiler.replacements.arraycopy.ArrayCopy;
+//import org.graalvm.compiler.replacements.arraycopy.ArrayCopy;
 
 import java.io.Serializable;
 

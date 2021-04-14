@@ -87,9 +87,9 @@ public class Player {
     public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isDiscountResource() && leaderCards[0].getEnable())
+        if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isDiscountResource() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isDiscountResource() && leaderCards[1].getEnable())
+        if (leaderCards[1] != null && leaderCards[1].getSpecialAbility().isDiscountResource() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
@@ -97,27 +97,27 @@ public class Player {
     public ArrayList<LeaderCard> getCardsWithExtraDepotAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isExtraDepot() && leaderCards[0].getEnable())
+        if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isExtraDepot() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isExtraDepot() && leaderCards[1].getEnable())
+        if (leaderCards[1] != null && leaderCards[1].getSpecialAbility().isExtraDepot() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
     public ArrayList<LeaderCard> getCardsWithProductionAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isProduction() && leaderCards[0].getEnable())
+        if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isProduction() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isProduction() && leaderCards[1].getEnable())
+        if (leaderCards[1] != null && leaderCards[1].getSpecialAbility().isProduction() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
     public ArrayList<LeaderCard> getCardsWithMarketResourceAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();
-        if (leaderCards[0].getSpecialAbility().isMarketResource() && leaderCards[0].getEnable())
+        if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isMarketResource() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1].getSpecialAbility().isMarketResource() && leaderCards[1].getEnable())
+        if (leaderCards[1] != null &&leaderCards[1].getSpecialAbility().isMarketResource() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }

@@ -286,8 +286,8 @@ public class ActionManager {
         Map<Resource, Integer> playerResources = p.getResources();
 
         ArrayList<DevelopmentCard> cards = new ArrayList<>();
-        for(int r = 0; r < 2; r++) {
-            for( int c = 0 ; c < 3; c++)
+        for(int r = 0; r < 3; r++) {
+            for( int c = 0 ; c < 4; c++)
             {
                 if(possibleCards[r][c]!=null)
                    cards.add(possibleCards[r][c]);
@@ -301,9 +301,13 @@ public class ActionManager {
             HashMap<Resource, Integer> cost = tmp.get(i).getCost();
             for (Resource resource : cost.keySet()) {
                 if (playerResources.get(resource) < cost.get(resource)) {
-                    cards.remove(i);
+                    cards.remove(tmp.get(i));
+                    break;
                 }
             }
+        }
+        if(cards.size() == 0) {
+            return true; //da cambiare
         }
 
         //second check: all the cards that the player can't put in his slot are removed from the ones selected before.
@@ -321,6 +325,6 @@ public class ActionManager {
                 finalCards.put(cards.get(i), pos);
             }
         }
-        return false;
+        return true;
     }
 }
