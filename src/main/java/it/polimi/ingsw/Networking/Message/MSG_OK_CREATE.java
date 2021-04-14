@@ -11,6 +11,6 @@ public class MSG_OK_CREATE extends Message implements Serializable {
         this.lobbyNumber=lobbyNumber;
     }
 
-    public MessageType getMessageType() { return messageType; }
-    public int getNumOfPlayers() { return this.lobbyNumber; }
+    public MessageType getMessageType() { return super.getMessageType();}
+    public int getLobbyNumber() { return this.lobbyNumber; }
 }

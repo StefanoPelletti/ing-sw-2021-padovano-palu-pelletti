@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Networking.Message;
 
-public enum MessageType {
+import java.io.Serializable;
+
+public enum MessageType implements Serializable {
     MSG_CREATE_LOBBY,
     MSG_OK_CREATE,
     MSG_JOIN_LOBBY,
