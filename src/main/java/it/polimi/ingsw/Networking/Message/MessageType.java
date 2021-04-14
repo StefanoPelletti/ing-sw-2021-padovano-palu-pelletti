@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Networking;
+package it.polimi.ingsw.Networking.Message;
 
 public enum MessageType {
     MSG_CREATE_LOBBY,

@@ -191,7 +191,7 @@ public class ActionManager {
             ResourceRequirements resourceRequirements= (ResourceRequirements) requirement;
             Map<Resource, Integer> requiredResources = resourceRequirements.getRequirements();
 
-            Map<Resource, Integer> resources = player.getResources();
+            Map<Resource, Integer> resources = player.getTotalResources();
 
             for(Resource resource: requiredResources.keySet()){
                 resources.put(resource, resources.get(resource)-requiredResources.get(resource));
@@ -237,20 +237,15 @@ public class ActionManager {
     // if player has two LeaderCards with ExtraDepot SpecialAbility and only one is activated, only firstExtraDepot is considered
     // if player has two LeaderCards with ExtraDepot SpecialAbility and both are activated, firstExtraDepot is referred to leaderCard[0] and secondExtraDepot is referred to leaderCard[1]
     public boolean changeDepotConfig(Player player, Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot ) {
-        Map<Resource, Integer> initialResources = player.getWarehouseDepot().getResources();
-        ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
-        for(LeaderCard l: playerLeaderCards){
-            ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
-            Resource resource = ability.getResourceType();
-            initialResources.put(resource, initialResources.get(resource) + ability.getNumber());
-        }
+        Map<Resource, Integer> initialResources = player.getDepotAndExtraDepotResources();
+        ArrayList<LeaderCard> playerLeaderCards= player.getCardsWithExtraDepotAbility();
 
         Map<Resource, Integer> newResources;
         WarehouseDepot demoDepot = new WarehouseDepot();
         ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
-        if(demoDepot.setConfig(slot1, slot2, slot3) == false) return false;
-        if(demoExtraDepot.setResource(firstExtraDepot) == false) return false;
-        if(demoExtraDepot.setResource(secondExtraDepot) == false) return false;
+        if(!demoDepot.setConfig(slot1, slot2, slot3)) return false;
+        if(playerLeaderCards.size()>0 && !demoExtraDepot.setResource(firstExtraDepot)) return false;
+        if(playerLeaderCards.size()==2 && !demoExtraDepot.setResource(secondExtraDepot)) return false;
 
         //let's check if the new configuration has the same resources as the one before!
         newResources = demoDepot.getResources();
@@ -268,7 +263,7 @@ public class ActionManager {
         }
 
         for(Resource resToControl : Resource.values()){
-            if(initialResources.get(resToControl) != newResources.get(resToControl)) return false;
+            if(!initialResources.get(resToControl).equals(newResources.get(resToControl))) return false;
         }
 
         //after all those controls, player really deserves a new depot!
@@ -288,7 +283,7 @@ public class ActionManager {
         DevelopmentCard[][] possibleCards = game.getDevelopmentCardsDeck().getVisible();
         Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
-        Map<Resource, Integer> playerResources = p.getResources();
+        Map<Resource, Integer> playerResources = p.getTotalResources();
 
         ArrayList<DevelopmentCard> cards = new ArrayList<>();
         for(int r = 0; r < 3; r++) {

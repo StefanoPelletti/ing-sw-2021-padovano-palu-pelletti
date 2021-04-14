@@ -1,4 +1,5 @@
-package it.polimi.ingsw.Networking;
+package it.polimi.ingsw.Networking.Message;
+
 import java.io.Serializable;
 
 public abstract class Message implements Serializable {

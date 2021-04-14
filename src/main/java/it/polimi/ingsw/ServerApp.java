@@ -1,12 +1,14 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.Server.Model.Game;
+import it.polimi.ingsw.Networking.Message.*;
+import it.polimi.ingsw.Networking.*;
+import java.net.*;
+import java.io.*;
+import java.util.*;
 
-/**
- * Hello world!
- *
- */
-public class App 
+
+public class ServerApp
 {
     public static void main( String[] args )
     {

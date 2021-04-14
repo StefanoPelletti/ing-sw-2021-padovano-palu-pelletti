@@ -69,7 +69,7 @@ public class Player {
         leaderCards[1] = L2;
     }
 
-    public Map<Resource, Integer> getResources(){
+    public Map<Resource, Integer> getTotalResources(){
         Map<Resource, Integer> resources= this.warehouseDepot.getResources();
         for(Resource resource: Resource.values()){
             if(this.strongbox.getQuantity(resource)!=null) {
@@ -82,6 +82,18 @@ public class Player {
             resources.put(extraResource, resources.get(extraResource) + depotAbility.getNumber());
         }
         return resources;
+    }
+
+    public Map<Resource, Integer> getDepotAndExtraDepotResources(){
+        Map<Resource, Integer> result;
+        result=this.warehouseDepot.getResources();
+        ArrayList<LeaderCard> playerLeaderCards = this.getCardsWithExtraDepotAbility();
+        for(LeaderCard l: playerLeaderCards){
+            ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
+            Resource resource = ability.getResourceType();
+            result.put(resource, result.get(resource) + ability.getNumber());
+        }
+        return result;
     }
 
     public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()

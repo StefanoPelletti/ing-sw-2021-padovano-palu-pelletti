@@ -1,4 +1,6 @@
-package it.polimi.ingsw.Networking;
+package it.polimi.ingsw.Networking.Message;
+
+import it.polimi.ingsw.Networking.OBJ_PRODUCTION;
 
 import java.io.Serializable;
 

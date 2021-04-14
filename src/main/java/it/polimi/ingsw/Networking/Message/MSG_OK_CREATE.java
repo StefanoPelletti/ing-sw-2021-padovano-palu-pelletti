@@ -1,9 +1,8 @@
-package it.polimi.ingsw.Networking;
+package it.polimi.ingsw.Networking.Message;
 
 import java.io.Serializable;
 
 public class MSG_OK_CREATE extends Message implements Serializable {
-    private MessageType messageType;
     private final int lobbyNumber;
 
     public MSG_OK_CREATE(int lobbyNumber)

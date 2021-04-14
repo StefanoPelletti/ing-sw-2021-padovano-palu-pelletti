@@ -1,9 +1,8 @@
-package it.polimi.ingsw.Networking;
+package it.polimi.ingsw.Networking.Message;
 
 import java.io.Serializable;
 
 public class MSG_ACTION_ACTIVATE_LEADERCARDS extends Message implements Serializable {
-    private MessageType messageType;
     private int cardNumber;
 
     public MSG_ACTION_ACTIVATE_LEADERCARDS(int cardNumber)
@@ -12,6 +11,6 @@ public class MSG_ACTION_ACTIVATE_LEADERCARDS extends Message implements Serializ
         this.cardNumber=cardNumber;
     }
 
-    public MessageType getMessageType() { return messageType; }
+    public MessageType getMessageType() { return super.getMessageType(); }
     public int getCardNumber() { return cardNumber;}
 }
