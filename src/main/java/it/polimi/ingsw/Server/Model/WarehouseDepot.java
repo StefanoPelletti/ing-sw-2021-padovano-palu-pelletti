@@ -254,11 +254,12 @@ public class WarehouseDepot {
             }
             else if(shelf2[1] != Resource.NONE) {
                 shelf1 = shelf2[1];
-                shelf2[1]=tmp;
+                shelf2[0]=tmp;
+                shelf2[1]=Resource.NONE;
             }
             else if(shelf2[0] == Resource.NONE && shelf2[1] == Resource.NONE )
             {
-                shelf1 = shelf2[0];
+                shelf1 = Resource.NONE;
                 shelf2[0] = tmp;
             }
         }

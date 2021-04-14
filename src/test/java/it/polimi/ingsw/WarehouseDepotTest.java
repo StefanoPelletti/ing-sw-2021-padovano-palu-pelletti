@@ -354,6 +354,9 @@ public class WarehouseDepotTest {
         assertEquals(m.get(Resource.SERVANT), 0);
     }
 
+    //         x
+    //       x   x
+    //     x   x   x
     @Test
     public void swapTestNone(){
        assertFalse( warehouseDepot.swapRow(0,2));
@@ -369,6 +372,9 @@ public class WarehouseDepotTest {
         assertTrue( warehouseDepot.swapRow(3,2));
     }
 
+    //         C               S
+    //       S   x     ->    C   x
+    //     x   x   x       x   x   x
     @Test
     public void swapRow12()
     {
@@ -380,6 +386,9 @@ public class WarehouseDepotTest {
         assertTrue( warehouseDepot.getShelf2()[0] == Resource.COIN);
     }
 
+    //         C               C
+    //       S   S     ->    S   S
+    //     x   x   x       x   x   x
     @Test
     public void swapRow12Full()
     {
@@ -390,17 +399,23 @@ public class WarehouseDepotTest {
         assertFalse(warehouseDepot.swapRow(1,2));
     }
 
+    //         C               S
+    //       x   S     ->    C   x
+    //     x   x   x       x   x   x
     @Test
-    public void swapRow12jump()
+    public void swapRow12right()
     {
         warehouseDepot.setConfig(Resource.COIN, new Resource[]{Resource.NONE, Resource.SHIELD}, new Resource[]{Resource.NONE, Resource.NONE, Resource.NONE});
 
         assertTrue( warehouseDepot.swapRow(1,2));
         assertTrue( warehouseDepot.getShelf1() == Resource.SHIELD);
-        assertTrue( warehouseDepot.getShelf2()[0] == Resource.NONE);
-        assertTrue( warehouseDepot.getShelf2()[1] == Resource.COIN);
+        assertTrue( warehouseDepot.getShelf2()[0] == Resource.COIN);
+        assertTrue( warehouseDepot.getShelf2()[1] == Resource.NONE);
     }
 
+    //         C               S
+    //       x   x     ->    x   x
+    //     S   x   x       C   x   x
     @Test
     public void swapRow13()
     {
@@ -410,6 +425,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3()[0] == Resource.COIN );
     }
 
+    //         C               C
+    //       x   x     ->    x   x
+    //     S   x   S       S   x   S
     @Test
     public void swapRow13FullTwoDistant()
     {
@@ -417,6 +435,9 @@ public class WarehouseDepotTest {
         assert ( false == warehouseDepot.swapRow(1,3));
     }
 
+    //         C               C
+    //       x   x     ->    x   x
+    //     S   S   S       S   S   S
     @Test
     public void swapRow13FullThree()
     {
@@ -424,6 +445,9 @@ public class WarehouseDepotTest {
         assert ( false == warehouseDepot.swapRow(1,3));
     }
 
+    //         C               C
+    //       x   x     ->    x   x
+    //     S   S   x       S   S   x
     @Test
     public void swapRow13FullTwoNearLeft()
     {
@@ -431,6 +455,9 @@ public class WarehouseDepotTest {
         assert ( false == warehouseDepot.swapRow(1,3));
     }
 
+    //         C               C
+    //       x   x     ->    x   x
+    //     x   S   S       x   S   S
     @Test
     public void swapRow13FullNearRight()
     {
@@ -438,6 +465,9 @@ public class WarehouseDepotTest {
         assert ( false == warehouseDepot.swapRow(1,3));
     }
 
+    //         C               S
+    //       x   x     ->    x   x
+    //     x   x   S       C   x   x
     @Test
     public void swapRow13Right()
     {
@@ -454,6 +484,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3ResourceNumber() == 1);
     }
 
+    //         x               x
+    //       C   C     ->    S   S
+    //     S   S   x       C   C   x
     @Test
     public void swapRow23()
     {
@@ -469,6 +502,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3ResourceNumber() == 2);
     }
 
+    //         x               x
+    //       C   C     ->    C   C
+    //     S   S   S       S   S   S
     @Test
     public void swapRow23Full()
     {
@@ -479,6 +515,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3ResourceNumber() == 3);
     }
 
+    //         x               x
+    //       C   C     ->    S   S
+    //     x   S   S       C   C   x
     @Test
     public void swapRow23Right()
     {
@@ -494,6 +533,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3ResourceNumber() == 2);
     }
 
+    //         x               x
+    //       C   C     ->    S   x
+    //     x   S   x       C   C   x
     @Test
     public void swapRow23OneDownTwoUp()
     {
@@ -509,6 +551,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3ResourceNumber() == 2);
     }
 
+    //         C               x                x               C
+    //       x   x     ->    C   x     ->     x   x     ->    x   x
+    //     x   x   x       x   x   x        C   x   x       x   x   x
     @Test
     public void swapLoop()
     {
@@ -533,6 +578,9 @@ public class WarehouseDepotTest {
         assert ( warehouseDepot.getShelf3ResourceNumber() == 0);
     }
 
+    //         S               C                C               C
+    //       C   x     ->    S   x     ->     S   S     ->    H   H
+    //     H   x   H       H   x   H        H   x   H       S   S   x
     @Test
     public void swapLoop2()
     {

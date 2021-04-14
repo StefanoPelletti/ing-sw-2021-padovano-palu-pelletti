@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Networking;
 
-//import org.graalvm.compiler.replacements.arraycopy.ArrayCopy;
-
 import java.io.Serializable;
 
 public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializable {
