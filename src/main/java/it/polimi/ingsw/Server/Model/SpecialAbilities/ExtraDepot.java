@@ -27,7 +27,7 @@ public class ExtraDepot implements SpecialAbility, Serializable {
     }
 
     public boolean setResource(int num){
-        if ( num > 2 || num <= 0 ) return false;
+        if ( num > 2 || num < 0 ) return false;
         number=num;
         return true;
     }

@@ -185,6 +185,7 @@ public class ActionManager {
         if(player.getLeaderCards()[cardNumber].getEnable()) return false;
         LeaderCard l = player.getLeaderCards()[cardNumber];
         Requirement requirement = l.getRequirement();
+        player.addVP(l.getPV());
 
         if(requirement.isResourceRequirement()){
             ResourceRequirements resourceRequirements= (ResourceRequirements) requirement;
@@ -237,10 +238,14 @@ public class ActionManager {
     // if player has two LeaderCards with ExtraDepot SpecialAbility and both are activated, firstExtraDepot is referred to leaderCard[0] and secondExtraDepot is referred to leaderCard[1]
     public boolean changeDepotConfig(Player player, Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot ) {
         Map<Resource, Integer> initialResources = player.getWarehouseDepot().getResources();
-        Map<Resource, Integer> newResources;
-
         ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
+        for(LeaderCard l: playerLeaderCards){
+            ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
+            Resource resource = ability.getResourceType();
+            initialResources.put(resource, initialResources.get(resource) + ability.getNumber());
+        }
 
+        Map<Resource, Integer> newResources;
         WarehouseDepot demoDepot = new WarehouseDepot();
         ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
         if(demoDepot.setConfig(slot1, slot2, slot3) == false) return false;
