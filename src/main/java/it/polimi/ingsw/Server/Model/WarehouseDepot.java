@@ -370,29 +370,6 @@ public class WarehouseDepot {
         return true;
     }
 
-    @Deprecated
-    public boolean swap(){
-        if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
-        Resource[] tmp2= new Resource[2];
-        Resource[] tmp3= new Resource[3];
-        Resource[] g2=getShelf2();
-        Resource[] g3=getShelf3();
-        int num=0;
-        for(int i=0; i<3 && num<2; i++){
-            if(i<2) tmp3[i]=g2[i];
-            if(g3[i]!=Resource.NONE){
-                tmp2[num]=g3[i];
-                num++;
-            }
-        }
-        while(num<2){
-            tmp2[num]=Resource.NONE;
-            num++;
-        }
-        tmp3[2]=Resource.NONE;
-        return true;
-    }
-
     @Override
     public boolean equals( Object obj )
     {

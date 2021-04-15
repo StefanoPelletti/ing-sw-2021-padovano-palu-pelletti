@@ -13,8 +13,7 @@ import java.util.*;
 public class ActionManagerTest {
     GameManager gm = new GameManager();
     Game g = new Game();
-    FaithTrack ft = new FaithTrack(g);
-    FaithTrackManager ftm = new FaithTrackManager(ft);
+    FaithTrackManager ftm = new FaithTrackManager(g);
     ActionManager am = new ActionManager(gm,ftm,g);
 
     @Test

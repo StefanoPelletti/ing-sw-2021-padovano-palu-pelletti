@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public class Game {
     private Status status;
+    private Player firstPlayer;
     int num_of_players;
     int turn;
     int blackCrossPosition;
@@ -21,6 +22,7 @@ public class Game {
     public Game()
     {
         status = Status.INIT;
+        firstPlayer=null;
         num_of_players = 0;
         blackCrossPosition = 1;
         playerList = new ArrayList<>();
@@ -32,6 +34,12 @@ public class Game {
     }
 
     public Status getStatus() { return this.status; }
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+    public void setFirstPlayer(Player firstPlayer) {
+        this.firstPlayer = firstPlayer;
+    }
     public int getNum_of_players() { return this.num_of_players; }
     public int getTurn() { return this.turn; }
     public int getBlackCrossPosition() { return this.blackCrossPosition; }
