@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class OBJ_PRODUCTION implements Serializable {
 
     private final ArrayList<Resource> input;
-    private final ArrayList<Resource> output;
+    private final Resource output;
     private final boolean basic;
 
-    public OBJ_PRODUCTION(boolean basic, ArrayList<Resource> input, ArrayList<Resource> output)
+    public OBJ_PRODUCTION(boolean basic, ArrayList<Resource> input, Resource output)
     {
         this.basic = basic;
         this.input = input;
@@ -19,7 +19,7 @@ public class OBJ_PRODUCTION implements Serializable {
     }
 
     public ArrayList<Resource> getProductionInput() { return input; }
-    public ArrayList<Resource> getProductionOutput() { return output; }
+    public Resource getProductionOutput() { return output; }
 
     public boolean isBasicProduction()
     {

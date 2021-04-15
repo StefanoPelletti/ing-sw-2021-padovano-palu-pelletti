@@ -8,10 +8,7 @@ import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Controller.*;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class ActionManagerTest {
     GameManager gm = new GameManager();
@@ -32,8 +29,8 @@ public class ActionManagerTest {
         assertTrue(am.buyDevelopmentCard(p));
     }
 
-    @Test
-    //this test is useless for now, it is onlu used to see if there is any major bug.
+    @Deprecated
+    //this test is useless for now, it is only used to see if there is any major bug.
     //it will be eliminated soon from this world.
     public void buyDevelopmentCardTest2() {
         DevelopmentCardsDeck dc = new DevelopmentCardsDeck();

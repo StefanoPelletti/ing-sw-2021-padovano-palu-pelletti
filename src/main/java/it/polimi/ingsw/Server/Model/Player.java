@@ -84,6 +84,18 @@ public class Player {
         return resources;
     }
 
+    public Map<Resource, Integer> getDepotAndExtraDepotResources(){
+        Map<Resource, Integer> result;
+        result=this.warehouseDepot.getResources();
+        ArrayList<LeaderCard> playerLeaderCards = this.getCardsWithExtraDepotAbility();
+        for(LeaderCard l: playerLeaderCards){
+            ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
+            Resource resource = ability.getResourceType();
+            result.put(resource, result.get(resource) + ability.getNumber());
+        }
+        return result;
+    }
+
     public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()
     {
         ArrayList<LeaderCard> result = new ArrayList<>();

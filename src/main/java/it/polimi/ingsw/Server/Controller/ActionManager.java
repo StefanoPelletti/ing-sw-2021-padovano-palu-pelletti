@@ -7,6 +7,8 @@ import it.polimi.ingsw.Server.Model.Marbles.RedMarbleException;
 import it.polimi.ingsw.Server.Model.Requirements.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
+import it.polimi.ingsw.Networking.*;
+
 
 import java.util.*;
 
@@ -181,11 +183,12 @@ public class ActionManager {
         return true;
     }
 
-    public boolean activateLeaderCard(Player player, int cardNumber){
+    public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARDS message){
+        int cardNumber = message.getCardNumber();
         if(player.getLeaderCards()[cardNumber].getEnable()) return false;
         LeaderCard l = player.getLeaderCards()[cardNumber];
         Requirement requirement = l.getRequirement();
-        player.addVP(l.getPV());
+        player.addVP(l.getVP());
 
         if(requirement.isResourceRequirement()){
             ResourceRequirements resourceRequirements= (ResourceRequirements) requirement;
@@ -226,7 +229,83 @@ public class ActionManager {
         return false;
     }
 
-    public boolean ActivateProduction() {
+    public boolean activateProduction(Player player, MSG_ACTION_ACTIVATE_PRODUCTION message) {
+        Map<Resource, Integer> initialResources = player.getResources();
+        boolean[] standardProduction = message.getStandardProduction();
+        boolean baseProduction = message.isBasicProduction();
+        boolean[] leaderProduction = message.getLeaderProduction();
+        OBJ_PRODUCTION baseProductionObject = message.getBasicProductionObject();
+        OBJ_PRODUCTION[] leaderProductionObject = message.getLeaderProductionObject();
+
+        Map<Resource, Integer> requiredResources = new HashMap<>();
+
+        //for each leaderProduction enabled, player receives one Faith Point
+        for(boolean enabled : leaderProduction){
+            if(enabled) {
+                faithTrackManager.advance(player);
+            }
+        }
+
+        //initializing requiredResources
+        for(Resource r : Resource.values()){
+            requiredResources.put(r, 0);
+        }
+
+        //getting costs for standard Productions
+        ArrayList<DevelopmentCard> topCards = player.getDevelopmentSlot().getTopCards();
+        for(int i=0; i<3; i++){
+            if(standardProduction[i]){
+                Map<Resource, Integer> cost = topCards.get(i).getPowerInput();
+                for(Resource r : cost.keySet()){
+                    requiredResources.put(r, requiredResources.get(r)+cost.get(r));
+                }
+            }
+        }
+
+        //getting cost for base Production
+        if(baseProduction) {
+            for (Resource r : baseProductionObject.getProductionInput()) {
+                requiredResources.put(r, requiredResources.get(r) + 1);
+            }
+        }
+
+        //getting cost for leader Production
+        //first LeaderCard
+        if(leaderProduction[0]){
+            for (Resource r : leaderProductionObject[0].getProductionInput()) {
+                requiredResources.put(r, requiredResources.get(r) + 1);
+            }
+        }
+
+        //secondLeaderCard
+        if(leaderProduction[1]){
+            for (Resource r : leaderProductionObject[1].getProductionInput()) {
+                requiredResources.put(r, requiredResources.get(r) + 1);
+            }
+        }
+
+        //check if the player has enough resources
+        for(Resource r : requiredResources.keySet()){
+            if(initialResources.get(r) < requiredResources.get(r)) return false;
+        }
+
+        //now we must consume the required resources
+        consumeResources(player, requiredResources);
+
+        //now we add output resources to the player's strongbox
+        Strongbox playerStrongbox = player.getStrongbox();
+        for(int i=0; i<3; i++){
+            if(standardProduction[i]){
+                Map<Resource, Integer> output = topCards.get(i).getPowerOutput();
+                for(Resource r : output.keySet()){
+                    playerStrongbox.addResource(r, output.get(r));
+                }
+            }
+        }
+
+        playerStrongbox.addResource(baseProductionObject.getProductionOutput(), 1);
+        playerStrongbox.addResource(leaderProductionObject[0].getProductionOutput(), 1);
+        playerStrongbox.addResource(leaderProductionObject[1].getProductionOutput(), 1);
         return true;
     }
 
@@ -237,20 +316,15 @@ public class ActionManager {
     // if player has two LeaderCards with ExtraDepot SpecialAbility and only one is activated, only firstExtraDepot is considered
     // if player has two LeaderCards with ExtraDepot SpecialAbility and both are activated, firstExtraDepot is referred to leaderCard[0] and secondExtraDepot is referred to leaderCard[1]
     public boolean changeDepotConfig(Player player, Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot ) {
-        Map<Resource, Integer> initialResources = player.getWarehouseDepot().getResources();
+        Map<Resource, Integer> initialResources = player.getDepotAndExtraDepotResources();
         ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
-        for(LeaderCard l: playerLeaderCards){
-            ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
-            Resource resource = ability.getResourceType();
-            initialResources.put(resource, initialResources.get(resource) + ability.getNumber());
-        }
 
         Map<Resource, Integer> newResources;
         WarehouseDepot demoDepot = new WarehouseDepot();
         ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
-        if(demoDepot.setConfig(slot1, slot2, slot3) == false) return false;
-        if(demoExtraDepot.setResource(firstExtraDepot) == false) return false;
-        if(demoExtraDepot.setResource(secondExtraDepot) == false) return false;
+        if(!demoDepot.setConfig(slot1, slot2, slot3)) return false;
+        if(!demoExtraDepot.setResource(firstExtraDepot)) return false;
+        if(!demoExtraDepot.setResource(secondExtraDepot)) return false;
 
         //let's check if the new configuration has the same resources as the one before!
         newResources = demoDepot.getResources();
@@ -268,7 +342,7 @@ public class ActionManager {
         }
 
         for(Resource resToControl : Resource.values()){
-            if(initialResources.get(resToControl) != newResources.get(resToControl)) return false;
+            if(!initialResources.get(resToControl).equals(newResources.get(resToControl))) return false;
         }
 
         //after all those controls, player really deserves a new depot!
@@ -331,5 +405,34 @@ public class ActionManager {
             }
         }
         return true;
+    }
+
+
+    public void consumeResources(Player player, Map<Resource, Integer> cost){
+        WarehouseDepot warehouseDepot = player.getWarehouseDepot();
+        ArrayList<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
+        int numLeaderCard = extraDepotLeaderCards.size();
+        ExtraDepot ability;
+        Strongbox strongbox = player.getStrongbox();
+        int remainingResources;
+        boolean found;
+
+        for(Resource r : cost.keySet()){
+            remainingResources = cost.get(r);
+            while(remainingResources>0){
+                found= false;
+                if(warehouseDepot.consume(r)) found =true;
+                if (!found) {
+                    for (int i = 0; i < numLeaderCard && !found; i++) {
+                        ability = (ExtraDepot) extraDepotLeaderCards.get(i).getSpecialAbility();
+                        if (ability.getResourceType() == r) {
+                            if (ability.removeResource(1)) found = true;
+                        }
+                    }
+                }
+                if(!found) strongbox.remove(r, 1);
+                remainingResources--;
+            }
+        }
     }
 }
