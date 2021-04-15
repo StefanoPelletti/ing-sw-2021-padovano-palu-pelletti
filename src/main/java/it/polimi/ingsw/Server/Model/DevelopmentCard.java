@@ -79,7 +79,7 @@ public class DevelopmentCard implements Serializable {
         result = result + "     color : "+this.color+ "\n";
         result = result + "     VP    : "+this.VP+ "\n";
         result = result + "     cost  : "+this.cost+ "\n";
-        result = result + "     power : "+this.power+ "\n";
+        result = result +this.power+ "\n";
         return result;
     }
 }

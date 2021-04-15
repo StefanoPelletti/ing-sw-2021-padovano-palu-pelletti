@@ -28,14 +28,14 @@ public class ActionManager {
         this.game = game;
     }
 
-    public boolean gameMarketResourcesAction(Player p, MSG_ACTION_GET_MARKET_RESOURCES message) {
+    public boolean gameMarketResourcesAction(Player player, MSG_ACTION_GET_MARKET_RESOURCES message) {
         boolean column = message.getColumn();
         int number = message.getNumber();
         if(column && number >=0 && number <= 4) return false;
         if(!column && number >= 0 && number <= 3) return false;
 
         ArrayList<MarketMarble> temp;
-        WarehouseDepot depot = p.getWarehouseDepot();
+        WarehouseDepot depot = player.getWarehouseDepot();
 
         Scanner myInput = new Scanner(System.in);
 
@@ -49,7 +49,7 @@ public class ActionManager {
             try {
                 m.addResource(R);
             } catch (RedMarbleException e) {
-                faithTrackManager.advance(p);
+                faithTrackManager.advance(player);
             }
         }
 
@@ -58,7 +58,7 @@ public class ActionManager {
             Resource r = R.get(i);
 
             if (r == Resource.EXTRA) {
-                ArrayList<LeaderCard> a = p.getCardsWithMarketResourceAbility();
+                ArrayList<LeaderCard> a = player.getCardsWithMarketResourceAbility();
                 if (a.size() == 0) {
                     R.remove(i); //Player cannot use the White Marble
                 } else if (a.size() == 1) {
@@ -99,7 +99,7 @@ public class ActionManager {
                 if (depot.isAddable(r)) choices[0] = true;
 
                 //choice 1: put in extra depot
-                ArrayList<LeaderCard> list = p.getCardsWithExtraDepotAbility();
+                ArrayList<LeaderCard> list = player.getCardsWithExtraDepotAbility();
                 ExtraDepot e = null;
                 if (list.size() == 0) {
                     choices[1] = false;
@@ -165,7 +165,7 @@ public class ActionManager {
                         R.remove(i);
                         break;
                     case 3:
-                        faithTrackManager.advanceAllExcept(p);
+                        faithTrackManager.advanceAllExcept(player);
                         R.remove(i);
                         break;
                     case 4:
@@ -326,7 +326,12 @@ public class ActionManager {
 
     // if player has two LeaderCards with ExtraDepot SpecialAbility and only one is activated, only firstExtraDepot is considered
     // if player has two LeaderCards with ExtraDepot SpecialAbility and both are activated, firstExtraDepot is referred to leaderCard[0] and secondExtraDepot is referred to leaderCard[1]
-    public boolean changeDepotConfig(Player player, Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot ) {
+    public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
+        Resource slot1 = message.getSlot1();
+        Resource[] slot2 = message.getSlot2();
+        Resource[] slot3 = message.getSlot3();
+        int firstExtraDepot = message.getFirstExtraDepot();
+        int secondExtraDepot = message.getSecondExtraDepot();
         Map<Resource, Integer> initialResources = player.getDepotAndExtraDepotResources();
         ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
 
