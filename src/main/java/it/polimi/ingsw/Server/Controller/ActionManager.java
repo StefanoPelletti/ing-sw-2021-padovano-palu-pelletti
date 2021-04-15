@@ -2,15 +2,13 @@ package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Networking.Message.MSG_ACTION_ACTIVATE_LEADERCARDS;
 import it.polimi.ingsw.Networking.Message.MSG_ACTION_ACTIVATE_PRODUCTION;
-import it.polimi.ingsw.Networking.OBJ_PRODUCTION;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import it.polimi.ingsw.Server.Model.Marbles.RedMarbleException;
 import it.polimi.ingsw.Server.Model.Requirements.*;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
 import it.polimi.ingsw.Networking.Message.*;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
 
 
 import java.util.*;
@@ -234,13 +232,20 @@ public class ActionManager {
         return false;
     }
 
+    public boolean discardLeaderCard(Player player, int cardNumber){
+        if(player.getLeaderCards()[cardNumber].getEnable()) return false;
+        player.getLeaderCards()[cardNumber] = null;
+        faithTrackManager.advance(player);
+        return true;
+    }
+
     public boolean activateProduction(Player player, MSG_ACTION_ACTIVATE_PRODUCTION message) {
         Map<Resource, Integer> initialResources = player.getResources();
         boolean[] standardProduction = message.getStandardProduction();
         boolean baseProduction = message.isBasicProduction();
         boolean[] leaderProduction = message.getLeaderProduction();
-        OBJ_PRODUCTION baseProductionObject = message.getBasicProductionObject();
-        OBJ_PRODUCTION[] leaderProductionObject = message.getLeaderProductionObject();
+        Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
+        ArrayList<LeaderCard> productionLeaderCards = player.getCardsWithProductionAbility();
 
         Map<Resource, Integer> requiredResources = new HashMap<>();
 
@@ -252,7 +257,7 @@ public class ActionManager {
         }
 
         //initializing requiredResources
-        for(Resource r : Resource.values()){
+        for(Resource r : possibleResources){
             requiredResources.put(r, 0);
         }
 
@@ -269,7 +274,7 @@ public class ActionManager {
 
         //getting cost for base Production
         if(baseProduction) {
-            for (Resource r : baseProductionObject.getProductionInput()) {
+            for (Resource r : message.getBasicInput()) {
                 requiredResources.put(r, requiredResources.get(r) + 1);
             }
         }
@@ -277,16 +282,16 @@ public class ActionManager {
         //getting cost for leader Production
         //first LeaderCard
         if(leaderProduction[0]){
-            for (Resource r : leaderProductionObject[0].getProductionInput()) {
-                requiredResources.put(r, requiredResources.get(r) + 1);
-            }
+            Production ability = (Production) productionLeaderCards.get(0).getSpecialAbility();
+            Resource input = ability.getInput();
+            requiredResources.put(input, requiredResources.get(input) + 1);
         }
 
         //secondLeaderCard
         if(leaderProduction[1]){
-            for (Resource r : leaderProductionObject[1].getProductionInput()) {
-                requiredResources.put(r, requiredResources.get(r) + 1);
-            }
+            Production ability = (Production) productionLeaderCards.get(1).getSpecialAbility();
+            Resource input = ability.getInput();
+            requiredResources.put(input, requiredResources.get(input) + 1);
         }
 
         //check if the player has enough resources
@@ -309,13 +314,13 @@ public class ActionManager {
         }
 
         if(baseProduction) {
-            playerStrongbox.addResource(baseProductionObject.getProductionOutput(), 1);
+            playerStrongbox.addResource(message.getBasicOutput(), 1);
         }
         if(leaderProduction[0]) {
-            playerStrongbox.addResource(leaderProductionObject[0].getProductionOutput(), 1);
+            playerStrongbox.addResource(message.getLeaderOutput1(), 1);
         }
         if(leaderProduction[1]) {
-            playerStrongbox.addResource(leaderProductionObject[1].getProductionOutput(), 1);
+            playerStrongbox.addResource(message.getLeaderOutput2(), 1);
         }
         return true;
     }
@@ -335,6 +340,7 @@ public class ActionManager {
         Map<Resource, Integer> initialResources = player.getDepotAndExtraDepotResources();
         ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
 
+        Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
         Map<Resource, Integer> newResources;
         WarehouseDepot demoDepot = new WarehouseDepot();
         ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
@@ -357,7 +363,7 @@ public class ActionManager {
             newResources.put(resource, newResources.get(resource) + secondExtraDepot);
         }
 
-        for(Resource resToControl : Resource.values()){
+        for(Resource resToControl : possibleResources){
             if(!initialResources.get(resToControl).equals(newResources.get(resToControl))) return false;
         }
 
@@ -458,8 +464,11 @@ public class ActionManager {
                         }
                     }
                 }
-                if(!found) strongbox.remove(r, 1);
-                remainingResources--;
+                if(!found){
+                    strongbox.remove(r, remainingResources);
+                    remainingResources=0;
+                }
+                else remainingResources--;
             }
         }
     }

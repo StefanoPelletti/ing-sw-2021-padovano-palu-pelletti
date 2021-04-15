@@ -71,7 +71,8 @@ public class Player {
 
     public Map<Resource, Integer> getResources(){
         Map<Resource, Integer> resources= this.warehouseDepot.getResources();
-        for(Resource resource: Resource.values()){
+        Set<Resource> possibleResources = resources.keySet();
+        for(Resource resource: possibleResources){
             if(this.strongbox.getQuantity(resource)!=null) {
                 resources.put(resource, resources.get(resource) + this.strongbox.getQuantity(resource));
             }

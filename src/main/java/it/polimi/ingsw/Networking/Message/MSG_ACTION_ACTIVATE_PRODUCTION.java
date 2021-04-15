@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Networking.Message;
 
-import it.polimi.ingsw.Networking.OBJ_PRODUCTION;
-
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializable {
 
@@ -10,21 +10,23 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
     private final boolean[] standardProduction; //refers to the DevelopmentSlot
     private final boolean basicProduction; //refers to the basic Development skill
     private final boolean[] leaderProduction; //refers to the choices made for the leaderCards with a Production ability
-    private final OBJ_PRODUCTION basicProductionObject;
-    private final OBJ_PRODUCTION[] leaderProductionObject;
+    private final ArrayList<Resource> basicInput;
+    private final Resource basicOutput;
+    private final Resource leaderOutput1;
+    private final Resource leaderOutput2;
 
-    public MSG_ACTION_ACTIVATE_PRODUCTION(boolean[] standardProduction, boolean basicProduction, boolean[] leaderProduction, OBJ_PRODUCTION basicProductionObject, OBJ_PRODUCTION[] leaderProductionObject)
+    public MSG_ACTION_ACTIVATE_PRODUCTION(boolean[] standardProduction, boolean basicProduction, boolean[] leaderProduction, ArrayList<Resource> basicInput, Resource basicOutput, Resource leaderOutput1, Resource leaderOutput2)
     {
         super(MessageType.MSG_ACTION_ACTIVATE_PRODUCTION);
 
-        this.standardProduction = new boolean[3];
-        System.arraycopy(standardProduction, 0, this.standardProduction, 0, 3);
+        this.standardProduction = standardProduction.clone();
         this.basicProduction=basicProduction;
-        this.leaderProduction = new boolean[2];
-        System.arraycopy(leaderProduction, 0, this.leaderProduction, 0, 2);
-        this.basicProductionObject=basicProductionObject;
-        this.leaderProductionObject = new OBJ_PRODUCTION[2];
-        System.arraycopy(leaderProductionObject, 0, this.leaderProductionObject, 0, 2);
+        this.leaderProduction = leaderProduction.clone();
+
+        this.basicInput = basicInput;
+        this.basicOutput = basicOutput;
+        this.leaderOutput1 = leaderOutput1;
+        this.leaderOutput2 = leaderOutput2;
     }
 
     public boolean[] getStandardProduction() {
@@ -39,14 +41,21 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
         return leaderProduction.clone();
     }
 
-    public OBJ_PRODUCTION getBasicProductionObject() {
-        return basicProductionObject;
+    public ArrayList<Resource> getBasicInput(){
+        return (ArrayList<Resource>) this.basicInput.clone();
     }
 
-    public OBJ_PRODUCTION[] getLeaderProductionObject() {
-        return leaderProductionObject.clone();
+    public Resource getBasicOutput(){
+        return this.basicOutput;
     }
 
+    public Resource getLeaderOutput1(){
+        return this.leaderOutput1;
+    }
+
+    public Resource getLeaderOutput2(){
+        return this.leaderOutput2;
+    }
 
 
     public MessageType getMessageType() { return super.getMessageType();}

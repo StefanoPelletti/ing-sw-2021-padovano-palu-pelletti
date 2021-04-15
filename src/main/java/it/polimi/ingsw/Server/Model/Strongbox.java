@@ -61,4 +61,8 @@ public class Strongbox {
         Strongbox o = (Strongbox) obj;
         return (this.resources.equals(((Strongbox) obj).resources));
     }
+
+    public String toString(){
+        return resources.toString();
+    }
 }
