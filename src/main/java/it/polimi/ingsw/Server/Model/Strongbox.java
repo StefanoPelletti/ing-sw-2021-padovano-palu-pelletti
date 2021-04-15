@@ -52,4 +52,13 @@ public class Strongbox {
     public Integer getTotal() {
         return resources.values().stream().reduce(0, Integer::sum);
     }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if(obj == this) return true;
+        if(!(obj instanceof Strongbox)) return false;
+        Strongbox o = (Strongbox) obj;
+        return (this.resources.equals(((Strongbox) obj).resources));
+    }
 }

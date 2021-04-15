@@ -11,10 +11,11 @@ import it.polimi.ingsw.Server.Controller.*;
 import java.util.*;
 
 public class ActionManagerTest {
+
     GameManager gm = new GameManager();
-    Game g = new Game();
-    FaithTrackManager ftm = new FaithTrackManager(g);
-    ActionManager am = new ActionManager(gm,ftm,g);
+    Game g = gm.getGame();
+    FaithTrackManager ftm = gm.getFaithTrackManager();
+    ActionManager am = gm.getActionManager();
 
     @Test
     //this test ensures that all the cards are removed from the purchasable cards

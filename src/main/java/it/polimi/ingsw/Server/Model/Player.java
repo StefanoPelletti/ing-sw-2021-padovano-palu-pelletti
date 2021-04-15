@@ -133,4 +133,29 @@ public class Player {
             result.add(leaderCards[1]);
         return result;
     }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if(obj == this) return true;
+        if(!(obj instanceof Player)) return false;
+        Player o = (Player) obj;
+        return (this.nickname.equals(o.nickname));
+    }
+
+
+    public boolean deepEquals( Object obj )
+    {
+        if(obj == this) return true;
+        if(!(obj instanceof Player)) return false;
+        Player o = (Player) obj;
+        return ( this.nickname.equals(o.nickname) &&
+                this.VP == o.VP &&
+                this.position == o.position &&
+                this.playerNumber == o.playerNumber &&
+                Arrays.equals(this.leaderCards, o.leaderCards) &&
+                this.strongbox.equals(o.strongbox) &&
+                this.warehouseDepot.equals(o.warehouseDepot) &&
+                this.developmentSlot.equals(o.developmentSlot));
+    }
 }

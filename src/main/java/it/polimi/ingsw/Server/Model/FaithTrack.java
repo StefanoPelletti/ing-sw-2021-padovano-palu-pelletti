@@ -42,6 +42,12 @@ public class FaithTrack {
         return true;
     }
 
+    public boolean advanceLorentz()
+    {
+        if(game.getBlackCrossPosition() == 24) return false;
+        game.setBlackCrossPosition(game.getBlackCrossPosition()+1);
+        return true;
+    }
 
 //result is the number of points that
     public int calculateVP( Player player )

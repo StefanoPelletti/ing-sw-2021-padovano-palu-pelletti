@@ -8,9 +8,9 @@ import java.util.Optional;
 public class Game {
     private Status status;
     private Player firstPlayer;
-    int num_of_players;
-    int turn;
-    int blackCrossPosition;
+    private int num_of_players;
+    private int turn;
+    private int blackCrossPosition;
 
     private final ActionTokenStack actionTokenStack;
     private final ArrayList<Player> playerList;
@@ -94,34 +94,5 @@ public class Game {
         }
     }
 
-    public void advanceOnTrack( Player player )
-    {
-          switch ( faithTrack.doesActivateZone(player) )
-          {
-                case 0:
-                    faithTrack.advance( player );
-                    break;
-                case 1:
-                    faithTrack.advance( player );
-                    for ( Player p : playerList )
-                        p.addVP(faithTrack.calculateVP(p));
-                    faithTrack.setZones(0, true);
-                    break;
-                case 2:
-                    faithTrack.advance( player );
-                    for ( Player p : playerList )
-                        p.addVP(faithTrack.calculateVP(p));
-                    faithTrack.setZones(1, true);
-                    break;
-                case 3:
-                    faithTrack.advance( player );
-                    for ( Player p : playerList )
-                        p.addVP(faithTrack.calculateVP(p));
-                    faithTrack.setZones(2, true);
-                    changeStatus(Status.LAST_TURN);
-                    break;
-                case -1:
-                    break;
-          }
-    }
+
 }

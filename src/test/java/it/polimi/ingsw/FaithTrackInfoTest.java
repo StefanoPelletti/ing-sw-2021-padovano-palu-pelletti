@@ -11,6 +11,7 @@ public class FaithTrackInfoTest {
     {
         f = new FaithTrackInfo();
     }
+
     @Test
     public void testCopyInvalidConfig1()
     {
