@@ -377,8 +377,7 @@ public class ActionManager {
 
         ArrayList<DevelopmentCard> tmp = new ArrayList<>(cards);
         //first check: all the cards that the player can't buy are removed from the ones that are on top.
-        for(int i = 0; i < tmp.size(); i++)
-        {
+        for(int i = 0; i < tmp.size(); i++) {
             HashMap<Resource, Integer> cost = tmp.get(i).getCost();
             for (Resource resource : cost.keySet()) {
                 if (playerResources.get(resource) < cost.get(resource)) {
@@ -406,6 +405,19 @@ public class ActionManager {
                 finalCards.put(cards.get(i), pos);
             }
         }
+
+        Scanner myInput = new Scanner(System.in);
+        for(DevelopmentCard dc : finalCards.keySet()) {
+            System.out.println(dc);
+            int k = 1;
+            for(boolean b : finalCards.get(dc)) {
+                if(b) {
+                    System.out.println("Puo' essere inserito nello slot: "+k);
+                }
+                k++;
+            }
+        }
+
         return true;
     }
 
