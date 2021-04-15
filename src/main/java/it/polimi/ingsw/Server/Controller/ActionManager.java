@@ -305,9 +305,15 @@ public class ActionManager {
             }
         }
 
-        playerStrongbox.addResource(baseProductionObject.getProductionOutput(), 1);
-        playerStrongbox.addResource(leaderProductionObject[0].getProductionOutput(), 1);
-        playerStrongbox.addResource(leaderProductionObject[1].getProductionOutput(), 1);
+        if(baseProduction) {
+            playerStrongbox.addResource(baseProductionObject.getProductionOutput(), 1);
+        }
+        if(leaderProduction[0]) {
+            playerStrongbox.addResource(leaderProductionObject[0].getProductionOutput(), 1);
+        }
+        if(leaderProduction[1]) {
+            playerStrongbox.addResource(leaderProductionObject[1].getProductionOutput(), 1);
+        }
         return true;
     }
 
