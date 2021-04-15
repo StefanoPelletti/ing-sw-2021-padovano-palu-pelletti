@@ -31,6 +31,7 @@ public enum MessageType implements Serializable {
     MSG_GAME_END_TURN,
 
     MSG_UPDATE_MODEL,
+    MSG_ALERT,
 
     MSG_GAME_OVER
 
