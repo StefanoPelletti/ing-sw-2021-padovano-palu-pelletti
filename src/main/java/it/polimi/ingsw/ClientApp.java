@@ -9,8 +9,6 @@ import it.polimi.ingsw.Networking.Message.*;
 public class ClientApp {
 
     public static void main( String[] args ) {
-        MSG_CREATE_LOBBY p = new MSG_CREATE_LOBBY(4, "tommaso");
-        System.out.println(p.getMessageType());
         Socket socket;
         List<String> textList = new ArrayList<>();
         String text;
@@ -35,7 +33,7 @@ public class ClientApp {
                 case "QUIT":
                     quit = true;
                     break;
-                case "CREATE":   // CREATE localhost 1337 Tommaso 4
+                case "CREATE":   // CREATE localhost 43210 Tommaso 4
                     if ( !checkCreateCommand(textList) ) break;
                     try {
                         socket = new Socket(textList.get(1), Integer.parseInt(textList.get(2)));

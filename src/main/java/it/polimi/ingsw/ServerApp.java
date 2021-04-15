@@ -12,7 +12,7 @@ public class ServerApp
 {
     public static void main( String[] args )
     {
-        final int port = 1337;
+        final int port = 43210;
         ServerSocket serverSocket;
         OutputStream outputStream;
         ObjectOutputStream objectOutputStream;
@@ -31,7 +31,7 @@ public class ServerApp
             System.out.println("SRV ERROR: "+e.getMessage());
             return;
         }
-        System.out.println("Server online, listening on: " + serverSocket.getLocalPort()+serverSocket.getInetAddress());
+        System.out.println("Server online, listening on: " + serverSocket.getLocalPort()+"  "+serverSocket.getInetAddress());
 
         Socket socket;
         while(true)
@@ -91,14 +91,14 @@ public class ServerApp
                         }
                         else
                         {
-                            objectOutputStream.writeObject(new MSG_ERROR_GENERIC("Error! THERE IS NO STANZA W/ that NuMeRo"));
+                            objectOutputStream.writeObject(new MSG_ERROR_GENERIC("Error! The lobby is full!"));
                             socket.close();
 
                         }
                     }
                     else
                     {
-                        objectOutputStream.writeObject(new MSG_ERROR_GENERIC("Error! THERE IS NO STANZA W/ that NuMeRo"));
+                        objectOutputStream.writeObject(new MSG_ERROR_GENERIC("Error! There is no lobby with such number!"));
                         socket.close();
                     }
                 }
