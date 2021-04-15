@@ -30,4 +30,14 @@ public class Power implements Serializable {
         Power o = (Power) obj;
         return(this.input.equals(o.input) && this.output.equals(o.output));
     }
+
+    @Override
+    public String toString()
+    {
+        String result = "";
+        result = result + "     POWER: "+"\n";
+        result = result + " input:  "+input.toString()+"\n";
+        result = result + " output: "+output.toString()+"\n";
+        return result;
+    }
 }

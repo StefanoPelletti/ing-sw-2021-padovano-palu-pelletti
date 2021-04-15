@@ -69,7 +69,7 @@ public class ExtraDepot implements SpecialAbility, Serializable {
     @Override
     public String toString()
     {
-        return "I have "+getNumber()+" "+getResourceType()+ " in my belly! ";
+        return "  SpecialAbility: \nI have "+getNumber()+" "+getResourceType()+ " in my belly! ";
     }
 
 }

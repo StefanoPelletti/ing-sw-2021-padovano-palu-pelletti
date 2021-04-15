@@ -44,6 +44,6 @@ public class DiscountResource implements SpecialAbility, Serializable {
     @Override
     public String toString()
     {
-        return "Hear my plea! Discount this resource: "+getDiscountedResource();
+        return "  SpecialAbility: \nHear my plea! Discount this resource: "+getDiscountedResource();
     }
 }

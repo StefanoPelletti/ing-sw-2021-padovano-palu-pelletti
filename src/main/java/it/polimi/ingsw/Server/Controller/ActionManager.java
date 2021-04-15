@@ -25,7 +25,9 @@ public class ActionManager {
         this.game = game;
     }
 
-    public boolean gameMarketResourcesAction(Player p, boolean column, int number) {
+    public boolean gameMarketResourcesAction(Player p, MSG_ACTION_GET_MARKET_RESOURCES message) {
+        boolean column = message.getColumn();
+        int number = message.getNumber();
         if(column && number >=0 && number <= 4) return false;
         if(!column && number >= 0 && number <= 3) return false;
 

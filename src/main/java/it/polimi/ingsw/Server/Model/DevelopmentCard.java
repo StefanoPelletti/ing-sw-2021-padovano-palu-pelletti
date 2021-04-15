@@ -69,4 +69,17 @@ public class DevelopmentCard implements Serializable {
                 this.power.equals(o.power));
 
     }
+
+    @Override
+    public String toString()
+    {
+        String result= "";
+        result = result + "   DEVELOPMENT CARD!   \n";
+        result = result + "     level : "+this.level+ "\n";
+        result = result + "     color : "+this.color+ "\n";
+        result = result + "     VP    : "+this.VP+ "\n";
+        result = result + "     cost  : "+this.cost+ "\n";
+        result = result + "     power : "+this.power+ "\n";
+        return result;
+    }
 }
