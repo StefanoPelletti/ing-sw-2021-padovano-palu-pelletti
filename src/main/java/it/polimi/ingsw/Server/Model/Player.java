@@ -69,7 +69,7 @@ public class Player {
         leaderCards[1] = L2;
     }
 
-    public Map<Resource, Integer> getTotalResources(){
+    public Map<Resource, Integer> getResources(){
         Map<Resource, Integer> resources= this.warehouseDepot.getResources();
         for(Resource resource: Resource.values()){
             if(this.strongbox.getQuantity(resource)!=null) {
