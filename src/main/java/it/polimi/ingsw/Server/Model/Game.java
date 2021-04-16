@@ -8,7 +8,6 @@ import java.util.Optional;
 public class Game {
     private Status status;
     private Player firstPlayer;
-    private int num_of_players;
     private int turn;
     private int blackCrossPosition;
 
@@ -23,7 +22,6 @@ public class Game {
     {
         status = Status.INIT;
         firstPlayer=null;
-        num_of_players = 0;
         blackCrossPosition = 1;
         playerList = new ArrayList<>();
         leaderCardsDeck = new LeaderCardsDeck();
@@ -37,10 +35,6 @@ public class Game {
     public Player getFirstPlayer() {
         return firstPlayer;
     }
-    public void setFirstPlayer(Player firstPlayer) {
-        this.firstPlayer = firstPlayer;
-    }
-    public int getNum_of_players() { return this.num_of_players; }
     public int getTurn() { return this.turn; }
     public int getBlackCrossPosition() { return this.blackCrossPosition; }
 
@@ -62,37 +56,24 @@ public class Game {
         Optional<Player> result = playerList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
         return result.orElse(null);
     }
-
-    public void addPlayer( String nickname )
+    public Player getPlayer( int playerNumber)
     {
-        if (getPlayer(nickname) == null) {
-            if (num_of_players < 4) {
-                playerList.add(new Player(nickname, num_of_players));
-                num_of_players++;
-            } else {
-                System.out.println("Max number of player reached!");
-            }
-        }
-        else
-        {
-            System.out.println("Player already present!");
-        }
+        Optional<Player> result = playerList.stream().filter( p -> p.getPlayerNumber()==playerNumber ).findFirst();
+        return result.orElse(null);
     }
 
-    public void removePlayer( String nickname )
+    public boolean addPlayer( String nickname , int playerNumber)
     {
-        boolean result = playerList.removeIf(x -> (x.getNickname()).equals(nickname));
-        if ( result )
-        {
-            num_of_players = num_of_players-1;
-            for ( int i = 0; i < playerList.size(); i++)
-                playerList.get(i).setPlayerNumber(i);
-        }
-        else
-        {
-            System.out.println("No player with such nickname found!");
-        }
+        if (getPlayer(nickname) != null) return false;
+        Player player = new Player(nickname,playerNumber);
+        if (playerNumber == 1)
+            firstPlayer = player;
+        playerList.add(player);
+        return true;
     }
 
-
+    public boolean removePlayer( String nickname )
+    {
+        return playerList.removeIf(x -> (x.getNickname()).equals(nickname));
+    }
 }

@@ -12,23 +12,23 @@ public class GameManager {
     private Game game;
     private FaithTrackManager faithTrackManager;
     private ActionManager actionManager;
-    public GameManager()
+    private int lobbyMaxPlayers;
+    private int currentPlayer;
+
+    public GameManager(int lobbyMaxPlayers)
     {
-        broadcastList = new LinkedList<>();
-        game = new Game();
-        faithTrackManager = new FaithTrackManager(this.game, this);
-        actionManager = new ActionManager(this, this.faithTrackManager, this.game);
+        this.broadcastList = new LinkedList<>();
+        this.game = new Game();
+        this.faithTrackManager = new FaithTrackManager(this.game, this);
+        this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
+        this.lobbyMaxPlayers = lobbyMaxPlayers;
+        this.currentPlayer = 1;
     }
 
     public boolean addBroadcastMessage(Message message)
     {
         if ( message == null ) return false;
         broadcastList.add(message);
-        return true;
-    }
-
-    public boolean INIT()
-    {
         return true;
     }
 
@@ -43,4 +43,13 @@ public class GameManager {
     }
     public FaithTrackManager getFaithTrackManager() { return faithTrackManager; }
     public ActionManager getActionManager() { return actionManager; }
+    public ArrayList<LeaderCard> pickFourLeaderCards() {
+
+        return game.getLeaderCardsDeck().pickFourCards();
+    }
+    public void setLeaderCards(ArrayList<LeaderCard> cards, String nickname)
+    {
+        Player p = game.getPlayer(nickname);
+        p.associateLeaderCards(cards);
+    }
 }

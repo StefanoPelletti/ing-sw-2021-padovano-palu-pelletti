@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Networking;
 
+import it.polimi.ingsw.Server.ClientHandler;
 import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
@@ -13,35 +14,42 @@ import java.util.*;
 public class Lobby {
     List<Socket> socketList;
     List<String> nicknameList;
+    List<ClientHandler> threadsList;
+
     int lobbyNumber;
     int lobbyMaxPlayers;
-    Game game;
-    ActionManager actionManager;
-    FaithTrackManager faithTrackManager;
-    GameManager gameManager;
+
+
 
     public Lobby(String nickname, Socket socket, int lobbyNumber, int lobbyMaxPlayers)
     {
         this.socketList = new LinkedList<>();
         this.nicknameList = new LinkedList<>();
+        this.threadsList = new LinkedList<>();
         this.socketList.add(socket);
-        this.game = null;
-        this.actionManager = null;
-        this.faithTrackManager = null;
-        this.gameManager = null;
+
         this.lobbyNumber = lobbyNumber;
         this.lobbyMaxPlayers = lobbyMaxPlayers;
-    }
-
-    public void init()
-    {
 
     }
-    public void onInit(Game game, ActionManager actionManager, FaithTrackManager faithTrackManager, GameManager gameManager){
-        this.game = game;
-        this.actionManager = actionManager;
-        this.faithTrackManager = faithTrackManager;
-        this.gameManager = gameManager;
+
+    public void init() {
+        GameManager gameManager = new GameManager(this.lobbyMaxPlayers);
+        Thread thread;
+        List<Integer> playerNumbers = new LinkedList<>();
+
+        for(int i = 0; i<lobbyMaxPlayers; i++) {
+            playerNumbers.add(i);
+        }
+
+        Collections.shuffle(playerNumbers);
+        Game game = gameManager.getGame();
+
+        for(int i = 0; i<lobbyMaxPlayers; i++) {
+            game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
+            thread = new Thread(new ClientHandler(socketList.get(i),gameManager, this, nicknameList.get(i)));
+            thread.start();
+        }
     }
 
     public String add(String nickname, Socket socket){

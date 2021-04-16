@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Server.Model.*;
 
+import java.util.ArrayList;
+
 public class PlayerTest {
     Player player;
 
@@ -91,20 +93,22 @@ public class PlayerTest {
     @Test
     public void associateLeaderCardsTest(){
         LeaderCardsDeck ld= new LeaderCardsDeck();
-        LeaderCard l1=ld.pickFourCards().get(0);
-        LeaderCard l2=ld.pickFourCards().get(1);
-        player.associateLeaderCards(l1, l2);
-        assertEquals(l1, player.getLeaderCards()[0]);
-        assertEquals(l2, player.getLeaderCards()[1]);
+        ArrayList<LeaderCard> l = new ArrayList<>();
+        l.add(ld.pickFourCards().get(0));
+        l.add(ld.pickFourCards().get(1));
+        player.associateLeaderCards(l);
+        assertEquals(ld.pickFourCards().get(0), player.getLeaderCards()[0]);
+        assertEquals(ld.pickFourCards().get(1), player.getLeaderCards()[1]);
     }
 
     //verifies that the leaderCard methods do not return null
     @Test
     public void leaderCardsTest(){
         LeaderCardsDeck ld= new LeaderCardsDeck();
-        LeaderCard l1=ld.pickFourCards().get(0);
-        LeaderCard l2=ld.pickFourCards().get(1);
-        player.associateLeaderCards(l1, l2);
+        ArrayList<LeaderCard> l = new ArrayList<>();
+        l.add(ld.pickFourCards().get(0));
+        l.add(ld.pickFourCards().get(1));
+        player.associateLeaderCards(l);
         assertNotNull(player.getCardsWithDiscountResourceAbility());
         assertNotNull(player.getCardsWithExtraDepotAbility());
         assertNotNull(player.getCardsWithProductionAbility());

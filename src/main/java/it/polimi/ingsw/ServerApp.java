@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.Server.ClientHandler;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Networking.*;
@@ -21,6 +22,7 @@ public class ServerApp
         Message message;
         List<Lobby> lobbies = new ArrayList<Lobby>();
         Random random = new Random();
+        Thread T;
         int i;
 
         try {
@@ -87,7 +89,11 @@ public class ServerApp
                             String newNickname = lobby.add(msg.getNickname(), socket);
                             objectOutputStream.writeObject(new MSG_OK_JOIN(newNickname));
 
-                            lobby.init();
+                            if( lobby.getLobbyMaxPlayers() == lobby.getLobbyNumber()) {
+                                //lobby piena, bisogna inizializzarla
+
+                                lobby.init();
+                            }
                         }
                         else
                         {

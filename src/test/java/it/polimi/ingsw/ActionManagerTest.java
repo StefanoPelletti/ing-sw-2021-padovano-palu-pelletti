@@ -12,7 +12,7 @@ import java.util.*;
 
 public class ActionManagerTest {
 
-    GameManager gm = new GameManager();
+    GameManager gm = new GameManager(4);
     Game g = gm.getGame();
     FaithTrackManager ftm = gm.getFaithTrackManager();
     ActionManager am = gm.getActionManager();

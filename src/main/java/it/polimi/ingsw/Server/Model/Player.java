@@ -63,10 +63,10 @@ public class Player {
     }
     public DevelopmentSlot getDevelopmentSlot() { return this.developmentSlot; }
 
-    public void associateLeaderCards(LeaderCard L1, LeaderCard L2)
+    public void associateLeaderCards(ArrayList<LeaderCard> cards)
     {
-        leaderCards[0] = L1;
-        leaderCards[1] = L2;
+        leaderCards[0] = cards.get(0);
+        leaderCards[1] = cards.get(1);
     }
 
     public Map<Resource, Integer> getResources(){
