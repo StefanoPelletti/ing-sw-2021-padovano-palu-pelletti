@@ -2,7 +2,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
-import it.polimi.ingsw.Server.Model.Game;
+import it.polimi.ingsw.Server.Model.*;
 
 import java.util.*;
 
@@ -23,6 +23,17 @@ public class GameManager {
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
         this.lobbyMaxPlayers = lobbyMaxPlayers;
         this.currentPlayer = 1;
+    }
+
+    public Player currentPlayer(){
+        return game.getPlayer(currentPlayer);
+    }
+
+    public void setNextPlayer(){
+        currentPlayer++;
+        if(currentPlayer>lobbyMaxPlayers){
+            currentPlayer=1;
+        }
     }
 
     public boolean addBroadcastMessage(Message message)
