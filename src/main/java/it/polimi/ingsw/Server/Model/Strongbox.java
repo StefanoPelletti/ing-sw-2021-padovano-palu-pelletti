@@ -62,7 +62,16 @@ public class Strongbox {
         return (this.resources.equals(((Strongbox) obj).resources));
     }
 
+    @Override
     public String toString(){
-        return resources.toString();
+
+        StringBuilder result = new StringBuilder();
+        result.append(" the Strongbox contains: ").append("\n");
+        for( Resource r : resources.keySet())
+        {
+            result.append(resources.get(r)).append(" of ").append(r.toString());
+            result.append("\n");
+        }
+        return result.toString();
     }
 }

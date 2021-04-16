@@ -120,4 +120,14 @@ public class StrongboxTest {
         s.addResource(Resource.STONE, 4);
         assertEquals(s.getTotal(), 56);
     }
+
+    @Test
+    public void toStringFormat()
+    {
+        s.addResource(Resource.COIN, 2);
+        s.addResource(Resource.SHIELD, 50);
+        s.addResource(Resource.STONE, 4);
+        System.out.println(s.toString());
+        assert ( true );
+    }
 }
