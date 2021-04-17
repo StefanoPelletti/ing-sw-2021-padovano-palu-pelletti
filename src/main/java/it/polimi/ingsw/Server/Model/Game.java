@@ -17,6 +17,7 @@ public class Game {
     private final Market market;
     private final FaithTrack faithTrack;
     private final DevelopmentCardsDeck developmentCardsDeck;
+    private final MarketHelper marketHelper;
 
     public Game()
     {
@@ -29,6 +30,7 @@ public class Game {
         faithTrack = new FaithTrack(this);
         developmentCardsDeck = new DevelopmentCardsDeck();
         actionTokenStack=new ActionTokenStack();
+        marketHelper = new MarketHelper();
     }
 
     public Status getStatus() { return this.status; }
@@ -43,6 +45,7 @@ public class Game {
     }
     public LeaderCardsDeck getLeaderCardsDeck() { return this.leaderCardsDeck; }
     public Market getMarket() { return this.market; }
+    public MarketHelper getMarketHelper(){return this.marketHelper;}
     public FaithTrack getFaithTrack() { return this.faithTrack; }
     public DevelopmentCardsDeck getDevelopmentCardsDeck() { return this.developmentCardsDeck; }
     public ActionTokenStack getActionTokenStack(){return this.actionTokenStack;}
@@ -71,6 +74,7 @@ public class Game {
         playerList.add(player);
         return true;
     }
+
 
     public boolean removePlayer( String nickname )
     {

@@ -74,13 +74,13 @@ public class Player {
         Set<Resource> possibleResources = resources.keySet();
         for(Resource resource: possibleResources){
             if(this.strongbox.getQuantity(resource)!=null) {
-                resources.put(resource, resources.get(resource) + this.strongbox.getQuantity(resource));
+                resources.merge(resource, this.strongbox.getQuantity(resource), Integer::sum);
             }
         }
         for(LeaderCard l: this.getCardsWithExtraDepotAbility()){
             ExtraDepot depotAbility = (ExtraDepot) l.getSpecialAbility();
             Resource extraResource = depotAbility.getResourceType();
-            resources.put(extraResource, resources.get(extraResource) + depotAbility.getNumber());
+            resources.merge(extraResource, depotAbility.getNumber(), Integer::sum);
         }
         return resources;
     }
@@ -92,7 +92,7 @@ public class Player {
         for(LeaderCard l: playerLeaderCards){
             ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
             Resource resource = ability.getResourceType();
-            result.put(resource, result.get(resource) + ability.getNumber());
+            result.merge(resource, ability.getNumber(), Integer::sum);
         }
         return result;
     }

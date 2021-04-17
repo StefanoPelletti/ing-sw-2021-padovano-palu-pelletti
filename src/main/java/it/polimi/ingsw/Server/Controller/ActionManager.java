@@ -26,166 +26,6 @@ public class ActionManager {
         this.game = game;
     }
 
-    public boolean gameMarketResourcesAction(Player player, MSG_ACTION_GET_MARKET_RESOURCES message) {
-        boolean column = message.getColumn();
-        int number = message.getNumber();
-        if(column && number >=0 && number <= 4) return false;
-        if(!column && number >= 0 && number <= 3) return false;
-
-        ArrayList<MarketMarble> temp;
-        WarehouseDepot depot = player.getWarehouseDepot();
-
-        Scanner myInput = new Scanner(System.in);
-
-        if(column)
-            temp = game.getMarket().getColumn(number);
-        else
-            temp = game.getMarket().getRow(number);
-
-        ArrayList<Resource> R = new ArrayList<>();
-        for( MarketMarble m : temp ) {
-            try {
-                m.addResource(R);
-            } catch (RedMarbleException e) {
-                faithTrackManager.advance(player);
-            }
-        }
-
-        int i = 0;
-        while(R.size()>0) {
-            Resource r = R.get(i);
-
-            if (r == Resource.EXTRA) {
-                ArrayList<LeaderCard> a = player.getCardsWithMarketResourceAbility();
-                if (a.size() == 0) {
-                    R.remove(i); //Player cannot use the White Marble
-                } else if (a.size() == 1) {
-                    R.set(i, ((MarketResources) a.get(0).getSpecialAbility()).getConvertedResource());
-                } else if (a.size() == 2) {
-                    Resource r1 = ((MarketResources) a.get(0).getSpecialAbility()).getConvertedResource();
-                    Resource r2 = ((MarketResources) a.get(1).getSpecialAbility()).getConvertedResource();
-                    Resource chosenResource;
-//MYSTERY FROM THIS POINT ONWARD -------------------------------------------------------------------------------------------------------------------
-                    boolean done = false;
-                    int x = 0;
-
-
-                    while (!done) {
-                        System.out.println("hai una risorsa extra! che vuoi?");
-                        System.out.println("1: " + r1);
-                        System.out.println("2: " + r2);
-                        x = myInput.nextInt();
-                        if (x == 1 || x == 2) done = true;
-
-                    }
-                    //askForResource ???
-
-                    if (x == 1) chosenResource = r1;
-                    else chosenResource = r2;
-//END OF THE MYSTERY! -------------------------------------------------------------------------------------------------------------------
-                    R.set(i, chosenResource);
-                }
-            }
-            r = R.get(i);
-
-            if (r == Resource.COIN || r == Resource.STONE || r == Resource.SHIELD || r == Resource.SERVANT)
-            {
-                boolean[] choices = new boolean[7];
-                choices[0] = choices[1] = choices[2] = choices[3] = choices[4] = choices[5] = choices[6] = false;
-
-                //choice 0: put in depot
-                if (depot.isAddable(r)) choices[0] = true;
-
-                //choice 1: put in extra depot
-                ArrayList<LeaderCard> list = player.getCardsWithExtraDepotAbility();
-                ExtraDepot e = null;
-                if (list.size() == 0) {
-                    choices[1] = false;
-                } else if (list.size() == 1) {
-                    e = ((ExtraDepot) list.get(0).getSpecialAbility());
-                    if (e.getResourceType()==r && e.getNumber() < 2)
-                        choices[1] = true;
-                } else if (list.size() == 2) {
-                    e = ((ExtraDepot) list.get(0).getSpecialAbility());
-                    if (e.getResourceType() != r) {
-                        e = ((ExtraDepot) list.get(1).getSpecialAbility());
-                        if (e.getResourceType() != r) {
-                            e = null;
-                        }
-                    }
-                    if (e != null) {
-                        if (e.getNumber() < 2)
-                            choices[1] = true;
-                    }
-                }
-
-                //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
-                if (!choices[0] && !choices[1]) choices[2] = true;
-
-                //choice 3-4-5: swap rows
-                if (depot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
-                if (depot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
-                if (depot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
-
-                //choice 6: skip this resource
-                if ( R.size() > 1 ) {
-                    choices[6] = true;
-                }
-
-
-//MYSTERY FROM THIS POINT ONWARD -------------------------------------------------------------------------------------------------------------------
-
-                boolean done = false;
-                int x = 0;
-
-                while (!done) {
-                    if(choices[0]) System.out.println("1: METTI NEL DEPOSITO");
-                    if(choices[1]) System.out.println("2: PUT IN EXTRA DEPOSITO");
-                    if(choices[2]) System.out.println("3: DISCARD RESOURCE");
-                    if(choices[3]) System.out.println("4: SWAP RIGA 1-2 DEPOT");
-                    if(choices[4]) System.out.println("5: SWAP RIGA 1-3 DEPOT");
-                    if(choices[5]) System.out.println("6: SWAP RIGA 2-3 DEPOT");
-                    if(choices[6]) System.out.println("7: SKIPPA THIS RISOURSA");
-                    x = myInput.nextInt();
-                    if ((x==1&&choices[0]) || (x==2&&choices[1]) || (x==3&&choices[2]) || (x==4&&choices[3]) || (x==5&&choices[4]) || (x==6&&choices[5]) || (x==7)&&choices[6]) done = true;
-
-                }
-                //askForCHOICE?
-
-                switch (x)
-                {
-                    case 1:
-                        depot.add(r);
-                        R.remove(i);
-                        break;
-                    case 2:
-                        e.addResource(1);
-                        R.remove(i);
-                        break;
-                    case 3:
-                        faithTrackManager.advanceAllExcept(player);
-                        R.remove(i);
-                        break;
-                    case 4:
-                        depot.swapRow(1,2);
-                        break;
-                    case 5:
-                        depot.swapRow(1,3);
-                        break;
-                    case 6:
-                        depot.swapRow(2,3);
-                        break;
-                    case 7:
-                        i = (i+1)%R.size();
-                        break;
-                }
-//END OF THE MYSTERY! -------------------------------------------------------------------------------------------------------------------
-
-            }
-        }
-        return true;
-    }
-
     public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARDS message){
         int cardNumber = message.getCardNumber();
         if(player.getLeaderCards()[cardNumber].getEnable()) return false;
@@ -245,9 +85,9 @@ public class ActionManager {
         boolean baseProduction = message.isBasicProduction();
         boolean[] leaderProduction = message.getLeaderProduction();
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
-        ArrayList<LeaderCard> productionLeaderCards = player.getCardsWithProductionAbility();
 
         Map<Resource, Integer> requiredResources = new HashMap<>();
+        Map<Resource, Integer> newResources = new HashMap<>();
 
         //for each leaderProduction enabled, player receives one Faith Point
         for(boolean enabled : leaderProduction){
@@ -265,9 +105,13 @@ public class ActionManager {
         ArrayList<DevelopmentCard> topCards = player.getDevelopmentSlot().getTopCards();
         for(int i=0; i<3; i++){
             if(standardProduction[i]){
-                Map<Resource, Integer> cost = topCards.get(i).getPowerInput();
-                for(Resource r : cost.keySet()){
-                    requiredResources.put(r, requiredResources.get(r)+cost.get(r));
+                Map<Resource, Integer> input = topCards.get(i).getPowerInput();
+                for(Resource r : input.keySet()){
+                    requiredResources.put(r, requiredResources.get(r)+input.get(r));
+                }
+                Map<Resource, Integer> output = topCards.get(i).getPowerOutput();
+                for(Resource r : output.keySet()){
+                    newResources.put(r, requiredResources.get(r)+output.get(r));
                 }
             }
         }
@@ -277,21 +121,24 @@ public class ActionManager {
             for (Resource r : message.getBasicInput()) {
                 requiredResources.put(r, requiredResources.get(r) + 1);
             }
+            newResources.put(message.getBasicOutput(), newResources.get(message.getBasicOutput())+1);
         }
 
         //getting cost for leader Production
         //first LeaderCard
         if(leaderProduction[0]){
-            Production ability = (Production) productionLeaderCards.get(0).getSpecialAbility();
+            Production ability = (Production) player.getLeaderCards()[0].getSpecialAbility();
             Resource input = ability.getInput();
             requiredResources.put(input, requiredResources.get(input) + 1);
+            newResources.put(message.getLeaderOutput1(), newResources.get(message.getLeaderOutput1())+1);
         }
 
         //secondLeaderCard
         if(leaderProduction[1]){
-            Production ability = (Production) productionLeaderCards.get(1).getSpecialAbility();
+            Production ability = (Production) player.getLeaderCards()[1].getSpecialAbility();
             Resource input = ability.getInput();
             requiredResources.put(input, requiredResources.get(input) + 1);
+            newResources.put(message.getLeaderOutput2(), newResources.get(message.getLeaderOutput2())+1);
         }
 
         //check if the player has enough resources
@@ -304,23 +151,8 @@ public class ActionManager {
 
         //now we add output resources to the player's strongbox
         Strongbox playerStrongbox = player.getStrongbox();
-        for(int i=0; i<3; i++){
-            if(standardProduction[i]){
-                Map<Resource, Integer> output = topCards.get(i).getPowerOutput();
-                for(Resource r : output.keySet()){
-                    playerStrongbox.addResource(r, output.get(r));
-                }
-            }
-        }
-
-        if(baseProduction) {
-            playerStrongbox.addResource(message.getBasicOutput(), 1);
-        }
-        if(leaderProduction[0]) {
-            playerStrongbox.addResource(message.getLeaderOutput1(), 1);
-        }
-        if(leaderProduction[1]) {
-            playerStrongbox.addResource(message.getLeaderOutput2(), 1);
+        for(Resource r: newResources.keySet()){
+            playerStrongbox.addResource(r, newResources.get(r));
         }
         return true;
     }
@@ -471,5 +303,222 @@ public class ActionManager {
                 else remainingResources--;
             }
         }
+    }
+
+    public boolean gameMarketResourcesAction2(Player player, MSG_ACTION_GET_MARKET_RESOURCES message){
+        boolean column = message.getColumn();
+        int number = message.getNumber();
+        if(column &&( number <0 || number >=4)) return false;
+        if(!column &&( number < 0 || number >= 3)) return false;
+
+        Market market = game.getMarket();
+        MarketHelper marketHelper = game.getMarketHelper();
+        ArrayList<MarketMarble> selectedMarbles;
+        if(column) selectedMarbles = market.pushColumn(number);
+        else selectedMarbles = market.pushRow(number);
+
+        System.out.println("You got these marbles: ");
+        selectedMarbles.stream().forEach(System.out::println);
+
+        ArrayList<Resource> resources = new ArrayList<>();
+        for( MarketMarble m : selectedMarbles ) {
+            try {
+                m.addResource(resources);
+            } catch (RedMarbleException e) {
+                faithTrackManager.advance(player);
+                System.out.println("Risorsa fede! Corro ad aggiungerti un punto fede!");
+            }
+        }
+
+        //check on the leaderCards with Market Ability
+        ArrayList<LeaderCard> marblesCards = player.getCardsWithMarketResourceAbility();
+        for(int i=0; i<resources.size(); i++){
+            if(resources.get(i)==Resource.EXTRA){
+                if(marblesCards.size()==0){
+                    resources.remove(i);
+                    i--;
+                }
+                else if(marblesCards.size()==1){
+                    resources.set(i, ((MarketResources) marblesCards.get(0).getSpecialAbility()).getConvertedResource());
+                }
+            }
+        }
+        marketHelper.setResources(resources);
+        setNextResourceOptions(player);
+        return true;
+    }
+
+    public void setNextResourceOptions(Player player){
+        MarketHelper marketHelper = game.getMarketHelper();
+
+        Resource resource = marketHelper.getCurrentResource();
+        if(resource == Resource.EXTRA){ //then player has 2 leaderCards with Market Ability
+            ArrayList<LeaderCard> marblesCards = player.getCardsWithMarketResourceAbility();
+            Resource[] extraResources = new Resource[2];
+            extraResources[0] = ((MarketResources) marblesCards.get(0).getSpecialAbility()).getConvertedResource();
+            extraResources[1] = ((MarketResources) marblesCards.get(1).getSpecialAbility()).getConvertedResource();
+            marketHelper.setExtraResourceChoices(extraResources);
+            marketHelper.setNormalChoice(false);
+            marketHelper.setChoices(calculateChoices(player, Resource.EXTRA));
+        }
+        else {
+            /*boolean[] choices = new boolean[8];
+            choices[0] = choices[1] = choices[2] = choices[3] = choices[4] = choices[5] = choices[6] = choices[7] = false;
+
+            //choice 0: put in depot
+            if (warehouseDepot.isAddable(resource)) choices[0] = true;
+
+            //choice 1: put in extra depot
+            ExtraDepot e = null;
+            if (extraDepotCards.size() == 0) {
+                choices[1] = false;
+            } else if (extraDepotCards.size() == 1) {
+                e = ((ExtraDepot) extraDepotCards.get(0).getSpecialAbility());
+                if (e.getResourceType() == resource && e.getNumber() < 2)
+                    choices[1] = true;
+            } else if (extraDepotCards.size() == 2) {
+                e = ((ExtraDepot) extraDepotCards.get(0).getSpecialAbility());
+                if (e.getResourceType() != resource) {
+                    e = ((ExtraDepot) extraDepotCards.get(1).getSpecialAbility());
+                    if (e.getResourceType() != resource) {
+                        e = null;
+                    }
+                }
+                if (e != null) {
+                    if (e.getNumber() < 2)
+                        choices[1] = true;
+                }
+            }
+
+            //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
+            /*if (!choices[0] && !choices[1]) choices[2] = true;
+
+            //choice 3-4-5: swap rows
+            if (warehouseDepot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
+            if (warehouseDepot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
+            if (warehouseDepot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
+
+            //choice 6: skip this resource
+            if (marketHelper.getResources().size() > 1) {
+                choices[6] = true;
+                choices[7] = true;
+            }*/
+
+            marketHelper.setNormalChoice(true);
+            marketHelper.setChoices(calculateChoices(player, resource));
+        }
+    }
+
+    public void gameNewChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message){
+        MarketHelper marketHelper = game.getMarketHelper();
+        boolean[] choice = message.getChoice();
+        Resource currentResource = marketHelper.getCurrentResource();
+        WarehouseDepot depot = player.getWarehouseDepot();
+        ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
+
+        if(!message.isNormalChoice()){
+            marketHelper.setResource(message.getResourceChoice());
+            System.out.println("Risorsa cambiata!");
+            return;
+        }
+        if(choice[0]){
+            depot.add(currentResource);
+            marketHelper.removeResource();
+            System.out.println("\nRisorsa aggiunta al deposito!");
+        }
+
+        else if(choice[1]){
+            for(LeaderCard l : extraDepotCards) {
+                ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
+                if (extraDepot.getResourceType() == currentResource) {
+                    extraDepot.addResource(1);
+                    marketHelper.removeResource();
+                    break;
+                }
+            }
+            System.out.println("\nRisorsa aggiunta nel deposito extra!");
+        }
+
+        else if(choice[2]){
+            marketHelper.removeResource();
+            System.out.println("\nRisorsa scartata!");
+        }
+
+        else if(choice[3]){
+            depot.swapRow(1,2);
+            System.out.println("\nHo scambiato le righe 1 e 2!");
+        }
+
+        else if(choice[4]){
+            depot.swapRow(1,3);
+            System.out.println("\nHo scambiato le righe 1 e 3!");
+        }
+
+        else if(choice[5]){
+            depot.swapRow(2,3);
+            System.out.println("\nHo scambiato le righe 2 e 3!");
+        }
+
+        else if(choice[6]){
+            marketHelper.skipForward();
+            System.out.println("\nRisorsa skippata! Non le volevi bene?");
+        }
+
+        else if(choice[7]){
+            marketHelper.skipBackward();
+            System.out.println("\nTorniamo indietro!");
+        }
+
+        if(marketHelper.getResources().size()>0) {setNextResourceOptions(player);}
+    }
+
+    public boolean[] calculateChoices(Player player, Resource resource){
+        boolean[] choices = new boolean[8];
+        WarehouseDepot warehouseDepot = player.getWarehouseDepot();
+        ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
+        MarketHelper marketHelper = game.getMarketHelper();
+
+        if(resource!=Resource.EXTRA){
+            //choice 0: put in depot
+            if (warehouseDepot.isAddable(resource)) choices[0] = true;
+
+            //choice 1: put in extra depot
+            ExtraDepot e = null;
+            if (extraDepotCards.size() == 0) {
+                choices[1] = false;
+            } else if (extraDepotCards.size() == 1) {
+                e = ((ExtraDepot) extraDepotCards.get(0).getSpecialAbility());
+                if (e.getResourceType() == resource && e.getNumber() < 2)
+                    choices[1] = true;
+            } else if (extraDepotCards.size() == 2) {
+                e = ((ExtraDepot) extraDepotCards.get(0).getSpecialAbility());
+                if (e.getResourceType() != resource) {
+                    e = ((ExtraDepot) extraDepotCards.get(1).getSpecialAbility());
+                    if (e.getResourceType() != resource) {
+                        e = null;
+                    }
+                }
+                if (e != null) {
+                    if (e.getNumber() < 2)
+                        choices[1] = true;
+                }
+            }
+            if (!choices[0] && !choices[1]) choices[2] = true;
+        }
+        else choices[0]=choices[1]=choices[2]=choices[3]= false;
+        //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
+
+
+        //choice 3-4-5: swap rows
+        if (warehouseDepot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
+        if (warehouseDepot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
+        if (warehouseDepot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
+
+        //choice 6: skip this resource
+        if (marketHelper.getResources().size() > 1) {
+            choices[6] = true;
+            choices[7] = true;
+        }
+        return choices;
     }
 }
