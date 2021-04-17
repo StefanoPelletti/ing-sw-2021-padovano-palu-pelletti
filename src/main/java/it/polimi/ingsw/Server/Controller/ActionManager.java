@@ -350,21 +350,13 @@ public class ActionManager {
 
     public void setNextResourceOptions(Player player){
         MarketHelper marketHelper = game.getMarketHelper();
-
         Resource resource = marketHelper.getCurrentResource();
-        if(resource == Resource.EXTRA){ //then player has 2 leaderCards with Market Ability
-            ArrayList<LeaderCard> marblesCards = player.getCardsWithMarketResourceAbility();
-            Resource[] extraResources = new Resource[2];
-            extraResources[0] = ((MarketResources) marblesCards.get(0).getSpecialAbility()).getConvertedResource();
-            extraResources[1] = ((MarketResources) marblesCards.get(1).getSpecialAbility()).getConvertedResource();
-            marketHelper.setExtraResourceChoices(extraResources);
-            marketHelper.setNormalChoice(false);
-            marketHelper.setChoices(calculateChoices(player, Resource.EXTRA));
-        }
-        else {
-            /*boolean[] choices = new boolean[8];
-            choices[0] = choices[1] = choices[2] = choices[3] = choices[4] = choices[5] = choices[6] = choices[7] = false;
+        boolean[] choices = new boolean[8];
+        WarehouseDepot warehouseDepot = player.getWarehouseDepot();
+        ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
 
+        if(resource!=Resource.EXTRA){
+            marketHelper.setNormalChoice(true);
             //choice 0: put in depot
             if (warehouseDepot.isAddable(resource)) choices[0] = true;
 
@@ -389,24 +381,31 @@ public class ActionManager {
                         choices[1] = true;
                 }
             }
-
             //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
-            /*if (!choices[0] && !choices[1]) choices[2] = true;
-
-            //choice 3-4-5: swap rows
-            if (warehouseDepot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
-            if (warehouseDepot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
-            if (warehouseDepot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
-
-            //choice 6: skip this resource
-            if (marketHelper.getResources().size() > 1) {
-                choices[6] = true;
-                choices[7] = true;
-            }*/
-
-            marketHelper.setNormalChoice(true);
-            marketHelper.setChoices(calculateChoices(player, resource));
+            /*if (!choices[0] && !choices[1])*/ choices[2] = true;
         }
+        else {
+            choices[0]=choices[1]=choices[2]=choices[3]= false;
+            ArrayList<LeaderCard> marblesCards = player.getCardsWithMarketResourceAbility();
+            Resource[] extraResources = new Resource[2];
+            extraResources[0] = ((MarketResources) marblesCards.get(0).getSpecialAbility()).getConvertedResource();
+            extraResources[1] = ((MarketResources) marblesCards.get(1).getSpecialAbility()).getConvertedResource();
+            marketHelper.setExtraResourceChoices(extraResources);
+            marketHelper.setNormalChoice(false);
+        }
+
+
+        //choice 3-4-5: swap rows
+        if (warehouseDepot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
+        if (warehouseDepot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
+        if (warehouseDepot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
+
+        //choice 6: skip this resource
+        if (marketHelper.getResources().size() > 1) {
+            choices[6] = true;
+            choices[7] = true;
+        }
+        marketHelper.setChoices(choices);
     }
 
     public void gameNewChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message){
@@ -419,6 +418,7 @@ public class ActionManager {
         if(!message.isNormalChoice()){
             marketHelper.setResource(message.getResourceChoice());
             System.out.println("Risorsa cambiata!");
+            setNextResourceOptions(player);
             return;
         }
         if(choice[0]){
@@ -441,6 +441,7 @@ public class ActionManager {
 
         else if(choice[2]){
             marketHelper.removeResource();
+            faithTrackManager.advanceAllExcept(player);
             System.out.println("\nRisorsa scartata!");
         }
 
@@ -470,55 +471,5 @@ public class ActionManager {
         }
 
         if(marketHelper.getResources().size()>0) {setNextResourceOptions(player);}
-    }
-
-    public boolean[] calculateChoices(Player player, Resource resource){
-        boolean[] choices = new boolean[8];
-        WarehouseDepot warehouseDepot = player.getWarehouseDepot();
-        ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
-        MarketHelper marketHelper = game.getMarketHelper();
-
-        if(resource!=Resource.EXTRA){
-            //choice 0: put in depot
-            if (warehouseDepot.isAddable(resource)) choices[0] = true;
-
-            //choice 1: put in extra depot
-            ExtraDepot e = null;
-            if (extraDepotCards.size() == 0) {
-                choices[1] = false;
-            } else if (extraDepotCards.size() == 1) {
-                e = ((ExtraDepot) extraDepotCards.get(0).getSpecialAbility());
-                if (e.getResourceType() == resource && e.getNumber() < 2)
-                    choices[1] = true;
-            } else if (extraDepotCards.size() == 2) {
-                e = ((ExtraDepot) extraDepotCards.get(0).getSpecialAbility());
-                if (e.getResourceType() != resource) {
-                    e = ((ExtraDepot) extraDepotCards.get(1).getSpecialAbility());
-                    if (e.getResourceType() != resource) {
-                        e = null;
-                    }
-                }
-                if (e != null) {
-                    if (e.getNumber() < 2)
-                        choices[1] = true;
-                }
-            }
-            if (!choices[0] && !choices[1]) choices[2] = true;
-        }
-        else choices[0]=choices[1]=choices[2]=choices[3]= false;
-        //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
-
-
-        //choice 3-4-5: swap rows
-        if (warehouseDepot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
-        if (warehouseDepot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
-        if (warehouseDepot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
-
-        //choice 6: skip this resource
-        if (marketHelper.getResources().size() > 1) {
-            choices[6] = true;
-            choices[7] = true;
-        }
-        return choices;
     }
 }

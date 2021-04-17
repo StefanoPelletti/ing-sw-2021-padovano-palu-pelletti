@@ -40,6 +40,9 @@ public class MarketActionTest {
         LeaderCard l3 = new LeaderCard(5,
                 new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
                 new MarketResources(Resource.SHIELD));
+        LeaderCard l4 = new LeaderCard(3,
+                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SHIELD, 5); }}),
+                new ExtraDepot(Resource.COIN));
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(l1);
         cards.add(l3);
@@ -165,6 +168,12 @@ public class MarketActionTest {
             am.gameNewChoiceMarket(pino, m2);
 
         }
-        System.out.println("Risorse finite! Alla prossima!");
+        System.out.println("Risorse finite! Alla prossima!\n");
+        System.out.println("END SITUATION:");
+        System.out.println("\nYOUR DEPOT:\n"+d+"\n");
+        for(LeaderCard c: pino.getCardsWithExtraDepotAbility()){
+            ExtraDepot extraDepot =(ExtraDepot) c.getSpecialAbility();
+            System.out.println("EXTRADEPOT: "+extraDepot.getResourceType()+", "+extraDepot.getNumber()+"\n");
+        }
     }
 }
