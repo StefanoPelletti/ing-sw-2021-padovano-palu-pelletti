@@ -67,7 +67,7 @@ public class Market {
         grid[row][2] = grid[row][3];
         grid[row][3] = slideMarble;
         slideMarble = tmp;
-
+//notify()
         return result;
     }
 

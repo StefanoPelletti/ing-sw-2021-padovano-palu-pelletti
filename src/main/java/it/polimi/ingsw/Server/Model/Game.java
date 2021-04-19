@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
+import it.polimi.ingsw.Server.Model.Middles.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -11,6 +12,8 @@ public class Game {
     private int turn;
     private int blackCrossPosition;
 
+    private int currentPlayer;
+
     private final ActionTokenStack actionTokenStack;
     private final ArrayList<Player> playerList;
     private final LeaderCardsDeck leaderCardsDeck;
@@ -18,6 +21,10 @@ public class Game {
     private final FaithTrack faithTrack;
     private final DevelopmentCardsDeck developmentCardsDeck;
     private final MarketHelper marketHelper;
+    private final DevelopmentCardsVendor developmentCardsVendor;
+    private final ErrorObject errorObject;
+    private final LeaderCardsObject leaderCardsObject;
+    private final ResourceObject resourceObject;
 
     public Game()
     {
@@ -31,29 +38,41 @@ public class Game {
         developmentCardsDeck = new DevelopmentCardsDeck();
         actionTokenStack=new ActionTokenStack();
         marketHelper = new MarketHelper();
+        developmentCardsVendor = new DevelopmentCardsVendor();
+        errorObject = new ErrorObject();
+        leaderCardsObject = new LeaderCardsObject();
+        resourceObject = new ResourceObject();
+        currentPlayer = 1;
     }
 
+//GETTERS
     public Status getStatus() { return this.status; }
     public Player getFirstPlayer() {
         return firstPlayer;
     }
     public int getTurn() { return this.turn; }
     public int getBlackCrossPosition() { return this.blackCrossPosition; }
-
+    public int getCurrentPlayerInt() {
+        return currentPlayer;
+    }
     public ArrayList<Player> getPlayerList() {
         return new ArrayList<>(playerList);
     }
     public LeaderCardsDeck getLeaderCardsDeck() { return this.leaderCardsDeck; }
     public Market getMarket() { return this.market; }
     public MarketHelper getMarketHelper(){return this.marketHelper;}
+    public ErrorObject getErrorObject() { return this.errorObject;}
+    public DevelopmentCardsVendor getDevelopmentCardsVendor() { return this.developmentCardsVendor; }
     public FaithTrack getFaithTrack() { return this.faithTrack; }
     public DevelopmentCardsDeck getDevelopmentCardsDeck() { return this.developmentCardsDeck; }
-    public ActionTokenStack getActionTokenStack(){return this.actionTokenStack;}
-    public void setBlackCrossPosition(int blackCrossPosition) {
-        this.blackCrossPosition = blackCrossPosition;
-    }
+    public ActionTokenStack getActionTokenStack(){ return this.actionTokenStack; }
+    public LeaderCardsObject getLeaderCardsObject() { return this.leaderCardsObject; }
+    public ResourceObject getResourceObject() { return this.resourceObject;}
 
-    public void changeStatus(Status status) { this.status = status; }
+    public Player getCurrentPlayer()
+    {
+        return getPlayer(currentPlayer);
+    }
     public Player getPlayer( String nickname )
     {
         Optional<Player> result = playerList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
@@ -64,7 +83,26 @@ public class Game {
         Optional<Player> result = playerList.stream().filter( p -> p.getPlayerNumber()==playerNumber ).findFirst();
         return result.orElse(null);
     }
+//SETTERS
+    public void setTurn(int turn)
+    {
+        this.turn = turn;
+        //notify()
+    }
+    public void setBlackCrossPosition(int blackCrossPosition) {
+        this.blackCrossPosition = blackCrossPosition;
+        //notify()
+    }
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
+        //notify()
+    }
+    public void changeStatus(Status status) {
+        this.status = status;
+        //notify()
+    }
 
+//METHODS
     public boolean addPlayer( String nickname , int playerNumber)
     {
         if (getPlayer(nickname) != null) return false;

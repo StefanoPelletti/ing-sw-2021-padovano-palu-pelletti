@@ -331,6 +331,7 @@ public class DevelopmentCardsDeck {
                 break;
             }
         }
+        //notify();
         return card;
     }
 
@@ -348,6 +349,7 @@ public class DevelopmentCardsDeck {
             }
             if(removed==2) break;
         }
+        //notify();
         return true;
     }
 

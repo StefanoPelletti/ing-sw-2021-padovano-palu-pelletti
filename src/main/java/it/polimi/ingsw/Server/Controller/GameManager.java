@@ -12,8 +12,11 @@ public class GameManager {
     private Game game;
     private FaithTrackManager faithTrackManager;
     private ActionManager actionManager;
+
+
+
     private int lobbyMaxPlayers;
-    private int currentPlayer;
+    private boolean lastTurn;
 
     public GameManager(int lobbyMaxPlayers)
     {
@@ -22,18 +25,24 @@ public class GameManager {
         this.faithTrackManager = new FaithTrackManager(this.game, this);
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
         this.lobbyMaxPlayers = lobbyMaxPlayers;
-        this.currentPlayer = 1;
+        this.lastTurn=false;
     }
 
-    public Player currentPlayer(){
-        return game.getPlayer(currentPlayer);
+    public Player currentPlayer() {
+        return game.getCurrentPlayer();
     }
 
     public void setNextPlayer(){
-        currentPlayer++;
-        if(currentPlayer>lobbyMaxPlayers){
-            currentPlayer=1;
+        game.setCurrentPlayer(game.getCurrentPlayerInt()+1);
+        if(game.getCurrentPlayerInt()>lobbyMaxPlayers){
+            game.setCurrentPlayer(1);
         }
+    }
+
+    public void endTurn()
+    {
+        setNextPlayer();
+        if(game.getStatus()!=Status.SOLO && lastTurn && game.getCurrentPlayerInt()==0) setStatus(Status.GAME_OVER);
     }
 
     public boolean addBroadcastMessage(Message message)
@@ -48,6 +57,9 @@ public class GameManager {
         game.changeStatus(status);
     }
 
+    public int getLobbyMaxPlayers() {
+        return lobbyMaxPlayers;
+    }
     public Game getGame()
     {
         return game;
@@ -62,5 +74,15 @@ public class GameManager {
     {
         Player p = game.getPlayer(nickname);
         p.associateLeaderCards(cards);
+    }
+
+    public void resetErrorObject()
+    {
+        game.getErrorObject().setEnabled(false);
+    }
+    public void setErrorObject(String errorCause)
+    {
+        game.getErrorObject().setErrorMessage(errorCause);
+        game.getErrorObject().setEnabled(true);
     }
 }

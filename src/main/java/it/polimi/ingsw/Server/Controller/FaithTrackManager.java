@@ -39,6 +39,11 @@ public class FaithTrackManager {
 
     public boolean advance(Player player)
     {
+        return advance(player, false);
+    }
+
+    public boolean advance(Player player, boolean cumulative)
+    {
         if ( player == null ) return false;
         ArrayList<Player> players = game.getPlayerList();
         if ( players.stream().noneMatch( x -> x.getNickname().equals(player.getNickname()))) return false;
@@ -106,8 +111,14 @@ public class FaithTrackManager {
                 faithTrack.advance(player);
                 break;
         }
+
+        if(!cumulative) {
+            //notify()
+        }
+
         return true;
     }
+
 
     public boolean advanceAllExcept(Player player)
     {
@@ -119,7 +130,7 @@ public class FaithTrackManager {
         {
             if( !p.equals(player) )
             {
-                advance(p);
+                advance(p, true);
             }
         }
         return true;

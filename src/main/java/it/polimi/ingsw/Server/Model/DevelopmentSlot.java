@@ -32,20 +32,19 @@ public class DevelopmentSlot {
 
         if( cardLevel == 3 ) //then this stack is full
         {
-            //System.out.println("Error, this stack is full!");
             return false;
         }
         else
         {
             if ( newCardLevel != cardLevel +1 ) //then level is not ok!
             {
-                //System.out.println("Error, you cannot add a card on this deck!");
                 return false;
             }
             else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
             {
                 cards[selectedDeck][cardLevel] = newCard;
                 onTop[selectedDeck] = newCard;
+                //notify();
                 return true;
             }
         }

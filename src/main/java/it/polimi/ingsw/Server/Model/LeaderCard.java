@@ -29,7 +29,9 @@ public class LeaderCard implements Serializable {
     }
 
     public void setEnable(boolean enable) {
+
         this.enabled = enable;
+        //notify();
     }
 
     public boolean getEnable() {

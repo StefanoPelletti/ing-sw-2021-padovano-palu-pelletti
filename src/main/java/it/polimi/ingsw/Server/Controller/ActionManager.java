@@ -1,13 +1,15 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Networking.Message.MSG_ACTION_ACTIVATE_LEADERCARDS;
-import it.polimi.ingsw.Networking.Message.MSG_ACTION_ACTIVATE_PRODUCTION;
+import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import it.polimi.ingsw.Server.Model.Marbles.RedMarbleException;
+import it.polimi.ingsw.Server.Model.Middles.DevelopmentCardsVendor;
+import it.polimi.ingsw.Server.Model.Middles.LeaderCardsObject;
+import it.polimi.ingsw.Server.Model.Middles.MarketHelper;
+import it.polimi.ingsw.Server.Model.Middles.ResourceObject;
 import it.polimi.ingsw.Server.Model.Requirements.*;
-import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
 
 
@@ -21,14 +23,82 @@ public class ActionManager {
 
     public ActionManager(GameManager gameManager, FaithTrackManager faithTrackManager, Game game)
     {
-        this.gameManager=gameManager;
-        this.faithTrackManager=faithTrackManager;
+        this.gameManager = gameManager;
+        this.faithTrackManager = faithTrackManager;
         this.game = game;
     }
 
-    public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARDS message){
+    public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message)
+    {
+        ArrayList<LeaderCard> cards = message.getCards();
+        LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
+        ResourceObject resourceObject = game.getResourceObject();
+
+        if(!leaderCardsObject.isEnabled()) //how the hell did he get in here?
+        {
+            gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseLeaderCards senza oggetto LeaderCardsObject attivo nel model!");
+            return false;
+        }
+
+        player.associateLeaderCards(cards);
+        if(game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
+        {
+            leaderCardsObject.setEnabled(false);
+            resourceObject.setNumOfResources(1);
+            resourceObject.setEnabled(true);
+            game.setCurrentPlayer(2);
+        }
+        else
+        {
+            leaderCardsObject.setCards(game.getLeaderCardsDeck().pickFourCards());
+            endTurn(player);
+        }
+        return true;
+    }
+
+    public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message)
+    {
+        ResourceObject resourceObject = game.getResourceObject();
+        Resource resource = message.getResource();
+
+        if(!resourceObject.isEnabled()) //how the hell did he get in here?
+        {
+            gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseResources senza oggetto ResourceObject attivo nel model!");
+            return false;
+        }
+        player.getWarehouseDepot().add(resource);
+
+        if(resourceObject.getNumOfResources() == 2)
+            player.getWarehouseDepot().swapRow(1,2);
+        resourceObject.decNumOfResources();
+        if(resourceObject.getNumOfResources() == 0)
+        {
+            if(game.getCurrentPlayerInt()==gameManager.getLobbyMaxPlayers())
+            {
+                resourceObject.setEnabled(false);
+            }
+            else
+            {
+                if(game.getCurrentPlayerInt()==3)
+                    resourceObject.setNumOfResources(2);
+                else
+                    resourceObject.setNumOfResources(1);
+            }
+            endTurn(player);
+            game.setTurn(1);
+        }
+        return true;
+    }
+
+    public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARD message){
         int cardNumber = message.getCardNumber();
-        if(player.getLeaderCards()[cardNumber].getEnable()) return false;
+
+        if(player.getLeaderCards()[cardNumber].getEnable())
+        {
+            gameManager.setErrorObject("Errore! Questa carta è già attivata!");
+            return false;
+        }
+
         LeaderCard l = player.getLeaderCards()[cardNumber];
         Requirement requirement = l.getRequirement();
         player.addVP(l.getVP());
@@ -41,7 +111,11 @@ public class ActionManager {
 
             for(Resource resource: requiredResources.keySet()){
                 resources.put(resource, resources.get(resource)-requiredResources.get(resource));
-                if(resources.get(resource)<0) return false;
+                if(resources.get(resource)<0)
+                {
+                    gameManager.setErrorObject("Errore! Non hai abbastanza risorse!");
+                    return false;
+                }
             }
             player.getLeaderCards()[cardNumber].setEnable(true);
             return true;
@@ -62,9 +136,13 @@ public class ActionManager {
                         }
                     }
                 }
-                if(requiredNumCard>0) return false;
+                if(requiredNumCard>0)
+                {
+                    gameManager.setErrorObject("Errore! Non disponi delle carte corrette!");
+                    return false;
+                }
             }
-            player.getLeaderCards()[cardNumber].setEnable(true);
+            player.setLeaderCards(cardNumber, true);
             return true;
         }
 
@@ -72,9 +150,17 @@ public class ActionManager {
         return false;
     }
 
-    public boolean discardLeaderCard(Player player, int cardNumber){
-        if(player.getLeaderCards()[cardNumber].getEnable()) return false;
-        player.getLeaderCards()[cardNumber] = null;
+    public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message){
+        int cardNumber = message.getCardNumber();
+//VALIDATION
+        if(player.getLeaderCards()[cardNumber].getEnable())
+        {
+            gameManager.setErrorObject("Errore! Non puoi disattivare una carta già attivata!");
+            return false;
+        }
+//MODEL UPDATE
+        player.setLeaderCards(cardNumber, false);
+        //notify???
         faithTrackManager.advance(player);
         return true;
     }
@@ -89,13 +175,7 @@ public class ActionManager {
         Map<Resource, Integer> requiredResources = new HashMap<>();
         Map<Resource, Integer> newResources = new HashMap<>();
 
-        //for each leaderProduction enabled, player receives one Faith Point
-        for(boolean enabled : leaderProduction){
-            if(enabled) {
-                faithTrackManager.advance(player);
-            }
-        }
-
+//VALIDATION
         //initializing requiredResources
         for(Resource r : possibleResources){
             requiredResources.put(r, 0);
@@ -143,9 +223,12 @@ public class ActionManager {
 
         //check if the player has enough resources
         for(Resource r : requiredResources.keySet()){
-            if(initialResources.get(r) < requiredResources.get(r)) return false;
+            if(initialResources.get(r) < requiredResources.get(r)) {
+                gameManager.setErrorObject("Errore! Ti mancano le risorse per attivare queste produzioni!");
+                return false;
+            }
         }
-
+//MODEL UPDATE
         //now we must consume the required resources
         consumeResources(player, requiredResources);
 
@@ -154,10 +237,18 @@ public class ActionManager {
         for(Resource r: newResources.keySet()){
             playerStrongbox.addResource(r, newResources.get(r));
         }
+
+        //for each leaderProduction enabled, player receives one Faith Point
+        for(boolean enabled : leaderProduction){
+            if(enabled) {
+                faithTrackManager.advance(player);
+            }
+        }
         return true;
     }
 
-    public boolean endTurn() {
+    public boolean endTurn(Player player) {
+        gameManager.setNextPlayer();
         return true;
     }
 
@@ -171,14 +262,23 @@ public class ActionManager {
         int secondExtraDepot = message.getSecondExtraDepot();
         Map<Resource, Integer> initialResources = player.getDepotAndExtraDepotResources();
         ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
-
+//VALIDATION
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
         Map<Resource, Integer> newResources;
         WarehouseDepot demoDepot = new WarehouseDepot();
         ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
-        if(!demoDepot.setConfig(slot1, slot2, slot3)) return false;
-        if(!demoExtraDepot.setResource(firstExtraDepot)) return false;
-        if(!demoExtraDepot.setResource(secondExtraDepot)) return false;
+        if(!demoDepot.setConfig(slot1, slot2, slot3)) {
+            gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel deposito!");
+            return false;
+        }
+        if(!demoExtraDepot.setResource(firstExtraDepot)) {
+            gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel primo deposito extra!");
+            return false;
+        }
+        if(!demoExtraDepot.setResource(secondExtraDepot)) {
+            gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel secondo deposito extra!");
+            return false;
+        }
 
         //let's check if the new configuration has the same resources as the one before!
         newResources = demoDepot.getResources();
@@ -196,9 +296,14 @@ public class ActionManager {
         }
 
         for(Resource resToControl : possibleResources){
-            if(!initialResources.get(resToControl).equals(newResources.get(resToControl))) return false;
-        }
+            if(!initialResources.get(resToControl).equals(newResources.get(resToControl)))
+            {
+                gameManager.setErrorObject("Errore! Il numero di risorse non combacia!");
+                return false;
+            }
 
+        }
+//MODEL UPDATE
         //after all those controls, player really deserves a new depot!
         player.getWarehouseDepot().setConfig(slot1, slot2, slot3);
         if(playerLeaderCards.size()>0){
@@ -212,11 +317,11 @@ public class ActionManager {
         return true;
     }
 
-    public boolean buyDevelopmentCard(Player p) {
+    public boolean buyDevelopmentCard(Player player) {
         DevelopmentCard[][] possibleCards = game.getDevelopmentCardsDeck().getVisible();
         Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
-        Map<Resource, Integer> playerResources = p.getResources();
+        Map<Resource, Integer> playerResources = player.getResources();
 
         ArrayList<DevelopmentCard> cards = new ArrayList<>();
         for(int r = 0; r < 3; r++) {
@@ -239,18 +344,16 @@ public class ActionManager {
             }
         }
         if(cards.size() == 0) {
-            return true; //da cambiare
+            gameManager.setErrorObject("Ao! Va che non puoi comprare nemmeno una carta!");
+            return false;
         }
 
         //second check: all the cards that the player can't put in his slot are removed from the ones selected before.
         for(int i = 0; i < cards.size(); i++) {
             boolean[] pos = new boolean[3];
             for(int j = 0; j < 3; j++) {
-                if(p.getDevelopmentSlot().validateNewCard(cards.get(i), j)) {
+                if(player.getDevelopmentSlot().validateNewCard(cards.get(i), j)) {
                     pos[j] = true;
-                }
-                else {
-                    pos[j] = false;
                 }
             }
             if(pos[0] || pos[1] || pos[2]){
@@ -258,6 +361,17 @@ public class ActionManager {
             }
         }
 
+        if(finalCards.size()==0)
+        {
+            gameManager.setErrorObject("Ao! Va che puoi comprarle, ma non puoi metterle da nessuna parte!");
+            return false;
+        }
+
+        DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
+        developmentCardsVendor.setCards(finalCards);
+        developmentCardsVendor.setEnabled(true);
+        return true;
+       /*
         Scanner myInput = new Scanner(System.in);
         for(DevelopmentCard dc : finalCards.keySet()) {
             System.out.println(dc);
@@ -271,41 +385,60 @@ public class ActionManager {
         }
 
         return true;
+
+        */
     }
 
+    public boolean chooseDevelopmentCard(Player player, MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message) {
+        int cardNumber = message.getCardNumber();
+        int slotNumber = message.getSlotNumber();
 
-    public void consumeResources(Player player, Map<Resource, Integer> cost){
-        WarehouseDepot warehouseDepot = player.getWarehouseDepot();
-        ArrayList<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
-        int numLeaderCard = extraDepotLeaderCards.size();
-        ExtraDepot ability;
-        Strongbox strongbox = player.getStrongbox();
-        int remainingResources;
-        boolean found;
+        DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
+        if(!developmentCardsVendor.isEnabled()) //how the hell did he get in here?
+        {
+            gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseDevelopmentCard (2/2) senza oggetto vendor attivo nel model!");
+            return false;
+        }
 
-        for(Resource r : cost.keySet()){
-            remainingResources = cost.get(r);
-            while(remainingResources>0){
-                found= false;
-                if(warehouseDepot.consume(r)) found =true;
-                if (!found) {
-                    for (int i = 0; i < numLeaderCard && !found; i++) {
-                        ability = (ExtraDepot) extraDepotLeaderCards.get(i).getSpecialAbility();
-                        if (ability.getResourceType() == r) {
-                            if (ability.removeResource(1)) found = true;
-                        }
-                    }
+        DevelopmentCard dc = (new ArrayList<DevelopmentCard>(developmentCardsVendor.getCards().keySet())).get(cardNumber-1);
+
+        player.getDevelopmentSlot().addCard(dc, slotNumber);
+        DevelopmentCard[][] visibleCards = game.getDevelopmentCardsDeck().getVisible();
+        boolean found = false;
+        int r = 0;
+        int c = 0;
+        for(; r < 3; r++) {
+            for(; c < 4; c++) {
+                if(dc.equals(visibleCards[r][c])) {
+                    found = true;
+                    break;
                 }
-                if(!found){
-                    strongbox.remove(r, remainingResources);
-                    remainingResources=0;
-                }
-                else remainingResources--;
+            }
+            if(found) {
+                break;
             }
         }
+
+        game.getDevelopmentCardsDeck().removeCard(r,c);
+
+
+        ArrayList<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
+        HashMap<Resource, Integer> cost = dc.getCost();
+
+        for(LeaderCard l: specialAb) {
+            DiscountResource d = (DiscountResource) l.getSpecialAbility();
+            if (cost.get(d.getDiscountedResource()) != null) {
+                cost.replace(d.getDiscountedResource(), cost.get(d.getDiscountedResource()) - 1);
+            }
+        }
+
+        consumeResources(player, cost);
+
+        developmentCardsVendor.setEnabled(false);
+        return true;
     }
 
-    public boolean gameMarketResourcesAction2(Player player, MSG_ACTION_GET_MARKET_RESOURCES message){
+    public boolean getMarketResources(Player player, MSG_ACTION_GET_MARKET_RESOURCES message){
         boolean column = message.getColumn();
         int number = message.getNumber();
         if(column &&( number <0 || number >=4)) return false;
@@ -319,7 +452,7 @@ public class ActionManager {
 
         System.out.println("You got these marbles: ");
         selectedMarbles.stream().forEach(System.out::println);
-
+        //Requires NO VALIDATION (except for input)
         ArrayList<Resource> resources = new ArrayList<>();
         for( MarketMarble m : selectedMarbles ) {
             try {
@@ -347,7 +480,79 @@ public class ActionManager {
         setNextResourceOptions(player);
         return true;
     }
+    public boolean newChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message){
+        MarketHelper marketHelper = game.getMarketHelper();
+        boolean[] choice = message.getChoice();
+        Resource currentResource = marketHelper.getCurrentResource();
+        WarehouseDepot depot = player.getWarehouseDepot();
+        ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
 
+        if(!message.isNormalChoice()){
+            marketHelper.setResource(message.getResourceChoice());
+            System.out.println("Risorsa cambiata!");
+            setNextResourceOptions(player);
+            return true;
+        }
+        if(choice[0]){
+            depot.add(currentResource);
+            marketHelper.removeResource();
+            System.out.println("\nRisorsa aggiunta al deposito!");
+        }
+
+        else if(choice[1]){
+            for(LeaderCard l : extraDepotCards) {
+                ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
+                if (extraDepot.getResourceType() == currentResource) {
+                    extraDepot.addResource(1);
+                    marketHelper.removeResource();
+                    break;
+                }
+            }
+            System.out.println("\nRisorsa aggiunta nel deposito extra!");
+        }
+
+        else if(choice[2]){
+            marketHelper.removeResource();
+            faithTrackManager.advanceAllExcept(player);
+            System.out.println("\nRisorsa scartata!");
+        }
+
+        else if(choice[3]){
+            depot.swapRow(1,2);
+            System.out.println("\nHo scambiato le righe 1 e 2!");
+        }
+
+        else if(choice[4]){
+            depot.swapRow(1,3);
+            System.out.println("\nHo scambiato le righe 1 e 3!");
+        }
+
+        else if(choice[5]){
+            depot.swapRow(2,3);
+            System.out.println("\nHo scambiato le righe 2 e 3!");
+        }
+
+        else if(choice[6]){
+            marketHelper.skipForward();
+            System.out.println("\nRisorsa skippata! Non le volevi bene?");
+        }
+
+        else if(choice[7]){
+            marketHelper.skipBackward();
+            System.out.println("\nTorniamo indietro!");
+        }
+
+        if(marketHelper.getResources().size()>0) {
+            setNextResourceOptions(player);
+        }
+        else
+        {
+            marketHelper.setEnabled(false);
+        }
+        return true;
+    }
+
+    //Helper methods
     public void setNextResourceOptions(Player player){
         MarketHelper marketHelper = game.getMarketHelper();
         Resource resource = marketHelper.getCurrentResource();
@@ -407,69 +612,35 @@ public class ActionManager {
         }
         marketHelper.setChoices(choices);
     }
+    public void consumeResources(Player player, Map<Resource, Integer> cost){
+        WarehouseDepot warehouseDepot = player.getWarehouseDepot();
+        ArrayList<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
+        int numLeaderCard = extraDepotLeaderCards.size();
+        ExtraDepot ability;
+        Strongbox strongbox = player.getStrongbox();
+        int remainingResources;
+        boolean found;
 
-    public void gameNewChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message){
-        MarketHelper marketHelper = game.getMarketHelper();
-        boolean[] choice = message.getChoice();
-        Resource currentResource = marketHelper.getCurrentResource();
-        WarehouseDepot depot = player.getWarehouseDepot();
-        ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
-
-        if(!message.isNormalChoice()){
-            marketHelper.setResource(message.getResourceChoice());
-            System.out.println("Risorsa cambiata!");
-            setNextResourceOptions(player);
-            return;
-        }
-        if(choice[0]){
-            depot.add(currentResource);
-            marketHelper.removeResource();
-            System.out.println("\nRisorsa aggiunta al deposito!");
-        }
-
-        else if(choice[1]){
-            for(LeaderCard l : extraDepotCards) {
-                ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
-                if (extraDepot.getResourceType() == currentResource) {
-                    extraDepot.addResource(1);
-                    marketHelper.removeResource();
-                    break;
+        for(Resource r : cost.keySet()){
+            remainingResources = cost.get(r);
+            while(remainingResources>0){
+                found= false;
+                if(warehouseDepot.consume(r)) found =true;
+                if (!found) {
+                    for (int i = 0; i < numLeaderCard && !found; i++) {
+                        ability = (ExtraDepot) extraDepotLeaderCards.get(i).getSpecialAbility();
+                        if (ability.getResourceType() == r) {
+                            if (ability.removeResource(1)) found = true;
+                        }
+                    }
                 }
+                if(!found){
+                    strongbox.remove(r, remainingResources);
+                    remainingResources=0;
+                }
+                else remainingResources--;
             }
-            System.out.println("\nRisorsa aggiunta nel deposito extra!");
         }
-
-        else if(choice[2]){
-            marketHelper.removeResource();
-            faithTrackManager.advanceAllExcept(player);
-            System.out.println("\nRisorsa scartata!");
-        }
-
-        else if(choice[3]){
-            depot.swapRow(1,2);
-            System.out.println("\nHo scambiato le righe 1 e 2!");
-        }
-
-        else if(choice[4]){
-            depot.swapRow(1,3);
-            System.out.println("\nHo scambiato le righe 1 e 3!");
-        }
-
-        else if(choice[5]){
-            depot.swapRow(2,3);
-            System.out.println("\nHo scambiato le righe 2 e 3!");
-        }
-
-        else if(choice[6]){
-            marketHelper.skipForward();
-            System.out.println("\nRisorsa skippata! Non le volevi bene?");
-        }
-
-        else if(choice[7]){
-            marketHelper.skipBackward();
-            System.out.println("\nTorniamo indietro!");
-        }
-
-        if(marketHelper.getResources().size()>0) {setNextResourceOptions(player);}
     }
+
 }

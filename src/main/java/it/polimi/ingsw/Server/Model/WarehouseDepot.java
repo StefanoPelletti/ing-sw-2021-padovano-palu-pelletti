@@ -117,16 +117,19 @@ public class WarehouseDepot {
     public boolean consume(Resource resource){
         if(this.shelf1==resource){
             this.shelf1=Resource.NONE;
+            //notify()
             return true;
         }
         else{
             for(int i=2; i>=0; i--){
                 if(i<2 && this.shelf2[i]==resource){
                     this.shelf2[i]=Resource.NONE;
+                    //notify()
                     return true;
                 }
                 else if(this.shelf3[i]==resource){
                     this.shelf3[i]=Resource.NONE;
+                    //notify()
                     return true;
                 }
             }
@@ -165,6 +168,7 @@ public class WarehouseDepot {
                 }
             }
         }
+        //notify();
         return true;
     }
 
@@ -367,6 +371,7 @@ public class WarehouseDepot {
                 shelf3[2]=Resource.NONE;
             }
         }
+        //notify()
         return true;
     }
 

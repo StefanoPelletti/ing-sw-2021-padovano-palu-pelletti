@@ -11,7 +11,7 @@ public class Strongbox {
         this.resources = new HashMap<>();
     }
 
-    public boolean addResource(Resource resource, int quantity) throws IllegalArgumentException{
+    public boolean addResource(Resource resource, int quantity) {
         if(resource==Resource.EXTRA || resource==Resource.NONE || resource==Resource.FAITH ||resource==null || quantity<0)  return false;
         Integer tmp = resources.get(resource);
         if ( tmp == null ) {
@@ -34,6 +34,7 @@ public class Strongbox {
             if( (tmp - quantity) > 0) /*there will be resources after the remove */
                 {
                 resources.put(resource, tmp - quantity);
+                //notify()
                 return true;
             }
             else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.

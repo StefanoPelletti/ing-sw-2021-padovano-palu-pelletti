@@ -1,10 +1,11 @@
-package it.polimi.ingsw.Server.Model;
+package it.polimi.ingsw.Server.Model.Middles;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.util.*;
 
 
 public class MarketHelper {
+    private boolean enabled;
     private ArrayList<Resource> resources;
     private int currentResource;
     private boolean[] choices; //represents what the player can do with the current Resource
@@ -13,6 +14,7 @@ public class MarketHelper {
 
     public MarketHelper(){
         resources = new ArrayList<>();
+        enabled=false;
     }
 
     //called at the beginning of a Market Action
@@ -21,6 +23,11 @@ public class MarketHelper {
         this.currentResource = 0;
         this.choices = new boolean[8];
         this.extraResourceChoices = new Resource[2];
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled=enabled;
+        //notify();
     }
 
     public void setNormalChoice(boolean value){
@@ -52,7 +59,10 @@ public class MarketHelper {
 
     public void setChoices(boolean[] choices){
         this.choices = choices;
+        //notify()
     }
+
+    public boolean getEnabled() { return enabled;}
 
     public ArrayList<Resource> getResources(){
         return resources;

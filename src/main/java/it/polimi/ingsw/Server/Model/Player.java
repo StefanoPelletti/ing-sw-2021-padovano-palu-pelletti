@@ -52,6 +52,14 @@ public class Player {
     public int getPlayerNumber() { return playerNumber; }
     public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
 
+    public void setLeaderCards(int cardNumber, boolean enable)
+    {
+        if(enable)
+            leaderCards[cardNumber].setEnable(true);
+        else
+            leaderCards[cardNumber] = null;
+        //notify();
+    }
     public Strongbox getStrongbox() { return this.strongbox; }
     public WarehouseDepot getWarehouseDepot() { return this.warehouseDepot; }
 
@@ -67,6 +75,7 @@ public class Player {
     {
         leaderCards[0] = cards.get(0);
         leaderCards[1] = cards.get(1);
+        //notify();
     }
 
     public Map<Resource, Integer> getResources(){

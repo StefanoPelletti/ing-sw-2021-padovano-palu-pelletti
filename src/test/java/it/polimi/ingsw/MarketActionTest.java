@@ -1,9 +1,8 @@
 package it.polimi.ingsw;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Middles.MarketHelper;
 import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
 import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
@@ -86,7 +85,7 @@ public class MarketActionTest {
         }
 
         MSG_ACTION_GET_MARKET_RESOURCES m = new MSG_ACTION_GET_MARKET_RESOURCES(column, y-1);
-        am.gameMarketResourcesAction2(pino,m);
+        am.getMarketResources(pino,m);
         MSG_ACTION_MARKET_CHOICE m2;
 
 
@@ -165,7 +164,7 @@ public class MarketActionTest {
                 }
 
             }
-            am.gameNewChoiceMarket(pino, m2);
+            am.newChoiceMarket(pino, m2);
 
         }
         System.out.println("Risorse finite! Alla prossima!\n");

@@ -7,6 +7,7 @@ public class FaithTrackInfo implements Serializable {
     private final int[] position;              // check only if ^^ is true. Otherwise (false) it will be DEFAULT value (-1)
     private final boolean[] zones;
 
+
     public FaithTrackInfo()
     {
         presentPlayers = new boolean[4];
