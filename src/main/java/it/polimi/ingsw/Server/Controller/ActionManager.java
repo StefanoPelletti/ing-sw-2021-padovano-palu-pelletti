@@ -332,10 +332,23 @@ public class ActionManager {
             }
         }
 
+        ArrayList<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
+        ArrayList<Resource> discountedResources = new ArrayList<>();
+        if(specialAb.size() != 0) {
+            for(LeaderCard leaderCard : specialAb) {
+                discountedResources.add(((DiscountResource) leaderCard.getSpecialAbility()).getDiscountedResource());
+            }
+        }
+
         ArrayList<DevelopmentCard> tmp = new ArrayList<>(cards);
         //first check: all the cards that the player can't buy are removed from the ones that are on top.
         for(int i = 0; i < tmp.size(); i++) {
             HashMap<Resource, Integer> cost = tmp.get(i).getCost();
+            for(Resource rs : discountedResources) {
+                if(cost.get(rs) != null) {
+                    cost.replace(rs, cost.get(rs)-1);
+                }
+            }
             for (Resource resource : cost.keySet()) {
                 if (playerResources.get(resource) < cost.get(resource)) {
                     cards.remove(tmp.get(i));
@@ -343,6 +356,7 @@ public class ActionManager {
                 }
             }
         }
+
         if(cards.size() == 0) {
             gameManager.setErrorObject("Ao! Va che non puoi comprare nemmeno una carta!");
             return false;

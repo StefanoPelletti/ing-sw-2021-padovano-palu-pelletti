@@ -23,12 +23,14 @@ public class ExtraDepot implements SpecialAbility, Serializable {
         if ( numAdd == 2 && number != 0 ) return false;
         if ( numAdd == 1 && number == 2 ) return false;
         number = number+numAdd;
+        //notify();
         return true;
     }
 
     public boolean setResource(int num){
         if ( num > 2 || num < 0 ) return false;
         number=num;
+        //notify();
         return true;
     }
 
@@ -37,6 +39,7 @@ public class ExtraDepot implements SpecialAbility, Serializable {
         if ( numRem <= 0 || numRem > 2 ) return false;
         if ( numRem == 2 && number == 1 ) return false;
         number = number - numRem;
+        //notify();
         return true;
     }
 

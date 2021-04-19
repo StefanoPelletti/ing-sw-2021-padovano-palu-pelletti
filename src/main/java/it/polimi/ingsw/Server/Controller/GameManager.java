@@ -74,6 +74,7 @@ public class GameManager {
     {
         Player p = game.getPlayer(nickname);
         p.associateLeaderCards(cards);
+        //notify();
     }
 
     public void resetErrorObject()

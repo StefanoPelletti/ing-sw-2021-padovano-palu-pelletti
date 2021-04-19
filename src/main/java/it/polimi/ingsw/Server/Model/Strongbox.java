@@ -21,6 +21,7 @@ public class Strongbox {
         {
             resources.put(resource, tmp + quantity);
         }
+        //notify();
         return true;
     }
 

@@ -40,6 +40,7 @@ public class WarehouseDepot {
             if(i<2) this.shelf2[i]=shelf2[i];
             this.shelf3[i]=shelf3[i];
         }
+        //notify();
         return true;
     }
 
