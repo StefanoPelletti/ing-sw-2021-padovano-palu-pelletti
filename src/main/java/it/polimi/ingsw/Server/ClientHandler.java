@@ -13,21 +13,24 @@ import java.io.*;
 
 public class ClientHandler implements Runnable {
 
-    private Socket clientSocket;
+    private final Socket clientSocket;
+    private final OutputStream outputStream; // = socket.getOutputStream();
+    private final ObjectOutputStream objectOutputStream;// = new ObjectOutputStream(outputStream);
+    private final InputStream inputStream;// = socket.getInputStream();
+    private final ObjectInputStream objectInputStream;// = new ObjectInputStream(inputStream);
 
-    private GameManager gameManager;
-    private ActionManager actionManager;
-    private Lobby lobby;
-    private String nickname;
+    private final GameManager gameManager;
+    private final ActionManager actionManager;
+    private final Lobby lobby;
+    private final String nickname;
     private Player player;
-    private OutputStream outputStream; // = socket.getOutputStream();
-    private ObjectOutputStream objectOutputStream;// = new ObjectOutputStream(outputStream);
-    private InputStream inputStream;// = socket.getInputStream();
-    private ObjectInputStream objectInputStream;// = new ObjectInputStream(inputStream);
 
 
 
-    public ClientHandler( Socket clientSocket, GameManager gameManager, Lobby lobby, String nickname)
+
+    public ClientHandler( Socket clientSocket, GameManager gameManager, Lobby lobby, String nickname,
+                          OutputStream outputStream, ObjectOutputStream objectOutputStream,
+                          InputStream inputStream, ObjectInputStream objectInputStream)
     {
         this.clientSocket = clientSocket;
         this.gameManager = gameManager;
@@ -35,6 +38,10 @@ public class ClientHandler implements Runnable {
         this.lobby = lobby;
         this.nickname=nickname;
         this.player=null;
+        this.outputStream = outputStream;
+        this.objectOutputStream = objectOutputStream;
+        this.inputStream = inputStream;
+        this.objectInputStream = objectInputStream;
     }
 
     public void run() {
@@ -42,11 +49,6 @@ public class ClientHandler implements Runnable {
         ArrayList<LeaderCard> cards = gameManager.pickFourLeaderCards();
         try
         {
-            outputStream  = clientSocket.getOutputStream();
-            objectOutputStream = new ObjectOutputStream(outputStream);
-            inputStream = clientSocket.getInputStream();
-            objectInputStream = new ObjectInputStream(inputStream);
-
             MSG_INIT_LEADERCARDS_REQUEST message = new MSG_INIT_LEADERCARDS_REQUEST(cards);
             objectOutputStream.writeObject(message);
 

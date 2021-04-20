@@ -15,18 +15,34 @@ public class Lobby {
     List<Socket> socketList;
     List<String> nicknameList;
     List<ClientHandler> threadsList;
+    List<OutputStream> outputStreamList;
+    List<ObjectOutputStream> objectOutputStreamList;
+    List<InputStream> inputStreamList;
+    List<ObjectInputStream> objectInputStreamList;
 
     int lobbyNumber;
     int lobbyMaxPlayers;
 
 
 
-    public Lobby(String nickname, Socket socket, int lobbyNumber, int lobbyMaxPlayers)
+    public Lobby(String nickname, Socket socket, int lobbyNumber, int lobbyMaxPlayers,
+                 OutputStream outputStream, ObjectOutputStream objectOutputStream,
+                 InputStream inputStream, ObjectInputStream objectInputStream)
     {
         this.socketList = new LinkedList<>();
         this.nicknameList = new LinkedList<>();
         this.threadsList = new LinkedList<>();
+        this.outputStreamList= new LinkedList<>();
+        this.objectOutputStreamList= new LinkedList<>();
+        this.inputStreamList= new LinkedList<>();
+        this.objectInputStreamList= new LinkedList<>();
+
         this.socketList.add(socket);
+        this.outputStreamList.add(outputStream);
+        this.objectOutputStreamList.add(objectOutputStream);
+        this.inputStreamList.add(inputStream);
+        this.objectInputStreamList.add(objectInputStream);
+
 
         this.lobbyNumber = lobbyNumber;
         this.lobbyMaxPlayers = lobbyMaxPlayers;
@@ -38,7 +54,7 @@ public class Lobby {
         Thread thread;
         List<Integer> playerNumbers = new LinkedList<>();
 
-        for(int i = 0; i<lobbyMaxPlayers; i++) {
+        for(int i = 1; i<=lobbyMaxPlayers; i++) {
             playerNumbers.add(i);
         }
 
@@ -47,13 +63,21 @@ public class Lobby {
 
         for(int i = 0; i<lobbyMaxPlayers; i++) {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
-            thread = new Thread(new ClientHandler(socketList.get(i),gameManager, this, nicknameList.get(i)));
+            thread = new Thread(new ClientHandler(socketList.get(i),gameManager, this, nicknameList.get(i),
+                    outputStreamList.get(i), objectOutputStreamList.get(i),
+                    inputStreamList.get(i), objectInputStreamList.get(i)));
             thread.start();
         }
     }
 
-    public String add(String nickname, Socket socket){
-        socketList.add(socket);
+    public String add(String nickname, Socket socket,
+                      OutputStream outputStream, ObjectOutputStream objectOutputStream,
+                      InputStream inputStream, ObjectInputStream objectInputStream){
+        this.socketList.add(socket);
+        this.outputStreamList.add(outputStream);
+        this.objectOutputStreamList.add(objectOutputStream);
+        this.inputStreamList.add(inputStream);
+        this.objectInputStreamList.add(objectInputStream);
 
         if(nicknameList.stream().anyMatch(n-> n.equals(nickname))){
             if(nicknameList.stream().anyMatch(n-> n.equals(nickname+" (1)")))
