@@ -9,7 +9,14 @@ import it.polimi.ingsw.Server.Model.*;
 import java.util.ArrayList;
 
 public class MarketTest {
-    Market market=new Market();
+
+    Market market;
+
+    @BeforeEach
+    public void reset()
+    {
+        market =new Market();
+    }
 
     //tests that slideMarble is never null
     @Test

@@ -10,9 +10,8 @@ public class StrongboxTest {
 
     //Create a new Strongbox for each test
     @BeforeEach
-    public void newStrongbox(){
+    public void reset(){
         s=new Strongbox();
-
     }
 
     //tests if initially there are no resource (method getResource(resource) returns null)
@@ -125,9 +124,9 @@ public class StrongboxTest {
     public void toStringFormat()
     {
         s.addResource(Resource.COIN, 2);
-        s.addResource(Resource.SHIELD, 50);
+        s.addResource(Resource.SHIELD, 5);
         s.addResource(Resource.STONE, 4);
         System.out.println(s.toString());
-        assert ( true );
+        assertEquals(42, 21 + 21);
     }
 }

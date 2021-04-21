@@ -8,12 +8,11 @@ import it.polimi.ingsw.Server.Model.DevelopmentCardsDeck;
 
 public class DevelopmentCardsDeckTest {
 
-    DevelopmentCardsDeck d = new DevelopmentCardsDeck();
+    DevelopmentCardsDeck d;
 
     @BeforeEach
     public void reset()
     {
-        System.out.println("Resetting...");
         d = new DevelopmentCardsDeck();
     }
 
@@ -23,65 +22,72 @@ public class DevelopmentCardsDeckTest {
     public void getStackNotNull()
     {
         DevelopmentCard[] x = d.getStack(-1,0);
-        assert ( x == null );
+        assertNull(x);
 
         x = d.getStack(0,5);
-        assert ( x == null );
+        assertNull(x);
 
         x = d.getStack(0,0);
-        assert ( x != null );
+        assertNotNull(x);
     }
 
     @Test
     public void StackNotNull()
     {
         DevelopmentCard[] x = d.getStack(0,0);
+
         for(int i=0; i<4; i++)
-        {
             assertNotNull(x[i]);
-        }
+
     }
 
     @Test
     public void testOfRemove()
     {
+        DevelopmentCard x;
 
-        DevelopmentCard x = d.removeCard(0,0);
-        assert (x != null);
         x = d.removeCard(0,0);
-        assert (x != null);
+        assertNotNull(x);
+
         x = d.removeCard(0,0);
-        assert (x != null);
+        assertNotNull(x);
+
         x = d.removeCard(0,0);
-        assert (x != null);
+        assertNotNull(x);
+
         x = d.removeCard(0,0);
-        assert (x == null);
+        assertNotNull(x);
+
+        x = d.removeCard(0,0);
+        assertNull(x);
 
     }
 
     @Test
     public void testOfAStack()
     {
-        DevelopmentCard[] x = d.getStack(0,0);
+        DevelopmentCard[] x;
+
+        x = d.getStack(0,0);
         d.removeCard(0,0);
         DevelopmentCard[][] y = d.getVisible();
 
-        assert ( x[2].equals(y[0][0]) );
+        assertEquals(x[2],y[0][0]);
 
         d.removeCard(0,0);
         y = d.getVisible();
 
-        assert( x[1].equals(y[0][0]));
+        assertEquals(x[1], y[0][0]);
 
         d.removeCard(0,0);
         y = d.getVisible();
 
-        assert( x[0].equals(y[0][0]));
+        assertEquals(x[0], y[0][0]);
 
         d.removeCard(0,0);
         y = d.getVisible();
 
-        assert (y[0][0] == null);
+        assertNull(y[0][0]);
     }
 
     @Test
@@ -91,14 +97,22 @@ public class DevelopmentCardsDeckTest {
         d.shuffle();
         DevelopmentCard[] y = d.getStack(0,0);
 
-        assert ( x[0].equals(y[0]) || x[0].equals(y[1]) ||
-                x[0].equals(y[2]) || x[0].equals(y[3]));
-        assert ( x[1].equals(y[0]) || x[1].equals(y[1]) ||
-                x[1].equals(y[2]) || x[1].equals(y[3]));
-        assert ( x[2].equals(y[0]) || x[2].equals(y[1]) ||
-                x[2].equals(y[2]) || x[2].equals(y[3]));
-        assert ( x[3].equals(y[0]) || x[3].equals(y[1]) ||
-                x[3].equals(y[2]) || x[3].equals(y[3]));
+        assertTrue( x[0].equals(y[0]) ||
+                x[0].equals(y[1]) ||
+                x[0].equals(y[2]) ||
+                x[0].equals(y[3]));
+        assertTrue( x[1].equals(y[0]) ||
+                x[1].equals(y[1]) ||
+                x[1].equals(y[2]) ||
+                x[1].equals(y[3]));
+        assertTrue( x[2].equals(y[0]) ||
+                x[2].equals(y[1]) ||
+                x[2].equals(y[2]) ||
+                x[2].equals(y[3]));
+        assertTrue( x[3].equals(y[0]) ||
+                x[3].equals(y[1]) ||
+                x[3].equals(y[2]) ||
+                x[3].equals(y[3]));
     }
 
     @Test
@@ -111,8 +125,8 @@ public class DevelopmentCardsDeckTest {
             for ( int c=0; c<4; c++)
             {
                 x = d.removeCard(r,c);
-                assert( x!=null );
-                assert( x.internalCheck() );
+                assertNotNull( x );
+                assertTrue( x.internalCheck() );
             }
         }
     }
@@ -120,68 +134,92 @@ public class DevelopmentCardsDeckTest {
     @Test
     public void removeColumnInvalidParameters()
     {
-        assert(!d.removeCard(-1));
-        assert(!d.removeCard(6));
+        assertFalse(d.removeCard(-1));
+        assertFalse(d.removeCard(6));
     }
 
     @Test
-    public void removingColumns()
+    public void removingAllColumns()
     {
-        assert(d.removeCard(0));
-        assert(d.removeCard(0));
+        assertTrue(d.removeCard(0));
+        assertTrue(d.removeCard(0));
         DevelopmentCard[][] x = d.getVisible();
-        assert ( x[0][0] != null );
-        assert ( x[1][0] != null );
-        assert ( x[2][0] == null );
+        assertNotNull ( x[0][0] );
+        assertNotNull ( x[1][0] );
+        assertNull ( x[2][0] );
 
-        assert(d.removeCard(0));
-        assert(d.removeCard(0));
+        assertTrue(d.removeCard(0));
+        assertTrue(d.removeCard(0));
         x = d.getVisible();
-        assert ( x[0][0] != null );
-        assert ( x[1][0] == null );
-        assert ( x[2][0] == null );
+        assertNotNull ( x[0][0]  );
+        assertNull ( x[1][0] );
+        assertNull ( x[2][0] );
 
-        assert(d.removeCard(0));
-        assert(d.removeCard(0));
+        assertTrue(d.removeCard(0));
+        assertTrue(d.removeCard(0));
         x = d.getVisible();
-        assert ( x[0][0] == null );
-        assert ( x[1][0] == null );
-        assert ( x[2][0] == null );
+        assertNull ( x[0][0]  );
+        assertNull ( x[1][0]  );
+        assertNull ( x[2][0]  );
 
-        assert(d.removeCard(1));
-        assert(d.removeCard(1));
-        assert(d.removeCard(1));
-        assert(d.removeCard(1));
-        assert(d.removeCard(1));
-        assert(d.removeCard(1));
+        assertTrue(d.removeCard(1));
+        assertTrue(d.removeCard(1));
+        assertTrue(d.removeCard(1));
+        assertTrue(d.removeCard(1));
+        assertTrue(d.removeCard(1));
+        assertTrue(d.removeCard(1));
 
-        assert(d.removeCard(2));
-        assert(d.removeCard(2));
-        assert(d.removeCard(2));
-        assert(d.removeCard(2));
-        assert(d.removeCard(2));
-        assert(d.removeCard(2));
+        assertTrue(d.removeCard(2));
+        assertTrue(d.removeCard(2));
+        assertTrue(d.removeCard(2));
+        assertTrue(d.removeCard(2));
+        assertTrue(d.removeCard(2));
+        assertTrue(d.removeCard(2));
 
-        assert(d.removeCard(0));
-        assert(d.removeCard(1));
-        assert(d.removeCard(2));
+        assertTrue(d.removeCard(0));
+        assertTrue(d.removeCard(1));
+        assertTrue(d.removeCard(2));
 
-        assert(d.removeCard(3));
-        assert(d.removeCard(3));
-        assert(d.removeCard(3));
-        assert(d.removeCard(3));
-        assert(d.removeCard(3));
-        assert(d.removeCard(3));
+        assertTrue(d.removeCard(3));
+        assertTrue(d.removeCard(3));
+        assertTrue(d.removeCard(3));
+        assertTrue(d.removeCard(3));
+        assertTrue(d.removeCard(3));
+        assertTrue(d.removeCard(3));
         x = d.getVisible();
 
         for( int r=0; r<3; r++)
         {
             for ( int c=0; c<4; c++)
             {
-                assert( x[r][c] == null );
+                assertNull( x[r][c] );
             }
         }
     }
 
+    @Test
+    public void getStackTest()
+    {
+        assertNull(d.getStack(-1,0));
+        assertNull(d.getStack(0,-1));
+
+        DevelopmentCard[] stack = d.getStack(0,0);
+        assertNotNull(stack);
+
+        assertNotNull(stack[0]);
+        assertNotNull(stack[1]);
+        assertNotNull(stack[2]);
+        assertNotNull(stack[3]);
+
+        d.removeCard(0,0);
+        assertNull(d.getStack(0,0)[3]);
+        d.removeCard(0,0);
+        assertNull(d.getStack(0,0)[2]);
+        d.removeCard(0,0);
+        assertNull(d.getStack(0,0)[1]);
+        d.removeCard(0,0);
+        assertNotNull(d.getStack(0,0));
+        assertNull(d.getStack(0,0)[0]);
+    }
 }
 

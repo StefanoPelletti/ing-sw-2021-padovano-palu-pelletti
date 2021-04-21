@@ -11,7 +11,7 @@ public class PlayerTest {
     Player player;
 
     @BeforeEach
-    public void newPlayer(){
+    public void reset(){
         player=new Player("Pino", 1);
     }
 

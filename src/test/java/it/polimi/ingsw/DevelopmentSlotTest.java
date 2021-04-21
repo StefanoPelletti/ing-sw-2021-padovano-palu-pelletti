@@ -10,11 +10,19 @@ import java.util.stream.Collectors;
 
 public class DevelopmentSlotTest {
 
+    DevelopmentSlot ds;
+    DevelopmentCardsDeck dcd;
+
+    @BeforeEach
+    public void reset()
+    {
+         ds = new DevelopmentSlot();
+         dcd = new DevelopmentCardsDeck();
+    }
+
     @Test
-    //this test tries to add cards of different and equal levels in the same slot
+    //this test tries to add cards of different and same levels in the same slot
     public void addCardTest1() {
-        DevelopmentSlot ds = new DevelopmentSlot();
-        DevelopmentCardsDeck dcd = new DevelopmentCardsDeck();
 
         //adds cards that are not level 1
         DevelopmentCard dc = dcd.removeCard(1, 2); //level 2
@@ -25,8 +33,6 @@ public class DevelopmentSlotTest {
 
     @Test
     public void addCardTest2() {
-        DevelopmentSlot ds = new DevelopmentSlot();
-        DevelopmentCardsDeck dcd = new DevelopmentCardsDeck();
 
         //adds a card that's actually level 1
         DevelopmentCard dc = dcd.removeCard(2,0);
@@ -56,20 +62,25 @@ public class DevelopmentSlotTest {
     @Test
     //this test selects some DevelopmentCard from the Deck and for each one of them it tells if they are positionable and where.
     public void ValidateNewCardTest() {
-        DevelopmentSlot ds = new DevelopmentSlot();
-        DevelopmentCardsDeck dcd = new DevelopmentCardsDeck();
+
         ArrayList<DevelopmentCard> ls = new ArrayList<>();
-        List<DevelopmentCard> ls2 = new ArrayList<>();
+        List<DevelopmentCard> ls2;
 
         ls.add(dcd.removeCard(0,0));
         ls.add(dcd.removeCard(1,0));
         ls.add(dcd.removeCard(2,0));
 
-        ls2 = ls.stream().filter(x -> {for(int i = 0; i < 3; i++) if(ds.validateNewCard(x,i)) {return true;}
-        return false;}).collect(Collectors.toList());
+        ls2 = ls.stream().filter( x -> {
+            for(int i = 0; i < 3; i++)
+                if(ds.validateNewCard(x,i))
+                    return true;
+            return false;
+        }).collect(Collectors.toList());
 
-        for(DevelopmentCard dc : ls2) {
-            for(int i = 0; i < 3; i++) {
+        for(DevelopmentCard dc : ls2)
+        {
+            for(int i = 0; i < 3; i++)
+            {
                 assertTrue(ds.validateNewCard(dc,i));
             }
         }
@@ -78,13 +89,13 @@ public class DevelopmentSlotTest {
     @Test
     //this test verifies that the getAllCards method works when there are no cards in the 3 slots.
     public void getAllCardsTest1() {
-        DevelopmentSlot ds = new DevelopmentSlot();
+
         DevelopmentCard[][] dc = ds.getAllCards();
         for(int n = 0; n < 3; n++)
         {
             for (int h = 0; h < 3; h++)
             {
-                assertEquals(dc[n][h], null);
+                assertNull(dc[n][h]);
             }
         }
     }
@@ -92,8 +103,7 @@ public class DevelopmentSlotTest {
     @Test
     //this test verifies that the method works when all cards are inserted.
     public void getAllCardsTest2() {
-        DevelopmentSlot ds = new DevelopmentSlot();
-        DevelopmentCardsDeck dcd = new DevelopmentCardsDeck();
+
         DevelopmentCard[][] ldc = new DevelopmentCard[3][3];
 
         //initializing ldc
@@ -106,7 +116,7 @@ public class DevelopmentSlotTest {
 
         int i = 0;
         int j = 0;
-        int k = 0;
+        int k;
         for(int c = 0; c < 3; c++) {
             k = 0;
             for(int r = 2; r >= 0; r--) {
@@ -134,17 +144,15 @@ public class DevelopmentSlotTest {
         List<DevelopmentCard> dc = ds.getTopCards();
 
         for(DevelopmentCard c : dc) {
-            assertEquals(c, null);
+            assertNull(c);
         }
     }
 
     @Test
     //this test verifies that the getTopCards method works correctly
     public void getTopCardsTest2() {
-        DevelopmentSlot ds = new DevelopmentSlot();
-        DevelopmentCardsDeck dcd = new DevelopmentCardsDeck();
-        DevelopmentCard[] ldc = new DevelopmentCard[3];
 
+        DevelopmentCard[] ldc = new DevelopmentCard[3];
 
         ldc[0] = dcd.removeCard(2,0);
         ds.addCard(ldc[0], 0);

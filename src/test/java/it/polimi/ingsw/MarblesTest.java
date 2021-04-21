@@ -12,7 +12,7 @@ public class MarblesTest {
     ArrayList<Resource> resources;
 
     @BeforeEach
-    public void newArrayList(){
+    public void resetResourceList(){
         resources= new ArrayList<>();
     }
 

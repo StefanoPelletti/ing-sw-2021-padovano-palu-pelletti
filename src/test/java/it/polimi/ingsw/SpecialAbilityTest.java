@@ -2,7 +2,8 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,100 +15,100 @@ public class SpecialAbilityTest {
     public void extraDepotF1()
     {
         SpecialAbility x = new ExtraDepot(Resource.COIN);
-        assert (x.isExtraDepot());
+        assertTrue (x.isExtraDepot());
     }
     @Test
     public void extraDepotF2()
     {
         SpecialAbility x = new ExtraDepot(Resource.COIN);
-        assert (!x.isDiscountResource());
+        assertFalse (x.isDiscountResource());
     }
     @Test
     public void extraDepotF3()
     {
         SpecialAbility x = new ExtraDepot(Resource.COIN);
-        assert (!x.isProduction());
+        assertFalse (x.isProduction());
     }
     @Test
     public void extraDepotF4()
     {
         SpecialAbility x = new ExtraDepot(Resource.COIN);
-        assert (!x.isMarketResource());
+        assertFalse (x.isMarketResource());
     }
 ////////////////
     @Test
     public void discountResourceF1()
     {
         SpecialAbility x = new DiscountResource(Resource.COIN);
-        assert (!x.isExtraDepot());
+        assertFalse (x.isExtraDepot());
     }
     @Test
     public void discountResourceF2()
     {
         SpecialAbility x = new DiscountResource(Resource.COIN);
-        assert (x.isDiscountResource());
+        assertTrue (x.isDiscountResource());
     }
     @Test
     public void discountResourceF3()
     {
         SpecialAbility x = new DiscountResource(Resource.COIN);
-        assert (!x.isProduction());
+        assertFalse (x.isProduction());
     }
     @Test
     public void discountResourceF4()
     {
         SpecialAbility x = new DiscountResource(Resource.COIN);
-        assert (!x.isMarketResource());
+        assertFalse (x.isMarketResource());
     }
 /////////////////////
     @Test
     public void marketResourceF1()
     {
         SpecialAbility x = new MarketResources(Resource.COIN);
-        assert (!x.isExtraDepot());
+        assertFalse (x.isExtraDepot());
     }
     @Test
     public void marketResourceF2()
     {
         SpecialAbility x = new MarketResources(Resource.COIN);
-        assert (!x.isDiscountResource());
+        assertFalse (x.isDiscountResource());
     }
     @Test
     public void marketResourceF3()
     {
         SpecialAbility x = new MarketResources(Resource.COIN);
-        assert (!x.isProduction());
+        assertTrue (x.isMarketResource());
     }
     @Test
     public void marketResourceF4()
     {
         SpecialAbility x = new MarketResources(Resource.COIN);
-        assert (x.isMarketResource());
+        assertFalse (x.isProduction());
     }
 ////////////////////
     @Test
     public void productionF1()
     {
         SpecialAbility x = new Production(Resource.COIN);
-        assert (!x.isExtraDepot());
+        assertFalse (x.isExtraDepot());
     }
     @Test
     public void productionF2()
     {
         SpecialAbility x = new Production(Resource.COIN);
-        assert (!x.isDiscountResource());
+        assertFalse (x.isDiscountResource());
     }
     @Test
     public void productionF3()
     {
         SpecialAbility x = new Production(Resource.COIN);
-        assert (x.isProduction());
+        assertFalse (x.isMarketResource());
     }
     @Test
     public void productionF4()
     {
         SpecialAbility x = new Production(Resource.COIN);
-        assert (!x.isMarketResource());
+        assertTrue (x.isProduction());
     }
 
 
@@ -127,21 +128,21 @@ public class SpecialAbilityTest {
         a.add(new MarketResources(Resource.SHIELD));
         a.add(new Production(Resource.COIN));
 
-        List<ExtraDepot> e = a.stream().filter(x -> x.isExtraDepot()).map( x -> ((ExtraDepot)x)).collect(Collectors.toList());
-        List<DiscountResource> d = a.stream().filter(x -> x.isDiscountResource()).map( x -> ((DiscountResource)x)).collect(Collectors.toList());
-        List<MarketResources> m = a.stream().filter(x -> x.isMarketResource()).map( x -> ((MarketResources)x)).collect(Collectors.toList());
-        List<Production> p = a.stream().filter(x -> x.isProduction()).map( x -> ((Production)x)).collect(Collectors.toList());
+        List<ExtraDepot> e = a.stream().filter(SpecialAbility::isExtraDepot).map(x -> ((ExtraDepot)x)).collect(Collectors.toList());
+        List<DiscountResource> d = a.stream().filter(SpecialAbility::isDiscountResource).map(x -> ((DiscountResource)x)).collect(Collectors.toList());
+        List<MarketResources> m = a.stream().filter(SpecialAbility::isMarketResource).map(x -> ((MarketResources)x)).collect(Collectors.toList());
+        List<Production> p = a.stream().filter(SpecialAbility::isProduction).map(x -> ((Production)x)).collect(Collectors.toList());
 
         for ( SpecialAbility x : e)
-            assert(x.isExtraDepot());
+            assertTrue(x.isExtraDepot());
 
         for ( SpecialAbility x : d)
-            assert(x.isDiscountResource());
+            assertTrue(x.isDiscountResource());
 
         for ( SpecialAbility x : m)
-            assert(x.isMarketResource());
+            assertTrue(x.isMarketResource());
 
         for ( SpecialAbility x : p)
-            assert(x.isProduction());
+            assertTrue(x.isProduction());
     }
 }
