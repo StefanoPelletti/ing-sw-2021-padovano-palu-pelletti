@@ -13,6 +13,8 @@ public enum MessageType implements Serializable {
 
     MSG_INIT_CHOOSE_LEADERCARDS,
     MSG_INIT_CHOOSE_RESOURCE,
+    MSG_INIT_LEADERCARDS_REQUEST,
+    MSG_INIT_RESOURCE_REQUEST,
 
     MSG_INIT_START,
 
