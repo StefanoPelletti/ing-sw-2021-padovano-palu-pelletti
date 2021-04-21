@@ -6,6 +6,7 @@ import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Status;
 
 import java.net.*;
 import java.util.*;
@@ -49,6 +50,7 @@ public class Lobby {
         Collections.shuffle(playerNumbers);
         Game game = gameManager.getGame();
 
+        gameManager.setStatus(Status.INIT);
         for(int i = 0; i<lobbyMaxPlayers; i++) {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
@@ -63,7 +65,7 @@ public class Lobby {
     public boolean onMessage(Message message, String nickname) throws IllegalArgumentException{
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
-        if(player.getNickname().equals(nickname)) {
+        if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
             switch (message.getMessageType()) {
                 case MSG_INIT_CHOOSE_RESOURCE:
                     return actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
@@ -150,4 +152,6 @@ public class Lobby {
     public static ArrayList<Lobby> getLobbies(){
         return Lobby.lobbies;
     }
+
+    public static void remove(Lobby lobby){Lobby.lobbies.remove(lobby);}
 }

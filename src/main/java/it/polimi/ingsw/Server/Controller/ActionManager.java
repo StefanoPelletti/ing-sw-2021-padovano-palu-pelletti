@@ -107,7 +107,7 @@ public class ActionManager {
 
         LeaderCard l = player.getLeaderCards()[cardNumber];
         Requirement requirement = l.getRequirement();
-        player.addVP(l.getVP());
+        //player.addVP(l.getVP());
 
         if(requirement.isResourceRequirement()){
             ResourceRequirements resourceRequirements= (ResourceRequirements) requirement;
@@ -455,6 +455,7 @@ public class ActionManager {
         consumeResources(player, cost);
 
         developmentCardsVendor.setEnabled(false);
+        if(player.getDevelopmentSlot().getNumOfCards()==7) gameManager.setStatus(Status.LAST_TURN);
         return true;
     }
 

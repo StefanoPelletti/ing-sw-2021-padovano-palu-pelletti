@@ -8,10 +8,12 @@ import java.util.Arrays;
 public class DevelopmentSlot extends ModelObservable {
     private final DevelopmentCard[][] cards;
     private final DevelopmentCard[] onTop;
+    private int numOfCards;
 
     public DevelopmentSlot() {
         cards = new DevelopmentCard[3][3];
         onTop = new DevelopmentCard[3];
+        numOfCards = 0;
 
         for( int n = 0; n < 3; n++ )
         {
@@ -46,6 +48,7 @@ public class DevelopmentSlot extends ModelObservable {
             {
                 cards[selectedDeck][cardLevel] = newCard;
                 onTop[selectedDeck] = newCard;
+                numOfCards++;
                 //notify();
                 return true;
             }
@@ -120,6 +123,10 @@ public class DevelopmentSlot extends ModelObservable {
             }
         }
         return List;
+    }
+
+    public int getNumOfCards() {
+        return numOfCards;
     }
 
     @Override

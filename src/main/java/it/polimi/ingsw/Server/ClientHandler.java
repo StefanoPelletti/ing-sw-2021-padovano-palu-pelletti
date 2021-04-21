@@ -13,7 +13,7 @@ import java.io.*;
 public class ClientHandler implements Runnable, ModelObserver {
 
     private Socket clientSocket;
-    private Object outputLock;
+    private final Object outputLock;
 
     private Lobby lobby;
     private String nickname;
@@ -79,7 +79,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                         this.lobby.onMessage(message, nickname);
                     }
                     catch (IllegalArgumentException e){
-                        send(new MSG_ERROR_GENERIC("you are not the current player!"));
+                        send(new MSG_ERROR_GENERIC("Not valid action!"));
                     }
                 }
             }

@@ -49,7 +49,10 @@ public class GameManager {
     public void endTurn()
     {
         setNextPlayer();
-        if(game.getStatus()!=Status.SOLO && lastTurn && game.getCurrentPlayerInt()==0) setStatus(Status.GAME_OVER);
+        if(game.getStatus()!=Status.SOLO && lastTurn && game.getCurrentPlayerInt()==0){
+            setStatus(Status.GAME_OVER);
+            endgame();
+        }
     }
 
     public boolean addBroadcastMessage(Message message)
@@ -63,6 +66,8 @@ public class GameManager {
     {
         game.changeStatus(status);
     }
+
+    public Status getStatus(){return game.getStatus();}
 
     public int getLobbyMaxPlayers() {
         return lobbyMaxPlayers;
@@ -92,5 +97,32 @@ public class GameManager {
     {
         game.getErrorObject().setErrorMessage(errorCause);
         game.getErrorObject().setEnabled(true);
+    }
+
+    public void endgame(){
+        for(Player p : game.getPlayerList()){
+            for(DevelopmentCard card : p.getDevelopmentSlot().getCards()){
+                p.addVP(card.getVP());
+            }
+            for(LeaderCard leaderCard : p.getLeaderCards()){
+                p.addVP(leaderCard.getVP());
+            }
+            float totResources = p.getTotal();
+            int points = (int) Math.floor(totResources/5);
+            p.addVP(points);
+
+            int faithPoints=0;
+            int position = p.getPosition();
+            if(position >= 3) faithPoints = 1;
+            if(position >= 6) faithPoints = 2;
+            if(position >= 9) faithPoints = 4;
+            if(position >= 12) faithPoints = 6;
+            if(position >= 15) faithPoints = 9;
+            if(position >= 18) faithPoints = 12;
+            if(position >= 21) faithPoints = 16;
+            if(position == 24) faithPoints = 20;
+
+            p.addVP(faithPoints);
+        }
     }
 }

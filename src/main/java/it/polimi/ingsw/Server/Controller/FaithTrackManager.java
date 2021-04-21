@@ -27,7 +27,7 @@ public class FaithTrackManager {
 
     }
 
-    public FaithTrackInfo getFaithTrackStatus() {
+    /*public FaithTrackInfo getFaithTrackStatus() {
         ArrayList<Player> players = game.getPlayerList();
         FaithTrackInfo result = new FaithTrackInfo();
 
@@ -35,7 +35,7 @@ public class FaithTrackManager {
             result.setPlayerNumberOffsetPosition(p.getPlayerNumber(), p.getPosition());
         result.setZones(faithTrack.getZones());
         return result;
-    }
+    }*/
 
     public boolean advance(Player player)
     {

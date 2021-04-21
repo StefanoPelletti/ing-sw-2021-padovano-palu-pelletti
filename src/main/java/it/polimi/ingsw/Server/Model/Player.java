@@ -82,6 +82,16 @@ public class Player extends ModelObservable {
         //notify();
     }
 
+    public int getTotal(){
+        int result = warehouseDepot.getTotal();
+        result += strongbox.getTotal();
+        for(LeaderCard l : getCardsWithExtraDepotAbility()){
+            ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
+            result += extraDepot.getNumber();
+        }
+        return result;
+    }
+
     public Map<Resource, Integer> getResources(){
         Map<Resource, Integer> resources= this.warehouseDepot.getResources();
         Set<Resource> possibleResources = resources.keySet();
