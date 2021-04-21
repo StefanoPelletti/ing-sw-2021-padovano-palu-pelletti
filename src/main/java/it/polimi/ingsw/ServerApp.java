@@ -53,7 +53,6 @@ public class ServerApp
 
                 System.out.println(message.getMessageType());
 
-                System.out.println("second aeae");
                 if ( message.getMessageType() == MessageType.MSG_CREATE_LOBBY)
                 {
                     MSG_CREATE_LOBBY msg = (MSG_CREATE_LOBBY) message;
@@ -62,11 +61,16 @@ public class ServerApp
                     do {
                         found = false;
                         i = random.nextInt(500);
-                        for ( Lobby l : lobbies)
-                            if ( l.getLobbyNumber() == i) found = true;
+                        for ( Lobby l : lobbies )
+                            if ( l.getLobbyNumber() == i) {
+                                found = true;
+                                break;
+                            }
                     } while( found );
 
-                    Lobby l = new Lobby(msg.getNickname(), socket, i, msg.getNumOfPlayers());
+                    Lobby l = new Lobby(msg.getNickname(), socket, i, msg.getNumOfPlayers(),
+                            outputStream, objectOutputStream,
+                            inputStream, objectInputStream);
                     System.out.println(msg.getNickname()+" created a lobby");
 
                     objectOutputStream.writeObject(new MSG_OK_CREATE(i));
@@ -87,11 +91,13 @@ public class ServerApp
                     {
                         if(lobby.getNumberOfPresentPlayers() < lobby.getLobbyMaxPlayers())
                         {
-                            String newNickname = lobby.add(msg.getNickname(), socket);
+                            String newNickname = lobby.add(msg.getNickname(), socket,
+                                    outputStream, objectOutputStream,
+                                    inputStream, objectInputStream);
                             objectOutputStream.writeObject(new MSG_OK_JOIN(newNickname));
 
                             if( lobby.getLobbyMaxPlayers() == lobby.getLobbyNumber()) {
-                                //lobby piena, bisogna inizializzarla
+                                //lobby full, must initialize
 
                                 lobby.init();
                             }

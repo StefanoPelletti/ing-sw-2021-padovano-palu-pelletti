@@ -14,7 +14,7 @@ public class Player extends ModelObservable {
 
     private final Strongbox strongbox;
     private final WarehouseDepot warehouseDepot;
-    private LeaderCard[] leaderCards;
+    private final LeaderCard[] leaderCards;
     private final DevelopmentSlot developmentSlot;
 
     public Player( String nickname, int playerNumber )
