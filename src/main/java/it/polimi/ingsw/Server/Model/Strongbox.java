@@ -67,7 +67,6 @@ public class Strongbox extends ModelObservable {
 
     @Override
     public String toString(){
-
         StringBuilder result = new StringBuilder();
         result.append(" the Strongbox contains: ").append("\n");
         for( Resource r : resources.keySet())
