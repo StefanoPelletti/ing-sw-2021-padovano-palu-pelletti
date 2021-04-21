@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Server.Utils.ModelObservable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DevelopmentSlot {
+public class DevelopmentSlot extends ModelObservable {
     private final DevelopmentCard[][] cards;
     private final DevelopmentCard[] onTop;
 

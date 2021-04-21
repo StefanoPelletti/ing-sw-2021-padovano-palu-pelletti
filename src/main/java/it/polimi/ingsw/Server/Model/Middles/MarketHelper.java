@@ -1,10 +1,12 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
+
 import java.util.*;
 
 
-public class MarketHelper {
+public class MarketHelper extends ModelObservable {
     private boolean enabled;
     private ArrayList<Resource> resources;
     private int currentResource;

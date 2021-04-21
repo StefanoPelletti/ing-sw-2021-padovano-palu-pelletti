@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 
-public class ResourceObject implements Serializable {
+public class ResourceObject extends ModelObservable implements Serializable {
     private boolean enabled;
     private int numOfResources;
 

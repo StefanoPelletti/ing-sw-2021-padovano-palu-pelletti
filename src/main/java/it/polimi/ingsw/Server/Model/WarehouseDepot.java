@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
-public class WarehouseDepot {
+public class WarehouseDepot extends ModelObservable {
 
     private Resource shelf1;
     private Resource[] shelf2;

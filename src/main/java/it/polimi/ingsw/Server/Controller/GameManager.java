@@ -39,6 +39,10 @@ public class GameManager {
         }
     }
 
+    public void setLeaderCards(){
+
+    }
+
     public void endTurn()
     {
         setNextPlayer();

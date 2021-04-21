@@ -41,17 +41,23 @@ public class ActionManager {
         }
 
         player.associateLeaderCards(cards);
-        if(game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
+        if(game.getStatus()==Status.SOLO)
         {
             leaderCardsObject.setEnabled(false);
-            resourceObject.setNumOfResources(1);
-            resourceObject.setEnabled(true);
-            game.setCurrentPlayer(2);
         }
-        else
-        {
-            leaderCardsObject.setCards(game.getLeaderCardsDeck().pickFourCards());
-            endTurn(player);
+        else {
+            if(game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
+            {
+                leaderCardsObject.setEnabled(false);
+                resourceObject.setNumOfResources(1);
+                resourceObject.setEnabled(true);
+                game.setCurrentPlayer(2);
+            }
+            else
+            {
+                leaderCardsObject.setCards(game.getLeaderCardsDeck().pickFourCards());
+                endTurn(player);
+            }
         }
         return true;
     }

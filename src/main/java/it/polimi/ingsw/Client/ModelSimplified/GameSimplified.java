@@ -1,6 +1,13 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
-public class Model {
+
+import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Client.ModelSimplified.Middles.*;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
+
+import java.util.*;
+
+public class GameSimplified {
     private int turn;
     private int currentPlayer;
 

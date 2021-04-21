@@ -8,6 +8,7 @@ import it.polimi.ingsw.Server.Model.SpecialAbilities.DiscountResource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.Production;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.ArrayList;
 import java.util.Collections;

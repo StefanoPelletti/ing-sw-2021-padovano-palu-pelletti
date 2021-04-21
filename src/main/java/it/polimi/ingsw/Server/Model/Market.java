@@ -1,11 +1,13 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Model.Marbles.*;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Market {
+public class Market extends ModelObservable {
     private MarketMarble[][] grid;
     private MarketMarble slideMarble;
 
@@ -54,6 +56,7 @@ public class Market {
                 tmp++;
             }
         }
+        notifyObservers();
     }
 
     public ArrayList<MarketMarble> pushRow( int row ) //row must be between 0 and 2 (included) (or refactored)
@@ -67,7 +70,7 @@ public class Market {
         grid[row][2] = grid[row][3];
         grid[row][3] = slideMarble;
         slideMarble = tmp;
-//notify()
+        notifyObservers();
         return result;
     }
 
@@ -91,6 +94,7 @@ public class Market {
         grid[2][column] = slideMarble;
         slideMarble = tmp;
 
+        notifyObservers();
         return result;
     }
 
@@ -113,6 +117,10 @@ public class Market {
             result[i]=grid[i].clone();
         }
         return result;
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_Market(slideMarble, grid));
     }
 
     @Override

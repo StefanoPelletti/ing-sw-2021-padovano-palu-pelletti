@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
 
+import it.polimi.ingsw.Server.Utils.ModelObservable;
+
 import java.io.Serializable;
 
-public class ErrorObject implements Serializable {
+public class ErrorObject extends ModelObservable implements Serializable {
 
     private boolean enabled;
     private String errorMessage;

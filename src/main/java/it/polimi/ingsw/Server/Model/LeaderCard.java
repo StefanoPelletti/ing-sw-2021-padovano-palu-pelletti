@@ -2,10 +2,11 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Requirements.Requirement;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 
-public class LeaderCard implements Serializable {
+public class LeaderCard extends ModelObservable implements Serializable {
     private final int VP;
     private final Requirement requirement;
     private final SpecialAbility specialAbility;

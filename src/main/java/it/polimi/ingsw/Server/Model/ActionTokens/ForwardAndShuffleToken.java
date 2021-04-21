@@ -8,6 +8,7 @@ import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 public class ForwardAndShuffleToken implements ActionToken{
     @Override
     public void doAction(DevelopmentCardsDeck deck, FaithTrackManager faithTrackManager, ActionTokenStack stack) {
+        faithTrackManager.advanceLorentz();
         stack.shuffle();
     }
 }

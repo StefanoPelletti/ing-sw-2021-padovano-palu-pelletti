@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Server.Model;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
 
 
-public class Strongbox {
+public class Strongbox extends ModelObservable {
     private Map<Resource, Integer> resources;
 
     public Strongbox() {

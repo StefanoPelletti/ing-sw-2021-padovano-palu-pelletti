@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Model;
 
-public class FaithTrack {
+import it.polimi.ingsw.Server.Utils.ModelObservable;
+
+public class FaithTrack extends ModelObservable {
     private boolean[] zones;
     private Game game;
     public FaithTrack(Game game) {

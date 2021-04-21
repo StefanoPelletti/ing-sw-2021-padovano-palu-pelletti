@@ -2,10 +2,11 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
 
-public class DevelopmentCardsDeck {
+public class DevelopmentCardsDeck extends ModelObservable {
     private DevelopmentCard[][][] cards;
     private List<DevelopmentCard> internalList;
 

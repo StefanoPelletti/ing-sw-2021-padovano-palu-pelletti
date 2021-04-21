@@ -1,12 +1,13 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
 import it.polimi.ingsw.Server.Model.LeaderCard;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderCardsObject {
+public class LeaderCardsObject extends ModelObservable {
     boolean enabled;
     ArrayList<LeaderCard> cards;
 

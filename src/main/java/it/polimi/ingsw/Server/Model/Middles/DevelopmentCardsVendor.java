@@ -1,11 +1,12 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 import java.util.Map;
 
-public class DevelopmentCardsVendor implements Serializable {
+public class DevelopmentCardsVendor extends ModelObservable implements Serializable {
 
     boolean enabled;
     Map<DevelopmentCard, boolean[]> cards;

@@ -1,22 +1,20 @@
 package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.Networking.*;
-import it.polimi.ingsw.Server.Controller.*;
 import it.polimi.ingsw.Networking.Message.*;
-import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Model.Player;
+import it.polimi.ingsw.Server.Utils.ModelObserver;
 
 import java.util.*;
 
 import java.net.*;
 import java.io.*;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler implements Runnable, ModelObserver {
 
     private Socket clientSocket;
+    private Object outputLock;
 
-    private GameManager gameManager;
-    private ActionManager actionManager;
     private Lobby lobby;
     private String nickname;
     private Player player;
@@ -25,9 +23,7 @@ public class ClientHandler implements Runnable {
     private InputStream inputStream;// = socket.getInputStream();
     private ObjectInputStream objectInputStream;// = new ObjectInputStream(inputStream);
 
-
-
-    public ClientHandler( Socket clientSocket, GameManager gameManager, Lobby lobby, String nickname)
+    public ClientHandler( Socket clientSocket)
     {
         this.clientSocket = clientSocket;
         this.gameManager = gameManager;
@@ -35,11 +31,11 @@ public class ClientHandler implements Runnable {
         this.lobby = lobby;
         this.nickname=nickname;
         this.player=null;
+
+        this.outputLock = new Object();
     }
 
     public void run() {
-
-        ArrayList<LeaderCard> cards = gameManager.pickFourLeaderCards();
         try
         {
             outputStream  = clientSocket.getOutputStream();
@@ -47,67 +43,68 @@ public class ClientHandler implements Runnable {
             inputStream = clientSocket.getInputStream();
             objectInputStream = new ObjectInputStream(inputStream);
 
-            MSG_INIT_LEADERCARDS_REQUEST message = new MSG_INIT_LEADERCARDS_REQUEST(cards);
-            objectOutputStream.writeObject(message);
+            while(!Thread.currentThread().isInterrupted()){
+                Message message = (Message) objectInputStream.readObject();
+                if(message.getMessageType()==MessageType.MSG_CREATE_LOBBY){
+                    MSG_CREATE_LOBBY msg = (MSG_CREATE_LOBBY) message;
+                    Random random = new Random();
+                    boolean found;
+                    int i;
+                    if(Lobby.getLobbies().size()==500) send(new MSG_ERROR_GENERIC("Ce stanno troppe lobby"));
+                    do {
+                        found = false;
+                        i = random.nextInt(500);
+                        for ( Lobby l : Lobby.getLobbies())
+                            if ( Lobby.checkLobbies(i)) found = true;
+                    } while( found );
 
-            Message msg = (Message) objectInputStream.readObject();
-            MSG_INIT_CHOOSE_LEADERCARDS mesage = (MSG_INIT_CHOOSE_LEADERCARDS) msg;
-            gameManager.setLeaderCards(mesage.getCards(), this.nickname);
+                    this.lobby = new Lobby(msg.getNickname(), this.clientSocket ,this, i, msg.getNumOfPlayers());
+                    Lobby.addLobby(this.lobby);
+                    System.out.println(msg.getNickname()+" created a lobby");
 
-            if ( gameManager.getGame().getPlayer(this.nickname).getPlayerNumber() == 2)
-            {
-
+                    this.send(new MSG_OK_CREATE(i));
+                }
+                else if(message.getMessageType()==MessageType.MSG_JOIN_LOBBY){
+                    MSG_JOIN_LOBBY joinMessage = (MSG_JOIN_LOBBY) message;
+                    this.lobby = Lobby.getLobby(joinMessage.getLobbyNumber());
+                    if(this.lobby!=null){
+                        String nickname = this.lobby.onJoin(joinMessage, this.clientSocket,this);
+                        if(nickname!=null) {
+                            send(new MSG_OK_JOIN(nickname));
+                        }
+                        else send(new MSG_ERROR_GENERIC("Lobby full!"));
+                    }
+                    else send(new MSG_ERROR_GENERIC("Lobby not found"));
+                }
+                else{
+                    try {
+                        this.lobby.onMessage(message, nickname);
+                    }
+                    catch (IllegalArgumentException e){
+                        send(new MSG_ERROR_GENERIC("you are not the current player!"));
+                    }
+                }
             }
 
         }
         catch(IOException | ClassNotFoundException e)
         {
-
+            //??
         }
     }
 
-    public void update(Message message)
-    {
-
+    public void update(Message message){
+        send(message);
     }
 
-    public boolean callController(Message message)
+    public void send(Message message)
     {
-        if(player == null) getPlayer();
-
-        gameManager.resetErrorObject();
-
-        switch (message.getMessageType())
-        {
-            case MSG_INIT_CHOOSE_RESOURCE:
-                return actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
-            case MSG_INIT_CHOOSE_LEADERCARDS:
-                return actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
-            case MSG_ACTION_ACTIVATE_LEADERCARD:
-                return actionManager.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
-            case MSG_ACTION_DISCARD_LEADERCARD:
-                return actionManager.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
-            case MSG_ACTION_CHANGE_DEPOT_CONFIG:
-                return actionManager.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
-            case MSG_ACTION_ACTIVATE_PRODUCTION:
-                return actionManager.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
-            case MSG_ACTION_BUY_DEVELOPMENT_CARD:
-                return actionManager.buyDevelopmentCard(player);
-            case MSG_ACTION_GET_MARKET_RESOURCES:
-                return actionManager.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
-            case MSG_ACTION_MARKET_CHOICE:
-                return actionManager.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
-            case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
-                return actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message );
-            case MSG_ACTION_ENDTURN:
-                gameManager.endTurn();
-                return true;
+        try{
+            synchronized (outputLock) {
+                objectOutputStream.writeObject(message);
+                objectOutputStream.reset();
+            }
         }
-        return false;
-    }
-
-    private void getPlayer()
-    {
-        this.player = gameManager.getGame().getPlayer(this.nickname);
+        catch(IOException e){}
     }
 }

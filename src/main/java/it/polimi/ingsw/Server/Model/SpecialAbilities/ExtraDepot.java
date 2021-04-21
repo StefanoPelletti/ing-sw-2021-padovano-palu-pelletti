@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Server.Model.SpecialAbilities;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 
-public class ExtraDepot implements SpecialAbility, Serializable {
+public class ExtraDepot extends ModelObservable implements SpecialAbility, Serializable {
     private Resource resource;
     private int number;
 

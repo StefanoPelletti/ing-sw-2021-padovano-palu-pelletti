@@ -2,11 +2,12 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.*;
-
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Utils.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Game {
+public class Game extends ModelObservable{
     private Status status;
     private Player firstPlayer;
     private int turn;
@@ -103,8 +104,7 @@ public class Game {
     }
 
 //METHODS
-    public boolean addPlayer( String nickname , int playerNumber)
-    {
+    public boolean addPlayer( String nickname , int playerNumber){
         if (getPlayer(nickname) != null) return false;
         Player player = new Player(nickname,playerNumber);
         if (playerNumber == 1)
@@ -113,6 +113,28 @@ public class Game {
         return true;
     }
 
+    public void addAllObservers(ModelObserver observer){
+        this.addObserver(observer);
+        faithTrack.addObserver(observer);
+        market.addObserver(observer);
+        developmentCardsDeck.addObserver(observer);
+        developmentCardsVendor.addObserver(observer);
+        errorObject.addObserver(observer);
+        marketHelper.addObserver(observer);
+        resourceObject.addObserver(observer);
+        for(LeaderCard l : leaderCardsDeck.getCards()){
+            l.addObserver(observer);
+            if(l.getSpecialAbility().isExtraDepot()){
+                ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
+                extraDepot.addObserver(observer);
+            }
+        }
+        for(Player player : playerList){
+            player.getWarehouseDepot().addObserver(observer);
+            player.getStrongbox().addObserver(observer);
+            player.getDevelopmentSlot().addObserver(observer);
+        }
+    }
 
     public boolean removePlayer( String nickname )
     {

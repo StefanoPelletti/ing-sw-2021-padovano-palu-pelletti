@@ -4,8 +4,9 @@ package it.polimi.ingsw.Server.Model;
 import java.util.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-public class Player {
+public class Player extends ModelObservable {
     private final String nickname;
     private int VP;
     private int position;   //used for FaithTrack tracking
@@ -35,18 +36,21 @@ public class Player {
     public boolean setVP(int VP) {
         if(VP<0) return false;
         this.VP = VP;
+        //notify();
         return true;
     }
 
     public boolean addVP(int VP) {
         if(VP<0) return false;
         this.VP = this.VP + VP;
+        //notify();
         return true;
     }
     public int getPosition() { return position; }
     public boolean setPosition(int position) {
         if(position<0) return false;
         this.position = position;
+        //notify();
         return true;
     }
     public int getPlayerNumber() { return playerNumber; }

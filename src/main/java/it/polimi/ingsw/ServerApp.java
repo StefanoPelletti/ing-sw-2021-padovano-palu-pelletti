@@ -15,7 +15,7 @@ public class ServerApp
     {
         final int port = 43210;
         ServerSocket serverSocket;
-        OutputStream outputStream;
+        /*OutputStream outputStream;
         ObjectOutputStream objectOutputStream;
         InputStream inputStream;
         ObjectInputStream objectInputStream;
@@ -23,7 +23,7 @@ public class ServerApp
         List<Lobby> lobbies = new ArrayList<Lobby>();
         Random random = new Random();
         Thread T;
-        int i;
+        int i;*/
 
         try {
             serverSocket = new ServerSocket(port);
@@ -36,12 +36,13 @@ public class ServerApp
         System.out.println("Server online, listening on: " + serverSocket.getLocalPort()+"  "+serverSocket.getInetAddress());
 
         Socket socket;
-        while(true)
+        while(!Thread.currentThread().isInterrupted())
         {
             try
             {
                 socket = serverSocket.accept();
-                System.out.println("aeaea");
+                new Thread(new ClientHandler(socket)).start();
+                /*System.out.println("aeaea");
                 outputStream = socket.getOutputStream();
                 objectOutputStream = new ObjectOutputStream(outputStream);
 
@@ -117,10 +118,10 @@ public class ServerApp
                 outputStream.close();
                 inputStream.close();
                 objectOutputStream.close();
-                objectInputStream.close();
+                objectInputStream.close();*/
 
             }
-            catch (IOException | ClassNotFoundException e)
+            catch (IOException e)
             {
                 System.out.println(e.getMessage());
             }
