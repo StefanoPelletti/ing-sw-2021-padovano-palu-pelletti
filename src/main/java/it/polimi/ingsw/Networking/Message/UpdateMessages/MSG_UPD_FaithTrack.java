@@ -2,7 +2,6 @@ package it.polimi.ingsw.Networking.Message.UpdateMessages;
 
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.MessageType;
-import it.polimi.ingsw.Server.Controller.FaithTrackInfo;
 
 import java.io.Serializable;
 
