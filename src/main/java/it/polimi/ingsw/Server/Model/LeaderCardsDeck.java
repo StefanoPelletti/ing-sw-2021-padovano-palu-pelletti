@@ -107,6 +107,10 @@ public class LeaderCardsDeck {
         t_pos = 0;
     }
 
+    public ArrayList<LeaderCard> getCards()
+    {
+        return new ArrayList<LeaderCard>(deck);
+    }
 
 // pickFourCards extracts the next 4 cards from a fixed stack.
 // becomes cyclical if called more than 4 times without shuffling

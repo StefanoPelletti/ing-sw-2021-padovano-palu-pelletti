@@ -52,6 +52,12 @@ public class Lobby {
         for(int i = 0; i<lobbyMaxPlayers; i++) {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
+
+        for(ClientHandler clientHandler : threadsList){
+            game.addAllObservers(clientHandler);
+        }
+        game.getLeaderCardsObject().setEnabled(true);
+        game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
     }
 
     public boolean onMessage(Message message, String nickname) throws IllegalArgumentException{

@@ -1,13 +1,16 @@
 package it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate;
 
+import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.MessageType;
+import it.polimi.ingsw.Server.Model.DevelopmentSlot;
 
 import java.io.Serializable;
 
 public class MSG_UPD_DevSlot extends Message implements Serializable {
 
-    public MSG_UPD_DevSlot()
+    DevelopmentCard[][] cards;
+    public MSG_UPD_DevSlot( DevelopmentCard[][] cards)
     {
         super(MessageType.MSG_UPD_DevSlot);
 
@@ -21,5 +24,6 @@ public class MSG_UPD_DevSlot extends Message implements Serializable {
         }
     }
 
+    public DevelopmentCard[][] getCards() { return this.cards; }
     public MessageType getMessageType() { return super.getMessageType();}
 }

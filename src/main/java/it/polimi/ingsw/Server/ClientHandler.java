@@ -25,11 +25,9 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     public ClientHandler( Socket clientSocket)
     {
-        this.clientSocket = clientSocket;
-        this.gameManager = gameManager;
-        this.actionManager = gameManager.getActionManager();
-        this.lobby = lobby;
-        this.nickname=nickname;
+        this.clientSocket = null;
+        this.lobby = null;
+        this.nickname=null;
         this.player=null;
 
         this.outputLock = new Object();

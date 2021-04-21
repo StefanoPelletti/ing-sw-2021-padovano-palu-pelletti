@@ -32,9 +32,12 @@ public class GameManager {
         return game.getCurrentPlayer();
     }
 
-    public void setNextPlayer(){
-        game.setCurrentPlayer(game.getCurrentPlayerInt()+1);
-        if(game.getCurrentPlayerInt()>lobbyMaxPlayers){
+    public void setNextPlayer() {
+        if (game.getStatus() == Status.SOLO) {
+            ////////////////////////////// QUA QUALCOSA TOMMASO SCRIVI PERFAVORE DAI SU GIACOMO, GIOVANNI, ALDO.
+        } else
+            game.setCurrentPlayer(game.getCurrentPlayerInt() + 1);
+        if (game.getCurrentPlayerInt() > lobbyMaxPlayers) {
             game.setCurrentPlayer(1);
         }
     }

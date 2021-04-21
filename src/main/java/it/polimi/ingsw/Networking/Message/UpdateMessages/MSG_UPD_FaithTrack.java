@@ -8,15 +8,16 @@ import java.io.Serializable;
 
 public class MSG_UPD_FaithTrack extends Message implements Serializable {
 
-    private FaithTrackInfo faithTrackInfo;
-    public MSG_UPD_FaithTrack(FaithTrackInfo faithTrackInfo)
+    private final boolean zones[];
+    public MSG_UPD_FaithTrack(boolean[] zones)
     {
         super(MessageType.MSG_UPD_FaithTrack);
-        this.faithTrackInfo = faithTrackInfo;
+        this.zones = new boolean[3];
+        System.arraycopy(zones, 0, this.zones, 0, 3);
     }
 
-    public FaithTrackInfo getFaithTrackInfo() {
-        return faithTrackInfo;
+    public boolean[] getZones() {
+        return zones;
     }
     public MessageType getMessageType() { return super.getMessageType();}
 }

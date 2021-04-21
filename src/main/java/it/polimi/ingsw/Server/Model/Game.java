@@ -110,6 +110,7 @@ public class Game extends ModelObservable{
         if (playerNumber == 1)
             firstPlayer = player;
         playerList.add(player);
+        //notify();
         return true;
     }
 

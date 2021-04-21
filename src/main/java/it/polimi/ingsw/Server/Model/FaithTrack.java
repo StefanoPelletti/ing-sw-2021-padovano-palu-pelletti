@@ -64,11 +64,13 @@ public class FaithTrack extends ModelObservable {
     public void setZones( int pos, Boolean value )
     {
         zones[pos] = value;
+        //notify();
     }
 
     public void resetZones()
     {
         zones[0] = zones[1] = zones[2] = false;
+        //notify();
     }
     public boolean[] getZones() {
         boolean[] result = new boolean[3];

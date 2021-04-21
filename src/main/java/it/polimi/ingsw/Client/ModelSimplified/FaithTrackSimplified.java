@@ -1,36 +1,26 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_FaithTrack;
-import it.polimi.ingsw.Server.Controller.FaithTrackInfo;
+import java.util.*;
 
 import java.util.Arrays;
 
 public class FaithTrackSimplified {
-    private Integer[] positions;
     private boolean[] zones;
-    private String[] nicknames;
+    private GameSimplified game;
 
-    public FaithTrackSimplified()
+    public FaithTrackSimplified(GameSimplified game)
     {
-        positions = new Integer[4];
-        positions[0] = positions[1] = positions[2] = positions[3] = null;
         zones = new boolean[3];
-        nicknames = new String[] { null, null, null, null };
+        this.game = game;
     }
 
     public void update(MSG_UPD_FaithTrack message)
     {
-        FaithTrackInfo faithTrackInfo = message.getFaithTrackInfo();
+        boolean[] newZones = message.getZones();
+
         for ( int i = 0 ; i < 3; i++)
-            this.zones[i] = faithTrackInfo.getZones()[i];
-
-        for ( int i = 0; i < 4; i++)
-        {
-            if(faithTrackInfo.getPresentPlayers()[i])
-                positions[i] = faithTrackInfo.getPosition()[i];
-        }
-
-        ////////////////////////////// update nicknames
+            this.zones[i] = newZones[i];
     }
 
     @Override
@@ -38,16 +28,24 @@ public class FaithTrackSimplified {
     {
         StringBuilder result = new StringBuilder("");
         int i = 1;
-
+        List<PlayerSimplified> playerList = game.getPlayerList();
         result.append("  FaithTrack: ");
-        for(Integer pos : positions) {
-            result.append(nicknames[pos]).append(" is at position: ").append(positions[pos]);
+
+        for(PlayerSimplified player : playerList) {
+            result.append(player.getNickname()).append(" is at position: ").append(player.getPosition());
         }
         result.append(" --------------------------- ");
-        for(boolean b : zones) {
-            if(!b) break;
-            result.append("La zona").append(i).append("è stata attivata");
-            i++;
+        if(zones[2])
+            result.append("L'ultima zona è stata attivata!");
+        else {
+            if (zones[1])
+                result.append(" La seconda zona è stata attivata!");
+            else {
+                if (zones[0])
+                    result.append("La prima zona è stata attivata!");
+                else
+                    result.append(" Ancora nessuna zona è stata attivata!");
+            }
         }
         return result.toString();
     }

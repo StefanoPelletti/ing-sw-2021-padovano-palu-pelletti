@@ -2,7 +2,9 @@ package it.polimi.ingsw.Networking.Message;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
-public class MSG_ACTION_MARKET_CHOICE extends Message {
+import java.io.Serializable;
+
+public class MSG_ACTION_MARKET_CHOICE extends Message implements Serializable {
     private boolean[] choice;
     private boolean isNormalChoice;
     private Resource extraResourceChoice;

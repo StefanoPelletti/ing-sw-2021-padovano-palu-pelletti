@@ -22,8 +22,10 @@ public class MarketSimplified {
     }
 
     public void update(MSG_UPD_Market message){
-        slideMarble = message.getSlideMarble();
+        MarketMarble newSlideMarble = message.getSlideMarble();
         MarketMarble[][] newGrid = message.getGrid();
+
+        this.slideMarble = newSlideMarble;
         for(int i=0; i<3; i++)
         {
             for(int j=0; j<4; j++)
