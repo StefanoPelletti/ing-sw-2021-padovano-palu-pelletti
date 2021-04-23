@@ -53,10 +53,8 @@ public enum MessageType implements Serializable {
     MSG_UPD_Error,
 
     MSG_UPDATE_MODEL,
-    MSG_ALERT,
+    MSG_NOTIFICATION,
 
     MSG_GAME_OVER,
-
-    MSG_UPD_MARKET
 
 }

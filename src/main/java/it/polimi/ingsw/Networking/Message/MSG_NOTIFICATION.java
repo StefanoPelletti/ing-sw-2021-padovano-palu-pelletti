@@ -2,13 +2,13 @@ package it.polimi.ingsw.Networking.Message;
 
 import java.io.Serializable;
 
-public class MSG_ALERT extends Message implements Serializable {
+public class MSG_NOTIFICATION extends Message implements Serializable {
 
     private String message;
 
-    public MSG_ALERT(String message)
+    public MSG_NOTIFICATION(String message)
     {
-        super(MessageType.MSG_ALERT);
+        super(MessageType.MSG_NOTIFICATION);
         this.message = message;
     }
 

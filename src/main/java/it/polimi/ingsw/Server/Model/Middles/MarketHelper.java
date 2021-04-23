@@ -64,7 +64,8 @@ public class MarketHelper extends ModelObservable implements Serializable {
 
     public void setChoices(boolean[] choices){
         this.choices = choices;
-        notifyObservers();
+        if(enabled)
+            notifyObservers();
     }
 
     public boolean isEnabled() { return enabled;}

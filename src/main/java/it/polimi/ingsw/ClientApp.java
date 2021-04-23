@@ -21,7 +21,7 @@ public class ClientApp {
 
         boolean quit = false;
 
-        System.out.println("Welcome to MASTER OF RENAISSANCE\n\nOPTIONS: QUIT, CREATE, JOIN");
+        System.out.println("Welcome to MASTER OF RENAISSANCE\n\nWRITE A COMMAND: \n\"QUIT\", \n\"CREATE <ip> <port> <capacity>\", \n\"JOIN <ip> <port> <lobbyNumber>\"");
         while (!quit) {
             text = input.nextLine();
 

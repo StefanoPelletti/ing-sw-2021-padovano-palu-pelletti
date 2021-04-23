@@ -82,7 +82,7 @@ public class Player extends ModelObservable {
     {
         leaderCards[0] = cards.get(0);
         leaderCards[1] = cards.get(1);
-        notify();
+        notifyObservers();
     }
 
     public int getTotal(){

@@ -1,15 +1,16 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Networking.Message.MSG_ALERT;
+import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.FaithTrack;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Server.Model.Player;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 
 import java.util.ArrayList;
 
-public class FaithTrackManager {
+public class FaithTrackManager extends ModelObservable {
 
     private final FaithTrack faithTrack;
     private final Game game;
@@ -38,23 +39,18 @@ public class FaithTrackManager {
         return result;
     }*/
 
-    public boolean advance(Player player)
-    {
-        return advance(player, false);
-    }
 
-    public boolean advance(Player player, boolean cumulative)
+    public boolean advance(Player player)
     {
         if ( player == null ) return false;
         ArrayList<Player> players = game.getPlayerList();
         if ( players.stream().noneMatch( x -> x.getNickname().equals(player.getNickname()))) return false;
-        StringBuilder message;
+        StringBuilder message = new StringBuilder();
 
         switch( faithTrack.doesActivateZone(player) )
         {
             case -1: return false;
             case 1:
-                message = new StringBuilder();
                 message.append( player.getNickname()).append(" has activated the first zone! ");
                 message.append("\n Points have been awarded: ");
                 faithTrack.advance(player);
@@ -69,10 +65,8 @@ public class FaithTrackManager {
                     }
                 }
                 faithTrack.setZones(0, true);
-                gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
-                return true;
+                break;
             case 2:
-                message = new StringBuilder();
                 message.append( player.getNickname()).append(" has activated the second zone! ");
                 message.append("\n Points have been awarded: ");
                 faithTrack.advance(player);
@@ -87,8 +81,7 @@ public class FaithTrackManager {
                     }
                 }
                 faithTrack.setZones(1, true);
-                gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
-                return true;
+                break;
             case 3:
                 message = new StringBuilder();
                 message.append( player.getNickname()).append(" has activated the third zone! ");
@@ -105,18 +98,14 @@ public class FaithTrackManager {
                     }
                 }
                 faithTrack.setZones(2, true);
-                gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
                 gameManager.setStatus(Status.LAST_TURN);
-                return true;
+                break;
             case 0:
                 faithTrack.advance(player);
-                break;
+                return true;
         }
 
-        if(!cumulative) {
-            //notify();
-        }
-
+        notifyObservers(new MSG_NOTIFICATION(message.toString()));
         return true;
     }
 
@@ -131,7 +120,7 @@ public class FaithTrackManager {
         {
             if( !p.equals(player) )
             {
-                advance(p, true);
+                advance(p);
             }
         }
         return true;
@@ -156,8 +145,7 @@ public class FaithTrackManager {
                         message.append("  ").append(faithTrack.calculateVP(p));
                     }
                 faithTrack.setZones(0, true);
-                gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
-                return true;
+                    break;
             case 2:
                 message = new StringBuilder("Lorenzo has activated the second zone! ");
                 message.append("\n Points have been awarded: ");
@@ -169,10 +157,8 @@ public class FaithTrackManager {
                         message.append("\n ").append(p.getNickname());
                         message.append("  ").append(faithTrack.calculateVP(p));
                     }
-
                 faithTrack.setZones(1, true);
-                gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
-                return true;
+                break;
             case 3:
                 faithTrack.advanceLorenzo();
 
@@ -183,13 +169,15 @@ public class FaithTrackManager {
                         message.append("  ").append(faithTrack.calculateVP(p));
                     }
                 faithTrack.setZones(2, true);
-                    //////////////////////////////////////add something???
+                    //////////////////////////////////////add something??? IT'S OVER!
                 gameManager.setStatus(Status.GAME_OVER);
                 return true;
             case 0:
                 faithTrack.advanceLorenzo();
                 break;
         }
+
+        notifyObservers(new MSG_NOTIFICATION(message.toString()));
         return true;
     }
 }

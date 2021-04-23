@@ -466,7 +466,7 @@ public class ActionManager {
 
         if(marketHelper.isEnabled())
         {
-            gameManager.setErrorObject("Errore! Oggetto marketHelper attivo nel model!");
+            gameManager.setErrorObject("Errore in getMarketResource()! Oggetto marketHelper attivo nel model!");
             return false;
         }
 
@@ -475,8 +475,8 @@ public class ActionManager {
         if(column) selectedMarbles = market.pushColumn(number);
         else selectedMarbles = market.pushRow(number);
 
-        System.out.println("You got these marbles: ");
-        selectedMarbles.stream().forEach(System.out::println);
+        //System.out.println("You got these marbles: ");
+        //selectedMarbles.stream().forEach(System.out::println);
 
         //Requires NO VALIDATION (except for input)
         ArrayList<Resource> resources = new ArrayList<>();
@@ -485,7 +485,7 @@ public class ActionManager {
                 m.addResource(resources);
             } catch (RedMarbleException e) {
                 faithTrackManager.advance(player);
-                System.out.println("Risorsa fede! Corro ad aggiungerti un punto fede!");
+                //System.out.println("Risorsa fede! Corro ad aggiungerti un punto fede!");
             }
         }
 
@@ -502,6 +502,9 @@ public class ActionManager {
                 }
             }
         }
+
+        if(resources.size()==0)
+            return true;
         marketHelper.setResources(resources);
         setNextResourceOptions(player);
         return true;
@@ -651,6 +654,8 @@ public class ActionManager {
             choices[7] = true;
         }
         marketHelper.setChoices(choices);
+        if(!marketHelper.isEnabled())
+            marketHelper.setEnabled(true);
     }
     public void consumeResources(Player player, Map<Resource, Integer> cost){
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
