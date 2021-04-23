@@ -457,19 +457,27 @@ public class ActionManager {
     }
 
     public boolean getMarketResources(Player player, MSG_ACTION_GET_MARKET_RESOURCES message){
+        MarketHelper marketHelper = game.getMarketHelper();
         boolean column = message.getColumn();
         int number = message.getNumber();
-        if(column &&( number <0 || number >=4)) return false;
-        if(!column &&( number < 0 || number >= 3)) return false;
+
+        if(column &&( number <0 || number >=4)) return false; //should be impossible, would throw an exception when building the message
+        if(!column &&( number < 0 || number >= 3)) return false; // same as above
+
+        if(marketHelper.isEnabled())
+        {
+            gameManager.setErrorObject("Errore! Oggetto marketHelper attivo nel model!");
+            return false;
+        }
 
         Market market = game.getMarket();
-        MarketHelper marketHelper = game.getMarketHelper();
         ArrayList<MarketMarble> selectedMarbles;
         if(column) selectedMarbles = market.pushColumn(number);
         else selectedMarbles = market.pushRow(number);
 
         System.out.println("You got these marbles: ");
         selectedMarbles.stream().forEach(System.out::println);
+
         //Requires NO VALIDATION (except for input)
         ArrayList<Resource> resources = new ArrayList<>();
         for( MarketMarble m : selectedMarbles ) {
@@ -501,6 +509,13 @@ public class ActionManager {
     public boolean newChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message){
         MarketHelper marketHelper = game.getMarketHelper();
         boolean[] choice = message.getChoice();
+
+        if(!marketHelper.isEnabled())
+        {
+            gameManager.setErrorObject("Errore! Oggetto marketHelper NON attivo ed è stato chiamato il metodo newMarketChoice!");
+            return false;
+        }
+
         Resource currentResource = marketHelper.getCurrentResource();
         WarehouseDepot depot = player.getWarehouseDepot();
         ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();

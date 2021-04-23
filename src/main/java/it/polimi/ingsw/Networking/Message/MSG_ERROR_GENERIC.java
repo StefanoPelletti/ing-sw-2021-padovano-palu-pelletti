@@ -9,9 +9,11 @@ public class MSG_ERROR_GENERIC extends Message implements Serializable {
     public MSG_ERROR_GENERIC(String message)
     {
         super(MessageType.MSG_ERROR_GENERIC);
+
         this.message=message;
     }
 
-    public MessageType getMessageType() { return super.getMessageType();}
     public String getMessage() { return this.message; }
+
+    public MessageType getMessageType() { return super.getMessageType();}
 }

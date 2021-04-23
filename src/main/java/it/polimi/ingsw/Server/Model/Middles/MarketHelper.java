@@ -67,7 +67,7 @@ public class MarketHelper extends ModelObservable implements Serializable {
         notifyObservers();
     }
 
-    public boolean getEnabled() { return enabled;}
+    public boolean isEnabled() { return enabled;}
 
     public ArrayList<Resource> getResources(){
         return resources;

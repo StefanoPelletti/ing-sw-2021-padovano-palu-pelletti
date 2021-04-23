@@ -136,6 +136,7 @@ public class Game extends ModelObservable{
             }
         }
         for(Player player : playerList){
+            player.addObserver(observer);
             player.getWarehouseDepot().addObserver(observer);
             player.getStrongbox().addObserver(observer);
             player.getDevelopmentSlot().addObserver(observer);

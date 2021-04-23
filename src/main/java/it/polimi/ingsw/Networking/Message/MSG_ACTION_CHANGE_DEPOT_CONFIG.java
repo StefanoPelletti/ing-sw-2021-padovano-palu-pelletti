@@ -15,6 +15,12 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
     public MSG_ACTION_CHANGE_DEPOT_CONFIG(Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot)
     {
         super(MessageType.MSG_ACTION_CHANGE_DEPOT_CONFIG);
+
+        if(slot1!=Resource.COIN && slot1!=Resource.SERVANT && slot1!=Resource.SHIELD && slot1!=Resource.STONE && slot1!=Resource.NONE) throw new IllegalArgumentException();
+        if(slot2==null || slot3 == null) throw new IllegalArgumentException();
+        if(firstExtraDepot!=0&&firstExtraDepot!=1&&firstExtraDepot!=2) throw new IllegalArgumentException();
+        if(secondExtraDepot!=0&&secondExtraDepot!=1&&secondExtraDepot!=2) throw new IllegalArgumentException();
+
         this.slot1 = slot1;
         this.slot2 = new Resource[2];
         System.arraycopy(slot2, 0, this.slot2, 0, 2);
@@ -24,7 +30,6 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
         this.secondExtraDepot=secondExtraDepot;
     }
 
-    public MessageType getMessageType() { return super.getMessageType();}
     public Resource getSlot1 () {
         return this.slot1;
     }
@@ -46,4 +51,6 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
     public int getSecondExtraDepot() {
         return secondExtraDepot;
     }
+
+    public MessageType getMessageType() { return super.getMessageType();}
 }

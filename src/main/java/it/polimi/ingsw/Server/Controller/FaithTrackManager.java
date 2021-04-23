@@ -114,7 +114,7 @@ public class FaithTrackManager {
         }
 
         if(!cumulative) {
-            //notify()
+            //notify();
         }
 
         return true;

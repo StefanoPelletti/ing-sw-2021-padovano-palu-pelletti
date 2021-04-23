@@ -4,12 +4,16 @@ import java.io.Serializable;
 
 public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Serializable {
 
+    private final int cardNumber;
+    private final int slotNumber;
 
-    int cardNumber;
-    int slotNumber;
     public MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(int cardNumber, int slotNumber)
     {
         super(MessageType.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD);
+
+        if(cardNumber<0) throw new IllegalArgumentException();
+        if(slotNumber!=0 && slotNumber!=1&&slotNumber!=2) throw new IllegalArgumentException();
+
         this.cardNumber = cardNumber;
         this.slotNumber= slotNumber;
     }
@@ -20,5 +24,6 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Seria
     public int getSlotNumber() {
         return slotNumber;
     }
+
     public MessageType getMessageType() { return super.getMessageType();}
 }
