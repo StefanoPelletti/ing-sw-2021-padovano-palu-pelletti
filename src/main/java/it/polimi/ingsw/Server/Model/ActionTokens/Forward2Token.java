@@ -7,7 +7,7 @@ import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 public class Forward2Token implements ActionToken{
     @Override
     public void doAction (DevelopmentCardsDeck deck, FaithTrackManager faithTrackManager, ActionTokenStack stack){
-        faithTrackManager.advanceLorentz();
-        faithTrackManager.advanceLorentz();
+        faithTrackManager.advanceLorenzo();
+        faithTrackManager.advanceLorenzo();
     }
 }

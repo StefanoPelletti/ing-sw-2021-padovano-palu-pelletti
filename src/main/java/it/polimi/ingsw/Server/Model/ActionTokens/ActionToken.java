@@ -5,5 +5,5 @@ import it.polimi.ingsw.Server.Model.DevelopmentCardsDeck;
 import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 
 public interface ActionToken {
-    public void doAction(DevelopmentCardsDeck deck, FaithTrackManager faithTrackManger, ActionTokenStack stack);
+    void doAction(DevelopmentCardsDeck deck, FaithTrackManager faithTrackManger, ActionTokenStack stack);
 }

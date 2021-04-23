@@ -1,13 +1,13 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderCardsObject;
 import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.sql.Array;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-public class LeaderCardsObject extends ModelObservable {
+public class LeaderCardsObject extends ModelObservable implements Serializable {
     boolean enabled;
     ArrayList<LeaderCard> cards;
 
@@ -19,7 +19,7 @@ public class LeaderCardsObject extends ModelObservable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        //notify();
+        notifyObservers();
     }
 
     public boolean isEnabled() { return this.enabled; }
@@ -28,9 +28,13 @@ public class LeaderCardsObject extends ModelObservable {
     {
         cards = new ArrayList<>(newCards);
         if(enabled) {
-            //notify()
+            notifyObservers();
         }
     }
 
     public ArrayList<LeaderCard> getCards() { return new ArrayList<LeaderCard>(this.cards); }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_LeaderCardsObject(this.enabled, this.cards));
+    }
 }

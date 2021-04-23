@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Game;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
@@ -26,6 +28,7 @@ public class Game extends ModelObservable{
     private final ErrorObject errorObject;
     private final LeaderCardsObject leaderCardsObject;
     private final ResourceObject resourceObject;
+    private final LeaderBoard leaderBoard;
 
     public Game()
     {
@@ -43,6 +46,7 @@ public class Game extends ModelObservable{
         errorObject = new ErrorObject();
         leaderCardsObject = new LeaderCardsObject();
         resourceObject = new ResourceObject();
+        leaderBoard = new LeaderBoard();
         currentPlayer = 1;
     }
 
@@ -69,6 +73,7 @@ public class Game extends ModelObservable{
     public ActionTokenStack getActionTokenStack(){ return this.actionTokenStack; }
     public LeaderCardsObject getLeaderCardsObject() { return this.leaderCardsObject; }
     public ResourceObject getResourceObject() { return this.resourceObject;}
+    public LeaderBoard getLeaderBoard() { return this.leaderBoard; }
 
     public Player getCurrentPlayer()
     {
@@ -137,8 +142,13 @@ public class Game extends ModelObservable{
         }
     }
 
+
     public boolean removePlayer( String nickname )
     {
         return playerList.removeIf(x -> (x.getNickname()).equals(nickname));
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_Game());
     }
 }

@@ -9,12 +9,13 @@ import java.io.Serializable;
 
 public class MSG_UPD_DevSlot extends Message implements Serializable {
 
-    DevelopmentCard[][] cards;
+    private final DevelopmentCard[][] cards;
+
     public MSG_UPD_DevSlot( DevelopmentCard[][] cards)
     {
         super(MessageType.MSG_UPD_DevSlot);
 
-        cards = new DevelopmentCard[3][3];
+        this.cards = new DevelopmentCard[3][3];
         for(int i=0; i<3; i++)
         {
             for(int j=0; j<3; j++)
@@ -25,5 +26,6 @@ public class MSG_UPD_DevSlot extends Message implements Serializable {
     }
 
     public DevelopmentCard[][] getCards() { return this.cards; }
+
     public MessageType getMessageType() { return super.getMessageType();}
 }

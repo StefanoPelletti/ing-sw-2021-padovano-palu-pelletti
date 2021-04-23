@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.*;
+import it.polimi.ingsw.Server.Model.LeaderCard;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ public class PlayerSimplified {
     private int playerNumber;
     private String nickname;
     private int position;
+    private LeaderCard[] leaderCards;
 
     private final StrongboxSimplified strongbox;
     private final WarehouseDepotSimplified warehouseDepot;
@@ -21,6 +23,7 @@ public class PlayerSimplified {
         this.playerNumber = playerNumber;
         this.nickname = "";
         this.position = 0;
+        this.leaderCards = null;
         this.strongbox = new StrongboxSimplified();
         this.warehouseDepot = new WarehouseDepotSimplified();
         this.developmentSlot = new DevelopmentSlotSimplified();
@@ -28,10 +31,19 @@ public class PlayerSimplified {
 
     public void update(MSG_UPD_Player message)
     {
-        this.VP = message.getVP();
-        this.playerNumber = message.getPlayerNumber();
-        this.nickname = message.getNickname();
-        this.position = message.getPosition();
+        int newVP = message.getVP();
+        int newPlayerNumber = message.getPlayerNumber();
+        String newNickname = message.getNickname();
+        int newPosition = message.getPosition();
+        LeaderCard[] newLeaderCards = message.getLeaderCards();
+
+        this.VP = newVP;
+        this.playerNumber = newPlayerNumber;
+        this.nickname = newNickname;
+        this.position = newPosition;
+        this.leaderCards = new LeaderCard[2];
+        this.leaderCards[0] = newLeaderCards[0];
+        this.leaderCards[1] = newLeaderCards[1];
     }
 
     public void updateStrongbox(MSG_UPD_Strongbox message)

@@ -198,12 +198,12 @@ public class FaithTrackTest {
         faithTrack = new FaithTrack(game);
         int i = game.getBlackCrossPosition();
 
-        assertTrue ( faithTrack.advanceLorentz() );
+        assertTrue ( faithTrack.advanceLorenzo() );
         assertSame ( game.getBlackCrossPosition() , i+1);
 
         game.setBlackCrossPosition(23);
-        assertTrue ( faithTrack.advanceLorentz() );
-        assertFalse ( faithTrack.advanceLorentz() );
+        assertTrue ( faithTrack.advanceLorenzo() );
+        assertFalse ( faithTrack.advanceLorenzo() );
         assertSame ( game.getBlackCrossPosition() , 24);
 
     }

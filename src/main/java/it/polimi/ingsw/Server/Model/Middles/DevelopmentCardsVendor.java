@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_DevCardsVendor;
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
@@ -25,7 +27,7 @@ public class DevelopmentCardsVendor extends ModelObservable implements Serializa
         this.enabled = enabled;
         if(!enabled)
             cards = null;
-        //notify();
+        notifyObservers();
     }
 
     public Map<DevelopmentCard, boolean[]> getCards() {
@@ -36,6 +38,7 @@ public class DevelopmentCardsVendor extends ModelObservable implements Serializa
         this.cards = cards;
     }
 
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder("");
         int i=1;
@@ -55,5 +58,9 @@ public class DevelopmentCardsVendor extends ModelObservable implements Serializa
             }
         }
         return result.toString();
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_DevCardsVendor(this.enabled, this.cards));
     }
 }

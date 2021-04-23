@@ -125,13 +125,22 @@ public class Market extends ModelObservable {
 
     @Override
     public String toString() {
-        return " -- Market: -- " +
-                "\n SlideMarble : " + slideMarble.toString() +
-                "\n [ "+ grid[0][0].toAbbreviation()+ " | "+grid[0][1].toAbbreviation()+ " | "
-                        +grid[0][2].toAbbreviation()+ " | "+grid[0][3].toAbbreviation()+ " ]"+
-                "\n [ "+ grid[1][0].toAbbreviation()+ " | "+grid[1][1].toAbbreviation()+ " | "
-                        +grid[1][2].toAbbreviation()+ " | "+grid[1][3].toAbbreviation()+ " ]"+
-                "\n [ "+ grid[2][0].toAbbreviation()+ " | "+grid[2][1].toAbbreviation()+ " | "
-                        +grid[2][2].toAbbreviation()+ " | "+grid[2][3].toAbbreviation()+ " ]"+"\n";
+        StringBuilder result = new StringBuilder("");
+        result.append(" --  Market: -- ");
+        result.append("\n").append(" SlideMarble : ").append(slideMarble).append("\n");;
+
+        result.append(" [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation());
+        result.append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation());
+        result.append(" ] ").append("\n");;
+
+        result.append(" [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation());
+        result.append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation());
+        result.append(" ] ").append("\n");
+
+        result.append(" [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation());
+        result.append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation());
+        result.append(" ] ").append("\n");;
+
+        return result.toString();
     }
 }

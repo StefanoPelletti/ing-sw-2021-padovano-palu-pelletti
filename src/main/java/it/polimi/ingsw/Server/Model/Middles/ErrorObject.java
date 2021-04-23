@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_Error;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
@@ -24,7 +26,8 @@ public class ErrorObject extends ModelObservable implements Serializable {
         this.enabled = enabled;
         if(!enabled)
             errorMessage="";
-        //notify();
+        if(enabled)
+            notifyObservers();
     }
 
     public String getErrorMessage() {
@@ -33,5 +36,9 @@ public class ErrorObject extends ModelObservable implements Serializable {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_Error(this.errorMessage));
     }
 }

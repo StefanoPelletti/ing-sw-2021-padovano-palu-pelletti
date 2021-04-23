@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class DevelopmentSlot extends ModelObservable {
                 cards[selectedDeck][cardLevel] = newCard;
                 onTop[selectedDeck] = newCard;
                 numOfCards++;
-                //notify();
+                notifyObservers();
                 return true;
             }
         }
@@ -189,5 +191,9 @@ public class DevelopmentSlot extends ModelObservable {
         }
 
         return result.toString();
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_DevSlot(cards));
     }
 }

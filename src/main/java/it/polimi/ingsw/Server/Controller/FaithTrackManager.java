@@ -6,6 +6,7 @@ import it.polimi.ingsw.Server.Model.FaithTrack;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Server.Model.Player;
 
+
 import java.util.ArrayList;
 
 public class FaithTrackManager {
@@ -136,7 +137,7 @@ public class FaithTrackManager {
         return true;
     }
 
-    public boolean advanceLorentz()
+    public boolean advanceLorenzo()
     {
         Player p = game.getFirstPlayer();
         StringBuilder message = new StringBuilder();
@@ -145,9 +146,9 @@ public class FaithTrackManager {
         {
             case -1: return false;
             case 1:
-                message = new StringBuilder("Lorentz has activated the first zone! ");
+                message = new StringBuilder("Lorenzo has activated the first zone! ");
                 message.append("\n Points have been awarded: ");
-                faithTrack.advanceLorentz();
+                faithTrack.advanceLorenzo();
 
                     if ( faithTrack.calculateVP(p) > 0 ) {
                         p.addVP(faithTrack.calculateVP(p));
@@ -158,9 +159,9 @@ public class FaithTrackManager {
                 gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
                 return true;
             case 2:
-                message = new StringBuilder("Lorentz has activated the second zone! ");
+                message = new StringBuilder("Lorenzo has activated the second zone! ");
                 message.append("\n Points have been awarded: ");
-                faithTrack.advanceLorentz();
+                faithTrack.advanceLorenzo();
 
                     if ( faithTrack.calculateVP(p) > 0 )
                     {
@@ -173,7 +174,7 @@ public class FaithTrackManager {
                 gameManager.addBroadcastMessage(new MSG_ALERT(message.toString()));
                 return true;
             case 3:
-                faithTrack.advanceLorentz();
+                faithTrack.advanceLorenzo();
 
                     if ( faithTrack.calculateVP(p) > 0 )
                     {
@@ -182,10 +183,11 @@ public class FaithTrackManager {
                         message.append("  ").append(faithTrack.calculateVP(p));
                     }
                 faithTrack.setZones(2, true);
+                    //////////////////////////////////////add something???
                 gameManager.setStatus(Status.GAME_OVER);
                 return true;
             case 0:
-                faithTrack.advanceLorentz();
+                faithTrack.advanceLorenzo();
                 break;
         }
         return true;

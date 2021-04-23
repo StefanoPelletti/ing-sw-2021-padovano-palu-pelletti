@@ -19,5 +19,6 @@ public class MSG_UPD_ResourceObject extends Message implements Serializable {
 
     public boolean getEnabled() { return this.enabled;}
     public int getNumOfResources() { return this.numOfResources;}
+
     public MessageType getMessageType() { return super.getMessageType();}
 }

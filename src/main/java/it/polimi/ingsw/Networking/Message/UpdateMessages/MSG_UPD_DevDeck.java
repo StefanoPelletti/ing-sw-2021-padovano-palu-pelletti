@@ -8,10 +8,12 @@ import java.io.Serializable;
 
 public class MSG_UPD_DevDeck extends Message implements Serializable {
 
-    DevelopmentCard[][] cards;
+    private final DevelopmentCard[][] cards;
+
     public MSG_UPD_DevDeck(DevelopmentCard[][] cards)
     {
         super(MessageType.MSG_UPD_DevDeck);
+
         this.cards = new DevelopmentCard[3][4];
         for(int i=0; i<3; i++)
         {
@@ -21,7 +23,8 @@ public class MSG_UPD_DevDeck extends Message implements Serializable {
             }
         }
     }
-    public MessageType getMessageType() { return super.getMessageType();}
+
     public DevelopmentCard[][] getCards() { return this.cards; }
 
+    public MessageType getMessageType() { return super.getMessageType();}
 }

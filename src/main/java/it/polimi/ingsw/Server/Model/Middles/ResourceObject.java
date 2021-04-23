@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
-import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_ResourceObject;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class ResourceObject extends ModelObservable implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        //notify();
+        notifyObservers();
     }
 
     public int getNumOfResources() {
@@ -31,14 +32,17 @@ public class ResourceObject extends ModelObservable implements Serializable {
     public void decNumOfResources() {
         this.numOfResources--;
         if(enabled) {
-            //notify();
+            notifyObservers();
         }
     }
     public void setNumOfResources(int numOfResources) {
         this.numOfResources = numOfResources;
         if(enabled) {
-            //notify();
+            notifyObservers();
         }
     }
 
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_ResourceObject(this.enabled, this.numOfResources));
+    }
 }

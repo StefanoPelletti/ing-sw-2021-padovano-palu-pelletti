@@ -22,6 +22,7 @@ public class GameSimplified {
     LeaderCardsObject leaderCardsObject;
     MarketHelper marketHelper;
     ResourceObject resourceObject;
+    LeaderBoard leaderBoard;
 
     public GameSimplified()
     {
@@ -37,6 +38,7 @@ public class GameSimplified {
          leaderCardsObject= new LeaderCardsObject();
          marketHelper = new MarketHelper();
          resourceObject =  new ResourceObject();
+         leaderBoard = new LeaderBoard();
     }
 
     public boolean isDevelopmentCardsVendorEnabled()
@@ -74,8 +76,7 @@ public class GameSimplified {
         this.faithTrack.update(message);
     }
 
-    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message)
-    {
+    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) {
         this.developmentCardsVendor.update(message);
     }
 
@@ -93,6 +94,8 @@ public class GameSimplified {
     {
         this.resourceObject.update(message);
     }
+
+    public void updateLeaderBoard(MSG_UPD_LeaderBoard message) { this.leaderBoard.update(message);}
 
     public void updateTurn()
     {

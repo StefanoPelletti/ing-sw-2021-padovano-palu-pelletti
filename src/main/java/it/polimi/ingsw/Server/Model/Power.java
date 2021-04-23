@@ -34,10 +34,10 @@ public class Power implements Serializable {
     @Override
     public String toString()
     {
-        String result = "";
-        result = result + "     POWER: "+"\n";
-        result = result + " input:  "+input.toString()+"\n";
-        result = result + " output: "+output.toString()+"\n";
-        return result;
+        StringBuilder result = new StringBuilder("");
+        result.append("    POWER: ").append("\n");
+        result.append("input: ").append(input).append("\n");
+        result.append("output ").append(output).append("\n");
+        return result.toString();
     }
 }

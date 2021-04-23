@@ -1,4 +1,6 @@
 package it.polimi.ingsw.Server.Model;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
@@ -22,7 +24,7 @@ public class Strongbox extends ModelObservable {
         {
             resources.put(resource, tmp + quantity);
         }
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -36,7 +38,7 @@ public class Strongbox extends ModelObservable {
             if( (tmp - quantity) > 0) /*there will be resources after the remove */
                 {
                 resources.put(resource, tmp - quantity);
-                //notify()
+                notifyObservers();
                 return true;
             }
             else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
@@ -54,6 +56,10 @@ public class Strongbox extends ModelObservable {
 
     public Integer getTotal() {
         return resources.values().stream().reduce(0, Integer::sum);
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_Strongbox(resources));
     }
 
     @Override

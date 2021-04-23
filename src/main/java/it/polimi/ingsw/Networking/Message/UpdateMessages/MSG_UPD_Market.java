@@ -8,14 +8,14 @@ import java.io.Serializable;
 
 public class MSG_UPD_Market extends Message implements Serializable {
 
-
-    private MarketMarble[][] grid;
-    private MarketMarble slideMarble;
+    private final MarketMarble[][] grid;
+    private final MarketMarble slideMarble;
 
     public MSG_UPD_Market(MarketMarble slideMarble, MarketMarble[][] grid)
     {
         super(MessageType.MSG_UPD_Market);
-        this.slideMarble=slideMarble;
+
+        this.slideMarble = slideMarble;
         this.grid = new MarketMarble[3][4];
         for(int i=0; i<3; i++)
         {
@@ -32,5 +32,6 @@ public class MSG_UPD_Market extends Message implements Serializable {
     public MarketMarble getSlideMarble() {
         return slideMarble;
     }
+
     public MessageType getMessageType() { return super.getMessageType();}
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
@@ -41,7 +43,7 @@ public class WarehouseDepot extends ModelObservable {
             if(i<2) this.shelf2[i]=shelf2[i];
             this.shelf3[i]=shelf3[i];
         }
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -119,19 +121,19 @@ public class WarehouseDepot extends ModelObservable {
     public boolean consume(Resource resource){
         if(this.shelf1==resource){
             this.shelf1=Resource.NONE;
-            //notify()
+            notifyObservers();
             return true;
         }
         else{
             for(int i=2; i>=0; i--){
                 if(i<2 && this.shelf2[i]==resource){
                     this.shelf2[i]=Resource.NONE;
-                    //notify()
+                    notifyObservers();
                     return true;
                 }
                 else if(this.shelf3[i]==resource){
                     this.shelf3[i]=Resource.NONE;
-                    //notify()
+                    notifyObservers();
                     return true;
                 }
             }
@@ -170,7 +172,7 @@ public class WarehouseDepot extends ModelObservable {
                 }
             }
         }
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -231,10 +233,7 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
-    @Override
-    public String toString(){
-        return "Shelf 1:"+this.shelf1.toString()+"\nShelf 2:"+this.shelf2[0].toString()+","+this.shelf2[1].toString()+"\nShelf 3:"+this.shelf3[0].toString()+","+this.shelf3[1].toString()+","+this.shelf3[2].toString();
-    }
+
 
     public WarehouseDepot getSwapPreview(int r1, int r2)
     {
@@ -373,8 +372,21 @@ public class WarehouseDepot extends ModelObservable {
                 shelf3[2]=Resource.NONE;
             }
         }
-        //notify()
+        notifyObservers();
         return true;
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_WarehouseDepot(this.shelf1, this.shelf2, this.shelf3));
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder result = new StringBuilder("");
+        result.append("Shelf 1: ").append(this.shelf1.toString());
+        result.append("Shelf 2: ").append(this.shelf2[0].toString()).append(", ").append(this.shelf2[1].toString());
+        result.append("Shelf 3: ").append(this.shelf3[0].toString()).append(", ").append(this.shelf3[1].toString()).append(", ").append(this.shelf3[2].toString());
+        return result.toString();
     }
 
     @Override

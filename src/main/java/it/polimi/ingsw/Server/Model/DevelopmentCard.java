@@ -4,7 +4,9 @@ import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.SplittableRandom;
 
 public class DevelopmentCard implements Serializable {
     private final int level;
@@ -73,13 +75,13 @@ public class DevelopmentCard implements Serializable {
     @Override
     public String toString()
     {
-        String result= "";
-        result = result + "   DEVELOPMENT CARD!   \n";
-        result = result + "     level : "+this.level+ "\n";
-        result = result + "     color : "+this.color+ "\n";
-        result = result + "     VP    : "+this.VP+ "\n";
-        result = result + "     cost  : "+this.cost+ "\n";
-        result = result +this.power+ "\n";
-        return result;
+        StringBuilder result = new StringBuilder("");
+        result.append("   DEVELOPMENT CARD!   ").append("\n");
+        result.append("    level : ").append(this.level).append("\n");
+        result.append("    color : ").append(this.color).append("\n");
+        result.append("    VP    : ").append(this.color).append("\n");
+        result.append("    cost  : ").append(this.cost).append("\n");
+        result.append(this.power).append("\n");
+        return result.toString();
     }
 }

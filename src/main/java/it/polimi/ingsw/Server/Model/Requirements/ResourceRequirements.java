@@ -17,14 +17,7 @@ public class ResourceRequirements implements Requirement, Serializable {
         return requirements;
     }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof ResourceRequirements)) return false;
-        ResourceRequirements o = (ResourceRequirements) obj;
-        return (o.getRequirements().equals(this.requirements));
-    }
+
 
     public boolean isCardRequirement() { return false; }
     public boolean isResourceRequirement() { return true; }
@@ -40,5 +33,14 @@ public class ResourceRequirements implements Requirement, Serializable {
             result.append(requirements.get(r)).append(" ").append(r.toString()).append(r.toString());
         }
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this) return true;
+        if(!(obj instanceof ResourceRequirements)) return false;
+        ResourceRequirements o = (ResourceRequirements) obj;
+        return (o.getRequirements().equals(this.requirements));
     }
 }

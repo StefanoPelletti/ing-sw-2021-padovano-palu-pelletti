@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_DevDeck;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
@@ -383,5 +385,9 @@ public class DevelopmentCardsDeck extends ModelObservable {
         DevelopmentCard[] result = new DevelopmentCard[4];
         System.arraycopy(cards[row][column], 0, result, 0, 4);
         return result;
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_DevDeck(this.getVisible()));
     }
 }

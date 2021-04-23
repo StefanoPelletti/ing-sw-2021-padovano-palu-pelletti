@@ -7,12 +7,15 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.io.Serializable;
 
 public class MSG_UPD_WarehouseDepot extends Message implements Serializable {
-    private Resource shelf1;
-    private Resource[] shelf2;
-    private Resource[] shelf3;
+
+    private final Resource shelf1;
+    private final Resource[] shelf2;
+    private final Resource[] shelf3;
+
     public MSG_UPD_WarehouseDepot(Resource shelf1, Resource[] shelf2, Resource[] shelf3)
     {
         super(MessageType.MSG_UPD_WarehouseDepot);
+
         this.shelf1 = shelf1;
         this.shelf2 = new Resource[2];
         this.shelf2[0] = shelf2[0];
@@ -21,11 +24,11 @@ public class MSG_UPD_WarehouseDepot extends Message implements Serializable {
         this.shelf3[0] = shelf3[0];
         this.shelf3[1] = shelf3[1];
         this.shelf3[2] = shelf3[2];
-
     }
 
     public Resource getShelf1() { return shelf1; }
     public Resource[] getShelf2() { return shelf2; }
     public Resource[] getShelf3() { return shelf3; }
+
     public MessageType getMessageType() { return super.getMessageType();}
 }

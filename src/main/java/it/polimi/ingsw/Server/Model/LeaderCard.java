@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_LeaderCards;
 import it.polimi.ingsw.Server.Model.Requirements.Requirement;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
@@ -30,13 +32,25 @@ public class LeaderCard extends ModelObservable implements Serializable {
     }
 
     public void setEnable(boolean enable) {
-
+// does not need to notify(), the players updates it automatically
         this.enabled = enable;
-        //notify();
     }
 
     public boolean getEnable() {
         return enabled;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        StringBuilder result= new StringBuilder("");
+        result.append("   LEADER CARD!   ").append("\n");
+        result.append("      VP    : ").append(this.VP).append("\n");
+        result.append(" is enabled : ").append(this.enabled).append("\n").append("\n");
+        result.append(this.requirement);
+        result.append(this.specialAbility);
+        return result.toString();
     }
 
     @Override
@@ -47,22 +61,8 @@ public class LeaderCard extends ModelObservable implements Serializable {
         LeaderCard o = (LeaderCard) obj;
         return(this.VP == o.VP &&
                 this.requirement.equals(o.requirement) &&
-                        this.specialAbility.equals(o.specialAbility) &&
-                                this.enabled==o.enabled);
+                this.specialAbility.equals(o.specialAbility) &&
+                this.enabled==o.enabled);
 
     }
-
-    @Override
-    public String toString()
-    {
-        String result= "";
-        result = result + "   LEADER CARD!   \n";
-        result = result + "      VP    : "+this.VP+ "\n";
-        result = result + " is enabled : "+this.enabled+ "\n";
-        result = result + "\n";
-        result = result + this.requirement+ "\n";
-        result = result + this.specialAbility+ "\n";
-        return result;
-    }
-
 }

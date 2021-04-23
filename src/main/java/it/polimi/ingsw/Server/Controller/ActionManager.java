@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Server.Model.*;
+import it.polimi.ingsw.Server.Model.ActionTokens.ActionToken;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import it.polimi.ingsw.Server.Model.Marbles.RedMarbleException;
@@ -28,8 +29,7 @@ public class ActionManager {
         this.game = game;
     }
 
-    public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message)
-    {
+    public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message) {
         ArrayList<LeaderCard> cards = message.getCards();
         LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
         ResourceObject resourceObject = game.getResourceObject();
@@ -61,9 +61,7 @@ public class ActionManager {
         }
         return true;
     }
-
-    public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message)
-    {
+    public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message) {
         ResourceObject resourceObject = game.getResourceObject();
         Resource resource = message.getResource();
 
@@ -155,7 +153,6 @@ public class ActionManager {
         //should never reach this position
         return false;
     }
-
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message){
         int cardNumber = message.getCardNumber();
 //VALIDATION
@@ -573,7 +570,14 @@ public class ActionManager {
         return true;
     }
 
-    //Helper methods
+    public boolean lorenzoMove()
+    {
+        ActionToken token = game.getActionTokenStack().pickFirst();
+        token.doAction(game.getDevelopmentCardsDeck(), faithTrackManager, game.getActionTokenStack());
+        return true;
+    }
+
+//--------------------   Helper methods   --------------------//
     public void setNextResourceOptions(Player player){
         MarketHelper marketHelper = game.getMarketHelper();
         Resource resource = marketHelper.getCurrentResource();

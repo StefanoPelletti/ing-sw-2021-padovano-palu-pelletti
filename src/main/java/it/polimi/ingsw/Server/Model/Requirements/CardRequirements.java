@@ -17,14 +17,7 @@ public class CardRequirements implements Requirement, Serializable {
         return requirements;
     }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof CardRequirements)) return false;
-        CardRequirements o = (CardRequirements) obj;
-        return (o.getRequirements().equals(this.requirements));
-    }
+
 
     public boolean isCardRequirement() { return true; }
     public boolean isResourceRequirement() { return false; }
@@ -42,6 +35,15 @@ public class CardRequirements implements Requirement, Serializable {
                 result.append(" at level ").append(requirements.get(c)[1]);
         }
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == this) return true;
+        if(!(obj instanceof CardRequirements)) return false;
+        CardRequirements o = (CardRequirements) obj;
+        return (o.getRequirements().equals(this.requirements));
     }
 }
 

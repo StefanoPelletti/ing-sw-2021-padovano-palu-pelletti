@@ -49,6 +49,7 @@ public enum MessageType implements Serializable {
     MSG_UPD_LeaderCardsObject,
     MSG_UPD_MarketHelper,
     MSG_UPD_ResourceObject,
+    MSG_UPD_LeaderBoard,
     MSG_UPD_Error,
 
     MSG_UPDATE_MODEL,

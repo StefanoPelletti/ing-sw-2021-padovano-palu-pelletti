@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_FaithTrack;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 public class FaithTrack extends ModelObservable {
@@ -8,7 +10,6 @@ public class FaithTrack extends ModelObservable {
     public FaithTrack(Game game) {
         this.game = game;
         zones = new boolean[3];
-        zones[0] = zones[1] = zones[2] = false;
     }
 
 
@@ -44,7 +45,7 @@ public class FaithTrack extends ModelObservable {
         return true;
     }
 
-    public boolean advanceLorentz()
+    public boolean advanceLorenzo()
     {
         if(game.getBlackCrossPosition() == 24) { return false; }
         game.setBlackCrossPosition(game.getBlackCrossPosition()+1);
@@ -64,13 +65,13 @@ public class FaithTrack extends ModelObservable {
     public void setZones( int pos, Boolean value )
     {
         zones[pos] = value;
-        //notify();
+        notifyObservers();
     }
 
     public void resetZones()
     {
         zones[0] = zones[1] = zones[2] = false;
-        //notify();
+        notifyObservers();
     }
     public boolean[] getZones() {
         boolean[] result = new boolean[3];
@@ -78,4 +79,7 @@ public class FaithTrack extends ModelObservable {
         return result;
     }
 
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_FaithTrack(this.zones));
+    }
 }

@@ -16,10 +16,12 @@ public class MSG_UPD_MarketHelper extends Message implements Serializable {
     private final Resource[] extraResourceChoices; //used only when the player has two leaderCards with MarketMarble ability
     private final boolean isNormalChoice; //false if the player has two leaderCards with MarketMarble ability (must decide what he wants to do with the WhiteMarble)
 
-    public MSG_UPD_MarketHelper(boolean enabled, ArrayList<Resource> resources, int currentResource,boolean[] choices,
-                                Resource[] extraResourceChoices,boolean isNormalChoice)
+    public MSG_UPD_MarketHelper(boolean enabled, ArrayList<Resource> resources,
+                                int currentResource, boolean[] choices,
+                                Resource[] extraResourceChoices, boolean isNormalChoice)
     {
         super(MessageType.MSG_UPD_MarketHelper);
+
         this.enabled=enabled;
         this.resources = new ArrayList<>(resources);
         this.currentResource=currentResource;

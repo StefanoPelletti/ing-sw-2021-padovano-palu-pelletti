@@ -15,6 +15,7 @@ public abstract class ModelObservable {
     public void addObserver(ModelObserver observer){
         observers.add(observer);
     }
+    public void removeObserver(ModelObserver observer) { observers.remove(observer);}
 
     public ArrayList<ModelObserver> getObservers(){
         return this.observers;

@@ -2,6 +2,9 @@ package it.polimi.ingsw.Server.Model;
 
 
 import java.util.*;
+
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Player;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
@@ -36,21 +39,21 @@ public class Player extends ModelObservable {
     public boolean setVP(int VP) {
         if(VP<0) return false;
         this.VP = VP;
-        //notify();
+        notifyObservers();
         return true;
     }
 
     public boolean addVP(int VP) {
         if(VP<0) return false;
         this.VP = this.VP + VP;
-        //notify();
+        notifyObservers();
         return true;
     }
     public int getPosition() { return position; }
     public boolean setPosition(int position) {
         if(position<0) return false;
         this.position = position;
-        //notify();
+        notifyObservers();
         return true;
     }
     public int getPlayerNumber() { return playerNumber; }
@@ -62,7 +65,7 @@ public class Player extends ModelObservable {
             leaderCards[cardNumber].setEnable(true);
         else
             leaderCards[cardNumber] = null;
-        //notify();
+        notifyObservers();
     }
     public Strongbox getStrongbox() { return this.strongbox; }
     public WarehouseDepot getWarehouseDepot() { return this.warehouseDepot; }
@@ -79,7 +82,7 @@ public class Player extends ModelObservable {
     {
         leaderCards[0] = cards.get(0);
         leaderCards[1] = cards.get(1);
-        //notify();
+        notify();
     }
 
     public int getTotal(){
@@ -156,6 +159,10 @@ public class Player extends ModelObservable {
         if (leaderCards[1] != null &&leaderCards[1].getSpecialAbility().isMarketResource() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_Player(this.VP, this.playerNumber, this.nickname, this.position, this.leaderCards));
     }
 
     @Override
