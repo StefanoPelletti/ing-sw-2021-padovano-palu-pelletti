@@ -21,7 +21,7 @@ public class ClientApp {
 
         boolean quit = false;
 
-        System.out.println("Welcome to MASTER OF RENAISSANCE\n\nWRITE A COMMAND: \n\"QUIT\", \n\"CREATE <ip> <port> <capacity>\", \n\"JOIN <ip> <port> <lobbyNumber>\"");
+        System.out.println("Welcome to MASTER OF RENAISSANCE\n\nWRITE A COMMAND: \n\"QUIT\", \n\"CREATE <ip> <port> <nickname> <capacity>\", \n\"JOIN <ip> <port> <nickname> <lobbyNumber>\"");
         while (!quit) {
             text = input.nextLine();
 
@@ -53,10 +53,10 @@ public class ClientApp {
                             System.out.println("Your lobby number is "+ msg.getLobbyNumber());
                             Thread.sleep(600000);
                         }
-                        else if(message.getMessageType()==MessageType.MSG_ERROR_GENERIC)
+                        else if(message.getMessageType()==MessageType.MSG_ERROR)
                         {
-                            MSG_ERROR_GENERIC msg = (MSG_ERROR_GENERIC) message;
-                            System.out.println(msg.getMessage());
+                            MSG_ERROR msg = (MSG_ERROR) message;
+                            System.out.println(msg.getErrorMessage());
                             socket.close();
                             outputStream.close();
                             inputStream.close();
@@ -89,10 +89,10 @@ public class ClientApp {
                             System.out.println("Your assigned nickname is "+ msg.getAssignedNickname());
                             Thread.sleep(600000);
                         }
-                        else if(message.getMessageType()==MessageType.MSG_ERROR_GENERIC)
+                        else if(message.getMessageType()==MessageType.MSG_ERROR)
                         {
-                            MSG_ERROR_GENERIC msg = (MSG_ERROR_GENERIC) message;
-                            System.out.println(msg.getMessage());
+                            MSG_ERROR msg = (MSG_ERROR) message;
+                            System.out.println(msg.getErrorMessage());
                             socket.close();
                             outputStream.close();
                             inputStream.close();

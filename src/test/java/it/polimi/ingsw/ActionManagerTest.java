@@ -90,12 +90,12 @@ public class ActionManagerTest {
 
             assertTrue(g.getMarketHelper().isEnabled());
             assertTrue(c.messages.stream().anyMatch(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper));
-            assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_Error));
+            assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
             c.emptyQueue();
 
             assertFalse(am.getMarketResources(p, msg));
             assertEquals(1, c.messages.size());
-            assertSame(c.messages.get(0).getMessageType(), MessageType.MSG_UPD_Error);
+            assertSame(c.messages.get(0).getMessageType(), MessageType.MSG_ERROR);
             assertTrue(g.getMarketHelper().isEnabled());
     }
 
@@ -110,7 +110,7 @@ public class ActionManagerTest {
 
         assertFalse(am.buyDevelopmentCard(p)); //if FALSE => enables
         assertEquals(1, c.messages.size());
-        assertSame(c.messages.get(0).getMessageType(), MessageType.MSG_UPD_Error);
+        assertSame(c.messages.get(0).getMessageType(), MessageType.MSG_ERROR);
     }
 
     @Deprecated

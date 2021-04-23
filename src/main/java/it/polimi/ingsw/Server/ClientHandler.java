@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                     Random random = new Random();
                     boolean found;
                     int i;
-                    if(Lobby.getLobbies().size()==500) send(new MSG_ERROR_GENERIC("Ce stanno troppe lobby"));
+                    if(Lobby.getLobbies().size()==500) send(new MSG_ERROR("Ce stanno troppe lobby"));
                     do {
                         found = false;
                         i = random.nextInt(500);
@@ -70,16 +70,16 @@ public class ClientHandler implements Runnable, ModelObserver {
                         if(nickname!=null) {
                             send(new MSG_OK_JOIN(nickname));
                         }
-                        else send(new MSG_ERROR_GENERIC("Lobby full!"));
+                        else send(new MSG_ERROR("Lobby full!"));
                     }
-                    else send(new MSG_ERROR_GENERIC("Lobby not found"));
+                    else send(new MSG_ERROR("Lobby not found"));
                 }
                 else{
                     try {
                         this.lobby.onMessage(message, nickname);
                     }
                     catch (IllegalArgumentException e){
-                        send(new MSG_ERROR_GENERIC("Not valid action!"));
+                        send(new MSG_ERROR("Not valid action!"));
                     }
                 }
             }

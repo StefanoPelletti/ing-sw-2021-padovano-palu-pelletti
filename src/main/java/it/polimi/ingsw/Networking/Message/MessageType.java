@@ -8,7 +8,7 @@ public enum MessageType implements Serializable {
     MSG_JOIN_LOBBY,
     MSG_OK_JOIN,
 
-    MSG_ERROR_GENERIC,
+    MSG_ERROR,
     MSG_OK_GENERIC,
 
     MSG_INIT_CHOOSE_LEADERCARDS,
@@ -50,7 +50,6 @@ public enum MessageType implements Serializable {
     MSG_UPD_MarketHelper,
     MSG_UPD_ResourceObject,
     MSG_UPD_LeaderBoard,
-    MSG_UPD_Error,
 
     MSG_UPDATE_MODEL,
     MSG_NOTIFICATION,

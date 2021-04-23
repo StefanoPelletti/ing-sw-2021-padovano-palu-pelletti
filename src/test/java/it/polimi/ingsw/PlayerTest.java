@@ -93,12 +93,10 @@ public class PlayerTest {
     @Test
     public void associateLeaderCardsTest(){
         LeaderCardsDeck ld= new LeaderCardsDeck();
-        ArrayList<LeaderCard> l = new ArrayList<>();
-        l.add(ld.pickFourCards().get(0));
-        l.add(ld.pickFourCards().get(1));
+        ArrayList<LeaderCard> l = new ArrayList<>(ld.pickFourCards());
         player.associateLeaderCards(l);
-        assertEquals(ld.pickFourCards().get(0), player.getLeaderCards()[0]);
-        assertEquals(ld.pickFourCards().get(1), player.getLeaderCards()[1]);
+        assertEquals(l.get(0), player.getLeaderCards()[0]);
+        assertEquals(l.get(1), player.getLeaderCards()[1]);
     }
 
     //verifies that the leaderCard methods do not return null
