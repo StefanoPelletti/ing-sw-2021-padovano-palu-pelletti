@@ -17,7 +17,6 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     private Lobby lobby;
     private String nickname;
-    private Player player;
     private OutputStream outputStream; // = socket.getOutputStream();
     private ObjectOutputStream objectOutputStream;// = new ObjectOutputStream(outputStream);
     private InputStream inputStream;// = socket.getInputStream();
@@ -28,7 +27,6 @@ public class ClientHandler implements Runnable, ModelObserver {
         this.clientSocket = null;
         this.lobby = null;
         this.nickname=null;
-        this.player=null;
 
         this.outputLock = new Object();
     }
@@ -56,31 +54,31 @@ public class ClientHandler implements Runnable, ModelObserver {
                             if ( Lobby.checkLobbies(i)) found = true;
                     } while( found );
 
-                    this.lobby = new Lobby(msg.getNickname(), this.clientSocket ,this, i, msg.getNumOfPlayers());
+                    this.lobby = new Lobby(i, msg.getNumOfPlayers());
+                    this.lobby.onJoin(msg.getNickname(), this.clientSocket, this);
                     Lobby.addLobby(this.lobby);
+                    if(msg.getNumOfPlayers() == 1) lobby.init();
                     System.out.println(msg.getNickname()+" created a lobby");
 
                     this.send(new MSG_OK_CREATE(i));
                 }
+
                 else if(message.getMessageType()==MessageType.MSG_JOIN_LOBBY){
                     MSG_JOIN_LOBBY joinMessage = (MSG_JOIN_LOBBY) message;
                     this.lobby = Lobby.getLobby(joinMessage.getLobbyNumber());
                     if(this.lobby!=null){
-                        String nickname = this.lobby.onJoin(joinMessage, this.clientSocket,this);
+                        String nickname = this.lobby.onJoin(joinMessage.getNickname(), this.clientSocket,this);
                         if(nickname!=null) {
                             send(new MSG_OK_JOIN(nickname));
+                            if(lobby.getLobbyMaxPlayers() == lobby.getNumOfPlayers()) lobby.init();
                         }
                         else send(new MSG_ERROR("Lobby full!"));
                     }
                     else send(new MSG_ERROR("Lobby not found"));
                 }
+
                 else{
-                    try {
-                        this.lobby.onMessage(message, nickname);
-                    }
-                    catch (IllegalArgumentException e){
-                        send(new MSG_ERROR("Not valid action!"));
-                    }
+                    this.lobby.onMessage(message, nickname);
                 }
             }
 
@@ -88,6 +86,10 @@ public class ClientHandler implements Runnable, ModelObserver {
         catch(IOException | ClassNotFoundException e)
         {
             //??
+        }
+
+        catch(Exception e){
+            //partita finita
         }
     }
 

@@ -16,7 +16,6 @@ public class GameManager {
 
 
     private int lobbyMaxPlayers;
-    private boolean lastTurn;
 
     public GameManager(int lobbyMaxPlayers)
     {
@@ -25,7 +24,6 @@ public class GameManager {
         this.faithTrackManager = new FaithTrackManager(this.game, this);
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
         this.lobbyMaxPlayers = lobbyMaxPlayers;
-        this.lastTurn=false;
     }
 
     public Player currentPlayer() {
@@ -33,12 +31,11 @@ public class GameManager {
     }
 
     public void setNextPlayer() {
-        if (game.getStatus() == Status.SOLO) {
-            ////////////////////////////// QUA QUALCOSA TOMMASO SCRIVI PERFAVORE DAI SU GIACOMO, GIOVANNI, ALDO.
-        } else
+        if (game.getStatus() != Status.SOLO) {
             game.setCurrentPlayer(game.getCurrentPlayerInt() + 1);
-        if (game.getCurrentPlayerInt() > lobbyMaxPlayers) {
-            game.setCurrentPlayer(1);
+            if (game.getCurrentPlayerInt() > lobbyMaxPlayers) {
+                game.setCurrentPlayer(1);
+            }
         }
     }
 
@@ -49,7 +46,7 @@ public class GameManager {
     public void endTurn()
     {
         setNextPlayer();
-        if(game.getStatus()!=Status.SOLO && lastTurn && game.getCurrentPlayerInt()==0){
+        if(lobbyMaxPlayers!=1 && game.getStatus()==Status.LAST_TURN && game.getCurrentPlayerInt()==1){
             setStatus(Status.GAME_OVER);
             endgame();
         }

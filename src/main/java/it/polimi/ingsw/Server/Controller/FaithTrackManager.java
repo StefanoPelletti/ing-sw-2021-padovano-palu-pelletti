@@ -98,7 +98,13 @@ public class FaithTrackManager extends ModelObservable {
                     }
                 }
                 faithTrack.setZones(2, true);
-                gameManager.setStatus(Status.LAST_TURN);
+                if(solo)
+                {
+                    gameManager.setStatus(Status.GAME_OVER);
+                }
+                else {
+                    gameManager.setStatus(Status.LAST_TURN);
+                }
                 break;
             case 0:
                 faithTrack.advance(player);

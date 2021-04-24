@@ -8,7 +8,7 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 
-public class LeaderCard extends ModelObservable implements Serializable {
+public class LeaderCard implements Serializable {
     private final int VP;
     private final Requirement requirement;
     private final SpecialAbility specialAbility;

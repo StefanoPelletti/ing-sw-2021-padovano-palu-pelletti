@@ -26,14 +26,12 @@ public class Lobby {
 
 
 
-    public Lobby(String nickname, Socket socket,  ClientHandler clientHandler, int lobbyNumber, int lobbyMaxPlayers)
+    public Lobby(int lobbyNumber, int lobbyMaxPlayers)
     {
+        solo = (lobbyMaxPlayers == 1);
         this.socketList = new LinkedList<>();
         this.nicknameList = new LinkedList<>();
         this.threadsList = new LinkedList<>();
-        this.nicknameList.add(nickname);
-        this.threadsList.add(clientHandler);
-        this.socketList.add(socket);
         this.lobbyNumber = lobbyNumber;
         this.lobbyMaxPlayers = lobbyMaxPlayers;
     }
@@ -50,14 +48,19 @@ public class Lobby {
         Collections.shuffle(playerNumbers);
         Game game = gameManager.getGame();
 
+        for(ClientHandler clientHandler : threadsList){
+            game.addAllObservers(clientHandler);
+            gameManager.getFaithTrackManager().addObserver(clientHandler);
+        }
+
         gameManager.setStatus(Status.INIT);
         for(int i = 0; i<lobbyMaxPlayers; i++) {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
 
-        for(ClientHandler clientHandler : threadsList){
-            game.addAllObservers(clientHandler);
-        }
+        //
+
+
         game.getLeaderCardsObject().setEnabled(true);
         game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
     }
@@ -95,12 +98,11 @@ public class Lobby {
         throw new IllegalArgumentException();
     }
 
-    public String onJoin(MSG_JOIN_LOBBY message, Socket socket ,ClientHandler clientHandler){
+    public synchronized String onJoin(String nickname, Socket socket ,ClientHandler clientHandler){
         if(this.lobbyMaxPlayers > nicknameList.size()) {
             threadsList.add(clientHandler);
             socketList.add(socket);
-            final String nickname = message.getNickname();
-            String newNickname = message.getNickname();
+            String newNickname = nickname;
 
             if(nicknameList.stream().anyMatch(n-> n.equals(nickname))){
                 if(nicknameList.stream().anyMatch(n-> n.equals(nickname+" (1)"))){
@@ -131,27 +133,27 @@ public class Lobby {
         return this.socketList.size();
     }
 
-    public static boolean checkLobbies(int i){
+    public static synchronized boolean checkLobbies(int i){
         for(Lobby l : lobbies){
             if(l.getLobbyNumber()==i) return false;
         }
         return true;
     }
 
-    public static Lobby getLobby(int n){
+    public static synchronized Lobby getLobby(int n){
         for(Lobby lobby : lobbies){
             if(lobby.getLobbyNumber()== n) return lobby;
         }
         return null;
     }
 
-    public static void addLobby(Lobby lobby){
+    public static synchronized void addLobby(Lobby lobby){
         Lobby.lobbies.add(lobby);
     }
 
-    public static ArrayList<Lobby> getLobbies(){
+    public static synchronized ArrayList<Lobby> getLobbies(){
         return Lobby.lobbies;
     }
 
-    public static void remove(Lobby lobby){Lobby.lobbies.remove(lobby);}
+    public static synchronized void remove(Lobby lobby){Lobby.lobbies.remove(lobby);}
 }

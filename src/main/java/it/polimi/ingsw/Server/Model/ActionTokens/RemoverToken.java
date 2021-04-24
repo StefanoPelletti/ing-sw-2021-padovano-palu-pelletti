@@ -19,11 +19,11 @@ public class RemoverToken implements ActionToken{
         }
     }
 
-    @Override
-    public void doAction(DevelopmentCardsDeck deck, FaithTrackManager faithTrackManager, ActionTokenStack stack){
-        deck.removeCard(this.column);
-    }
+    public int getColumn(){return column;}
 
+    public boolean isRemover(){return true;}
+    public boolean isForward2() { return false;};
+    public boolean isForwardAndShuffle(){return false;};
     public Color getColor(){
         return this.color;
     }

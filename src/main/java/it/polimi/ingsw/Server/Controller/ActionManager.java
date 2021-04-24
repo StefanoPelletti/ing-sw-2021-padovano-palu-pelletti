@@ -2,7 +2,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Server.Model.*;
-import it.polimi.ingsw.Server.Model.ActionTokens.ActionToken;
+import it.polimi.ingsw.Server.Model.ActionTokens.*;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import it.polimi.ingsw.Server.Model.Marbles.RedMarbleException;
@@ -591,7 +591,20 @@ public class ActionManager {
     public boolean lorenzoMove()
     {
         ActionToken token = game.getActionTokenStack().pickFirst();
-        token.doAction(game.getDevelopmentCardsDeck(), faithTrackManager, game.getActionTokenStack());
+        if(token.isRemover())
+        {
+            game.getDevelopmentCardsDeck().removeCard(((RemoverToken) token).getColumn());
+            if (game.getDevelopmentCardsDeck().isOneColumnDestroyed()) gameManager.setStatus(Status.GAME_OVER);
+        }
+        else if(token.isForwardAndShuffle()) {
+            faithTrackManager.advanceLorenzo();
+            game.getActionTokenStack().shuffle();
+        }
+        else if(token.isForward2())
+        {
+            faithTrackManager.advanceLorenzo();
+            faithTrackManager.advanceLorenzo();
+        }
         return true;
     }
 
@@ -657,6 +670,8 @@ public class ActionManager {
         if(!marketHelper.isEnabled())
             marketHelper.setEnabled(true);
     }
+
+
     public void consumeResources(Player player, Map<Resource, Integer> cost){
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
         ArrayList<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
