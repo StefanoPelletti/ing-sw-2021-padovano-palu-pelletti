@@ -387,6 +387,21 @@ public class DevelopmentCardsDeck extends ModelObservable {
         return result;
     }
 
+    public boolean isOneColumnDestroyed()
+    {
+        boolean result = true;
+        for (int c=0; c<3; c++){
+            result = true;
+            for (int r = 0; r < 3; r++) {
+                for (int h = 0; h < 4; h++) {
+                    if (cards[r][c][h] != null) result = false;
+                }
+            }
+            if (result) return true;
+        }
+        return false;
+    }
+
     private void notifyObservers(){
         this.notifyObservers(new MSG_UPD_DevDeck(this.getVisible()));
     }

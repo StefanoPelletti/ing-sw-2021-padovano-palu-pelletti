@@ -97,7 +97,7 @@ public class Game extends ModelObservable{
     }
     public void setBlackCrossPosition(int blackCrossPosition) {
         this.blackCrossPosition = blackCrossPosition;
-        //notify()
+        notifyObservers();
     }
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;

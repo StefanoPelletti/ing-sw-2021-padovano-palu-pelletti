@@ -44,6 +44,7 @@ public enum MessageType implements Serializable {
     MSG_UPD_Game,
     MSG_UPD_Market,
     MSG_UPD_Player,
+    MSG_UPD_End,
 
     MSG_UPD_DevCardsVendor,
     MSG_UPD_LeaderCardsObject,

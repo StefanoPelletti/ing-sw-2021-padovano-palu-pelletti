@@ -15,29 +15,15 @@ public class FaithTrackManager extends ModelObservable {
     private final FaithTrack faithTrack;
     private final Game game;
     private final GameManager gameManager;
+    private final boolean solo;
 
     public FaithTrackManager(Game game, GameManager gameManager)
     {
         this.faithTrack=game.getFaithTrack();
         this.gameManager = gameManager;
         this.game = game;
+        solo= (gameManager.getLobbyMaxPlayers() == 1);
     }
-
-    //??
-    public void INIT()
-    {
-
-    }
-
-    /*public FaithTrackInfo getFaithTrackStatus() {
-        ArrayList<Player> players = game.getPlayerList();
-        FaithTrackInfo result = new FaithTrackInfo();
-
-        for (Player p : players)
-            result.setPlayerNumberOffsetPosition(p.getPlayerNumber(), p.getPosition());
-        result.setZones(faithTrack.getZones());
-        return result;
-    }*/
 
 
     public boolean advance(Player player)
@@ -110,8 +96,9 @@ public class FaithTrackManager extends ModelObservable {
                 faithTrack.advance(player);
                 return true;
         }
-
-        notifyObservers(new MSG_NOTIFICATION(message.toString()));
+        if(!(solo && gameManager.getStatus()==Status.GAME_OVER)) {
+            notifyObservers(new MSG_NOTIFICATION(message.toString()));
+        }
         return true;
     }
 
@@ -122,13 +109,18 @@ public class FaithTrackManager extends ModelObservable {
         ArrayList<Player> players = game.getPlayerList();
         if ( players.stream().noneMatch( x -> x.getNickname().equals(player.getNickname()))) return false;
 
-        for ( Player p : players )
-        {
-            if( !p.equals(player) )
-            {
-                advance(p);
+        if(!solo) {
+            for (Player p : players) {
+                if (!p.equals(player)) {
+                    advance(p);
+                }
             }
         }
+        else
+        {
+            this.advanceLorenzo();
+        }
+
         return true;
     }
 

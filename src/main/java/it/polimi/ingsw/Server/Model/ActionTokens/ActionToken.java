@@ -5,5 +5,9 @@ import it.polimi.ingsw.Server.Model.DevelopmentCardsDeck;
 import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 
 public interface ActionToken {
-    void doAction(DevelopmentCardsDeck deck, FaithTrackManager faithTrackManger, ActionTokenStack stack);
+
+    boolean isRemover();
+    boolean isForward2();
+    boolean isForwardAndShuffle();
+
 }

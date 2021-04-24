@@ -452,7 +452,13 @@ public class ActionManager {
         consumeResources(player, cost);
 
         developmentCardsVendor.setEnabled(false);
-        if(player.getDevelopmentSlot().getNumOfCards()==7) gameManager.setStatus(Status.LAST_TURN);
+        if(player.getDevelopmentSlot().getNumOfCards()==7)
+        {
+            if(gameManager.getLobbyMaxPlayers()==1)
+                gameManager.setStatus(Status.GAME_OVER);
+            else
+                gameManager.setStatus(Status.LAST_TURN);
+        }
         return true;
     }
 

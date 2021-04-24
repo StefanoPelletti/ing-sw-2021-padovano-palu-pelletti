@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Networking;
 
 import it.polimi.ingsw.Networking.Message.*;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 import it.polimi.ingsw.Server.ClientHandler;
 import it.polimi.ingsw.Server.Controller.ActionManager;
-import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
@@ -24,7 +24,7 @@ public class Lobby {
     int lobbyNumber;
     int lobbyMaxPlayers;
 
-
+    boolean solo;
 
     public Lobby(int lobbyNumber, int lobbyMaxPlayers)
     {
@@ -41,7 +41,7 @@ public class Lobby {
         this.actionManager = gameManager.getActionManager();
         List<Integer> playerNumbers = new LinkedList<>();
 
-        for(int i = 0; i<lobbyMaxPlayers; i++) {
+        for(int i = 1; i<=lobbyMaxPlayers; i++) {
             playerNumbers.add(i);
         }
 
@@ -65,37 +65,61 @@ public class Lobby {
         game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
     }
 
-    public boolean onMessage(Message message, String nickname) throws IllegalArgumentException{
+    public void onMessage(Message message, String nickname) throws IllegalArgumentException{
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
+        boolean order66 = false;
+
+        boolean result = false;
         if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
             switch (message.getMessageType()) {
                 case MSG_INIT_CHOOSE_RESOURCE:
-                    return actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
+                    result = actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
+                    break;
                 case MSG_INIT_CHOOSE_LEADERCARDS:
-                    return actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
+                    result = actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
+                    break;
                 case MSG_ACTION_ACTIVATE_LEADERCARD:
-                    return actionManager.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
+                    result = actionManager.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
+                    break;
                 case MSG_ACTION_DISCARD_LEADERCARD:
-                    return actionManager.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
+                    result = actionManager.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
+                    break;
                 case MSG_ACTION_CHANGE_DEPOT_CONFIG:
-                    return actionManager.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
+                    result = actionManager.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
+                    break;
                 case MSG_ACTION_ACTIVATE_PRODUCTION:
-                    return actionManager.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
+                    result = actionManager.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
+                    break;
                 case MSG_ACTION_BUY_DEVELOPMENT_CARD:
-                    return actionManager.buyDevelopmentCard(player);
+                    result = actionManager.buyDevelopmentCard(player);
+                    break;
                 case MSG_ACTION_GET_MARKET_RESOURCES:
-                    return actionManager.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
+                    result = actionManager.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
+                    break;
                 case MSG_ACTION_MARKET_CHOICE:
-                    return actionManager.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
+                    result = actionManager.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
+                    break;
                 case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
-                    return actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
+                    result = actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
+                    break;
                 case MSG_ACTION_ENDTURN:
-                    gameManager.endTurn();
-                    return true;
+                    if(solo) {
+                        result = actionManager.lorenzoMove();
+                    }
+                    order66 = gameManager.endTurn();
+                    break;
+                default: System.out.println(" SRV: non so cosa mi abbiano inviato aiuto.");
+            }
+
+            if(result) {  //if Result is true, then WE MUST END THE "UPDATE MODEL" PHASE!!!!!!!!!!!!!!!!!!!!
+                for (ClientHandler c : threadsList) {
+                    c.send(new MSG_UPD_End());
+                }
             }
         }
-        throw new IllegalArgumentException();
+
+        //if(order66) threadsList.stream().forEach();
     }
 
     public synchronized String onJoin(String nickname, Socket socket ,ClientHandler clientHandler){
@@ -118,7 +142,6 @@ public class Lobby {
                 }
             }
             nicknameList.add(newNickname);
-            if(this.lobbyMaxPlayers == nicknameList.size()) init();
             return newNickname;
         }
         else return null;
@@ -127,6 +150,8 @@ public class Lobby {
     public int getLobbyMaxPlayers() { return this.lobbyMaxPlayers; }
 
     public int getLobbyNumber() { return this.lobbyNumber; }
+
+    public synchronized int getNumOfPlayers() { return this.nicknameList.size(); }
 
     public int getNumberOfPresentPlayers() {
         assert ( this.socketList.size() == this.nicknameList.size());

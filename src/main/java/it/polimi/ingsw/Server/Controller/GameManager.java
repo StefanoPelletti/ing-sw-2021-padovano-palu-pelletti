@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.*;
+import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
 
 import java.util.*;
 
@@ -43,13 +44,19 @@ public class GameManager {
 
     }
 
-    public void endTurn()
+    public boolean endTurn()
     {
         setNextPlayer();
         if(lobbyMaxPlayers!=1 && game.getStatus()==Status.LAST_TURN && game.getCurrentPlayerInt()==1){
             setStatus(Status.GAME_OVER);
             endgame();
+            return true;
         }
+        if(lobbyMaxPlayers==1&&game.getStatus()==Status.GAME_OVER) {
+            endgame();
+            return true;
+        }
+        return false;
     }
 
     public boolean addBroadcastMessage(Message message)
@@ -97,6 +104,7 @@ public class GameManager {
     }
 
     public void endgame(){
+        LeaderBoard leaderBoard = game.getLeaderBoard();
         for(Player p : game.getPlayerList()){
             for(DevelopmentCard card : p.getDevelopmentSlot().getCards()){
                 p.addVP(card.getVP());
@@ -120,6 +128,8 @@ public class GameManager {
             if(position == 24) faithPoints = 20;
 
             p.addVP(faithPoints);
+            leaderBoard.addScore(p.getNickname(), p.getVP());
         }
+        leaderBoard.setEnabled(true);
     }
 }
