@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.ModelTest;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 

@@ -153,6 +153,7 @@ public class ActionManager {
         //should never reach this position
         return false;
     }
+
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message){
         int cardNumber = message.getCardNumber();
 //VALIDATION

@@ -46,7 +46,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                     Random random = new Random();
                     boolean found;
                     int i;
-                    if(Lobby.getLobbies().size()==500) send(new MSG_ERROR("Ce stanno troppe lobby"));
+                    if(Lobby.getLobbies().size()==500) send(new MSG_ERROR("Too many lobbies!"));
                     do {
                         found = false;
                         i = random.nextInt(500);
