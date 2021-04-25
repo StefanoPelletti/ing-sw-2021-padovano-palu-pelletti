@@ -156,7 +156,7 @@ public class ActionManager {
 
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message){
         int cardNumber = message.getCardNumber();
-//VALIDATION
+        //VALIDATION
         if(player.getLeaderCards()[cardNumber].getEnable())
         {
             gameManager.setErrorObject("Errore! Non puoi disattivare una carta già attivata!");
@@ -362,7 +362,7 @@ public class ActionManager {
         }
 
         if(cards.size() == 0) {
-            gameManager.setErrorObject("Ao! Va che non puoi comprare nemmeno una carta!");
+            gameManager.setErrorObject("You cannot buy any card.");
             return false;
         }
 
@@ -381,7 +381,7 @@ public class ActionManager {
 
         if(finalCards.size()==0)
         {
-            gameManager.setErrorObject("Ao! Va che puoi comprarle, ma non puoi metterle da nessuna parte!");
+            gameManager.setErrorObject("You cannot place the cards in any slot.");
             return false;
         }
 
@@ -403,7 +403,6 @@ public class ActionManager {
         }
 
         return true;
-
         */
     }
 
@@ -425,8 +424,8 @@ public class ActionManager {
         boolean found = false;
         int r = 0;
         int c = 0;
-        for(; r < 3; r++) {
-            for(; c < 4; c++) {
+        for(r = 0; r < 3; r++) {
+            for(c = 0; c < 4; c++) {
                 if(dc.equals(visibleCards[r][c])) {
                     found = true;
                     break;

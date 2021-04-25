@@ -405,4 +405,9 @@ public class DevelopmentCardsDeck extends ModelObservable {
     private void notifyObservers(){
         this.notifyObservers(new MSG_UPD_DevDeck(this.getVisible()));
     }
+
+    public void setGrid(DevelopmentCard[][][] grid)
+    {
+        this.cards = grid;
+    }
 }

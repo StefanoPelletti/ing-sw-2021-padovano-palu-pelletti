@@ -17,7 +17,11 @@ public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
     {
         super(MessageType.MSG_UPD_DevCardsVendor);
 
-        cards = new HashMap<DevelopmentCard, boolean[]>(map);
+        if(map == null) {
+            cards = null;
+        } else {
+            cards = new HashMap<DevelopmentCard, boolean[]>(map);
+        }
         this.enabled = enabled;
     }
 
