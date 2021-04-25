@@ -3,6 +3,7 @@ package it.polimi.ingsw.ModelTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
+import it.polimi.ingsw.Server.Model.Marbles.WhiteMarble;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Server.Model.*;
 
@@ -26,14 +27,14 @@ public class MarketTest {
 
     //verifies that methods getColumn(column) and getRow(row) are not null if column/row are valid
     @Test
-    public void getValidRowCOlumn(){
+    public void getValidRowColumn(){
         assertNotNull(market.getColumn(0));
         assertNotNull(market.getRow(0));
     }
 
     //verifies that methods pushColumn(column) and pushRow(row) are not null if column/row are valid
     @Test
-    public void pushValidRowCOlumn(){
+    public void pushValidRowColumn(){
         assertNotNull(market.pushColumn(0));
         assertNotNull(market.pushRow(0));
     }
@@ -116,5 +117,23 @@ public class MarketTest {
         priorMarbles.add(4, priorSlideMarble);
         postMarbles.add(0, postSlideMarble);
         assertArrayEquals(priorMarbles.toArray(), postMarbles.toArray());
+    }
+
+    @Test
+    public void testSet()
+    {
+        MarketMarble[][] re = { {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
+                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
+                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+
+        market.setGrid(re, new WhiteMarble() );
+
+        for(int r=0; r<3; r++)
+        {
+            for(int c=0; c<4; c++)
+            {
+                market.getGrid()[r][c].equals(new WhiteMarble());
+            }
+        }
     }
 }

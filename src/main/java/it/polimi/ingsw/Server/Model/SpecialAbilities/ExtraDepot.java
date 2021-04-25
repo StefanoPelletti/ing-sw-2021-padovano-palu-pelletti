@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model.SpecialAbilities;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
@@ -24,14 +26,14 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         if ( numAdd == 2 && number != 0 ) return false;
         if ( numAdd == 1 && number == 2 ) return false;
         number = number+numAdd;
-        //notify();
+        notifyObservers();
         return true;
     }
 
     public boolean setResource(int num){
         if ( num > 2 || num < 0 ) return false;
         number=num;
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -40,7 +42,7 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         if ( numRem <= 0 || numRem > 2 ) return false;
         if ( numRem == 2 && number == 1 ) return false;
         number = number - numRem;
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -61,6 +63,10 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         return false;
     }
 
+    private void notifyObservers(){
+        this.notifyObservers(new MSG_UPD_Extradepot(this.resource, this.number));
+    }
+
     @Override
     public boolean equals(Object obj)
     {
@@ -75,5 +81,6 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
     {
         return "  SpecialAbility: \nI have "+getNumber()+" "+getResourceType()+ " in my belly! ";
     }
+
 
 }

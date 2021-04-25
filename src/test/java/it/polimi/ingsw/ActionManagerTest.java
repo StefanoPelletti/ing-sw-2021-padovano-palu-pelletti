@@ -53,31 +53,7 @@ public class ActionManagerTest {
         assertTrue ( am.getMarketResources(p, msg));
     }
 
-    @Test
-    public void redWhiteWhite_Or_WhiteWhiteWhite_SpecialCase()
-    {
-        MSG_ACTION_GET_MARKET_RESOURCES msg = new MSG_ACTION_GET_MARKET_RESOURCES(true, 0);
-        while(true)
-        {
-            if(g.getMarket().getGrid()[0][0] instanceof WhiteMarble || g.getMarket().getGrid()[0][0] instanceof RedMarble)
-                if(g.getMarket().getGrid()[1][0] instanceof WhiteMarble || g.getMarket().getGrid()[1][0] instanceof RedMarble)
-                    if(g.getMarket().getGrid()[2][0] instanceof WhiteMarble || g.getMarket().getGrid()[2][0] instanceof RedMarble)
-                        break;
-            this.reset();
-        }
 
-        assertTrue(am.getMarketResources(p, msg));
-        c.printQueueHeaders();
-        if(c.messages.size()==1) {
-            assertSame(c.messages.get(0).getMessageType(), MessageType.MSG_UPD_Market); //this case is the WHITE WHITE WHITE one. Player does not get updated. Only market does.
-            assertEquals(1, p.getPosition());
-        }
-        else if(c.messages.size()==2) { // this is a RED WHITE WHITE case. The player AND the market must be updated, nothing else.
-            assertTrue ( c.messages.get(0).getMessageType()==MessageType.MSG_UPD_Player || c.messages.get(0).getMessageType()==MessageType.MSG_UPD_Market);
-            assertTrue ( c.messages.get(1).getMessageType()==MessageType.MSG_UPD_Player || c.messages.get(1).getMessageType()==MessageType.MSG_UPD_Market);
-        }
-        assertFalse ( c.messages.size()>2);
-    }
 
     @Test
     public void getMarketResourcesError()

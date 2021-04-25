@@ -119,6 +119,13 @@ public class Market extends ModelObservable {
         return result;
     }
 
+    //used only for testing, does not notify the observers
+    public void setGrid(MarketMarble[][] grid, MarketMarble slideMarble)
+    {
+        this.grid = grid;
+        this.slideMarble = slideMarble;
+    }
+
     private void notifyObservers(){
         this.notifyObservers(new MSG_UPD_Market(slideMarble, grid));
     }

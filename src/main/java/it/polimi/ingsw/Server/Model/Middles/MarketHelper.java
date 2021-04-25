@@ -93,7 +93,7 @@ public class MarketHelper extends ModelObservable implements Serializable {
     private void notifyObservers(){
         this.notifyObservers(new MSG_UPD_MarketHelper(this.enabled, this.resources,
                 this.currentResource, this.choices,
-                this.extraResourceChoices, this.isNormalChoice));
+                this.extraResourceChoices));
     }
 
 }

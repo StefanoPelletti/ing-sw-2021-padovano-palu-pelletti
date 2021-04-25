@@ -35,6 +35,7 @@ public enum MessageType implements Serializable {
     MSG_ACTION_ENDTURN,
     MSG_GAME_END_TURN,
 
+    MSG_UPD_Extradepot,
     MSG_UPD_DevSlot,
     MSG_UPD_LeaderCards,
     MSG_UPD_Strongbox,

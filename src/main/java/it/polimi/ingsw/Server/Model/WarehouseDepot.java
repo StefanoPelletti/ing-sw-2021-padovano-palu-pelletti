@@ -172,7 +172,6 @@ public class WarehouseDepot extends ModelObservable {
                 }
             }
         }
-        notifyObservers();
         return true;
     }
 

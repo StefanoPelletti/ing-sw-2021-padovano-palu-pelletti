@@ -517,7 +517,7 @@ public class ActionManager {
     }
     public boolean newChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message){
         MarketHelper marketHelper = game.getMarketHelper();
-        boolean[] choice = message.getChoice();
+        int choice = message.getChoice();
 
         if(!marketHelper.isEnabled())
         {
@@ -526,72 +526,149 @@ public class ActionManager {
         }
 
         Resource currentResource = marketHelper.getCurrentResource();
+        boolean isNormalChoice;
+        boolean[] choices = marketHelper.getChoices();
+
+        boolean error=false;
+
+        if(currentResource==Resource.EXTRA)
+            isNormalChoice=false;
+        else
+            isNormalChoice=true;
+
+
+
+
+
         WarehouseDepot depot = player.getWarehouseDepot();
         ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
 
-        if(!message.isNormalChoice()){
-            marketHelper.setResource(message.getResourceChoice());
-            System.out.println("Risorsa cambiata!");
-            setNextResourceOptions(player);
-            return true;
-        }
-        if(choice[0]){
-            depot.add(currentResource);
-            marketHelper.removeResource();
-            System.out.println("\nRisorsa aggiunta al deposito!");
-        }
-
-        else if(choice[1]){
-            for(LeaderCard l : extraDepotCards) {
-                ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
-                if (extraDepot.getResourceType() == currentResource) {
-                    extraDepot.addResource(1);
-                    marketHelper.removeResource();
-                    break;
+        if(!isNormalChoice) {
+            if(choice==0) {
+                if(choices[0]) {
+                    marketHelper.setResource(marketHelper.getExtraResources()[0]);
+                    System.out.println("Risorsa cambiata!");
                 }
+                else
+                    error=true;
             }
-            System.out.println("\nRisorsa aggiunta nel deposito extra!");
-        }
+            else if (choice==1) {
+                if(choices[1]) {
+                    marketHelper.setResource(marketHelper.getExtraResources()[1]);
+                    System.out.println("Risorsa cambiata!");
+                }
+                else
+                    error=true;
+            }
 
-        else if(choice[2]){
-            marketHelper.removeResource();
-            faithTrackManager.advanceAllExcept(player);
-            System.out.println("\nRisorsa scartata!");
-        }
 
-        else if(choice[3]){
-            depot.swapRow(1,2);
-            System.out.println("\nHo scambiato le righe 1 e 2!");
-        }
-
-        else if(choice[4]){
-            depot.swapRow(1,3);
-            System.out.println("\nHo scambiato le righe 1 e 3!");
-        }
-
-        else if(choice[5]){
-            depot.swapRow(2,3);
-            System.out.println("\nHo scambiato le righe 2 e 3!");
-        }
-
-        else if(choice[6]){
-            marketHelper.skipForward();
-            System.out.println("\nRisorsa skippata! Non le volevi bene?");
-        }
-
-        else if(choice[7]){
-            marketHelper.skipBackward();
-            System.out.println("\nTorniamo indietro!");
-        }
-
-        if(marketHelper.getResources().size()>0) {
-            setNextResourceOptions(player);
         }
         else
         {
-            marketHelper.setEnabled(false);
+            if(choice==0)
+            {
+                if(choices[0]) {
+                    depot.add(currentResource);
+                    marketHelper.removeResource();
+                    System.out.println("\nRisorsa aggiunta al deposito!");
+                }
+                else
+                    error=true;
+
+            }
+            else if(choice==1)
+            {
+                if(choices[1]) {
+                    for(LeaderCard l : extraDepotCards) {
+                        ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
+                        if (extraDepot.getResourceType() == currentResource) {
+                            extraDepot.addResource(1);
+                            marketHelper.removeResource();
+                            break;
+                        }
+                    }
+                    System.out.println("\nRisorsa aggiunta nel deposito extra!");
+                }
+                else
+                    error=true;
+
+            }
         }
-        return true;
+
+        if(choice==2){
+            if(choices[2]) {
+                marketHelper.removeResource();
+                faithTrackManager.advanceAllExcept(player);
+                System.out.println("\nRisorsa scartata! Non le volevi bene? Direi di no");
+            }
+            else
+                error=true;
+
+        }
+
+        else if(choice==3){
+            if(choices[3]) {
+                depot.swapRow(1,2);
+                System.out.println("\nHo scambiato le righe 1 e 2!");
+            }
+            else
+                error=true;
+
+        }
+
+        else if(choice==4){
+            if(choices[4]) {
+                depot.swapRow(1,3);
+                System.out.println("\nHo scambiato le righe 1 e 3!");
+            }
+            else
+                error=true;
+
+        }
+
+        else if(choice==5){
+            if(choices[5]) {
+                depot.swapRow(2,3);
+                System.out.println("\nHo scambiato le righe 2 e 3!");
+            }
+            else
+                error=true;
+        }
+
+        else if(choice==6){
+            if(choices[6]) {
+                marketHelper.skipForward();
+                System.out.println("\nRisorsa skippata! ");
+            }
+            else
+                error=true;
+        }
+
+        else if(choice==7){
+            if(choices[7]) {
+                marketHelper.skipBackward();
+                System.out.println("\nTorniamo indietro!");
+            }
+            else
+                error=true;
+
+        }
+
+
+        if(error)
+        {
+            gameManager.setErrorObject("Errore! Hai fatto una scelta invalida, perfavore no!");
+            return false;
+        }
+        else {
+
+            if (marketHelper.getResources().size() > 0) {
+                setNextResourceOptions(player);
+            } else {
+                marketHelper.setEnabled(false);
+            }
+            return true;
+        }
     }
 
     public boolean lorenzoMove()
@@ -648,11 +725,10 @@ public class ActionManager {
                         choices[1] = true;
                 }
             }
-            //choice 2: discard resource (only available if the player cannot use the depot or the extra depot
-            /*if (!choices[0] && !choices[1])*/ choices[2] = true;
         }
         else {
-            choices[0]=choices[1]=choices[2]=choices[3]= false;
+
+            choices[0]=choices[1]=true;
             ArrayList<LeaderCard> marblesCards = player.getCardsWithMarketResourceAbility();
             Resource[] extraResources = new Resource[2];
             extraResources[0] = ((MarketResources) marblesCards.get(0).getSpecialAbility()).getConvertedResource();
@@ -660,14 +736,15 @@ public class ActionManager {
             marketHelper.setExtraResourceChoices(extraResources);
             marketHelper.setNormalChoice(false);
         }
-
+        //choice 2: discard resource
+        choices[2]=true;
 
         //choice 3-4-5: swap rows
         if (warehouseDepot.getShelf2ResourceNumber() < 2) choices[3] = true; //swap 1-2
         if (warehouseDepot.getShelf3ResourceNumber() < 2) choices[4] = true; //swap 1-3
         if (warehouseDepot.getShelf3ResourceNumber() < 3) choices[5] = true; //swap 2-3
 
-        //choice 6: skip this resource
+        //choice 6: skip this resource, 7 backwards
         if (marketHelper.getResources().size() > 1) {
             choices[6] = true;
             choices[7] = true;
