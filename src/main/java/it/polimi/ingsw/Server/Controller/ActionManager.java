@@ -248,8 +248,7 @@ public class ActionManager {
     }
 
     public boolean endTurn(Player player) {
-        gameManager.setNextPlayer();
-        return true;
+        return gameManager.endTurn();
     }
 
     // if player has two LeaderCards with ExtraDepot SpecialAbility and only one is activated, only firstExtraDepot is considered

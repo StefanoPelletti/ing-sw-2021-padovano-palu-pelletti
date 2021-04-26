@@ -195,6 +195,53 @@ public class BuyDevelopmentCardTest {
     }
 
     @Test
+    //test that ensures that the player can buy a card with the DiscountResource ability.
+    public void buyDevelopmentCardTest6() {
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
+        ArrayList<LeaderCard> lc = new ArrayList<>();
+
+        lc.add(new LeaderCard(2,
+                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new DiscountResource(Resource.STONE)));
+
+        lc.add(new LeaderCard(2,
+                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {1,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new DiscountResource(Resource.SHIELD)));
+
+        p.associateLeaderCards(lc);
+        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[1].setEnable(true);
+        c.emptyQueue();
+
+        DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
+
+        for(int r = 0; r < 3; r++) {
+            for(int c = 0; c < 4; c++) {
+                for(int p = 0; p < 4; p++) {
+                    grid[r][c][p] = null;
+                }
+            }
+        }
+
+        grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
+                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 2); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
+                new Power(new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
+                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }}));
+
+
+        g.getDevelopmentCardsDeck().setGrid(grid);
+        p.getStrongbox().addResource(Resource.SERVANT, 1);
+        c.emptyQueue();
+
+        assertFalse(am.buyDevelopmentCard(p));
+        assertFalse(dcv.isEnabled());
+        assertEquals(1, c.messages.size());
+        assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+        assertEquals("You cannot buy any card.", g.getErrorObject().getErrorMessage());
+    }
+
+    @Test
     //test for the starting "exception".
     public void chooseDevelopmentCardTest0() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();

@@ -40,23 +40,19 @@ public class GameManager {
         }
     }
 
-    public void setLeaderCards(){
-
-    }
-
     public boolean endTurn()
     {
         setNextPlayer();
         if(lobbyMaxPlayers!=1 && game.getStatus()==Status.LAST_TURN && game.getCurrentPlayerInt()==1){
             setStatus(Status.GAME_OVER);
             endgame();
-            return true;
+            return false;
         }
         if(lobbyMaxPlayers==1&&game.getStatus()==Status.GAME_OVER) {
             endgame();
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public boolean addBroadcastMessage(Message message)
@@ -110,7 +106,9 @@ public class GameManager {
                 p.addVP(card.getVP());
             }
             for(LeaderCard leaderCard : p.getLeaderCards()){
-                p.addVP(leaderCard.getVP());
+                if(leaderCard != null) {
+                    p.addVP(leaderCard.getVP());
+                }
             }
             float totResources = p.getTotal();
             int points = (int) Math.floor(totResources/5);

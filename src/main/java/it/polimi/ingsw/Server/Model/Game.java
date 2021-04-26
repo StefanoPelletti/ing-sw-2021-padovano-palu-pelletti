@@ -115,13 +115,6 @@ public class Game extends ModelObservable{
         if (playerNumber == 1)
             firstPlayer = player;
         playerList.add(player);
-
-        for(ModelObserver observer : this.getObservers()){
-            player.addObserver(observer);
-            player.getWarehouseDepot().addObserver(observer);
-            player.getStrongbox().addObserver(observer);
-            player.getDevelopmentSlot().addObserver(observer);
-        }
         //notify();
         return true;
     }
@@ -140,6 +133,13 @@ public class Game extends ModelObservable{
                 ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
                 extraDepot.addObserver(observer);
             }
+        }
+
+        for(Player player : this.getPlayerList()){
+            player.addObserver(observer);
+            player.getWarehouseDepot().addObserver(observer);
+            player.getStrongbox().addObserver(observer);
+            player.getDevelopmentSlot().addObserver(observer);
         }
     }
 
