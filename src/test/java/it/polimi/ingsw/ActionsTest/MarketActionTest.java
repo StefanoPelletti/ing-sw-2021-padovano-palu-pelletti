@@ -15,7 +15,7 @@ import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
 import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
-import it.polimi.ingsw.Server.Utils.Catcher;
+import it.polimi.ingsw.Catcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

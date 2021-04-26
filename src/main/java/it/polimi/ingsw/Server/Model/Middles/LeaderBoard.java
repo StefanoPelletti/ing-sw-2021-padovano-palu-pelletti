@@ -1,14 +1,12 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderBoard;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class LeaderBoard extends ModelObservable implements Serializable {
+public class LeaderBoard extends ModelObservable  {
     private boolean enabled;
     private Map<String, Integer> leaderboard;
 

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.ActionsTest;
-import it.polimi.ingsw.Networking.Message.MSG_ACTION_BUY_DEVELOPMENT_CARD;
 import it.polimi.ingsw.Networking.Message.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD;
-import it.polimi.ingsw.Networking.Message.MSG_ACTION_GET_MARKET_RESOURCES;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
@@ -9,12 +7,11 @@ import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.Middles.DevelopmentCardsVendor;
-import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
 import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
 import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.DiscountResource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
-import it.polimi.ingsw.Server.Utils.Catcher;
+import it.polimi.ingsw.Catcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,10 +46,16 @@ public class BuyDevelopmentCardTest {
     }
 
     @Test
-    //this test ensures that DevelopmentCardsVendor is correctly set to disabled at the beginning.
+    //ensures that DevelopmentCardsVendor is correctly set to disabled at the beginning.
     public void buyDevelopmentCardTest0() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
         assertFalse(dcv.isEnabled());
+
+
+
+        c.test();
+
+
     }
 
     @Test

@@ -6,12 +6,8 @@ import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
-import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
-import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.DiscountResource;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.Production;
-import it.polimi.ingsw.Server.Utils.Catcher;
+import it.polimi.ingsw.Catcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,8 +35,6 @@ public class ActivateProductionTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-        g.addAllObservers(c);
-
         g.addAllObservers(c);
 
         p = g.getPlayer(1);

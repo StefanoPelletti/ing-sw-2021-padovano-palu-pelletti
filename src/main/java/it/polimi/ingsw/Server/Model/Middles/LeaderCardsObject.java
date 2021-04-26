@@ -4,10 +4,9 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_L
 import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class LeaderCardsObject extends ModelObservable implements Serializable {
+public class LeaderCardsObject extends ModelObservable  {
     boolean enabled;
     ArrayList<LeaderCard> cards;
 

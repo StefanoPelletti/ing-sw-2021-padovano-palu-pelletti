@@ -1,15 +1,13 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_MarketHelper;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.io.Serializable;
 import java.util.*;
 
 
-public class MarketHelper extends ModelObservable implements Serializable {
+public class MarketHelper extends ModelObservable  {
     private boolean enabled;
     private ArrayList<Resource> resources;
     private int currentResource;

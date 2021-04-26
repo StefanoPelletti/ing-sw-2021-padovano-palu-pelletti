@@ -78,11 +78,11 @@ public class Lobby {
         boolean result = false;
         if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
             switch (message.getMessageType()) {
-                case MSG_INIT_CHOOSE_RESOURCE:
-                    result = actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
-                    break;
                 case MSG_INIT_CHOOSE_LEADERCARDS:
                     result = actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
+                    break;
+                case MSG_INIT_CHOOSE_RESOURCE:
+                    result = actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
                     break;
                 case MSG_ACTION_ACTIVATE_LEADERCARD:
                     result = actionManager.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);

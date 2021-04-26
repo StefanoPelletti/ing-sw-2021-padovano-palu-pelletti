@@ -31,6 +31,7 @@ public class ActionManager {
 
     public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message) {
         ArrayList<LeaderCard> cards = message.getCards();
+
         LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
         ResourceObject resourceObject = game.getResourceObject();
 
@@ -40,18 +41,19 @@ public class ActionManager {
             return false;
         }
 
-        player.associateLeaderCards(cards);
-        if(game.getStatus()==Status.SOLO)
-        {
+        player.associateLeaderCards(cards); //notifies player
+        if(gameManager.getSolo()) {
             leaderCardsObject.setEnabled(false);
         }
         else {
             if(game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
             {
-                leaderCardsObject.setEnabled(false);
+                leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
                 resourceObject.setNumOfResources(1);
-                resourceObject.setEnabled(true);
-                game.setCurrentPlayer(2);
+                resourceObject.setEnabled(true); //notifies resourceObject
+                //game.setCurrentPlayer(2); //notifies Game
+                endTurn(game.getCurrentPlayer()); //notifies Game
+                return endTurn(game.getCurrentPlayer()); //notifies Game (overwrite) and update_end
             }
             else
             {
@@ -63,15 +65,17 @@ public class ActionManager {
     }
 
     public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message) {
-        ResourceObject resourceObject = game.getResourceObject();
         Resource resource = message.getResource();
+
+        ResourceObject resourceObject = game.getResourceObject();
 
         if(!resourceObject.isEnabled()) //how the hell did he get in here?
         {
             gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseResources senza oggetto ResourceObject attivo nel model!");
             return false;
         }
-        player.getWarehouseDepot().add(resource);
+
+        player.getWarehouseDepot().add(resource); //notifies Warehouse
 
         if(resourceObject.getNumOfResources() == 2)
             player.getWarehouseDepot().swapRow(1,2);
@@ -81,6 +85,8 @@ public class ActionManager {
             if(game.getCurrentPlayerInt()==gameManager.getLobbyMaxPlayers())
             {
                 resourceObject.setEnabled(false);
+                game.changeStatus(Status.STANDARD_TURN);
+                game.setTurn(1);
             }
             else
             {
@@ -90,7 +96,6 @@ public class ActionManager {
                     resourceObject.setNumOfResources(1);
             }
             endTurn(player);
-            game.setTurn(1);
         }
         return true;
     }

@@ -6,7 +6,7 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 
-public class ErrorObject extends ModelObservable implements Serializable {
+public class ErrorObject extends ModelObservable  {
 
     private boolean enabled;
     private String errorMessage;

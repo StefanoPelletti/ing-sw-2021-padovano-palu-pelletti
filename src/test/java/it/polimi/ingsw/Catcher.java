@@ -1,7 +1,11 @@
-package it.polimi.ingsw.Server.Utils;
+package it.polimi.ingsw;
 
 import it.polimi.ingsw.Networking.Message.Message;
+import it.polimi.ingsw.Server.Utils.ModelObserver;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,4 +39,5 @@ public class Catcher implements ModelObserver {
         this.messages = new ArrayList<>();
         System.out.println(" Queue reset \n");
     }
+
 }

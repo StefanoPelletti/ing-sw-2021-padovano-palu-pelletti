@@ -4,11 +4,9 @@ import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Server.Model.Player;
-import it.polimi.ingsw.Server.Utils.Catcher;
+import it.polimi.ingsw.Catcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

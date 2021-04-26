@@ -1,12 +1,10 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_ResourceObject;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.io.Serializable;
 
-public class ResourceObject extends ModelObservable implements Serializable {
+public class ResourceObject extends ModelObservable  {
     private boolean enabled;
     private int numOfResources;
 
