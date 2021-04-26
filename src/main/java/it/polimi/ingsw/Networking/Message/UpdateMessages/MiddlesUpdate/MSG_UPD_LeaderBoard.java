@@ -23,4 +23,7 @@ public class MSG_UPD_LeaderBoard extends Message implements Serializable {
 
     public MessageType getMessageType() { return super.getMessageType();}
 
+    //in SOLO mode there are ALWAYS 2 keys in the Map.
+    // the player, and Lorenzo. IF Lorenzo's value is 1, he's the LOSER
+    //                          IF Lorenzo's value is 2, he's the WINNER
 }

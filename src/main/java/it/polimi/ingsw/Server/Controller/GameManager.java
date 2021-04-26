@@ -12,9 +12,11 @@ public class GameManager {
     private Game game;
     private FaithTrackManager faithTrackManager;
     private ActionManager actionManager;
+    private boolean solo;
 
 
 
+    private Boolean soloWinner; // if null: no one, if true: the player, if false: the Lorenzo
     private int lobbyMaxPlayers;
 
     public GameManager(int lobbyMaxPlayers)
@@ -23,14 +25,27 @@ public class GameManager {
         this.faithTrackManager = new FaithTrackManager(this.game, this);
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
         this.lobbyMaxPlayers = lobbyMaxPlayers;
+        this.solo = lobbyMaxPlayers == 1;
+        this.soloWinner = null;
     }
 
     public Player currentPlayer() {
         return game.getCurrentPlayer();
     }
 
+
+    public boolean endTurn()
+    {
+        setNextPlayer();
+        if(!solo && game.getStatus()==Status.LAST_TURN && game.getCurrentPlayerInt()==1){
+            setStatus(Status.GAME_OVER);
+            return endgame(); //which is return FALSE
+        }
+        return true;
+    }
+
     public void setNextPlayer() {
-        if (game.getStatus() != Status.SOLO) {
+        if (!solo) {
             game.setCurrentPlayer(game.getCurrentPlayerInt() + 1);
             if (game.getCurrentPlayerInt() > lobbyMaxPlayers) {
                 game.setCurrentPlayer(1);
@@ -38,28 +53,24 @@ public class GameManager {
         }
     }
 
-    public boolean endTurn()
-    {
-        setNextPlayer();
-        if(lobbyMaxPlayers!=1 && game.getStatus()==Status.LAST_TURN && game.getCurrentPlayerInt()==1){
-            setStatus(Status.GAME_OVER);
-            endgame();
-            return false;
-        }
-        if(lobbyMaxPlayers==1&&game.getStatus()==Status.GAME_OVER) {
-            endgame();
-            return false;
-        }
-        return true;
-    }
+
+
+
 
     public void setStatus(Status status)
     {
         game.changeStatus(status);
     }
+    public Boolean getSoloWinner() {
+        return soloWinner;
+    }
+    public void setSoloWinner(boolean value)
+    {
+        this.soloWinner = value;
+    }
 
     public Status getStatus(){return game.getStatus();}
-
+    public boolean getSolo() { return solo; }
     public int getLobbyMaxPlayers() {
         return lobbyMaxPlayers;
     }
@@ -90,7 +101,11 @@ public class GameManager {
         game.getErrorObject().setEnabled(true);
     }
 
-    public void endgame(){
+    // if it is a NON-SOLO game, the leaderBoard will be: nickname-VP, nickname-VP (in ascending order)
+    // if it is a SOLO game, the leaderBoard will contain the player-score and Lorenzo
+    //       Lorenzo could be the loser (points will be 1)
+    //       Lorenzo could be the winner (points will be 2)
+    public boolean endgame(){
         LeaderBoard leaderBoard = game.getLeaderBoard();
         for(Player p : game.getPlayerList()){
             for(DevelopmentCard card : p.getDevelopmentSlot().getCards()){
@@ -119,6 +134,19 @@ public class GameManager {
             p.addVP(faithPoints);
             leaderBoard.addScore(p.getNickname(), p.getVP());
         }
+
+        if(solo) {
+            if(soloWinner) // if (Lorenzo has lost)
+            {
+                leaderBoard.addScore("Lorenzo, the Loser", 1 );
+            }
+            else
+            {
+                leaderBoard.addScore("Lorenzo, the Winner", 2);
+            }
+        }
+
         leaderBoard.setEnabled(true);
+        return false;
     }
 }

@@ -39,20 +39,21 @@ public class MarketActionTest {
         g = gm.getGame();
 
         c = new Catcher();
-
-        g.addAllObservers(c);
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
+        g.addAllObservers(c);
+
         gm.getFaithTrackManager().addObserver(c);
         c.emptyQueue();
         p = g.getPlayer(1);
     }
 
 
-
+//----------- testing the first part of the getMarket action
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
+    //market resource: SHIELD FAITH
     @Test
     public void getMarketResourceBWRW()
     {
@@ -83,6 +84,7 @@ public class MarketActionTest {
     }
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
+    //market resource: SHIELD SHIELD STONE
     @Test
     public void getMarketResourceBWBG()
     {
@@ -168,6 +170,7 @@ public class MarketActionTest {
     }
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
+    //Market Resources:
     @Test
     public void getMarketResourceBGYP()
     {
@@ -939,7 +942,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(6); //skip again
         assertTrue(am.newChoiceMarket(p, message));
-        resources = resources = g.getMarketHelper().getResources();
+        resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.size());
@@ -948,7 +951,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(7); //skip backwards
         assertTrue(am.newChoiceMarket(p, message));
-        resources = resources = g.getMarketHelper().getResources();
+        resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.size());
@@ -958,7 +961,7 @@ public class MarketActionTest {
         message = new MSG_ACTION_MARKET_CHOICE(2); //discard
         assertTrue(am.newChoiceMarket(p, message));
         assertTrue(g.getMarketHelper().isEnabled());
-        resources = resources = g.getMarketHelper().getResources();
+        resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.size());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
@@ -974,6 +977,80 @@ public class MarketActionTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(4, c.messages.size());
         assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 3).count());
+        c.emptyQueue();
+    }
+
+
+    //Resources from the market: FAITH STONE STONE STONE
+    //Other players are at position 22. After 3 discard, they should
+//                                 2 : discard
+//                                 2 : discard
+//                                 2 : discard
+    @Test
+    public void lastTurn()
+    {
+        MarketMarble[][] re = {{new RedMarble(), new GreyMarble(), new GreyMarble(), new GreyMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
+
+
+        Market market = g.getMarket();
+        market.setGrid(re, new WhiteMarble());
+
+        g.getPlayer(1).setPosition(23);
+        g.getPlayer(2).setPosition(22);
+        g.getPlayer(3).setPosition(22);
+        g.getPlayer(4).setPosition(22);
+        g.getFaithTrack().setZones(0,true);
+        g.getFaithTrack().setZones(1,true);
+        c.emptyQueue();
+
+        assertTrue(am.getMarketResources(p, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
+        assertTrue(g.getMarketHelper().isEnabled());
+        ArrayList<Resource> resources = g.getMarketHelper().getResources();
+        assertEquals(3, resources.stream().filter(x -> x == Resource.STONE).count());
+        assertEquals(3, resources.size());
+        assertEquals(1, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
+        assertEquals(9, c.messages.size());
+        assertEquals(24, p.getPosition());
+        c.emptyQueue();
+
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discard
+        assertTrue(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        resources = g.getMarketHelper().getResources();
+        assertEquals(2, resources.stream().filter(x -> x == Resource.STONE).count());
+        assertEquals(2, resources.size());
+        assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 23).count());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(4, c.messages.size());
+        c.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(2); //discard
+        assertTrue(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        resources = g.getMarketHelper().getResources();
+        assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
+        assertEquals(1, resources.size());
+        assertEquals(4, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(4, c.messages.size());
+        c.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(2); //discard
+        assertTrue(am.newChoiceMarket(p, message));
+        assertFalse(g.getMarketHelper().isEnabled());
+        assertEquals(4, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
+        assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(1, c.messages.size());
         c.emptyQueue();
     }
 }

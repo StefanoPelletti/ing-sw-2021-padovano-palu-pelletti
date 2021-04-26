@@ -57,6 +57,9 @@ public class Lobby {
             gameManager.getFaithTrackManager().addObserver(clientHandler);
         }
 
+
+
+        gameManager.setStatus(Status.INIT);
         if(lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
         else gameManager.setStatus(Status.INIT);
 
@@ -71,7 +74,6 @@ public class Lobby {
     public void onMessage(Message message, String nickname) throws IllegalArgumentException{
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
-        boolean order66 = false;
 
         boolean result = false;
         if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
@@ -107,10 +109,7 @@ public class Lobby {
                     result = actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
                     break;
                 case MSG_ACTION_ENDTURN:
-                    if(solo) {
-                        result = actionManager.lorenzoMove();
-                    }
-                    order66 = gameManager.endTurn();
+                    result = actionManager.endTurn(player);
                     break;
                 default: System.out.println(" SRV: non so cosa mi abbiano inviato aiuto.");
             }
@@ -122,7 +121,7 @@ public class Lobby {
             }
         }
 
-        //if(order66) threadsList.stream().forEach();
+
     }
 
     public synchronized String onJoin(String nickname, Socket socket ,ClientHandler clientHandler){

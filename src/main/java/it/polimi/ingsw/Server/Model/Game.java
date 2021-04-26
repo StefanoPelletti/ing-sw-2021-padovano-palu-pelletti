@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Game;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
@@ -9,7 +8,7 @@ import it.polimi.ingsw.Server.Utils.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Game extends ModelObservable{
+public class Game extends ModelObservable {
     private Status status;
     private Player firstPlayer;
     private int turn;
@@ -105,7 +104,6 @@ public class Game extends ModelObservable{
     }
     public void changeStatus(Status status) {
         this.status = status;
-        notifyObservers();
     }
 
 //METHODS
@@ -115,11 +113,10 @@ public class Game extends ModelObservable{
         if (playerNumber == 1)
             firstPlayer = player;
         playerList.add(player);
-        notifyObservers();
         return true;
     }
 
-    public void addAllObservers(ModelObserver observer){
+    public void addAllObservers(ModelObserver observer) {
         this.addObserver(observer);
         faithTrack.addObserver(observer);
         market.addObserver(observer);
@@ -128,14 +125,14 @@ public class Game extends ModelObservable{
         errorObject.addObserver(observer);
         marketHelper.addObserver(observer);
         resourceObject.addObserver(observer);
-        for(LeaderCard l : leaderCardsDeck.getCards()){
-            if(l.getSpecialAbility().isExtraDepot()){
+        for (LeaderCard l : leaderCardsDeck.getCards()) {
+            if (l.getSpecialAbility().isExtraDepot()) {
                 ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
                 extraDepot.addObserver(observer);
             }
         }
 
-        for(Player player : this.getPlayerList()){
+        for (Player player : this.playerList) {
             player.addObserver(observer);
             player.getWarehouseDepot().addObserver(observer);
             player.getStrongbox().addObserver(observer);
@@ -144,8 +141,8 @@ public class Game extends ModelObservable{
     }
 
 
-    public boolean removePlayer( String nickname )
-    {
+
+    public boolean removePlayer( String nickname ) {
         return playerList.removeIf(x -> (x.getNickname()).equals(nickname));
     }
 

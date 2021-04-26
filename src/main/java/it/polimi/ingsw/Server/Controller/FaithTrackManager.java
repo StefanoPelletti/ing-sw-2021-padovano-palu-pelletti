@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Controller;
 
+import it.polimi.ingsw.Networking.Message.MSG_GAME_OVER;
 import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.FaithTrack;
@@ -22,7 +23,7 @@ public class FaithTrackManager extends ModelObservable {
         this.faithTrack=game.getFaithTrack();
         this.gameManager = gameManager;
         this.game = game;
-        solo= (gameManager.getLobbyMaxPlayers() == 1);
+        this.solo= (gameManager.getLobbyMaxPlayers() == 1);
     }
 
 
@@ -84,9 +85,10 @@ public class FaithTrackManager extends ModelObservable {
                     }
                 }
                 faithTrack.setZones(2, true);
-                if(solo)
-                {
+                if(solo) {
                     gameManager.setStatus(Status.GAME_OVER);
+                    if(gameManager.getSoloWinner()!=null)
+                        gameManager.setSoloWinner(true);
                 }
                 else {
                     gameManager.setStatus(Status.LAST_TURN);
@@ -96,9 +98,8 @@ public class FaithTrackManager extends ModelObservable {
                 faithTrack.advance(player);
                 return true;
         }
-        if(!(solo && gameManager.getStatus()==Status.GAME_OVER)) {
-            notifyObservers(new MSG_NOTIFICATION(message.toString()));
-        }
+
+        notifyObservers(new MSG_NOTIFICATION(message.toString()));
         return true;
     }
 
@@ -168,14 +169,19 @@ public class FaithTrackManager extends ModelObservable {
                     }
                 faithTrack.setZones(2, true);
                     //////////////////////////////////////add something??? IT'S OVER!
+
                 gameManager.setStatus(Status.GAME_OVER);
+                if(gameManager.getSoloWinner()!=null)
+                    gameManager.setSoloWinner(false);
+
                 return true;
             case 0:
                 faithTrack.advanceLorenzo();
                 break;
         }
 
-        notifyObservers(new MSG_NOTIFICATION(message.toString()));
+        if(gameManager.getStatus() != Status.GAME_OVER)
+            notifyObservers(new MSG_NOTIFICATION(message.toString()));
         return true;
     }
 }

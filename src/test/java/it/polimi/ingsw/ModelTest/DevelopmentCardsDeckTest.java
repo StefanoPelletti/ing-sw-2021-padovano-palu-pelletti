@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
 import it.polimi.ingsw.Server.Model.DevelopmentCardsDeck;
 
+
+
 public class DevelopmentCardsDeckTest {
 
     DevelopmentCardsDeck d;
@@ -15,8 +17,6 @@ public class DevelopmentCardsDeckTest {
     {
         d = new DevelopmentCardsDeck();
     }
-
-
 
     @Test
     public void getStackNotNull()

@@ -61,6 +61,7 @@ public class ActionManager {
         }
         return true;
     }
+
     public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message) {
         ResourceObject resourceObject = game.getResourceObject();
         Resource resource = message.getResource();
@@ -272,10 +273,6 @@ public class ActionManager {
         return true;
     }
 
-    public boolean endTurn(Player player) {
-        return gameManager.endTurn();
-    }
-
 
      public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
         Resource slot1 = message.getSlot1();
@@ -466,8 +463,10 @@ public class ActionManager {
         developmentCardsVendor.setEnabled(false);
         if(player.getDevelopmentSlot().getNumOfCards()==7)
         {
-            if(gameManager.getLobbyMaxPlayers()==1)
+            if(gameManager.getSolo()) {
                 gameManager.setStatus(Status.GAME_OVER);
+                gameManager.setSoloWinner(true);
+            }
             else
                 gameManager.setStatus(Status.LAST_TURN);
         }
@@ -503,9 +502,9 @@ public class ActionManager {
                 m.addResource(resources);
             } catch (RedMarbleException e) {
                 faithTrackManager.advance(player);
-                //System.out.println("Risorsa fede! Corro ad aggiungerti un punto fede!");
             }
         }
+
 
         //check on the leaderCards with Market Ability
         ArrayList<LeaderCard> marblesCards = player.getCardsWithMarketResourceAbility();
@@ -660,24 +659,47 @@ public class ActionManager {
         }
     }
 
-    public boolean lorenzoMove()
+
+    public boolean endTurn(Player player) {
+        if(gameManager.getSolo())
+        {
+            if( game.getStatus()==Status.GAME_OVER && gameManager.getSoloWinner())
+            {
+                return gameManager.endgame();
+            }
+            else //status NOT gameover, Lorenzo has to Play
+            {
+                lorenzoMove();
+                //after his play, check if the game is over
+                if(game.getStatus()==Status.GAME_OVER && !gameManager.getSoloWinner())
+                    return gameManager.endgame();
+            }
+        }
+        return gameManager.endTurn();
+    }
+
+
+    private void lorenzoMove()
     {
         ActionToken token = game.getActionTokenStack().pickFirst();
         if(token.isRemover())
         {
             game.getDevelopmentCardsDeck().removeCard(((RemoverToken) token).getColumn());
-            if (game.getDevelopmentCardsDeck().isOneColumnDestroyed()) gameManager.setStatus(Status.GAME_OVER);
+            if (game.getDevelopmentCardsDeck().isOneColumnDestroyed())
+            {
+                gameManager.setStatus(Status.GAME_OVER);
+                gameManager.setSoloWinner(false);
+            }
         }
         else if(token.isForwardAndShuffle()) {
-            faithTrackManager.advanceLorenzo();
             game.getActionTokenStack().shuffle();
+            faithTrackManager.advanceLorenzo();
         }
         else if(token.isForward2())
         {
             faithTrackManager.advanceLorenzo();
             faithTrackManager.advanceLorenzo();
         }
-        return true;
     }
 
 //--------------------   Helper methods   --------------------//

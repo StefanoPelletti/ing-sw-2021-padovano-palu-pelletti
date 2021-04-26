@@ -39,6 +39,7 @@ public class ActivateProductionTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
+        g.addAllObservers(c);
 
         g.addAllObservers(c);
 

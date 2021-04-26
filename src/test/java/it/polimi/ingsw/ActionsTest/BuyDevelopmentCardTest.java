@@ -38,12 +38,12 @@ public class BuyDevelopmentCardTest {
         g = gm.getGame();
 
         c = new Catcher();
-        g.addAllObservers(c);
+
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-
+        g.addAllObservers(c);
         p = g.getPlayer(1);
         c.emptyQueue();
     }

@@ -46,6 +46,7 @@ public class ActivateLeaderCardTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
+        g.addAllObservers(c);
 
         l1 = new LeaderCard(3,
                 new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SHIELD, 5); }}),
