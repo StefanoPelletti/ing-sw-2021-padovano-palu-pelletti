@@ -168,7 +168,6 @@ public class FaithTrackManager extends ModelObservable {
                         message.append("  ").append(faithTrack.calculateVP(p));
                     }
                 faithTrack.setZones(2, true);
-                    //////////////////////////////////////add something??? IT'S OVER!
 
                 gameManager.setStatus(Status.GAME_OVER);
                 if(gameManager.getSoloWinner()!=null)

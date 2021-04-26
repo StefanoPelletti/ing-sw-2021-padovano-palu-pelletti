@@ -12,107 +12,46 @@ import java.util.stream.Collectors;
 public class SpecialAbilityTest {
 
     @Test
-    public void extraDepotF1()
+    public void extraDepot()
     {
         SpecialAbility x = new ExtraDepot(Resource.COIN);
         assertTrue (x.isExtraDepot());
-    }
-    @Test
-    public void extraDepotF2()
-    {
-        SpecialAbility x = new ExtraDepot(Resource.COIN);
         assertFalse (x.isDiscountResource());
-    }
-    @Test
-    public void extraDepotF3()
-    {
-        SpecialAbility x = new ExtraDepot(Resource.COIN);
         assertFalse (x.isProduction());
-    }
-    @Test
-    public void extraDepotF4()
-    {
-        SpecialAbility x = new ExtraDepot(Resource.COIN);
         assertFalse (x.isMarketResource());
     }
-////////////////
+
     @Test
-    public void discountResourceF1()
+    public void discountResource()
     {
         SpecialAbility x = new DiscountResource(Resource.COIN);
         assertFalse (x.isExtraDepot());
-    }
-    @Test
-    public void discountResourceF2()
-    {
-        SpecialAbility x = new DiscountResource(Resource.COIN);
         assertTrue (x.isDiscountResource());
-    }
-    @Test
-    public void discountResourceF3()
-    {
-        SpecialAbility x = new DiscountResource(Resource.COIN);
         assertFalse (x.isProduction());
-    }
-    @Test
-    public void discountResourceF4()
-    {
-        SpecialAbility x = new DiscountResource(Resource.COIN);
         assertFalse (x.isMarketResource());
     }
-/////////////////////
+
+
     @Test
-    public void marketResourceF1()
+    public void marketResource()
     {
         SpecialAbility x = new MarketResources(Resource.COIN);
         assertFalse (x.isExtraDepot());
-    }
-    @Test
-    public void marketResourceF2()
-    {
-        SpecialAbility x = new MarketResources(Resource.COIN);
         assertFalse (x.isDiscountResource());
-    }
-    @Test
-    public void marketResourceF3()
-    {
-        SpecialAbility x = new MarketResources(Resource.COIN);
         assertTrue (x.isMarketResource());
-    }
-    @Test
-    public void marketResourceF4()
-    {
-        SpecialAbility x = new MarketResources(Resource.COIN);
         assertFalse (x.isProduction());
     }
-////////////////////
+
+
     @Test
-    public void productionF1()
+    public void production()
     {
         SpecialAbility x = new Production(Resource.COIN);
         assertFalse (x.isExtraDepot());
-    }
-    @Test
-    public void productionF2()
-    {
-        SpecialAbility x = new Production(Resource.COIN);
         assertFalse (x.isDiscountResource());
-    }
-    @Test
-    public void productionF3()
-    {
-        SpecialAbility x = new Production(Resource.COIN);
         assertFalse (x.isMarketResource());
-    }
-    @Test
-    public void productionF4()
-    {
-        SpecialAbility x = new Production(Resource.COIN);
         assertTrue (x.isProduction());
     }
-
-
-
 
 
     @Test

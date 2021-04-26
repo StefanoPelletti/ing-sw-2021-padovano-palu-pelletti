@@ -81,6 +81,4 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
     {
         return "  SpecialAbility: \nI have "+getNumber()+" "+getResourceType()+ " in my belly! ";
     }
-
-
 }

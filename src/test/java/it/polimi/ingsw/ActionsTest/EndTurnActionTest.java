@@ -23,6 +23,16 @@ public class EndTurnActionTest {
     Catcher c;
     Catcher c2;
 
+// how does the endTurn work ( for T )
+// NON-SOLO mode:
+//     IF NOT LAST PLAYER => the currentPlayer advance, the call returns TRUE (1 MSG_UPD_Game)
+//     IF LAST PLAYER => the currentPlayer advances, the turn advances (2 MSG_UPD_Game)
+//          IF (gameOver condition, essentially) changes the status in GameOver and the method returns FALSE (1 MSG_UPD_LeaderBoard)
+// SOLO mode:
+//     IF status is GAMEOVER (silently modified by the actionmanager) => notify leaderBoard (1 MSG_UPD_Leaderboard)
+//     OTHERWISE Lorenzo must play. He can modify the DevDeck, its position in Game, (#? Messages) and surely the ActionTokenStack (which does not generate any message)
+//         After the action, the status could be GAMEOVER. in THIS case, load the LeaderBoard ( 1 MSG_UPD_LeaderBoard)
+//             IF status is not gameover, that's it. Continue the game as always.
     @BeforeEach
     public void reset()
     {

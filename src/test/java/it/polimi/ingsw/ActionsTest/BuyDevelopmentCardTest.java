@@ -52,10 +52,6 @@ public class BuyDevelopmentCardTest {
         assertFalse(dcv.isEnabled());
 
 
-
-        c.test();
-
-
     }
 
     @Test

@@ -108,17 +108,19 @@ public class GameManager {
     public boolean endgame(){
         LeaderBoard leaderBoard = game.getLeaderBoard();
         for(Player p : game.getPlayerList()){
+            int points = p.getVP();
+
             for(DevelopmentCard card : p.getDevelopmentSlot().getCards()){
-                p.addVP(card.getVP());
+                points+=card.getVP();
             }
             for(LeaderCard leaderCard : p.getLeaderCards()){
                 if(leaderCard != null) {
-                    p.addVP(leaderCard.getVP());
+                    points+=leaderCard.getVP();
                 }
             }
             float totResources = p.getTotal();
-            int points = (int) Math.floor(totResources/5);
-            p.addVP(points);
+            points+= (int) Math.floor(totResources/5);
+
 
             int faithPoints=0;
             int position = p.getPosition();
@@ -131,8 +133,8 @@ public class GameManager {
             if(position >= 21) faithPoints = 16;
             if(position == 24) faithPoints = 20;
 
-            p.addVP(faithPoints);
-            leaderBoard.addScore(p.getNickname(), p.getVP());
+            points+=faithPoints;
+            leaderBoard.addScore(p.getNickname(), points);
         }
 
         if(solo) {

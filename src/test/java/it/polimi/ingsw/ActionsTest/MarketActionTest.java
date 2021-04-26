@@ -4,13 +4,10 @@ import it.polimi.ingsw.Networking.Message.MSG_ACTION_MARKET_CHOICE;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
+import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
-import it.polimi.ingsw.Server.Model.Game;
-import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Model.Marbles.*;
-import it.polimi.ingsw.Server.Model.Market;
-import it.polimi.ingsw.Server.Model.Player;
 import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
 import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
@@ -982,7 +979,7 @@ public class MarketActionTest {
 
 
     //Resources from the market: FAITH STONE STONE STONE
-    //Other players are at position 22. After 3 discard, they should
+    //Other players are at position 22. After 3 discard, they should still be at position #24
 //                                 2 : discard
 //                                 2 : discard
 //                                 2 : discard
@@ -1053,4 +1050,208 @@ public class MarketActionTest {
         assertEquals(1, c.messages.size());
         c.emptyQueue();
     }
+
+    //Resources from the market: SERVANT WHITE WHITE SERVANT
+    //Other players are at position 22. After 3 discard, they should still be at position #24
+//                                 0 : put in depot
+//                                 3 : swap 1,2
+//                                 5 : swap 2,3
+//                                 6 : go forward (error)
+//                                 7 : go backwards (error)
+    @Test
+    public void chooseResource8()
+    {
+        MarketMarble[][] re = {{new PurpleMarble(), new WhiteMarble(), new WhiteMarble(), new PurpleMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
+
+
+        Market market = g.getMarket();
+        market.setGrid(re, new WhiteMarble());
+
+        ArrayList<LeaderCard> lc = new ArrayList<>();
+
+        lc.add(new LeaderCard(3,
+                new ResourceRequirements(new HashMap<Resource, Integer>() {{
+                    put(Resource.SERVANT, 5);
+                }}),
+                new ExtraDepot(Resource.SHIELD)));
+
+        lc.add(new LeaderCard(3,
+                new ResourceRequirements(new HashMap<Resource, Integer>() {{
+                    put(Resource.COIN, 5);
+                }}),
+                new ExtraDepot(Resource.STONE)));
+
+        p.associateLeaderCards(lc);
+        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[1].setEnable(true);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
+        c.emptyQueue();
+
+        assertTrue(am.getMarketResources(p, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
+        assertTrue(g.getMarketHelper().isEnabled());
+        ArrayList<Resource> resources = g.getMarketHelper().getResources();
+        assertSame(p.getWarehouseDepot().getShelf1(), Resource.NONE);
+        assertEquals(2, resources.stream().filter(x -> x == Resource.SERVANT).count());
+        assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
+        assertEquals(2, c.messages.size());
+        c.emptyQueue();
+
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(0); //put in Depot
+        assertTrue(am.newChoiceMarket(p, message));
+        resources = g.getMarketHelper().getResources();
+        assertEquals(1, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(2, c.messages.size());
+
+        c.emptyQueue();
+
+        assertSame(p.getWarehouseDepot().getShelf1(), Resource.SERVANT);
+        assertSame(p.getWarehouseDepot().getShelf2()[0], Resource.NONE);
+        assertEquals(1, p.getWarehouseDepot().getTotal());
+
+        message = new MSG_ACTION_MARKET_CHOICE(3); //swap 1,2
+        assertTrue(am.newChoiceMarket(p, message));
+        resources = g.getMarketHelper().getResources();
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(2, c.messages.size());
+        assertSame(p.getWarehouseDepot().getShelf1(), Resource.NONE);
+        assertSame(p.getWarehouseDepot().getShelf2()[0], Resource.SERVANT);
+        assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.NONE);
+        assertEquals(1, p.getWarehouseDepot().getTotal());
+        c.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(5); //swap 2,3
+        assertTrue(am.newChoiceMarket(p, message));
+        resources = g.getMarketHelper().getResources();
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
+        assertEquals(2, c.messages.size());
+        assertSame(p.getWarehouseDepot().getShelf1(), Resource.NONE);
+        assertSame(p.getWarehouseDepot().getShelf2()[0], Resource.NONE);
+        assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.SERVANT);
+        assertEquals(1, p.getWarehouseDepot().getTotal());
+        c.emptyQueue();
+
+        WarehouseDepot Depot = new WarehouseDepot();
+        Depot.setConfig(p.getWarehouseDepot().getShelf1(), p.getWarehouseDepot().getShelf2(), p.getWarehouseDepot().getShelf3());
+
+        message = new MSG_ACTION_MARKET_CHOICE(6); // skip forward, should generate error
+
+        assertFalse(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+
+        assertEquals(Depot, p.getWarehouseDepot());
+        resources = g.getMarketHelper().getResources();
+        assertEquals(1, resources.stream().filter(x -> x == Resource.SERVANT).count());
+        assertEquals(1, resources.size());
+
+        assertEquals(0, ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).getNumber());
+        assertEquals(0, ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).getNumber());
+
+        g.getErrorObject().setEnabled(false);
+        c.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(7); // skip backwards, should generate error
+
+        assertFalse(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+
+        assertEquals(Depot, p.getWarehouseDepot());
+        resources = g.getMarketHelper().getResources();
+        assertEquals(1, resources.stream().filter(x -> x == Resource.SERVANT).count());
+        assertEquals(1, resources.size());
+
+        assertEquals(0, ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).getNumber());
+        assertEquals(0, ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).getNumber());
+
+        g.getErrorObject().setEnabled(false);
+        c.emptyQueue();
+    }
+
+
+//covers the 3 unswappable events (should be impossible to create a message, then)
+    @Test
+    public void chooseResource9()
+    {
+        MarketMarble[][] re = {{new PurpleMarble(), new WhiteMarble(), new WhiteMarble(), new PurpleMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
+
+
+        Market market = g.getMarket();
+        market.setGrid(re, new WhiteMarble());
+
+        p.getWarehouseDepot().setConfig(Resource.COIN,
+                new Resource[]{Resource.STONE, Resource.STONE},
+                new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.SERVANT});
+        WarehouseDepot Depot = new WarehouseDepot();
+        Depot.setConfig(Resource.COIN,
+                new Resource[]{Resource.STONE, Resource.STONE},
+                new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.SERVANT});
+        c.emptyQueue();
+
+
+        assertTrue(am.getMarketResources(p, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
+        assertTrue(g.getMarketHelper().isEnabled());
+        c.emptyQueue();
+
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(3); // swap rows 1,2, will generate error
+
+        assertFalse(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+
+        assertEquals(Depot, p.getWarehouseDepot());
+
+        g.getErrorObject().setEnabled(false);
+        c.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(4); // swap rows 1,3 , will generate error
+
+        assertFalse(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+
+        assertEquals(Depot, p.getWarehouseDepot());
+
+        g.getErrorObject().setEnabled(false);
+        c.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(5); // swap rows 1,4, will generate error
+
+        assertFalse(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+
+        assertEquals(Depot, p.getWarehouseDepot());
+
+        g.getErrorObject().setEnabled(false);
+        c.emptyQueue();
+    }
+
+
 }

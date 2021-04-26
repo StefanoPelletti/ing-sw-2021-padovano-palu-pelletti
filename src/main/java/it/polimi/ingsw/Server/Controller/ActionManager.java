@@ -278,8 +278,7 @@ public class ActionManager {
         return true;
     }
 
-
-     public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
+    public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
         Resource slot1 = message.getSlot1();
         Resource[] slot2 = message.getSlot2();
         Resource[] slot3 = message.getSlot3();
@@ -563,7 +562,7 @@ public class ActionManager {
                     System.out.println("Risorsa cambiata!");
                 }
                 else
-                    error=true;
+                    error=true; //impossible?
             }
             else if (choice==1) {
                 if(choices[1]) {
@@ -571,7 +570,7 @@ public class ActionManager {
                     System.out.println("Risorsa cambiata!");
                 }
                 else
-                    error=true;
+                    error=true; //impossible?
             }
 
         }
@@ -606,7 +605,7 @@ public class ActionManager {
                 faithTrackManager.advanceAllExcept(player);
                 System.out.println("\nRisorsa scartata! Non le volevi bene? Direi di no");
             }
-            else error=true;
+            else error=true; //impossible?
         }
 
         else if(choice==3){
@@ -663,7 +662,6 @@ public class ActionManager {
             return true;
         }
     }
-
 
     public boolean endTurn(Player player) {
         if(gameManager.getSolo())

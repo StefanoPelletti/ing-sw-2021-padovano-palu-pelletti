@@ -136,4 +136,10 @@ public class MarketTest {
             }
         }
     }
+
+    @Test
+    public void toStringFormat()
+    {
+        System.out.println(market);
+    }
 }
