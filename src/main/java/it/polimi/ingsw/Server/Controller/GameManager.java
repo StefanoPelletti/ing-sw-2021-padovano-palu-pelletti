@@ -9,7 +9,6 @@ import java.util.*;
 
 public class GameManager {
 
-    private List<Message> broadcastList;
     private Game game;
     private FaithTrackManager faithTrackManager;
     private ActionManager actionManager;
@@ -20,7 +19,6 @@ public class GameManager {
 
     public GameManager(int lobbyMaxPlayers)
     {
-        this.broadcastList = new LinkedList<>();
         this.game = new Game();
         this.faithTrackManager = new FaithTrackManager(this.game, this);
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
@@ -52,13 +50,6 @@ public class GameManager {
             endgame();
             return false;
         }
-        return true;
-    }
-
-    public boolean addBroadcastMessage(Message message)
-    {
-        if ( message == null ) return false;
-        broadcastList.add(message);
         return true;
     }
 

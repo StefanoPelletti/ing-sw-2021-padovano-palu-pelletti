@@ -48,15 +48,18 @@ public class Lobby {
         Collections.shuffle(playerNumbers);
         Game game = gameManager.getGame();
 
+        for(int i = 0; i<lobbyMaxPlayers; i++) {
+            game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
+        }
+
         for(ClientHandler clientHandler : threadsList){
             game.addAllObservers(clientHandler);
             gameManager.getFaithTrackManager().addObserver(clientHandler);
         }
 
-        gameManager.setStatus(Status.INIT);
-        for(int i = 0; i<lobbyMaxPlayers; i++) {
-            game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
-        }
+        if(lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
+        else gameManager.setStatus(Status.INIT);
+
 
         //
 

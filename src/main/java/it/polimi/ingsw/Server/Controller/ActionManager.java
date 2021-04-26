@@ -172,6 +172,30 @@ public class ActionManager {
         boolean[] leaderProduction = message.getLeaderProduction();
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
 
+        if(leaderProduction[0]){
+            LeaderCard l1 = player.getLeaderCards()[0];
+            if(l1 == null || !l1.getEnable() || !l1.getSpecialAbility().isProduction()){
+                gameManager.setErrorObject("Non puoi produrre con questa leader Card!");
+                return false;
+            }
+        }
+
+        if(leaderProduction[1]){
+            LeaderCard l2 = player.getLeaderCards()[0];
+            if(l2 == null || !l2.getEnable() || !l2.getSpecialAbility().isProduction()){
+                gameManager.setErrorObject("Non puoi produrre con questa leader Card!");
+                return false;
+            }
+        }
+
+        DevelopmentCard[] top = player.getDevelopmentSlot().getOnTop();
+        for(int i=0; i<3; i++){
+            if(top[i]==null && standardProduction[i]){
+                gameManager.setErrorObject("Non puoi produrre con tali scelte standard!");
+                return false;
+            }
+        }
+
         Map<Resource, Integer> requiredResources = new HashMap<>();
         Map<Resource, Integer> newResources = new HashMap<>();
 
@@ -179,19 +203,20 @@ public class ActionManager {
         //initializing requiredResources
         for(Resource r : possibleResources){
             requiredResources.put(r, 0);
+            newResources.put(r,0);
         }
 
         //getting costs for standard Productions
-        ArrayList<DevelopmentCard> topCards = player.getDevelopmentSlot().getTopCards();
+        DevelopmentCard[] topCards = player.getDevelopmentSlot().getOnTop();
         for(int i=0; i<3; i++){
             if(standardProduction[i]){
-                Map<Resource, Integer> input = topCards.get(i).getPowerInput();
+                Map<Resource, Integer> input = topCards[i].getPowerInput();
                 for(Resource r : input.keySet()){
-                    requiredResources.put(r, requiredResources.get(r)+input.get(r));
+                    requiredResources.merge(r, input.get(r), Integer::sum);
                 }
-                Map<Resource, Integer> output = topCards.get(i).getPowerOutput();
+                Map<Resource, Integer> output = topCards[i].getPowerOutput();
                 for(Resource r : output.keySet()){
-                    newResources.put(r, requiredResources.get(r)+output.get(r));
+                    newResources.merge(r, output.get(r), Integer::sum);
                 }
             }
         }
@@ -251,16 +276,25 @@ public class ActionManager {
         return gameManager.endTurn();
     }
 
-    // if player has two LeaderCards with ExtraDepot SpecialAbility and only one is activated, only firstExtraDepot is considered
-    // if player has two LeaderCards with ExtraDepot SpecialAbility and both are activated, firstExtraDepot is referred to leaderCard[0] and secondExtraDepot is referred to leaderCard[1]
-    public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
+
+     public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
         Resource slot1 = message.getSlot1();
         Resource[] slot2 = message.getSlot2();
         Resource[] slot3 = message.getSlot3();
         int firstExtraDepot = message.getFirstExtraDepot();
         int secondExtraDepot = message.getSecondExtraDepot();
         Map<Resource, Integer> initialResources = player.getDepotAndExtraDepotResources();
-        ArrayList<LeaderCard> playerLeaderCards = player.getCardsWithExtraDepotAbility();
+        LeaderCard[] playerLeaderCards = player.getLeaderCards();
+
+        if(firstExtraDepot>=0 && !playerLeaderCards[0].getSpecialAbility().isExtraDepot()){
+            gameManager.setErrorObject("Errore! La tua leader Card 1 non ha abilità speciale deposito!");
+            return false;
+        }
+
+        if(secondExtraDepot>=0 && !playerLeaderCards[1].getSpecialAbility().isExtraDepot()){
+            gameManager.setErrorObject("Errore! La tua leader Card 2 non ha abilità speciale deposito!");
+            return false;
+        }
 //VALIDATION
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
         Map<Resource, Integer> newResources;
@@ -282,35 +316,33 @@ public class ActionManager {
         //let's check if the new configuration has the same resources as the one before!
         newResources = demoDepot.getResources();
 
-        if(playerLeaderCards.size()>0 && firstExtraDepot>0){
-            ExtraDepot ability = (ExtraDepot) playerLeaderCards.get(0).getSpecialAbility();
+        if(firstExtraDepot>=0){
+            ExtraDepot ability = (ExtraDepot) playerLeaderCards[0].getSpecialAbility();
             Resource resource = ability.getResourceType();
-            newResources.put(resource, newResources.get(resource) + firstExtraDepot);
+            newResources.merge(resource, firstExtraDepot, Integer::sum);
         }
 
-        if(playerLeaderCards.size()==2 && secondExtraDepot>0){
-            ExtraDepot ability = (ExtraDepot) playerLeaderCards.get(1).getSpecialAbility();
+        if(secondExtraDepot>=0){
+            ExtraDepot ability = (ExtraDepot) playerLeaderCards[1].getSpecialAbility();
             Resource resource = ability.getResourceType();
-            newResources.put(resource, newResources.get(resource) + secondExtraDepot);
+            newResources.merge(resource, secondExtraDepot,Integer::sum);
         }
 
         for(Resource resToControl : possibleResources){
-            if(!initialResources.get(resToControl).equals(newResources.get(resToControl)))
-            {
+            if(!initialResources.get(resToControl).equals(newResources.get(resToControl))){
                 gameManager.setErrorObject("Errore! Il numero di risorse non combacia!");
                 return false;
             }
-
         }
 //MODEL UPDATE
         //after all those controls, player really deserves a new depot!
         player.getWarehouseDepot().setConfig(slot1, slot2, slot3);
-        if(playerLeaderCards.size()>0){
-            ExtraDepot ability1 = (ExtraDepot) playerLeaderCards.get(0).getSpecialAbility();
+        if(firstExtraDepot>=0){
+            ExtraDepot ability1 = (ExtraDepot) playerLeaderCards[0].getSpecialAbility();
             ability1.setResource(firstExtraDepot);
         }
-        if(playerLeaderCards.size()==2){
-            ExtraDepot ability2 = (ExtraDepot) playerLeaderCards.get(1).getSpecialAbility();
+        if(secondExtraDepot>=0){
+            ExtraDepot ability2 = (ExtraDepot) playerLeaderCards[1].getSpecialAbility();
             ability2.setResource(secondExtraDepot);
         }
         return true;

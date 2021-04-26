@@ -45,6 +45,7 @@ public class BuyDevelopmentCardTest {
         g.addPlayer("Quarto",4);
 
         p = g.getPlayer(1);
+        c.emptyQueue();
     }
 
     @Test

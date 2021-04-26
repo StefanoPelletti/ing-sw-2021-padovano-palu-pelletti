@@ -40,7 +40,7 @@ public class ActivateLeaderCardTest {
         g = gm.getGame();
 
         c = new Catcher();
-        g.addAllObservers(c);
+
 
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
@@ -54,6 +54,8 @@ public class ActivateLeaderCardTest {
         l2 = new LeaderCard(2,
                 new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {1,-1}); put(Color.GREEN, new Integer[] {1,-1}); }}),
                 new DiscountResource(Resource.SERVANT));
+
+        g.addAllObservers(c);
 
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(l1);

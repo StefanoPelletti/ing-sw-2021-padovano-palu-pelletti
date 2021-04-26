@@ -127,6 +127,10 @@ public class DevelopmentSlot extends ModelObservable {
         return List;
     }
 
+    public DevelopmentCard[] getOnTop(){
+        return onTop.clone();
+    }
+
     public int getNumOfCards() {
         return numOfCards;
     }

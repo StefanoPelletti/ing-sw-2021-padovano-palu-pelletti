@@ -93,7 +93,7 @@ public class Game extends ModelObservable{
     public void setTurn(int turn)
     {
         this.turn = turn;
-        //notify()
+        notifyObservers();
     }
     public void setBlackCrossPosition(int blackCrossPosition) {
         this.blackCrossPosition = blackCrossPosition;
@@ -101,11 +101,11 @@ public class Game extends ModelObservable{
     }
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
-        //notify()
+        notifyObservers();
     }
     public void changeStatus(Status status) {
         this.status = status;
-        //notify()
+        notifyObservers();
     }
 
 //METHODS
@@ -115,7 +115,7 @@ public class Game extends ModelObservable{
         if (playerNumber == 1)
             firstPlayer = player;
         playerList.add(player);
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -150,6 +150,6 @@ public class Game extends ModelObservable{
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_Game());
+        this.notifyObservers(new MSG_UPD_Game(this.turn, this.currentPlayer, this.blackCrossPosition));
     }
 }

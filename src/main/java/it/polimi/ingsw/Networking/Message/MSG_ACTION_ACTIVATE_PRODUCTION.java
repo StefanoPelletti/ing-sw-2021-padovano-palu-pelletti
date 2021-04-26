@@ -31,7 +31,7 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
         this.basicProduction = basicProduction;
         this.leaderProduction = leaderProduction.clone();
 
-        this.basicInput = new ArrayList<>(basicInput);
+        this.basicInput = basicInput!=null? new ArrayList<>(basicInput) : null;
         this.basicOutput = basicOutput;
         this.leaderOutput1 = leaderOutput1;
         this.leaderOutput2 = leaderOutput2;
