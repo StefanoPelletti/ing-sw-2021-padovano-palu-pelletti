@@ -126,10 +126,6 @@ public class Market extends ModelObservable {
         this.slideMarble = slideMarble;
     }
 
-    private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_Market(slideMarble, grid));
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("");
@@ -149,5 +145,16 @@ public class Market extends ModelObservable {
         result.append(" ] ").append("\n");;
 
         return result.toString();
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_Market generateMessage() {
+        return new MSG_UPD_Market(
+                slideMarble,
+                grid
+        );
     }
 }

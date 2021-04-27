@@ -198,6 +198,10 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_DevSlot(cards));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_DevSlot generateMessage() {
+        return new MSG_UPD_DevSlot(cards);
     }
 }

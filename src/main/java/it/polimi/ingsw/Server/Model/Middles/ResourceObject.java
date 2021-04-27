@@ -41,6 +41,14 @@ public class ResourceObject extends ModelObservable  {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_ResourceObject(this.enabled, this.numOfResources));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_ResourceObject generateMessage()
+    {
+        return new MSG_UPD_ResourceObject(
+                this.enabled,
+                this.numOfResources
+        );
     }
 }

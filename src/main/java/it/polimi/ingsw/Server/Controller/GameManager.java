@@ -1,9 +1,18 @@
 package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Networking.Message.Message;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_DevCardsVendor;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderCardsObject;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_MarketHelper;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_ResourceObject;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 
 import java.util.*;
 
@@ -150,5 +159,46 @@ public class GameManager {
 
         leaderBoard.setEnabled(true);
         return false;
+    }
+
+    public MSG_UPD_Full getFullModel()
+    {
+        MSG_UPD_Full result = new MSG_UPD_Full();
+
+        result.setDevCardsVendor( game.getDevelopmentCardsVendor().generateMessage() );
+
+        result.setLeaderCardsObject( game.getLeaderCardsObject().generateMessage() );
+
+        result.setMarketHelper( game.getMarketHelper().generateMessage() );
+
+        result.setResourceObject( game.getResourceObject().generateMessage() );
+
+        result.setGame( game.generateMessage());
+
+        result.setDevDeck( game.getDevelopmentCardsDeck().generateMessage() );
+
+        result.setFaithTrack( game.getFaithTrack().generateMessage() );
+
+        result.setMarket( game.getMarket().generateMessage() );
+
+        for ( Player p : game.getPlayerList() )
+        {
+            result.addPlayerUpdate(p.getPlayerNumber(), p.generateMessage());
+
+            result.addPlayerUpdate(p.getPlayerNumber(), p.getDevelopmentSlot().generateMessage() );
+
+            if(p.getCardsWithExtraDepotAbility().size()>0)
+            {
+                for(LeaderCard card : p.getCardsWithExtraDepotAbility())
+                {
+                    ExtraDepot depot = (ExtraDepot) card.getSpecialAbility();
+                    result.addPlayerUpdate(p.getPlayerNumber(), depot.generateMessage());
+                }
+            }
+
+            result.addPlayerUpdate(p.getPlayerNumber(), p.getStrongbox().generateMessage() );
+        }
+
+        return result;
     }
 }

@@ -375,10 +375,6 @@ public class WarehouseDepot extends ModelObservable {
         return true;
     }
 
-    private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_WarehouseDepot(this.shelf1, this.shelf2, this.shelf3));
-    }
-
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder("");
@@ -399,5 +395,16 @@ public class WarehouseDepot extends ModelObservable {
                 && Arrays.equals(this.shelf3, o.shelf3));
     }
 
+    private void notifyObservers(){
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_WarehouseDepot generateMessage() {
+        return new MSG_UPD_WarehouseDepot(
+                shelf1,
+                shelf2,
+                shelf3
+        );
+    }
 
 }

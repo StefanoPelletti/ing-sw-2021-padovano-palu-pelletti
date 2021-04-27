@@ -46,6 +46,9 @@ public class PlayerSimplified {
         this.leaderCards[1] = newLeaderCards[1];
     }
 
+    public void updateExtradepot(MSG_UPD_Extradepot message) {
+
+    }
     public void updateStrongbox(MSG_UPD_Strongbox message)
     {
         this.strongbox.update(message);

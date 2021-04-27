@@ -80,6 +80,11 @@ public class FaithTrack extends ModelObservable {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_FaithTrack(this.zones));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_FaithTrack generateMessage()
+    {
+        return new MSG_UPD_FaithTrack(zones);
     }
 }

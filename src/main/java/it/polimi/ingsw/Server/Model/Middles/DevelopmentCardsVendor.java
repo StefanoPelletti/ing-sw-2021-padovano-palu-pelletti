@@ -59,6 +59,13 @@ public class DevelopmentCardsVendor extends ModelObservable {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_DevCardsVendor(this.enabled, this.cards));
+        this.notifyObservers(generateMessage());
+    }
+    public MSG_UPD_DevCardsVendor generateMessage()
+    {
+        return new MSG_UPD_DevCardsVendor(
+                this.enabled,
+                this.cards
+        );
     }
 }

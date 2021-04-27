@@ -84,14 +84,25 @@ public class MarketHelper extends ModelObservable  {
         return resources.get(currentResource);
     }
 
+    public int getCurrentResourceInt() { return this.currentResource; }
+
     public boolean[] getChoices(){
         return this.choices;
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_MarketHelper(this.enabled, this.resources,
-                this.currentResource, this.choices,
-                this.extraResourceChoices));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_MarketHelper generateMessage()
+    {
+        return new MSG_UPD_MarketHelper(
+                this.enabled,
+                this.resources,
+                this.currentResource,
+                this.choices,
+                this.extraResourceChoices
+        );
     }
 
 }

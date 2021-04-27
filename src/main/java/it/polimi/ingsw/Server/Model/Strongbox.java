@@ -58,10 +58,6 @@ public class Strongbox extends ModelObservable {
         return resources.values().stream().reduce(0, Integer::sum);
     }
 
-    private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_Strongbox(resources));
-    }
-
     @Override
     public boolean equals( Object obj )
     {
@@ -81,5 +77,16 @@ public class Strongbox extends ModelObservable {
             result.append("\n");
         }
         return result.toString();
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_Strongbox generateMessage() {
+        return new MSG_UPD_Strongbox(
+                resources
+        );
+
     }
 }

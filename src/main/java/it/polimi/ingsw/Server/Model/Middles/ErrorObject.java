@@ -38,6 +38,11 @@ public class ErrorObject extends ModelObservable  {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_ERROR(this.errorMessage));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_ERROR generateMessage()
+    {
+        return new MSG_ERROR(this.errorMessage);
     }
 }

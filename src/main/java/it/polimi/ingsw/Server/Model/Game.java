@@ -147,6 +147,15 @@ public class Game extends ModelObservable {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_Game(this.turn, this.currentPlayer, this.blackCrossPosition));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_Game generateMessage()
+    {
+        return new MSG_UPD_Game(
+                this.turn,
+                this.currentPlayer,
+                this.blackCrossPosition
+        );
     }
 }

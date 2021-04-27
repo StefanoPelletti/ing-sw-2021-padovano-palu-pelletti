@@ -6,6 +6,7 @@ import it.polimi.ingsw.Networking.Message.MessageType;
 import java.io.Serializable;
 
 public class MSG_UPD_Game extends Message implements Serializable {
+
     private final int turn;
     private final int currentPlayer;
     private final int blackCrossPosition;
@@ -17,5 +18,16 @@ public class MSG_UPD_Game extends Message implements Serializable {
         this.blackCrossPosition = blackCrossPosition;
         this.currentPlayer = currentPlayer;
     }
+
+    public int getTurn() {
+        return turn;
+    }
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+    public int getBlackCrossPosition() {
+        return blackCrossPosition;
+    }
+
     public MessageType getMessageType() { return super.getMessageType();}
 }

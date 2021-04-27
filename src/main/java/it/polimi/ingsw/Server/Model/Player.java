@@ -162,10 +162,6 @@ public class Player extends ModelObservable {
         return result;
     }
 
-    private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_Player(this.VP, this.playerNumber, this.nickname, this.position, this.leaderCards));
-    }
-
     @Override
     public boolean equals( Object obj )
     {
@@ -189,5 +185,20 @@ public class Player extends ModelObservable {
                 this.strongbox.equals(o.strongbox) &&
                 this.warehouseDepot.equals(o.warehouseDepot) &&
                 this.developmentSlot.equals(o.developmentSlot));
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_Player generateMessage()
+    {
+        return new MSG_UPD_Player(
+                VP,
+                playerNumber,
+                nickname,
+                position,
+                leaderCards
+        );
     }
 }

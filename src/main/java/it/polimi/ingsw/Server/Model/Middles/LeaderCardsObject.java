@@ -34,6 +34,14 @@ public class LeaderCardsObject extends ModelObservable  {
     public ArrayList<LeaderCard> getCards() { return new ArrayList<LeaderCard>(this.cards); }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_LeaderCardsObject(this.enabled, this.cards));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_LeaderCardsObject generateMessage()
+    {
+        return new MSG_UPD_LeaderCardsObject(
+                this.enabled,
+                this.cards
+        );
     }
 }

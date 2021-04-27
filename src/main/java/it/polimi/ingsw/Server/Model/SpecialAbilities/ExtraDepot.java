@@ -63,10 +63,6 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         return false;
     }
 
-    private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_Extradepot(this.resource, this.number));
-    }
-
     @Override
     public boolean equals(Object obj)
     {
@@ -80,5 +76,17 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
     public String toString()
     {
         return "  SpecialAbility: \nI have "+getNumber()+" "+getResourceType()+ " in my belly! ";
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_Extradepot generateMessage()
+    {
+        return new MSG_UPD_Extradepot(
+                this.resource,
+                this.number
+        );
     }
 }

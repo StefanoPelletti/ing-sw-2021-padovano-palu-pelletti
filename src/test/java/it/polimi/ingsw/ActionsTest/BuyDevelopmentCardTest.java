@@ -89,7 +89,7 @@ public class BuyDevelopmentCardTest {
         p.getStrongbox().addResource(Resource.SHIELD, 20);
         p.getStrongbox().addResource(Resource.STONE, 20);
         p.getStrongbox().addResource(Resource.COIN, 20);
-        c.emptyQueue();
+
 
         for(int c = 0; c < 4; c++) {
             for (int p = 0; p < 4; p++) {
@@ -97,6 +97,7 @@ public class BuyDevelopmentCardTest {
             }
         }
 
+        c.emptyQueue();
         assertFalse(am.buyDevelopmentCard(p));
         assertEquals(1, c.messages.size());
         assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());

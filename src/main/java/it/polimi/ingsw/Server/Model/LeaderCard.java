@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_LeaderCards;
 import it.polimi.ingsw.Server.Model.Requirements.Requirement;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
-import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.io.Serializable;
 

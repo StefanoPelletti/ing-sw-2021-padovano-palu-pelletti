@@ -334,7 +334,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
                 break;
             }
         }
-        //notify();
+        notifyObservers();
         return card;
     }
 
@@ -352,7 +352,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
             }
             if(removed==2) break;
         }
-        //notify();
+        notifyObservers();
         return true;
     }
 
@@ -402,12 +402,19 @@ public class DevelopmentCardsDeck extends ModelObservable {
         return false;
     }
 
-    private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_DevDeck(this.getVisible()));
-    }
-
     public void setGrid(DevelopmentCard[][][] grid)
     {
         this.cards = grid;
+    }
+
+    private void notifyObservers(){
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_DevDeck generateMessage()
+    {
+        return new MSG_UPD_DevDeck(
+                this.getVisible()
+        );
     }
 }

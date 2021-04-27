@@ -72,6 +72,14 @@ public class LeaderBoard extends ModelObservable  {
     }
 
     private void notifyObservers(){
-        this.notifyObservers(new MSG_UPD_LeaderBoard(this.enabled, this.leaderboard));
+        this.notifyObservers(generateMessage());
+    }
+
+    public MSG_UPD_LeaderBoard generateMessage()
+    {
+        return new MSG_UPD_LeaderBoard(
+                this.enabled,
+                this.leaderboard
+        );
     }
 }
