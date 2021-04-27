@@ -4,21 +4,22 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Power implements Serializable {
-    private final HashMap<Resource, Integer> input;
-    private final HashMap<Resource, Integer> output;
+    private final Map<Resource, Integer> input;
+    private final Map<Resource, Integer> output;
 
-    public Power(HashMap<Resource, Integer> input, HashMap<Resource, Integer> output) {
+    public Power(Map<Resource, Integer> input, Map<Resource, Integer> output) {
         this.input = input;
         this.output = output;
     }
 
-    public HashMap<Resource, Integer> getInput() {
+    public Map<Resource, Integer> getInput() {
         return input;
     }
 
-    public HashMap<Resource, Integer> getOutput() {
+    public Map<Resource, Integer> getOutput() {
         return output;
     }
 

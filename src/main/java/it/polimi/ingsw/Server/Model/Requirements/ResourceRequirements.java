@@ -5,15 +5,16 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ResourceRequirements implements Requirement, Serializable {
-    private HashMap<Resource, Integer> requirements;
+    private Map<Resource, Integer> requirements;
 
-    public ResourceRequirements(HashMap<Resource, Integer> requirements) {
+    public ResourceRequirements(Map<Resource, Integer> requirements) {
         this.requirements = requirements;
     }
 
-    public HashMap<Resource, Integer> getRequirements() {
+    public Map<Resource, Integer> getRequirements() {
         return requirements;
     }
 

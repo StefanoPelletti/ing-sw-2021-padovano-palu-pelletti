@@ -5,15 +5,17 @@ import it.polimi.ingsw.Server.Model.Enumerators.Color;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CardRequirements implements Requirement, Serializable {
-    private HashMap<Color, Integer[]> requirements;
+    private Map<Color, Integer[]> requirements;
 
-    public CardRequirements(HashMap<Color, Integer[]> requirements) {
+    public CardRequirements(Map<Color, Integer[]> requirements) {
         this.requirements = requirements;
     }
 
-    public HashMap<Color, Integer[]> getRequirements() {
+    public Map<Color, Integer[]> getRequirements() {
         return requirements;
     }
 
@@ -21,6 +23,10 @@ public class CardRequirements implements Requirement, Serializable {
 
     public boolean isCardRequirement() { return true; }
     public boolean isResourceRequirement() { return false; }
+
+    public Set<Color> getColor(){
+        return requirements.keySet();
+    }
 
     @Override
     public String toString()

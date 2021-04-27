@@ -113,11 +113,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                    new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                    new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
                     new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(3,
-                    new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.STONE, 5); }}),
+                    new ResourceRequirements(Map.of(Resource.STONE, 5)),
                     new ExtraDepot(Resource.SERVANT)));
 
         p.associateLeaderCards(lc);
@@ -135,9 +135,9 @@ public class BuyDevelopmentCardTest {
         }
 
         grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
-                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
-                new Power(new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
-                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }}));
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
 
 
         g.getDevelopmentCardsDeck().setGrid(grid);
@@ -158,11 +158,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {1,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -181,9 +181,9 @@ public class BuyDevelopmentCardTest {
         }
 
         grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
-                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
-                new Power(new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
-                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }}));
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
 
 
         g.getDevelopmentCardsDeck().setGrid(grid);
@@ -203,11 +203,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {1,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -226,9 +226,9 @@ public class BuyDevelopmentCardTest {
         }
 
         grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
-                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 2); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
-                new Power(new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
-                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }}));
+                Map.of(Resource.SHIELD, 2 ,Resource.SERVANT, 1, Resource.STONE, 1) ,
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
 
 
         g.getDevelopmentCardsDeck().setGrid(grid);
@@ -282,11 +282,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {1,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -305,9 +305,9 @@ public class BuyDevelopmentCardTest {
         }
 
         grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
-                new HashMap<Resource,Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); put(Resource.STONE, 1);}} ,
-                new Power(new HashMap<Resource, Integer>() {{ put(Resource.STONE, 1); }},
-                        new HashMap<Resource, Integer>() {{ put(Resource.SERVANT, 1); }}));
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                       Map.of(Resource.SERVANT, 1)));
 
         g.getDevelopmentCardsDeck().setGrid(grid);
         p.getStrongbox().addResource(Resource.SERVANT, 1);

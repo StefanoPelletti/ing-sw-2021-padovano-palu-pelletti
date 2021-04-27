@@ -217,11 +217,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {2,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -262,11 +262,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {2,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -307,11 +307,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {2,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -388,11 +388,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {2,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -463,11 +463,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SERVANT, 5); }}),
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.COIN, 5); }}),
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
@@ -558,11 +558,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SERVANT, 5); }}),
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.COIN, 5); }}),
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
@@ -640,15 +640,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource, Integer>() {{
-                    put(Resource.SERVANT, 5);
-                }}),
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource, Integer>() {{
-                    put(Resource.COIN, 5);
-                }}),
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
@@ -737,11 +733,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {2,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -840,17 +836,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{
-                    put(Color.YELLOW, new Integer[]{2, -1});
-                    put(Color.BLUE, new Integer[]{1, -1});
-                }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{
-                    put(Color.GREEN, new Integer[]{2, -1});
-                    put(Color.PURPLE, new Integer[]{1, -1});
-                }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -1072,15 +1062,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource, Integer>() {{
-                    put(Resource.SERVANT, 5);
-                }}),
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
 
         lc.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource, Integer>() {{
-                    put(Resource.COIN, 5);
-                }}),
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);

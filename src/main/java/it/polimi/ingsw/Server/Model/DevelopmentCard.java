@@ -6,16 +6,17 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SplittableRandom;
 
 public class DevelopmentCard implements Serializable {
     private final int level;
     private final Color color;
-    private final HashMap<Resource, Integer> cost;
+    private final Map<Resource, Integer> cost;
     private final int VP;
     private final Power power;
 
-    public DevelopmentCard(int level, Color color, int VP, HashMap<Resource, Integer> cost, Power power) {
+    public DevelopmentCard(int level, Color color, int VP, Map<Resource, Integer> cost, Power power) {
         this.level = level;
         this.color = color;
         this.cost = cost;
@@ -23,7 +24,7 @@ public class DevelopmentCard implements Serializable {
         this.power = power;
     }
 
-    public HashMap<Resource, Integer> getCost() {
+    public Map<Resource, Integer> getCost() {
         return cost;
     }
 
@@ -39,11 +40,11 @@ public class DevelopmentCard implements Serializable {
         return VP;
     }
 
-    public HashMap<Resource, Integer> getPowerInput() {
+    public Map<Resource, Integer> getPowerInput() {
         return power.getInput();
     }
 
-    public HashMap<Resource, Integer> getPowerOutput() {
+    public Map<Resource, Integer> getPowerOutput() {
         return power.getOutput();
     }
 

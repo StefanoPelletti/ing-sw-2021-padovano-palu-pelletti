@@ -40,9 +40,6 @@ public class ActivateProductionTest {
         p = g.getPlayer(1);
         c.emptyQueue();
 
-
-
-
     }
 
     //verifies that a Standard Production is refused if the player has not a card in the given devSlot
@@ -112,10 +109,11 @@ public class ActivateProductionTest {
                 null,
                 null);
 
-        DevelopmentCard card1 = new DevelopmentCard(1, Color.GREEN, 6,
-                null,
-                new Power(new HashMap<Resource, Integer>() {{ put(Resource.SHIELD, 1); put(Resource.SERVANT, 1); }},
-                        new HashMap<Resource, Integer>() {{ put(Resource.STONE, 3); }}));
+        DevelopmentCard card1 = new DevelopmentCard(1, Color.PURPLE, 9,
+                Map.of(Resource.SERVANT, 6),
+                new Power( Map.of(Resource.STONE, 2),
+                        Map.of(Resource.COIN, 3, Resource.FAITH, 2))
+        );
         assertTrue(p.getDevelopmentSlot().addCard(card1, 1));
         c.emptyQueue();
 

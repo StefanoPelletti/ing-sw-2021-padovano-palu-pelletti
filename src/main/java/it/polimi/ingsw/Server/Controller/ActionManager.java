@@ -375,7 +375,7 @@ public class ActionManager {
         ArrayList<DevelopmentCard> tmp = new ArrayList<>(cards);
         //first check: all the cards that the player can't buy are removed from the ones that are on top.
         for(int i = 0; i < tmp.size(); i++) {
-            HashMap<Resource, Integer> cost = tmp.get(i).getCost();
+            Map<Resource, Integer> cost = tmp.get(i).getCost();
             for(Resource rs : discountedResources) {
                 if(cost.get(rs) != null) {
                     cost.replace(rs, cost.get(rs)-1);
@@ -453,7 +453,7 @@ public class ActionManager {
 
 
         ArrayList<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
-        HashMap<Resource, Integer> cost = dc.getCost();
+        Map<Resource, Integer> cost = dc.getCost();
 
         for(LeaderCard l: specialAb) {
             DiscountResource d = (DiscountResource) l.getSpecialAbility();

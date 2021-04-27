@@ -48,11 +48,11 @@ public class ActivateLeaderCardTest {
 
 
         l1 = new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SHIELD, 5); }}),
+                new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN));
 
         l2 = new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {1,-1}); put(Color.GREEN, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,-1}, Color.GREEN, new Integer[] {1,-1})),
                 new DiscountResource(Resource.SERVANT));
 
         g.addAllObservers(c);
@@ -139,7 +139,7 @@ public class ActivateLeaderCardTest {
         MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(1);
 
         LeaderCard l3 = new LeaderCard(4,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {1,2}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,2})),
                 new Production(Resource.SHIELD));
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(l1);

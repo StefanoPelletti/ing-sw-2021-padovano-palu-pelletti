@@ -13,6 +13,7 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LeaderCardsDeck {
     private ArrayList<LeaderCard> deck;
@@ -23,79 +24,79 @@ public class LeaderCardsDeck {
         deck = new ArrayList<LeaderCard>();
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {1,-1}); put(Color.GREEN, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN,  new Integer[] {1,-1})),
                 new DiscountResource(Resource.SERVANT)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {1,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.SHIELD)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.STONE)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {1,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new DiscountResource(Resource.COIN))
         );
 
         deck.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.COIN, 5); }}),
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
                 new ExtraDepot(Resource.STONE))
         );
 
         deck.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SERVANT, 5); }}),
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.STONE, 5); }}),
+                new ResourceRequirements(Map.of(Resource.STONE, 5)),
                 new ExtraDepot(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(3,
-                new ResourceRequirements(new HashMap<Resource,Integer>() {{put(Resource.SHIELD, 5); }}),
+                new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {2,-1}); put(Color.BLUE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {2,-1}); put(Color.PURPLE, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
                 new MarketResources(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {2,-1}); put(Color.YELLOW, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[] {2,-1}, Color.YELLOW, new Integer[] {1,-1})),
                 new MarketResources(Resource.STONE))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.PURPLE, new Integer[] {2,-1}); put(Color.GREEN, new Integer[] {1,-1}); }}),
+                new CardRequirements(Map.of(Color.PURPLE, new Integer[] {2,-1}, Color.GREEN, new Integer[] {1,-1})),
                 new MarketResources(Resource.COIN))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.YELLOW, new Integer[] {1,2}); }}),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,2})),
                 new Production(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.BLUE, new Integer[] {1,2}); }}),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,2})),
                 new Production(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.PURPLE, new Integer[] {1,2}); }}),
+                new CardRequirements(Map.of(Color.PURPLE, new Integer[] {1,2})),
                 new Production(Resource.STONE))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(new HashMap<Color, Integer[]>() {{put(Color.GREEN, new Integer[] {1,2}); }}),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,2})),
                 new Production(Resource.COIN))
         );
 
