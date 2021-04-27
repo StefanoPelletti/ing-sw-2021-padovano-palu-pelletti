@@ -137,10 +137,10 @@ public class LorenzoMoveTest {
         assertEquals(24, g.getBlackCrossPosition());
         //one from the BlackCross, one notification, one faithtrack, and the leaderboard
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(5, c.messages.size());
     }
     @Test
     public void LorenzoEndsTheGameByRemovingCards()

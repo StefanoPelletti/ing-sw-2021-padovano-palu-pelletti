@@ -666,11 +666,11 @@ public class ActionManager {
     public boolean endTurn(Player player) {
         if(gameManager.getSolo())
         {
-            if( game.getStatus()==Status.GAME_OVER && gameManager.getSoloWinner())
+            if(game.getStatus()==Status.GAME_OVER)
             {
                 return gameManager.endgame();
             }
-            else //status NOT gameover, Lorenzo has to Play
+            else  //status NOT gameover, Lorenzo has to Play
             {
                 lorenzoMove();
                 //after his play, check if the game is over

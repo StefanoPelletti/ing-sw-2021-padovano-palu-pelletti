@@ -16,14 +16,13 @@ public class FaithTrackManager extends ModelObservable {
     private final FaithTrack faithTrack;
     private final Game game;
     private final GameManager gameManager;
-    private final boolean solo;
 
     public FaithTrackManager(Game game, GameManager gameManager)
     {
         this.faithTrack=game.getFaithTrack();
         this.gameManager = gameManager;
         this.game = game;
-        this.solo= (gameManager.getLobbyMaxPlayers() == 1);
+
     }
 
 
@@ -71,8 +70,12 @@ public class FaithTrackManager extends ModelObservable {
                 break;
             case 3:
                 message = new StringBuilder();
+
                 message.append( player.getNickname()).append(" has activated the third zone! ");
-                message.append("\n Last turn begins!").append("\n Points have been awarded: ");
+                if(!gameManager.getSolo())
+                    message.append("\n Last turn begins!").append("\n Points have been awarded: ");
+                else
+                    message.append("\n It's Game Over. end the turn to finish him!").append("\n Points have been awarded: ");
                 faithTrack.advance(player);
 
                 for ( Player p : players )
@@ -85,7 +88,7 @@ public class FaithTrackManager extends ModelObservable {
                     }
                 }
                 faithTrack.setZones(2, true);
-                if(solo) {
+                if(gameManager.getSolo()) {
                     gameManager.setStatus(Status.GAME_OVER);
                     if(gameManager.getSoloWinner()==null)
                         gameManager.setSoloWinner(true);
@@ -110,7 +113,7 @@ public class FaithTrackManager extends ModelObservable {
         ArrayList<Player> players = game.getPlayerList();
         if ( players.stream().noneMatch( x -> x.getNickname().equals(player.getNickname()))) return false;
 
-        if(!solo) {
+        if(!gameManager.getSolo()) {
             for (Player p : players) {
                 if (!p.equals(player)) {
                     advance(p);
@@ -159,6 +162,8 @@ public class FaithTrackManager extends ModelObservable {
                 faithTrack.setZones(1, true);
                 break;
             case 3:
+                message = new StringBuilder("Lorenzo has activated the last zone! ");
+                message.append("\n Points have been awarded, but Gameover!: ");
                 faithTrack.advanceLorenzo();
 
                     if ( faithTrack.calculateVP(p) > 0 )
@@ -173,14 +178,14 @@ public class FaithTrackManager extends ModelObservable {
                 if(gameManager.getSoloWinner()==null)
                     gameManager.setSoloWinner(false);
 
-                return true;
+                break;
             case 0:
                 faithTrack.advanceLorenzo();
                 return true;
         }
 
-        if(gameManager.getStatus() != Status.GAME_OVER)
-            notifyObservers(new MSG_NOTIFICATION(message.toString()));
+
+        notifyObservers(new MSG_NOTIFICATION(message.toString()));
         return true;
     }
 }

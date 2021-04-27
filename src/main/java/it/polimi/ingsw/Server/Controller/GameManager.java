@@ -34,7 +34,7 @@ public class GameManager {
         this.faithTrackManager = new FaithTrackManager(this.game, this);
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
         this.lobbyMaxPlayers = lobbyMaxPlayers;
-        this.solo = lobbyMaxPlayers == 1;
+        this.solo = (lobbyMaxPlayers == 1);
         this.soloWinner = null;
     }
 

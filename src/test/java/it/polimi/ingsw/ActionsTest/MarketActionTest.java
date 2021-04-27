@@ -7,6 +7,7 @@ import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Marbles.*;
 import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
 import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
@@ -1239,5 +1240,176 @@ public class MarketActionTest {
         c.emptyQueue();
     }
 
+    @Test
+    public void soloTest()
+    {
+        GameManager gameManager =  new GameManager(1);
+        Game game = gameManager.getGame();
+        ActionManager actionManager = gameManager.getActionManager();
+        Catcher a = new Catcher();
+        game.addPlayer("Giacomo Poretto", 1);
+        game.addAllObservers(a);
+        gameManager.getFaithTrackManager().addObserver(a);
+
+        Player player = game.getPlayer(1);
+        player.setPosition(23);
+        game.setBlackCrossPosition(22);
+
+        //Resources from the market: FAITH STONE STONE
+        // the player should be winning by the faith point. After 2 discard, Lorenzo gets to latest position, but cannot win.
+//                                 2 : discard
+//                                 2 : discard (lorenzo gets to latest position)
+//                                  checks if endTurn has been set correctly by the market action.
+//
+
+        MarketMarble[][] re = {{new RedMarble(), new GreyMarble(), new GreyMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
+
+        Market market = game.getMarket();
+        market.setGrid(re, new WhiteMarble());
+
+        a.emptyQueue();
+
+        assertTrue(actionManager.getMarketResources(player, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
+        assertTrue(game.getMarketHelper().isEnabled());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //advances, gets Points
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count()); //market updates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count()); //third zones activates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper activates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
+        assertEquals(6, a.messages.size());
+        assertTrue(gameManager.getSoloWinner());
+        assertEquals(24, player.getPosition());
+        assertSame(game.getStatus(), Status.GAME_OVER);
+        a.emptyQueue();
+
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
+        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
+        assertEquals(2, a.messages.size());
+        assertEquals(23, game.getBlackCrossPosition());
+        assertTrue(gameManager.getSoloWinner());
+        a.emptyQueue();
+
+        message = new MSG_ACTION_MARKET_CHOICE(2); //discards
+        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
+        assertEquals(2, a.messages.size());
+        assertEquals(24, game.getBlackCrossPosition());
+        assertTrue(gameManager.getSoloWinner());
+        a.emptyQueue();
+
+        //which is basically endTurnGameOverPlayerWins test in endTurnTest.
+        assertFalse(actionManager.endTurn(player));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
+        assertEquals(1, a.messages.size());
+    }
+
+    @Test
+    public void soloTest2()
+    {
+        GameManager gameManager =  new GameManager(1);
+        Game game = gameManager.getGame();
+        ActionManager actionManager = gameManager.getActionManager();
+        Catcher a = new Catcher();
+        game.addPlayer("Giacomo Poretto", 1);
+        game.addAllObservers(a);
+        gameManager.getFaithTrackManager().addObserver(a);
+
+        Player player = game.getPlayer(1);
+        player.setPosition(22);
+        game.setBlackCrossPosition(23);
+
+        //Resources from the market: FAITH STONE
+        // the player should be at position 23. Lorenzo wins because the player discards the resource.
+//                                 2 : discard
+//                                  checks if endTurn has been set correctly by the market action.
+//
+
+        MarketMarble[][] re = {{new RedMarble(), new GreyMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
+
+        Market market = game.getMarket();
+        market.setGrid(re, new WhiteMarble());
+
+        a.emptyQueue();
+
+        assertTrue(actionManager.getMarketResources(player, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
+        assertTrue(game.getMarketHelper().isEnabled());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //advances
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count()); //market updates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper activates
+        assertEquals(3, a.messages.size());
+        assertEquals(23, player.getPosition());
+        a.emptyQueue();
+
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
+        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //gets points
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count()); //third zones activates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
+        assertEquals(5, a.messages.size());
+        assertEquals(24, game.getBlackCrossPosition());
+        assertFalse(gameManager.getSoloWinner());
+        a.emptyQueue();
+
+
+        //which is basically endTurnGameOverPlayerWins test in endTurnTest.
+        assertFalse(actionManager.endTurn(player));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
+        assertEquals(1, a.messages.size());
+    }
+
+    //checks if Lorenzo advances normally
+    @Test
+    public void soloTest3()
+    {
+        GameManager gameManager =  new GameManager(1);
+        Game game = gameManager.getGame();
+        ActionManager actionManager = gameManager.getActionManager();
+        Catcher a = new Catcher();
+        game.addPlayer("Giacomo Poretto", 1);
+        game.addAllObservers(a);
+        gameManager.getFaithTrackManager().addObserver(a);
+
+        Player player = game.getPlayer(1);
+        player.setPosition(2);
+        game.setBlackCrossPosition(2);
+
+        //Resources from the market: FAITH STONE STONE
+//                                 2 : discard
+
+        MarketMarble[][] re = {{new RedMarble(), new GreyMarble(), new GreyMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
+
+        Market market = game.getMarket();
+        market.setGrid(re, new WhiteMarble());
+
+        a.emptyQueue();
+
+        assertTrue(actionManager.getMarketResources(player, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
+        assertTrue(game.getMarketHelper().isEnabled());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //advances
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count()); //market updates
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper activates
+        assertEquals(3, a.messages.size());
+        a.emptyQueue();
+
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
+        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
+        assertEquals(2, a.messages.size());
+        assertEquals(3, game.getBlackCrossPosition());
+        assertNull(gameManager.getSoloWinner());
+        a.emptyQueue();
+    }
 
 }
