@@ -390,11 +390,14 @@ public class DevelopmentCardsDeck extends ModelObservable {
     public boolean isOneColumnDestroyed()
     {
         boolean result = true;
-        for (int c=0; c<3; c++){
+        for (int c=0; c<4; c++){
             result = true;
-            for (int r = 0; r < 3; r++) {
+            loop: for (int r = 0; r < 3; r++) {
                 for (int h = 0; h < 4; h++) {
-                    if (cards[r][c][h] != null) result = false;
+                    if (cards[r][c][h] != null) {
+                        result = false;
+                        break loop;
+                    }
                 }
             }
             if (result) return true;

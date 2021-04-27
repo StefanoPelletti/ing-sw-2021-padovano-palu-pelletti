@@ -7,7 +7,7 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 import java.util.*;
 
 
-public class MarketHelper extends ModelObservable  {
+public class MarketHelper extends ModelObservable {
     private boolean enabled;
     private ArrayList<Resource> resources;
     private int currentResource;
@@ -15,13 +15,13 @@ public class MarketHelper extends ModelObservable  {
     private Resource[] extraResourceChoices; //used only when the player has two leaderCards with MarketMarble ability
     private boolean isNormalChoice; //false if the player has two leaderCards with MarketMarble ability (must decide what he wants to do with the WhiteMarble)
 
-    public MarketHelper(){
+    public MarketHelper() {
         resources = new ArrayList<>();
-        enabled=false;
+        enabled = false;
     }
 
     //called at the beginning of a Market Action
-    public void setResources(ArrayList<Resource> newResources){
+    public void setResources(ArrayList<Resource> newResources) {
         this.resources = newResources;
         this.currentResource = 0;
         this.choices = new boolean[8];
@@ -29,73 +29,76 @@ public class MarketHelper extends ModelObservable  {
     }
 
     public void setEnabled(boolean enabled) {
-        this.enabled=enabled;
+        this.enabled = enabled;
         notifyObservers();
     }
 
-    public void setNormalChoice(boolean value){
-        isNormalChoice=value;
+    public void setNormalChoice(boolean value) {
+        isNormalChoice = value;
     }
 
-    public void setExtraResourceChoices(Resource[] extraChoices){
+    public void setExtraResourceChoices(Resource[] extraChoices) {
         this.extraResourceChoices = extraChoices;
     }
 
-    public void setResource(Resource resource){ //only used when player has two leaderCards with MarketMarble ability
+    public void setResource(Resource resource) { //only used when player has two leaderCards with MarketMarble ability
         this.resources.set(currentResource, resource);
     }
 
-    public void skipForward(){
+    public void skipForward() {
         this.currentResource++;
-        if(currentResource == resources.size()) currentResource=0;
+        if (currentResource == resources.size()) currentResource = 0;
     }
 
-    public void skipBackward(){
+    public void skipBackward() {
         this.currentResource--;
-        if(currentResource == -1) currentResource=resources.size()-1;
+        if (currentResource == -1) currentResource = resources.size() - 1;
     }
 
-    public void removeResource(){
+    public void removeResource() {
         resources.remove(currentResource);
-        if(currentResource == resources.size()) currentResource=0;
+        if (currentResource == resources.size()) currentResource = 0;
     }
 
-    public void setChoices(boolean[] choices){
+    public void setChoices(boolean[] choices) {
         this.choices = choices;
-        if(enabled)
+        if (enabled)
             notifyObservers();
     }
 
-    public boolean isEnabled() { return enabled;}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-    public ArrayList<Resource> getResources(){
+    public ArrayList<Resource> getResources() {
         return resources;
     }
 
-    public boolean isNormalChoice(){
+    public boolean isNormalChoice() {
         return isNormalChoice;
     }
 
-    public Resource[] getExtraResources(){
+    public Resource[] getExtraResources() {
         return extraResourceChoices;
     }
 
-    public Resource getCurrentResource(){
+    public Resource getCurrentResource() {
         return resources.get(currentResource);
     }
 
-    public int getCurrentResourceInt() { return this.currentResource; }
+    public int getCurrentResourceInt() {
+        return this.currentResource;
+    }
 
-    public boolean[] getChoices(){
+    public boolean[] getChoices() {
         return this.choices;
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_MarketHelper generateMessage()
-    {
+    public MSG_UPD_MarketHelper generateMessage() {
         return new MSG_UPD_MarketHelper(
                 this.enabled,
                 this.resources,
@@ -104,5 +107,4 @@ public class MarketHelper extends ModelObservable  {
                 this.extraResourceChoices
         );
     }
-
 }

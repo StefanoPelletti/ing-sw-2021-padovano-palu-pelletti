@@ -1,4 +1,5 @@
 package it.polimi.ingsw.ActionsTest;
+import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
@@ -28,6 +29,7 @@ public class EndTurnActionTest {
 //     IF NOT LAST PLAYER => the currentPlayer advance, the call returns TRUE (1 MSG_UPD_Game)
 //     IF LAST PLAYER => the currentPlayer advances, the turn advances (2 MSG_UPD_Game)
 //          IF (gameOver condition, essentially) changes the status in GameOver and the method returns FALSE (1 MSG_UPD_LeaderBoard)
+//          IF NOT : well. It doesn't go in endgame().
 // SOLO mode:
 //     IF status is GAMEOVER (silently modified by the actionmanager) => notify leaderBoard (1 MSG_UPD_Leaderboard)
 //     OTHERWISE Lorenzo must play. He can modify the DevDeck, its position in Game, (#? Messages) and surely the ActionTokenStack (which does not generate any message)
@@ -52,7 +54,7 @@ public class EndTurnActionTest {
 
         c2 = new Catcher();
         g2.addAllObservers(c2);
-        g.addPlayer("Unico", 1);
+        g2.addPlayer("Unico", 1);
 
         p2 = g2.getPlayer(1);
 
@@ -65,6 +67,9 @@ public class EndTurnActionTest {
         g.changeStatus(Status.STANDARD_TURN);
         assertTrue(am.endTurn(p));
         assertEquals(g.getCurrentPlayerInt(), 2);
+        //just the currentPlayer should change
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
+        assertEquals(1, c.messages.size());
     }
 
     @Test
@@ -72,22 +77,59 @@ public class EndTurnActionTest {
     public void endTurnTest1() {
         g.changeStatus(Status.STANDARD_TURN);
         g.setCurrentPlayer(g.getCurrentPlayerInt() + 3);
+        c.emptyQueue();
         assertTrue(am.endTurn(p));
         assertEquals(g.getCurrentPlayerInt(), 1);
+        //both the turn AND the currentPlayer should change
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
+        assertEquals(2, c.messages.size());
     }
 
     @Test
     public void endTurnTest2() {
         g.changeStatus(Status.LAST_TURN);
         g.setCurrentPlayer(g.getCurrentPlayerInt() + 3);
+        c.emptyQueue();
+
         assertEquals(g.getCurrentPlayerInt(), 4);
-        assertFalse(am.endTurn(p));
+        assertFalse(am.endTurn(p)); //returns false because the LeaderBoard message is the last one.
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
+        assertEquals(3, c.messages.size());
+    }
+
+    // in the SOLO mode, there is no LAST TURN.
+    // when
+    // when GAME OVER is set, the leaderboard will be sent, and the thread will terminate.
+    @Test
+    public void endTurnGameOverPlayerWins() {
+        g2.changeStatus(Status.GAME_OVER);
+        gm2.setSoloWinner(true); // <- if this is set to true, the game will end
+        assertFalse(am2.endTurn(p2));
+        assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
+        assertEquals(1, c2.messages.size());
+    }
+
+    // this test should basically not exist.
+    // when endTurn() is invoked and Lorenzo triggers his winning condition,
+    // GAMEOVER status is set and SoloWinner is set to false, thus leading to the endgame().
+    // setting GAMEOVER status and SoloWinner should be tested as LorenzoMove() testing.
+    @Deprecated
+    public void endTurnGameOverLorenzoWins() {
+        g2.changeStatus(Status.GAME_OVER);
+        gm2.setSoloWinner(false);
+        assertFalse(am2.endTurn(p2));
+        assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
+        assertSame(c2.messages.get(c2.messages.size()-1).getMessageType(),MessageType.MSG_UPD_LeaderBoard); //<- the LAST message must be MSG_UPD_LeaderBoard
+        //assertEquals(1, c2.messages.size()); <- this may change: LorenzoMove() modifies the model.
     }
 
     @Test
-    public void endTurnTest3() {
-        g2.changeStatus(Status.GAME_OVER);
-        assertFalse(am2.endTurn(p2));
+    public void endTurnSoloGameStandard() {
+        g2.changeStatus(Status.STANDARD_TURN);
+        int turn = g2.getTurn();
+        assertTrue(am2.endTurn(p2));
+        assertEquals(g2.getTurn(), turn + 1);
     }
 
 }

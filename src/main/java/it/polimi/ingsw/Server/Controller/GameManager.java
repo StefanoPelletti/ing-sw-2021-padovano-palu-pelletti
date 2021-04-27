@@ -50,17 +50,23 @@ public class GameManager {
             setStatus(Status.GAME_OVER);
             return endgame(); //which is return FALSE
         }
+
         return true;
     }
 
     public void setNextPlayer() {
         if (!solo) {
-            game.setCurrentPlayer(game.getCurrentPlayerInt() + 1);
-            if (game.getCurrentPlayerInt() > lobbyMaxPlayers) {
+            if(game.getCurrentPlayerInt()+1 > lobbyMaxPlayers) {
                 game.setCurrentPlayer(1);
+                game.setTurn(game.getTurn()+1);
             }
+            else
+                game.setCurrentPlayer(game.getCurrentPlayerInt() + 1);
         }
+        else
+            game.setTurn(game.getTurn()+1);
     }
+
 
 
 

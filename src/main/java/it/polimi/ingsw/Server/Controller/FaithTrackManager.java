@@ -87,7 +87,7 @@ public class FaithTrackManager extends ModelObservable {
                 faithTrack.setZones(2, true);
                 if(solo) {
                     gameManager.setStatus(Status.GAME_OVER);
-                    if(gameManager.getSoloWinner()!=null)
+                    if(gameManager.getSoloWinner()==null)
                         gameManager.setSoloWinner(true);
                 }
                 else {
@@ -130,7 +130,7 @@ public class FaithTrackManager extends ModelObservable {
         Player p = game.getFirstPlayer();
         StringBuilder message = new StringBuilder();
 
-        switch( faithTrack.doesActivateZone(game.getBlackCrossPosition()) )
+        switch( faithTrack.doesActivateZone(game.getBlackCrossPosition()+1) )
         {
             case -1: return false;
             case 1:
@@ -170,13 +170,13 @@ public class FaithTrackManager extends ModelObservable {
                 faithTrack.setZones(2, true);
 
                 gameManager.setStatus(Status.GAME_OVER);
-                if(gameManager.getSoloWinner()!=null)
+                if(gameManager.getSoloWinner()==null)
                     gameManager.setSoloWinner(false);
 
                 return true;
             case 0:
                 faithTrack.advanceLorenzo();
-                break;
+                return true;
         }
 
         if(gameManager.getStatus() != Status.GAME_OVER)
