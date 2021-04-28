@@ -331,13 +331,13 @@ public class ActionManager {
             gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel deposito!");
             return false;
         }
-        if(!demoExtraDepot.setResource(firstExtraDepot)) {
+        if(firstExtraDepot!=-1 && !demoExtraDepot.setResource(firstExtraDepot)) {
             gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel primo deposito extra!");
-            return false;
+            return false; //impossible? Cannot build message like that
         }
-        if(!demoExtraDepot.setResource(secondExtraDepot)) {
+        if(secondExtraDepot!=-1 && !demoExtraDepot.setResource(secondExtraDepot)) {
             gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel secondo deposito extra!");
-            return false;
+            return false; //impossible? Cannot build message like that
         }
 
         //let's check if the new configuration has the same resources as the one before!
@@ -361,16 +361,24 @@ public class ActionManager {
                 return false;
             }
         }
+
+        if(demoDepot.equals(player.getWarehouseDepot()))
+            return true;
+
 //MODEL UPDATE
         //after all those controls, player really deserves a new depot!
         player.getWarehouseDepot().setConfig(slot1, slot2, slot3);
         if(firstExtraDepot>=0){
             ExtraDepot ability1 = (ExtraDepot) playerLeaderCards[0].getSpecialAbility();
-            ability1.setResource(firstExtraDepot);
+            if(firstExtraDepot==0 && ability1.getNumber()==0) {}
+            else
+                ability1.setResource(firstExtraDepot);
         }
         if(secondExtraDepot>=0){
             ExtraDepot ability2 = (ExtraDepot) playerLeaderCards[1].getSpecialAbility();
-            ability2.setResource(secondExtraDepot);
+            if(secondExtraDepot==0 && ability2.getNumber()==0) {}
+            else
+                ability2.setResource(secondExtraDepot);
         }
         return true;
     }

@@ -39,26 +39,27 @@ public class EndTurnActionTest {
     public void reset()
     {
         gm = new GameManager(4);
-        gm2 = new GameManager(1);
         am = gm.getActionManager();
-        am2 = gm2.getActionManager();
         g = gm.getGame();
-        g2 = gm2.getGame();
-
         c = new Catcher();
-        g.addAllObservers(c);
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-
-        c2 = new Catcher();
-        g2.addAllObservers(c2);
-        g2.addPlayer("Unico", 1);
-
-        p2 = g2.getPlayer(1);
-
+        g.addAllObservers(c);
+        gm.getFaithTrackManager().addObserver(c);
         p = g.getPlayer(1);
+        c.emptyQueue();
+
+        gm2 = new GameManager(1);
+        am2 = gm2.getActionManager();
+        g2 = gm2.getGame();
+        c2 = new Catcher();
+        g2.addPlayer("Unico", 1);
+        g2.addAllObservers(c2);
+        gm2.getFaithTrackManager().addObserver(c2);
+        p2 = g2.getPlayer(1);
+        c2.emptyQueue();
     }
 
     @Test

@@ -35,7 +35,7 @@ public class Strongbox extends ModelObservable {
         }
         else
         {
-            if( (tmp - quantity) > 0) /*there will be resources after the remove */
+            if( (tmp - quantity) >= 0) /*there will be resources after the remove */
                 {
                 resources.put(resource, tmp - quantity);
                 notifyObservers();

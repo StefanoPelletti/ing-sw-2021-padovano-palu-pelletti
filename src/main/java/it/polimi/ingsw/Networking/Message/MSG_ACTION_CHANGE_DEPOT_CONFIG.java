@@ -18,8 +18,8 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
 
         if(slot1!=Resource.COIN && slot1!=Resource.SERVANT && slot1!=Resource.SHIELD && slot1!=Resource.STONE && slot1!=Resource.NONE) throw new IllegalArgumentException();
         if(slot2==null || slot3 == null) throw new IllegalArgumentException();
-        if(firstExtraDepot!=0&&firstExtraDepot!=1&&firstExtraDepot!=2) throw new IllegalArgumentException();
-        if(secondExtraDepot!=0&&secondExtraDepot!=1&&secondExtraDepot!=2) throw new IllegalArgumentException();
+        if(firstExtraDepot!=-1 && firstExtraDepot!=0 && firstExtraDepot!=1 && firstExtraDepot!=2) throw new IllegalArgumentException();
+        if(secondExtraDepot!=-1 && secondExtraDepot!=0 && secondExtraDepot!=1 && secondExtraDepot!=2) throw new IllegalArgumentException();
 
         this.slot1 = slot1;
         this.slot2 = new Resource[2];

@@ -1,6 +1,8 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.Networking.Message.MSG_ERROR;
 import it.polimi.ingsw.Networking.Message.Message;
+import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -20,14 +22,18 @@ public class Catcher implements ModelObserver {
 
     public void update(Message message) {
         messages.add(message);
-        System.out.println(" Received "+message.getMessageType());
+        System.out.print("\n Received "+message.getMessageType()+ " ");
+        if(message.getMessageType()== MessageType.MSG_ERROR)
+            System.out.print( ((MSG_ERROR) message).getErrorMessage() );
     }
 
     public void printQueueHeaders()
     {
         if(messages.size()>0) {
             for (int i = 0; i < messages.size(); i++) {
-                System.out.println(" Received [" + i + "] : " + messages.get(i).getMessageType());
+                System.out.print(" \nReceived [" + i + "] : " + messages.get(i).getMessageType()+ " ");
+                if(messages.get(i).getMessageType()== MessageType.MSG_ERROR)
+                    System.out.print( ((MSG_ERROR) messages.get(i)).getErrorMessage() );
             }
         }
         else
@@ -37,7 +43,7 @@ public class Catcher implements ModelObserver {
     public void emptyQueue()
     {
         this.messages = new ArrayList<>();
-        System.out.println(" Queue reset \n");
+        System.out.println(" \nQueue reset \n");
     }
 
 }

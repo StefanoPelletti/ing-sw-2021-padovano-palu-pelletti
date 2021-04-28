@@ -865,7 +865,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(0); //put in Depot
         assertTrue(am.newChoiceMarket(p, message));
-        ArrayList<Resource> resources = resources = g.getMarketHelper().getResources();
+        ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
@@ -877,7 +877,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(0); //put in Depot
         assertTrue(am.newChoiceMarket(p, message));
-        resources = resources = g.getMarketHelper().getResources();
+        resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.size());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
