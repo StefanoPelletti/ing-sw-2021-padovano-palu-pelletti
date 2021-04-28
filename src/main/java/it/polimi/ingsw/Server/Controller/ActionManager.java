@@ -196,7 +196,7 @@ public class ActionManager {
         }
 
         if(leaderProduction[1]){
-            LeaderCard l2 = player.getLeaderCards()[0];
+            LeaderCard l2 = player.getLeaderCards()[1];
             if(l2 == null || !l2.getEnable() || !l2.getSpecialAbility().isProduction()){
                 gameManager.setErrorObject("Non puoi produrre con questa leader Card!");
                 return false;
@@ -216,7 +216,11 @@ public class ActionManager {
             return false;
         }
 
-        if((leaderProduction[0] || leaderProduction[1]) && Arrays.stream(possibleResources).noneMatch(r-> r==message.getLeaderOutput1())){
+        if(leaderProduction[0] && Arrays.stream(possibleResources).noneMatch(r-> r==message.getLeaderOutput1())){
+            gameManager.setErrorObject("Non puoi produrre questa risorsa con una carta leader!");
+            return false;
+        }
+        if(leaderProduction[1] && Arrays.stream(possibleResources).noneMatch(r-> r==message.getLeaderOutput2())){
             gameManager.setErrorObject("Non puoi produrre questa risorsa con una carta leader!");
             return false;
         }
@@ -249,7 +253,7 @@ public class ActionManager {
         }
 
         //getting cost for base Production
-        if(baseProduction) {
+        if (baseProduction) {
             for (Resource r : message.getBasicInput()) {
                 requiredResources.put(r, requiredResources.get(r) + 1);
             }
@@ -283,7 +287,6 @@ public class ActionManager {
 //MODEL UPDATE
         //now we must consume the required resources
         consumeResources(player, requiredResources);
-
         //now we add output resources to the player's strongbox (and the faith points)
         Strongbox playerStrongbox = player.getStrongbox();
         for(Resource r: newResources.keySet()){
@@ -814,8 +817,7 @@ public class ActionManager {
         for(Resource r : cost.keySet()){
             remainingResources = cost.get(r);
             while(remainingResources>0){
-                found= false;
-                if(warehouseDepot.consume(r)) found =true;
+                found = warehouseDepot.consume(r);
                 if (!found) {
                     for (int i = 0; i < numLeaderCard && !found; i++) {
                         ability = (ExtraDepot) extraDepotLeaderCards.get(i).getSpecialAbility();

@@ -74,49 +74,6 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
-    //could be not used, but will remain here for now. NOT TESTED
-    public boolean consume(ArrayList<Resource> resToDiscard){
-        boolean result=true;
-        boolean found=false;
-        Resource tmpShelf1=this.shelf1;
-        Resource[] tmpShelf2=this.getShelf2(), tmpShelf3=this.getShelf3();
-
-        for(Resource r:resToDiscard){
-            if((r==Resource.NONE)||(r==null)||(r==Resource.FAITH)){
-                result=false;
-                break;
-            }
-            else if(r==tmpShelf1){
-                tmpShelf1=Resource.NONE;
-                found=true;
-            }
-            else {
-                for (int i = 2; i >=0; i--) {
-                    if (i < 2 && tmpShelf2[i] == r) {
-                        tmpShelf2[i] = Resource.NONE;
-                        found=true;
-                        break;
-                    }
-                    else if (tmpShelf3[i] == r) {
-                        tmpShelf3[i] = Resource.NONE;
-                        found=true;
-                        break;
-                    }
-                }
-            }
-            if(!found) {
-                result=false;
-                break;
-            }
-            found=false;
-        }
-
-        if(result) {
-            this.setConfig(tmpShelf1, tmpShelf2, tmpShelf3);
-        }
-        return result;
-    }
-
     //used when the player buys a devCard or activates production
     public boolean consume(Resource resource){
         if(this.shelf1==resource){

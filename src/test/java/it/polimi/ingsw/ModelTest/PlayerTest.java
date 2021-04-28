@@ -2,10 +2,14 @@ package it.polimi.ingsw.ModelTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Server.Model.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PlayerTest {
     Player player;
@@ -111,5 +115,124 @@ public class PlayerTest {
         assertNotNull(player.getCardsWithExtraDepotAbility());
         assertNotNull(player.getCardsWithProductionAbility());
         assertNotNull(player.getCardsWithMarketResourceAbility());
+    }
+
+    //tests method getTotal()
+    @Test
+    public void getTotalTest(){
+        assertEquals(0, player.getTotal()); //at the beginning, total must be 0
+
+        player.getWarehouseDepot().add(Resource.SERVANT);
+        player.getWarehouseDepot().add(Resource.COIN);
+        player.getWarehouseDepot().add(Resource.COIN);
+
+        player.getStrongbox().addResource(Resource.STONE, 4);
+        player.getStrongbox().addResource(Resource.COIN, 3);
+
+        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
+        leaderCards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.STONE, 5)),
+                new ExtraDepot(Resource.SERVANT)));
+        leaderCards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
+                new ExtraDepot(Resource.COIN)));
+        player.associateLeaderCards(leaderCards);
+        player.setLeaderCards(0, true);
+        ((ExtraDepot) player.getLeaderCards()[0].getSpecialAbility()).addResource(1);
+        assertEquals(11, player.getTotal());
+
+        player.setLeaderCards(1, true);
+        ((ExtraDepot) player.getLeaderCards()[0].getSpecialAbility()).setResource(2);
+        ((ExtraDepot) player.getLeaderCards()[1].getSpecialAbility()).addResource(1);
+
+        assertEquals(13, player.getTotal());
+    }
+
+    //tests method getResources
+    @Test
+    public void getResourcesTest(){
+        Map<Resource, Integer> resources = player.getResources(); //initially player ha 0 resources
+        for(Resource r: resources.keySet()){
+            assertEquals(0, resources.get(r));
+        }
+
+        player.getWarehouseDepot().add(Resource.SHIELD);
+        player.getWarehouseDepot().add(Resource.COIN);
+        player.getWarehouseDepot().add(Resource.STONE);
+
+        player.getStrongbox().addResource(Resource.STONE, 2);
+        player.getStrongbox().addResource(Resource.COIN, 3);
+
+        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
+        leaderCards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.STONE, 5)),
+                new ExtraDepot(Resource.SERVANT)));
+        leaderCards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
+                new ExtraDepot(Resource.COIN)));
+        player.associateLeaderCards(leaderCards);
+
+        resources = player.getResources();
+        assertEquals(1, resources.get(Resource.SHIELD));
+        assertEquals(4, resources.get(Resource.COIN));
+        assertEquals(3, resources.get(Resource.STONE));
+        assertEquals(0, resources.get(Resource.SERVANT));
+
+        player.setLeaderCards(0, true);
+        ((ExtraDepot) player.getLeaderCards()[0].getSpecialAbility()).setResource(2);
+
+        resources = player.getResources();
+        assertEquals(1, resources.get(Resource.SHIELD));
+        assertEquals(4, resources.get(Resource.COIN));
+        assertEquals(3, resources.get(Resource.STONE));
+        assertEquals(2, resources.get(Resource.SERVANT));
+    }
+
+
+    //tests method getDepotAndExtraDepotResources()
+    @Test
+    public void getDepotAndExtraDepotResourcesTest(){
+        Map<Resource, Integer> resources = player.getDepotAndExtraDepotResources(); //initially player ha 0 resources
+        for(Resource r: resources.keySet()){
+            assertEquals(0, resources.get(r));
+        }
+
+        player.getWarehouseDepot().add(Resource.SHIELD);
+        player.getWarehouseDepot().add(Resource.COIN);
+        player.getWarehouseDepot().add(Resource.COIN);
+        player.getWarehouseDepot().add(Resource.SERVANT);
+
+        ArrayList<LeaderCard> leaderCards = new ArrayList<>();
+        leaderCards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.STONE, 5)),
+                new ExtraDepot(Resource.SERVANT)));
+        leaderCards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
+                new ExtraDepot(Resource.STONE)));
+        player.associateLeaderCards(leaderCards);
+
+        resources = player.getDepotAndExtraDepotResources();
+        assertEquals(1, resources.get(Resource.SHIELD));
+        assertEquals(2, resources.get(Resource.COIN));
+        assertEquals(0, resources.get(Resource.STONE));
+        assertEquals(1, resources.get(Resource.SERVANT));
+
+        player.setLeaderCards(0, true);
+        ((ExtraDepot) player.getLeaderCards()[0].getSpecialAbility()).setResource(2);
+
+        resources = player.getDepotAndExtraDepotResources();
+        assertEquals(1, resources.get(Resource.SHIELD));
+        assertEquals(2, resources.get(Resource.COIN));
+        assertEquals(0, resources.get(Resource.STONE));
+        assertEquals(3, resources.get(Resource.SERVANT));
+
+        player.setLeaderCards(1, true);
+        ((ExtraDepot) player.getLeaderCards()[1].getSpecialAbility()).setResource(1);
+
+        resources = player.getDepotAndExtraDepotResources();
+        assertEquals(1, resources.get(Resource.SHIELD));
+        assertEquals(2, resources.get(Resource.COIN));
+        assertEquals(1, resources.get(Resource.STONE));
+        assertEquals(3, resources.get(Resource.SERVANT));
     }
 }
