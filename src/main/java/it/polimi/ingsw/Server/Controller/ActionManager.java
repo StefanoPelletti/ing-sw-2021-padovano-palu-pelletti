@@ -162,7 +162,7 @@ public class ActionManager {
         if(cardNumber!=0 && cardNumber!=1)
         {
             gameManager.setErrorObject("Errore! Ma che carta hai tentato di distruggere?");
-            return false;
+            return false; //impossible?  cannot build a message like that
         }
         if(player.getLeaderCards()[cardNumber]==null)
         {

@@ -73,7 +73,7 @@ public class FaithTrackManager extends ModelObservable {
 
                 message.append( player.getNickname()).append(" has activated the third zone! ");
                 if(!gameManager.getSolo())
-                    message.append("\n Last turn begins!").append("\n Points have been awarded: ");
+                    message.append("\n Points have been awarded: ");
                 else
                     message.append("\n It's Game Over. end the turn to finish him!").append("\n Points have been awarded: ");
                 faithTrack.advance(player);

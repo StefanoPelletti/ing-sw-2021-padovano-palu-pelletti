@@ -107,8 +107,8 @@ public class FaithManagerTest {
         assertEquals(24, p.getPosition());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.size());
         assertTrue(g.getFaithTrack().getZones()[0]);
         assertTrue(g.getFaithTrack().getZones()[1]);
         assertTrue(g.getFaithTrack().getZones()[2]);

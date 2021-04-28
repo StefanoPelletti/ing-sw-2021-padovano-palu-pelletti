@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
+import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Game;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.*;
@@ -103,6 +105,11 @@ public class Game extends ModelObservable {
         notifyObservers();
     }
     public void changeStatus(Status status) {
+        if(status==Status.LAST_TURN)
+        {
+            Message m = new MSG_NOTIFICATION("LAST TURN!");
+            notifyObservers(m);
+        }
         this.status = status;
     }
 

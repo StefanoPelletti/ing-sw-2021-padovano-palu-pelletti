@@ -999,12 +999,12 @@ public class MarketActionTest {
         assertEquals(3, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(3, resources.size());
         assertEquals(1, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(5, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(9, c.messages.size());
+        assertEquals(10, c.messages.size());
         assertEquals(24, p.getPosition());
         c.emptyQueue();
 
