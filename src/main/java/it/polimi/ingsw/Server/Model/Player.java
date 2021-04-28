@@ -57,6 +57,7 @@ public class Player extends ModelObservable {
         return true;
     }
     public int getPlayerNumber() { return playerNumber; }
+
     public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
 
     public void setLeaderCards(int cardNumber, boolean enable)
@@ -67,7 +68,9 @@ public class Player extends ModelObservable {
             leaderCards[cardNumber] = null;
         notifyObservers();
     }
+
     public Strongbox getStrongbox() { return this.strongbox; }
+
     public WarehouseDepot getWarehouseDepot() { return this.warehouseDepot; }
 
     public LeaderCard[] getLeaderCards() {

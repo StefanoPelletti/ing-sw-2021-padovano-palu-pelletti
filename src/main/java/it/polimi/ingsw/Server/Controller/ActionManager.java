@@ -158,7 +158,17 @@ public class ActionManager {
 
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message){
         int cardNumber = message.getCardNumber();
-        //VALIDATION
+//VALIDATION
+        if(cardNumber!=0 && cardNumber!=1)
+        {
+            gameManager.setErrorObject("Errore! Ma che carta hai tentato di distruggere?");
+            return false;
+        }
+        if(player.getLeaderCards()[cardNumber]==null)
+        {
+            gameManager.setErrorObject("Errore! Hai già scartato questa carta!");
+            return false;
+        }
         if(player.getLeaderCards()[cardNumber].getEnable())
         {
             gameManager.setErrorObject("Errore! Non puoi disattivare una carta già attivata!");
@@ -166,7 +176,6 @@ public class ActionManager {
         }
 //MODEL UPDATE
         player.setLeaderCards(cardNumber, false);
-        //notify???
         faithTrackManager.advance(player);
         return true;
     }

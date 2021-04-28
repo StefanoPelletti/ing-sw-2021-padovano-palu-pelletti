@@ -87,7 +87,7 @@ public class FaithTrackTest {
     {
         Player p = new Player("test", 1);
 
-        //1
+        assertTrue( faithTrack.advance(p) ); //1//1
         assertSame( faithTrack.calculateVP(p), 0);
         assertSame( faithTrack.doesActivateZone(p), 0);
 

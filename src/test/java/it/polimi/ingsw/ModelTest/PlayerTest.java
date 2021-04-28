@@ -36,7 +36,7 @@ public class PlayerTest {
         assertNotNull(player.getWarehouseDepot());
         assertNotNull(player.getStrongbox());
         assertEquals(player.getVP(), 0);
-        assertEquals(player.getPosition(), 1);
+        assertEquals(player.getPosition(), 0);
     }
 
     //verifies that the method setVP(VP) does not accept negative parameter
