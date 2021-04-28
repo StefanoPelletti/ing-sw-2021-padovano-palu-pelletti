@@ -202,6 +202,16 @@ public class ActionManager {
             }
         }
 
+        if(baseProduction && Arrays.stream(possibleResources).noneMatch(r-> r==message.getBasicOutput())){
+            gameManager.setErrorObject("Non puoi produrre questa risorsa con il potere base!");
+            return false;
+        }
+
+        if((leaderProduction[0] || leaderProduction[1]) && Arrays.stream(possibleResources).noneMatch(r-> r==message.getLeaderOutput1())){
+            gameManager.setErrorObject("Non puoi produrre questa risorsa con una carta leader!");
+            return false;
+        }
+
         Map<Resource, Integer> requiredResources = new HashMap<>();
         Map<Resource, Integer> newResources = new HashMap<>();
 
@@ -211,6 +221,8 @@ public class ActionManager {
             requiredResources.put(r, 0);
             newResources.put(r,0);
         }
+
+        newResources.put(Resource.FAITH, 0);
 
         //getting costs for standard Productions
         DevelopmentCard[] topCards = player.getDevelopmentSlot().getOnTop();
@@ -263,10 +275,15 @@ public class ActionManager {
         //now we must consume the required resources
         consumeResources(player, requiredResources);
 
-        //now we add output resources to the player's strongbox
+        //now we add output resources to the player's strongbox (and the faith points)
         Strongbox playerStrongbox = player.getStrongbox();
         for(Resource r: newResources.keySet()){
-            playerStrongbox.addResource(r, newResources.get(r));
+            if(r==Resource.FAITH){
+                for(int i=0; i<newResources.get(Resource.FAITH); i++){
+                    faithTrackManager.advance(player);
+                }
+            }
+            else if(newResources.get(r)>0)  playerStrongbox.addResource(r, newResources.get(r));
         }
 
         //for each leaderProduction enabled, player receives one Faith Point

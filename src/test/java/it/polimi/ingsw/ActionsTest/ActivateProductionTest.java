@@ -114,7 +114,7 @@ public class ActivateProductionTest {
                 new Power( Map.of(Resource.STONE, 2),
                         Map.of(Resource.COIN, 3, Resource.FAITH, 2))
         );
-        assertTrue(p.getDevelopmentSlot().addCard(card1, 1));
+        p.getDevelopmentSlot().addCard(card1, 1);
         c.emptyQueue();
 
         assertFalse(am.activateProduction(p, message));
@@ -176,5 +176,45 @@ public class ActivateProductionTest {
         assertEquals(1, c.messages.size());
     }
 
+
+    //verifies that a standard production is accepted if the player has enough resources
+    //also verifies if the production gives the correct amount of faith points
+    //indirectly tests consumeResources() method in ActionManager
+    @Test
+    public void standardProductionAccepted(){
+        MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(
+                new boolean[]{true, false, false},
+                false,
+                new boolean[]{false, false},
+                null,
+                null,
+                null,
+                null);
+
+        DevelopmentCard card1 = new DevelopmentCard(1, Color.PURPLE, 9,
+                Map.of(Resource.SERVANT, 6),
+                new Power( Map.of(Resource.STONE, 2, Resource.SHIELD, 1),
+                        Map.of(Resource.COIN, 2, Resource.SERVANT , 3, Resource.FAITH, 2))
+        );
+        p.getDevelopmentSlot().addCard(card1, 0);
+        p.getWarehouseDepot().add(Resource.STONE);
+        p.getWarehouseDepot().swapRow(1,2);
+        p.getWarehouseDepot().add(Resource.STONE);
+        p.getStrongbox().addResource(Resource.SHIELD,2);
+        c.emptyQueue();
+
+        assertTrue(am.activateProduction(p, message));
+
+        assertEquals(p.getWarehouseDepot().getTotal(), 0);
+        assertEquals(p.getStrongbox().getQuantity(Resource.SERVANT), 3);
+        assertEquals(p.getStrongbox().getQuantity(Resource.SHIELD), 1);
+        assertEquals(p.getStrongbox().getQuantity(Resource.COIN), 2);
+        assertEquals(p.getPosition(), 2);
+
+        assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
+        assertEquals(3, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
+        assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
+        assertEquals(7, c.messages.size());
+    }
 
 }

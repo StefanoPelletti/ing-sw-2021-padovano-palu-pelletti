@@ -25,7 +25,7 @@ public class DevelopmentCard implements Serializable {
     }
 
     public Map<Resource, Integer> getCost() {
-        return cost;
+        return new HashMap<>(cost);
     }
 
     public Color getColor() {

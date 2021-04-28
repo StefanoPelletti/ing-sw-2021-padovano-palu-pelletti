@@ -24,7 +24,7 @@ public class Player extends ModelObservable {
     {
         this.nickname = nickname;
         this.VP = 0;
-        this.position = 1;
+        this.position = 0;
         this.playerNumber = playerNumber;
         this.leaderCards = new LeaderCard[2];
         this.strongbox = new Strongbox();
