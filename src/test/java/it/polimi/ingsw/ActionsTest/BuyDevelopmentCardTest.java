@@ -2,10 +2,12 @@ package it.polimi.ingsw.ActionsTest;
 import it.polimi.ingsw.Networking.Message.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Controller.ActionManager;
+import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.DevelopmentCardsVendor;
 import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
 import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
@@ -254,10 +256,14 @@ public class BuyDevelopmentCardTest {
         assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
         assertFalse(dcv.isEnabled());
         assertEquals("Errore! è stato chiamato il metodo chooseDevelopmentCard (2/2) senza oggetto vendor attivo nel model!", g.getErrorObject().getErrorMessage());
+        assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
+        assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
     }
 
     @Test
-    //if the player selects a card and a slot the card is added and the resources are removed from the inventory.
+    //if the player selects a card and a slot then the card is added and the resources are removed from the inventory.
     public void chooseDevelopmentCardTest1() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
 
@@ -266,12 +272,34 @@ public class BuyDevelopmentCardTest {
         p.getStrongbox().addResource(Resource.STONE, 20);
         p.getStrongbox().addResource(Resource.COIN, 20);
 
+        DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
+
+        for(int r = 0; r < 3; r++) {
+            for(int c = 0; c < 4; c++) {
+                for(int p = 0; p < 4; p++) {
+                    grid[r][c][p] = null;
+                }
+            }
+        }
+
+        grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
+
+        g.getDevelopmentCardsDeck().setGrid(grid);
+
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
         assertTrue(am.chooseDevelopmentCard(p, msg));
         assertFalse(dcv.isEnabled());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
+        assertEquals(6, c.messages.size());
     }
 
     @Test
@@ -319,5 +347,139 @@ public class BuyDevelopmentCardTest {
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
         assertTrue(am.chooseDevelopmentCard(p, msg));
         assertFalse(dcv.isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
+        assertEquals(4, c.messages.size());
+    }
+
+    @Test
+    //this test checks if the resources are removed correctly
+    public void chooseDevelopmentCardTest3() {
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
+        //creates a card
+        DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
+
+        for(int r = 0; r < 3; r++) {
+            for(int c = 0; c < 4; c++) {
+                for(int p = 0; p < 4; p++) {
+                    grid[r][c][p] = null;
+                }
+            }
+        }
+
+        grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
+                Map.of(Resource.SHIELD, 4, Resource.SERVANT, 5, Resource.COIN, 2),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
+
+        g.getDevelopmentCardsDeck().setGrid(grid);
+
+        //adds the resources that are needed
+        ArrayList<LeaderCard> cards = new ArrayList<>();
+        cards.add( new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
+                new ExtraDepot(Resource.COIN)));
+        cards.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
+                new ExtraDepot(Resource.SHIELD)));
+        p.associateLeaderCards(cards);
+        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[1].setEnable(true);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
+        Resource r0 = Resource.COIN;
+        Resource[] r1 = new Resource[]{Resource.SHIELD, Resource.SHIELD};
+        Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.SERVANT};
+        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(1);
+        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
+        p.getWarehouseDepot().setConfig(r0, r1, r2);
+        c.emptyQueue();
+
+        p.getStrongbox().addResource(Resource.SERVANT, 2);
+
+        assertTrue(am.buyDevelopmentCard(p));
+        c.emptyQueue();
+
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        assertTrue(am.chooseDevelopmentCard(p, msg));
+        assertFalse(dcv.isEnabled());
+
+        assertEquals(0, p.getWarehouseDepot().getTotal());
+        assertEquals(0, p.getStrongbox().getTotal());
+        assertEquals(0, ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).getNumber());
+        assertEquals(0, ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).getNumber());
+
+        assertEquals(6, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
+        assertEquals(13, c.messages.size());
+    }
+
+    @Test
+    //endgame 7 cards
+    public void chooseDevelopmentCardTest4() {
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2,0),0);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2,0),1);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2,0),2);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1,0),0);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1,0),1);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1,0),2);
+
+        p.getStrongbox().addResource(Resource.SERVANT, 20);
+        p.getStrongbox().addResource(Resource.SHIELD, 20);
+        p.getStrongbox().addResource(Resource.STONE, 20);
+        p.getStrongbox().addResource(Resource.COIN, 20);
+
+        assertTrue(am.buyDevelopmentCard(p));
+        c.emptyQueue();
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        assertTrue(am.chooseDevelopmentCard(p, msg));
+        assertFalse(dcv.isEnabled());
+        assertEquals(Status.LAST_TURN, g.getStatus());
+    }
+
+    @Test
+    //endgame 7 cards SOLO
+    public void chooseDevelopmentCardTest5() {
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
+        GameManager gameManager =  new GameManager(1);
+        Game game = gameManager.getGame();
+        ActionManager actionManager = gameManager.getActionManager();
+        Catcher a = new Catcher();
+        game.addPlayer("Primo", 1);
+        game.addAllObservers(a);
+        gameManager.getFaithTrackManager().addObserver(a);
+        Player player = game.getPlayer(1);
+        FaithTrackManager ftm1 = gameManager.getFaithTrackManager();
+
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),0);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),1);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),2);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1,0),0);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1,0),1);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1,0),2);
+
+        player.getStrongbox().addResource(Resource.SERVANT, 20);
+        player.getStrongbox().addResource(Resource.SHIELD, 20);
+        player.getStrongbox().addResource(Resource.STONE, 20);
+        player.getStrongbox().addResource(Resource.COIN, 20);
+
+        assertTrue(actionManager.buyDevelopmentCard(player));
+        a.emptyQueue();
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        assertTrue(actionManager.chooseDevelopmentCard(player, msg));
+        assertFalse(dcv.isEnabled());
+        assertEquals(Status.GAME_OVER, game.getStatus());
+        assertTrue(gameManager.getSoloWinner());
     }
 }

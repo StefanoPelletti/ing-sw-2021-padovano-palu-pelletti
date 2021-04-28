@@ -1374,7 +1374,7 @@ public class MarketActionTest {
         Game game = gameManager.getGame();
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
-        game.addPlayer("Giacomo Poretto", 1);
+        game.addPlayer("Primo", 1);
         game.addAllObservers(a);
         gameManager.getFaithTrackManager().addObserver(a);
 
