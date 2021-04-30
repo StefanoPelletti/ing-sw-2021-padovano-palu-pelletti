@@ -15,15 +15,6 @@ public class ServerApp
     {
         final int port = 43210;
         ServerSocket serverSocket;
-        /*OutputStream outputStream;
-        ObjectOutputStream objectOutputStream;
-        InputStream inputStream;
-        ObjectInputStream objectInputStream;
-        Message message;
-        List<Lobby> lobbies = new ArrayList<Lobby>();
-        Random random = new Random();
-        Thread T;
-        int i;*/
 
         try {
             serverSocket = new ServerSocket(port);
@@ -33,10 +24,11 @@ public class ServerApp
             System.out.println("SRV ERROR: "+e.getMessage());
             return;
         }
+
         System.out.println("Server online, listening on: " + serverSocket.getLocalPort()+"  "+serverSocket.getInetAddress());
 
         Socket socket;
-        while(!Thread.currentThread().isInterrupted())
+        while(true)
         {
             try
             {
@@ -47,7 +39,6 @@ public class ServerApp
             {
                 System.out.println(e.getMessage());
             }
-            System.out.println("third aeae");
         }
     }
 

@@ -55,6 +55,7 @@ public class MarketActionTest {
     @Test
     public void getMarketResourceBWRW()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -66,14 +67,16 @@ public class MarketActionTest {
         market.setGrid(re, new WhiteMarble());
 
         //in this case the action should: modify the Market, activate the MarketHelper, modify the Player  and return true
-
         assertTrue( am.getMarketResources(p, msg));
-        assertTrue(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(1, resources.size());
+        assertEquals(1, p.getPosition());
 
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
@@ -86,6 +89,7 @@ public class MarketActionTest {
     @Test
     public void getMarketResourceBWBG()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -93,24 +97,22 @@ public class MarketActionTest {
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
 
-
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
         //in this case the action should: modify the Market, activate the MarketHelper, NOT modify the Player and return true
-
         assertTrue( am.getMarketResources(p, msg));
-        assertTrue(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(3, resources.size());
 
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_Player));
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(2, c.messages.size());
     }
 
@@ -130,14 +132,15 @@ public class MarketActionTest {
         market.setGrid(re, new WhiteMarble());
 
         //in this case the action should: modify the Market, NOT activate the MarketHelper, modify the Player and return true
-
         assertTrue( am.getMarketResources(p, msg));
-        assertFalse(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertFalse(g.getMarketHelper().isEnabled());
+        assertEquals(1, p.getPosition());
+
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper));
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(2, c.messages.size());
     }
 
@@ -145,6 +148,7 @@ public class MarketActionTest {
     @Test
     public void getMarketResourceWWWW()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -152,18 +156,18 @@ public class MarketActionTest {
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
 
-
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
         //in this case the action should: modify the Market, NOT activate the MarketHelper, NOT modify the Player and return true
         assertTrue( am.getMarketResources(p, msg));
-        assertFalse(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertFalse(g.getMarketHelper().isEnabled());
+        assertEquals(0, p.getPosition());
+
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper));
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_Player));
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(1, c.messages.size());
     }
 
@@ -172,6 +176,7 @@ public class MarketActionTest {
     @Test
     public void getMarketResourceBGYP()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -179,14 +184,14 @@ public class MarketActionTest {
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
 
-
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
         //in this case the action should: modify the Market, NOT activate the MarketHelper, NOT modify the Player and return true
         assertTrue( am.getMarketResources(p, msg));
-        assertTrue(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
@@ -194,23 +199,22 @@ public class MarketActionTest {
         assertEquals(1, resources.stream().filter(x -> x == Resource.SERVANT).count());
         assertEquals(4, resources.size());
 
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_Player));
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(2, c.messages.size());
     }
 
     @Test
     public void getMarketResourceWWGG()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
         MarketMarble[][] re = { {new WhiteMarble(),new WhiteMarble(),new GreyMarble(),new GreyMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
-
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
@@ -232,23 +236,24 @@ public class MarketActionTest {
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with exchanged resources, NOT modify the Player and return true
         assertTrue( am.getMarketResources(p, msg));
-        assertTrue(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(2, resources.stream().filter(x -> x == Resource.SERVANT).count());
         assertEquals(4, resources.size());
 
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_UPD_Player));
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(2, c.messages.size());
     }
 
     @Test
     public void getMarketResourceGRWW()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -277,23 +282,25 @@ public class MarketActionTest {
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
         assertTrue( am.getMarketResources(p, msg));
-        assertTrue(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(2, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(3, resources.size());
 
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(3, c.messages.size());
     }
 
     @Test
     public void getMarketResourceRWWG()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -323,26 +330,27 @@ public class MarketActionTest {
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
         assertTrue( am.getMarketResources(p, msg));
-        assertTrue(g.getMarketHelper().isEnabled());
 
+        //asserting the model is modified correctly
+        assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(2, resources.stream().filter(x -> x == Resource.EXTRA).count());
         assertEquals(3, resources.size());
 
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(3, c.messages.size());
     }
 
-    //the error is generated only if the marketHelper is enabled, and the getMarketResource gets somehow invoked
+    //the error is generated only if the marketHelper is enabled, and the getMarketResource gets (again) somehow invoked
     @Test
     public void getMarketResourcesError()
     {
-
         //can only occur if: message contains impossible data, or the corresponding market helper is enabled
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
@@ -350,17 +358,25 @@ public class MarketActionTest {
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
 
-
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
         assertTrue( am.getMarketResources(p, msg));
+
+        //saving or asserting (in a simplified way) the starting condition
+        ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, c.messages.size());
         c.emptyQueue();
 
+        //in this case the action should: activate ErrorObject, NOT modify the marketHelper, and return false
         assertFalse(am.getMarketResources(p, msg));
+
+        //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
+        assertEquals(g.getMarketHelper().getResources(), resources);
+
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
@@ -375,13 +391,13 @@ public class MarketActionTest {
     @Test
     public void chooseResource1()
     {
+        //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
         MarketMarble[][] re = { {new BlueMarble(),new BlueMarble(),new WhiteMarble(),new GreyMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
                 {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
-
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
@@ -400,18 +416,20 @@ public class MarketActionTest {
         c.emptyQueue();
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //saving or asserting (in a simplified way) the starting condition
         assertTrue( am.getMarketResources(p, msg));
         assertTrue(g.getMarketHelper().isEnabled());
-
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(3, resources.size());
         c.emptyQueue();
 
+        //action 1: save. the action should return true
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(0);
-
         assertTrue( am.newChoiceMarket(p, message));
+
+        //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -421,24 +439,34 @@ public class MarketActionTest {
         assertEquals(1, p.getWarehouseDepot().getResources().entrySet().stream().filter(x -> x.getKey() == Resource.SHIELD).map(Map.Entry::getValue).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
         assertEquals(2, c.messages.size());
         c.emptyQueue();
 
+        //action 2: save. the action should return false
         assertFalse( am.newChoiceMarket(p, message));
+
+        //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
+
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
 
+        //setting new condition
         g.getErrorObject().setEnabled(false);
         c.emptyQueue();
+
+        //action 3: save. the action should return false
         assertFalse( am.newChoiceMarket(p, message));
+
+        //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
+
+        //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
-
     }
 
     //Resources from the market: SHIELD SHIELD STONE
@@ -1409,7 +1437,5 @@ public class MarketActionTest {
         assertEquals(2, a.messages.size());
         assertEquals(3, game.getBlackCrossPosition());
         assertNull(gameManager.getSoloWinner());
-        a.emptyQueue();
     }
-
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Networking.Message.MSG_GAME_OVER;
 import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.FaithTrack;

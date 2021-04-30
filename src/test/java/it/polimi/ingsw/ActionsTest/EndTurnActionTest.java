@@ -76,24 +76,39 @@ public class EndTurnActionTest {
     @Test
     //this test ensures that the next player is set correctly if it was the last player's turn.
     public void endTurnTest1() {
+        //setting the initial condition and saving variables
         g.changeStatus(Status.STANDARD_TURN);
         g.setCurrentPlayer(g.getCurrentPlayerInt() + 3);
+        int turn = g.getTurn();
         c.emptyQueue();
-        assertTrue(am.endTurn(p));
-        assertEquals(g.getCurrentPlayerInt(), 1);
+
         //both the turn AND the currentPlayer should change
+        assertTrue(am.endTurn(p));
+
+        //assert Model changes
+        assertEquals(g.getTurn(), turn + 1);
+        assertEquals(g.getCurrentPlayerInt(), 1);
+
+        //assert correct messages are generated
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(2, c.messages.size());
     }
 
+    //test for Last Turn in MultiPlayer (the game should end)
     @Test
     public void endTurnTest2() {
+        //setting the initial condition and saving variables
         g.changeStatus(Status.LAST_TURN);
         g.setCurrentPlayer(g.getCurrentPlayerInt() + 3);
         c.emptyQueue();
 
-        assertEquals(g.getCurrentPlayerInt(), 4);
-        assertFalse(am.endTurn(p)); //returns false because the LeaderBoard message is the last one.
+        //returns false because the LeaderBoard message is the last one.
+        assertFalse(am.endTurn(p));
+
+        //assert Model changes
+        assertTrue(g.getLeaderBoard().isEnabled());
+
+        //assert correct messages are generated
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(3, c.messages.size());
@@ -104,9 +119,17 @@ public class EndTurnActionTest {
     // when GAME OVER is set, the leaderboard will be sent, and the thread will terminate.
     @Test
     public void endTurnGameOverPlayerWins() {
+        //setting the initial condition and saving variables
         g2.changeStatus(Status.GAME_OVER);
         gm2.setSoloWinner(true); // <- if this is set to true, the game will end
+
+        //returns false because the LeaderBoard message is the last one.
         assertFalse(am2.endTurn(p2));
+
+        //assert Model changes
+        assertTrue(g2.getLeaderBoard().isEnabled());
+
+        //assert correct messages are generated
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(1, c2.messages.size());
     }
@@ -117,9 +140,14 @@ public class EndTurnActionTest {
     // setting GAMEOVER status and SoloWinner should be tested as LorenzoMove() testing.
     @Deprecated
     public void endTurnGameOverLorenzoWins() {
+        //setting the initial condition and saving variables
         g2.changeStatus(Status.GAME_OVER);
         gm2.setSoloWinner(false);
+
+        //returns false because the LeaderBoard message is the last one.
         assertFalse(am2.endTurn(p2));
+
+        //assert correct messages are generated
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertSame(c2.messages.get(c2.messages.size()-1).getMessageType(),MessageType.MSG_UPD_LeaderBoard); //<- the LAST message must be MSG_UPD_LeaderBoard
         //assertEquals(1, c2.messages.size()); <- this may change: LorenzoMove() modifies the model.
@@ -127,9 +155,14 @@ public class EndTurnActionTest {
 
     @Test
     public void endTurnSoloGameStandard() {
+        //setting the initial condition and saving variables
         g2.changeStatus(Status.STANDARD_TURN);
         int turn = g2.getTurn();
+
+        //returns True because it needs a MSG_UPD_end message afterwards
         assertTrue(am2.endTurn(p2));
+
+        //assert Model changes
         assertEquals(g2.getTurn(), turn + 1);
     }
 

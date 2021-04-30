@@ -7,6 +7,8 @@ public enum MessageType implements Serializable {
     MSG_OK_CREATE,
     MSG_JOIN_LOBBY,
     MSG_OK_JOIN,
+    MSG_REJOIN_LOBBY,
+    MSG_OK_REJOIN,
 
     MSG_ERROR,
     MSG_OK_GENERIC,

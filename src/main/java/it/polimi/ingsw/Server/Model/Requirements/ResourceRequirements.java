@@ -1,10 +1,8 @@
 package it.polimi.ingsw.Server.Model.Requirements;
 
-import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ResourceRequirements implements Requirement, Serializable {
@@ -17,8 +15,6 @@ public class ResourceRequirements implements Requirement, Serializable {
     public Map<Resource, Integer> getRequirements() {
         return requirements;
     }
-
-
 
     public boolean isCardRequirement() { return false; }
     public boolean isResourceRequirement() { return true; }
