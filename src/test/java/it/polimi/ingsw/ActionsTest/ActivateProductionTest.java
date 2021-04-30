@@ -406,6 +406,51 @@ public class ActivateProductionTest {
         assertEquals(3, c.messages.size());
     }
 
+    //verifies that if a slot is selected for production, only the top card of that slot is used for the production
+    //indirectly tests consumeResources() method
+    @Test
+    public void standardProductionOnlyTop(){
+        MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(
+                new boolean[]{true, false, false},
+                false,
+                new boolean[]{false, false},
+                null,
+                null,
+                null,
+                null);
+
+        DevelopmentCard dCard1 = new DevelopmentCard(1, Color.BLUE, 4,
+                Map.of(Resource.COIN, 2, Resource.SERVANT, 2),
+                new Power( Map.of(Resource.SHIELD, 1, Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 1)));
+
+        DevelopmentCard dCard2 = new DevelopmentCard(2, Color.PURPLE, 6,
+                Map.of(Resource.SERVANT, 3, Resource.COIN, 2),
+                new Power( Map.of(Resource.COIN, 1, Resource.SERVANT, 1),
+                        Map.of(Resource.SHIELD, 3)));
+
+        p.getDevelopmentSlot().addCard(dCard1, 0);
+        assertTrue(p.getDevelopmentSlot().addCard(dCard2, 0));
+
+        p.getStrongbox().addResource(Resource.COIN, 1);
+        p.getStrongbox().addResource(Resource.SHIELD, 1);
+        p.getStrongbox().addResource(Resource.STONE, 1);
+        p.getWarehouseDepot().add(Resource.SERVANT);
+
+        c.emptyQueue();
+
+        assertTrue(am.activateProduction(p, message));
+        assertEquals(0, p.getWarehouseDepot().getTotal());
+        assertEquals(1, p.getStrongbox().getQuantity(Resource.STONE));
+        assertEquals(0, p.getStrongbox().getQuantity(Resource.COIN));
+        assertEquals(4, p.getStrongbox().getQuantity(Resource.SHIELD));
+        assertNull(p.getStrongbox().getQuantity(Resource.SERVANT));
+
+        assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
+        assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
+        assertEquals(3, c.messages.size());
+    }
+
 
     //Verifies if multiple productions are accepted
     @Test
