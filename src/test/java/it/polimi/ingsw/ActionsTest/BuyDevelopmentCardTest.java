@@ -76,11 +76,12 @@ public class BuyDevelopmentCardTest {
     //if the player has no resources it is expected to return false and to have an ObjectError.
     public void buyDevelopmentCardTest2() {
         assertFalse(am.buyDevelopmentCard(p));
+
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
-        assertEquals(1, c.messages.size());
-        assertSame(c.messages.get(0).getMessageType(), MessageType.MSG_ERROR);
-        assertEquals("You cannot buy any card.", g.getErrorObject().getErrorMessage());
         assertFalse(dcv.isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
     }
 
     @Test
@@ -101,10 +102,11 @@ public class BuyDevelopmentCardTest {
 
         c.emptyQueue();
         assertFalse(am.buyDevelopmentCard(p));
-        assertEquals(1, c.messages.size());
-        assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
         assertFalse(dcv.isEnabled());
-        assertEquals("You cannot place the cards in any slot.", g.getErrorObject().getErrorMessage());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
     }
 
     @Test
@@ -239,9 +241,9 @@ public class BuyDevelopmentCardTest {
 
         assertFalse(am.buyDevelopmentCard(p));
         assertFalse(dcv.isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
-        assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
-        assertEquals("You cannot buy any card.", g.getErrorObject().getErrorMessage());
     }
 
     @Test
@@ -255,7 +257,6 @@ public class BuyDevelopmentCardTest {
         assertEquals(1, c.messages.size());
         assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
         assertFalse(dcv.isEnabled());
-        assertEquals("Errore! è stato chiamato il metodo chooseDevelopmentCard (2/2) senza oggetto vendor attivo nel model!", g.getErrorObject().getErrorMessage());
         assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
         assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());

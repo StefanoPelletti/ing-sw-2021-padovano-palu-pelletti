@@ -9,13 +9,14 @@ import java.util.List;
 public class MessagePlatform implements ModelObserver {
 
     List<Message> list;
-    int maxPlayerNumber;
+    int activePlayers;
     int t;
-    public MessagePlatform(int maxPlayerNumber)
+
+    public MessagePlatform(int activePlayers)
     {
         list = new ArrayList<Message>();
-        this.maxPlayerNumber = maxPlayerNumber;
-        t = maxPlayerNumber;
+        this.activePlayers = activePlayers;
+        t = activePlayers;
     }
 
     public synchronized Message waitForLatestMessage() throws InterruptedException {
@@ -27,7 +28,7 @@ public class MessagePlatform implements ModelObserver {
         if(t==0)
         {
             list.remove(0);
-            t=maxPlayerNumber;
+            t = activePlayers;
         }
 
         return msg;
@@ -39,5 +40,22 @@ public class MessagePlatform implements ModelObserver {
             this.notify();
         }
         list.add(message);
+    }
+
+    public synchronized void decrementActivePlayers()
+    {
+        activePlayers--;
+        if( t == activePlayers -t -1) // this should migrate che unfortunate case in which the other threads are
+                                            //waiting for a disconnected thread to fetch the message
+        {
+            list.remove(0);
+            t = activePlayers;
+        }
+
+    }
+
+    public synchronized void incrementActivePlayers()
+    {
+        activePlayers++;
     }
 }

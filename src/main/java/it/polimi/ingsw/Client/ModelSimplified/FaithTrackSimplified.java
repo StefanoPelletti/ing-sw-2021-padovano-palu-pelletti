@@ -36,15 +36,15 @@ public class FaithTrackSimplified {
         }
         result.append(" --------------------------- ");
         if(zones[2])
-            result.append("L'ultima zona è stata attivata!");
+            result.append(" Third and last zone has been activated!");
         else {
             if (zones[1])
-                result.append(" La seconda zona è stata attivata!");
+                result.append(" Second zone has been activated!");
             else {
                 if (zones[0])
-                    result.append("La prima zona è stata attivata!");
+                    result.append(" The First zone has been activated!");
                 else
-                    result.append(" Ancora nessuna zona è stata attivata!");
+                    result.append(" No zone has been activated yet!");
             }
         }
         return result.toString();

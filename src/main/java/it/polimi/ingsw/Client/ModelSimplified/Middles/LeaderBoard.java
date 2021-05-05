@@ -35,7 +35,7 @@ public class LeaderBoard {
     public String toResult(String thisPlayer)
     {
         StringBuilder result = new StringBuilder("");
-        if(this.leaderboard == null) return result.append("Classifica vuota").toString();
+        if(this.leaderboard == null) return result.append("Empty LeaderBoard.").toString();
 
         boolean tie = false;
         Integer maxValue = 0;

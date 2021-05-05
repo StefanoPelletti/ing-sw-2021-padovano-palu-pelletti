@@ -154,11 +154,11 @@ public class DevelopmentSlot extends ModelObservable {
         if(onTop[0] != null) {
             result.append(onTop[0].toString());
         } else {
-            result.append("Nessuna carta nello slot 1. \n");
+            result.append(" No card in slot number 1. \n");
         }
         for(int i = 0; i < 3; i++) {
             if(cards[0][i] != onTop[0]) {
-                result.append("PV carta sottostante: " + cards[0][i].getVP() + "\n");
+                result.append("VP of underneath cards: " + cards[0][i].getVP() + "\n");
             } else {
                 break;
             }
@@ -169,11 +169,11 @@ public class DevelopmentSlot extends ModelObservable {
         if(onTop[1] != null) {
             result.append(onTop[1].toString());
         } else {
-            result.append("Nessuna carta nello slot 2. \n");
+            result.append(" No card in slot number 2. \n");
         }
         for(int i = 0; i < 3; i++) {
             if(cards[1][i] != onTop[1]) {
-                result.append("PV carta sottostante: " + cards[1][i].getVP() + "\n");
+                result.append("VP of underneath cards: " + cards[1][i].getVP() + "\n");
             } else {
                 break;
             }
@@ -184,11 +184,11 @@ public class DevelopmentSlot extends ModelObservable {
         if(onTop[2] != null) {
             result.append(onTop[2].toString());
         } else {
-            result.append("Nessuna carta nello slot 3. \n");
+            result.append(" No card in slot number 3. \n");
         }
         for(int i = 0; i < 3; i++) {
             if(cards[2][i] != onTop[2]) {
-                result.append("PV carta sottostante: " + cards[2][i].getVP() + "\n");
+                result.append("VP of underneath cards: " + cards[2][i].getVP() + "\n");
             } else {
                 break;
             }

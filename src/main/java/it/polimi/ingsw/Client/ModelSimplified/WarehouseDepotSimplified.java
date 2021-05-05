@@ -36,6 +36,12 @@ public class WarehouseDepotSimplified {
 
     @Override
     public String toString() {
-        return "Shelf 1:"+this.shelf1.toString()+"\nShelf 2:"+this.shelf2[0].toString()+","+this.shelf2[1].toString()+"\nShelf 3:"+this.shelf3[0].toString()+","+this.shelf3[1].toString()+","+this.shelf3[2].toString();
+        return "Shelf 1:"+
+                this.shelf1.toString()+"\nShelf 2:"+
+                this.shelf2[0].toString()+","+
+                this.shelf2[1].toString()+"\nShelf 3:"+
+                this.shelf3[0].toString()+","+
+                this.shelf3[1].toString()+","+
+                this.shelf3[2].toString();
     }
 }

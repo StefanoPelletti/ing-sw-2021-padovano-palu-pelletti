@@ -29,12 +29,12 @@ public class DevelopmentCardsVendor
 
         if (cards != null) {
             for (DevelopmentCard dc : cards.keySet()) {
-                result.append("La carta numero ").append(i);
+                result.append(" the Card number: ").append(i);
                 result.append(dc);
                 int k = 1;
                 for (boolean b : cards.get(dc)) {
                     if (b) {
-                        result.append("'\nPuo' essere inserito nello slot: ").append(k);
+                        result.append("'\nCould be placed in slot number: ").append(k);
                     }
                     k++;
                 }

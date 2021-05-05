@@ -26,15 +26,15 @@ public class DevelopmentCardsDeckSimplified {
     @Override
     public String toString()
     {
-        StringBuilder result = new StringBuilder(" DevelopmentDeck: ");
+        StringBuilder result = new StringBuilder(" Development Deck: ");
         for(int i=0; i<3; i++)
         {
-            result.append(" Riga ").append(i);
+            result.append(" Row ").append(i);
             for(int j=0; j<4; j++)
             {
-                result.append("Colonna ").append(j);
+                result.append(" Column ").append(j);
                 if(this.cards[i][j]==null)
-                    result.append(" XX VUOTO XX");
+                    result.append(" XX Empty! XX");
                 else
                     result.append(cards[i][j].toString());
             }

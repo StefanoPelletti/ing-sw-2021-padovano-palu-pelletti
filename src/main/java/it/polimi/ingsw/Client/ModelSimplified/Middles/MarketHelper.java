@@ -54,28 +54,28 @@ public class MarketHelper
     public String toString()
     {
         StringBuilder result = new StringBuilder("");
-        result.append(" MarketHelper è qui ad aiutarti! ");
-        result.append(" la risorsa attualmente selezionata è un ").append(getCurrentResource()).append("\n");
-        result.append(" le risorse che hai recuperato dal mercato, sono: ").append("\n");
+        result.append(" MarketHelper is here to help! ");
+        result.append(" Currently selected resource is a  ").append(getCurrentResource()).append("\n");
+        result.append(" The Resources you gathered from the market are: ").append("\n");
         result.append(resources);
-        result.append(" Perfavore seleziona una delle seguenti possibili opzioni");
+        result.append(" Please choose an option: ");
         if(getCurrentResource()!=Resource.EXTRA)
         {
-            if(choices[0]) result.append(" 0 : inserisci nel deposito").append("\n");
-            if(choices[1]) result.append(" 1 : inserisci nel deposito extra").append("\n");
+            if(choices[0]) result.append(" 0 : put in depot! ").append("\n");
+            if(choices[1]) result.append(" 1 : put in Extra depot!").append("\n");
         }
         else
         {
-            if(choices[0]) result.append(" 0 : scambia con un ").append(extraResourceChoices[0]).append("\n");
-            if(choices[1]) result.append(" 1 : scambia con un ").append(extraResourceChoices[1]).append("\n");
+            if(choices[0]) result.append(" 0 : convert in ").append(extraResourceChoices[0]).append("\n");
+            if(choices[1]) result.append(" 1 : convert in ").append(extraResourceChoices[1]).append("\n");
         }
 
-        if(choices[2]) result.append(" 2 : scarta la risorsa").append("\n");
-        if(choices[3]) result.append(" 3 : scambia le righe 1 e 2").append("\n");
-        if(choices[4]) result.append(" 4 : scambia le righe 1 e 3").append("\n");
-        if(choices[5]) result.append(" 5 : scambia le righe 2 e 3").append("\n");
-        if(choices[6]) result.append(" 6 : vai alla prossima risorsa").append("\n");
-        if(choices[7]) result.append(" 7 : vai alla risorsa precedente").append("\n");
+        if(choices[2]) result.append(" 2 : discard that resource! ").append("\n");
+        if(choices[3]) result.append(" 3 : swap the 1st and 2nd rows of your depot! ").append("\n");
+        if(choices[4]) result.append(" 4 : swap the 1st and 3rd rows of your depot! ").append("\n");
+        if(choices[5]) result.append(" 5 : swap the 2nd and 3rd rows of your depot! ").append("\n");
+        if(choices[6]) result.append(" 6 : hop to the next available resource! ").append("\n");
+        if(choices[7]) result.append(" 7 : hop back to the previous resource! ").append("\n");
 
         return result.toString();
     }

@@ -13,14 +13,20 @@ public class ActionHelper extends ModelObservable {
         this.actionMessage = "";
     }
 
-    public void setLorenzoNotificationMessage(int number){
+    public synchronized void setLorenzoNotificationMessage(int number){
         if(number == 0) actionMessage = "Lorenzo destroyed two cards on the devCardDeck!";
         if(number == 1) actionMessage = "Lorenzo gained one faithPoint and shuffled the ActionToken Stack!";
         if(number == 2) actionMessage = "Lorenzo gained two faithPoints!";
         //notifyObservers();
     }
 
-    public void setNotificationMessage(String nickname, Message message){
+    public synchronized void setNewMessage(String message)
+    {
+        actionMessage = message;
+        //notifyObservers();
+    }
+
+    public synchronized void setNotificationMessage(String nickname, Message message){
         switch(message.getMessageType()){
             case MSG_ACTION_ACTIVATE_LEADERCARD:
                 actionMessage = nickname + " activated his leadercard number "+ ((MSG_ACTION_ACTIVATE_LEADERCARD) message).getCardNumber();
@@ -80,5 +86,5 @@ public class ActionHelper extends ModelObservable {
     public MSG_NOTIFICATION generateMessage()
     {
         return new MSG_NOTIFICATION(this.actionMessage);
-        }
+    }
 }

@@ -136,7 +136,7 @@ public class ClientHandler implements Runnable {
                 } else
                     lobby.wait();
             } else {
-                this.send(new MSG_ERROR("Ma che mi hai inviato?"));
+                this.send(new MSG_ERROR("Huh?"));
                 closeStreams();
                 return;
             }
@@ -158,22 +158,22 @@ public class ClientHandler implements Runnable {
 
         while (true) {
             switch (phase) {
-                case GiveModel:
+                case GiveModel: //updates the Client with the FULL Model
                     phase = giveModel();
                     break;
-                case Proceed:
+                case Proceed: //basically chooses if the player is the currentPlayer. If true, YourTurn, else, receive updates
                     phase = proceed();
                     break;
-                case YourTurn:
+                case YourTurn: //creates a new thread which will perform the action. Then goes to receive updates
                     phase = yourTurn();
                     break;
-                case ReceiveUpdates:
+                case ReceiveUpdates: //loops in this phase till a certain message pops up
                     phase = receiveUpdates();
                     break;
-                case Disconnected:
+                case Disconnected: //gets in this phase if some exception was thrown by the streams
                     phase = disconnect();
                     break;
-                case GameOver:
+                case GameOver: //basically kills the thread
                     return;
             }
         }
@@ -191,7 +191,7 @@ public class ClientHandler implements Runnable {
     }
 
     private Phase proceed() {
-        if(playerNumber == lobby.currentPlayer())
+        if(playerNumber == lobby.currentPlayer()) //never happens for a reconnecting player
             return Phase.YourTurn; // if this is true, then the Thread HAS TO listen to the client
         else
             return Phase.ReceiveUpdates; //if playerNumber is not the currentPlayer, this thread is one of the "Inactive" players. THEN: send just the messages.
@@ -263,16 +263,25 @@ public class ClientHandler implements Runnable {
     private Phase disconnect() {
         System.out.println("An error has occurred and the ClientHandler will be disconnected");
         closeStreams();
+
+        //check if last player -> kill other threads (how? see below [275], same situation)
+        //in this case he should win? or he should continue alone? must discuss!
+
         this.pendingConnection=true;
         lobby.addIdlePlayer(this.playerNumber);
-
+        lobby.messagePlatform.decrementActivePlayers();
+        lobby.disconnectPlayer(this.nickname);
         try {
             while (this.pendingConnection) this.pendingConnection.wait();
+            // while (status!= GAMEOVER && this.pendingConnection ) this.pendingconnection.wait()
+            // {    if (status == GAMEOVER) return GameOver
+            // else ...   HOW TO UNLOCK THIS?
         }
         catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        lobby.messagePlatform.incrementActivePlayers();
         lobby.removeIdlePlayer(this.playerNumber);
         return Phase.GiveModel;
     }

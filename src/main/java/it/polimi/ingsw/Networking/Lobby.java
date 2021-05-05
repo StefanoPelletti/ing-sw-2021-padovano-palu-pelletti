@@ -7,6 +7,7 @@ import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
+import it.polimi.ingsw.Server.Model.Middles.DevelopmentCardsVendor;
 
 import java.net.*;
 import java.util.*;
@@ -77,7 +78,6 @@ public class Lobby {
         if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
             switch (message.getMessageType()) {
                 case MSG_INIT_CHOOSE_LEADERCARDS:
-                    //messagePlatform.update(new MSG_NOTIFICATION("tizio ha scelto carte!"));
                     return actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
                 case MSG_INIT_CHOOSE_RESOURCE:
                     return actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
@@ -100,7 +100,7 @@ public class Lobby {
                 case MSG_ACTION_ENDTURN:
                     return actionManager.endTurn(player);
                 default:
-                    System.out.println(" SRV: non so cosa mi abbiano inviato aiuto.");
+                    System.out.println(" SRV: help I don't know what they sent me.");
             }
         }
         return false;
@@ -141,6 +141,16 @@ public class Lobby {
     {
         gameManager.removeIdlePlayer(playerNumber);
     }
+
+    public void disconnectPlayer(String nickname)
+    {
+        Player player = gameManager.getGame().getPlayer(nickname);
+        if(player.equals( gameManager.currentPlayer() ))
+            actionManager.disconnectPlayer(player, true);
+        else
+            actionManager.disconnectPlayer(player, false);
+    }
+
 
     public synchronized ClientHandler findPendingClientHandler(String nickname)
     {

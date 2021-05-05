@@ -39,7 +39,7 @@ public class ActionManager {
 
         if(!leaderCardsObject.isEnabled()) //how the hell did he get in here?
         {
-            gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseLeaderCards senza oggetto LeaderCardsObject attivo nel model!");
+            gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsObject middle-object was not enabled!");
             return false;
         }
 
@@ -74,7 +74,7 @@ public class ActionManager {
 
         if(!resourceObject.isEnabled()) //how the hell did he get in here?
         {
-            gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseResources senza oggetto ResourceObject attivo nel model!");
+            gameManager.setErrorObject("Error! Method chooseResource was somehow invoked while ResourceObject middle-object was not enabled!");
             return false;
         }
 
@@ -108,7 +108,7 @@ public class ActionManager {
         int cardNumber = message.getCardNumber();
 
         if(player.getLeaderCards()[cardNumber].getEnable()){
-            gameManager.setErrorObject("Errore! Questa carta è già attivata!");
+            gameManager.setErrorObject("Error! This card was already enabled!");
             return false;
         }
 
@@ -124,7 +124,7 @@ public class ActionManager {
             for(Resource resource: requiredResources.keySet()){
                 resources.put(resource, resources.get(resource)-requiredResources.get(resource));
                 if(resources.get(resource)<0){
-                    gameManager.setErrorObject("Errore! Non hai abbastanza risorse!");
+                    gameManager.setErrorObject("Error! You don't have enough resources!");
                     return false;
                 }
             }
@@ -149,7 +149,7 @@ public class ActionManager {
                     }
                 }
                 if(requiredNumCard>0){
-                    gameManager.setErrorObject("Errore! Non disponi delle carte corrette!");
+                    gameManager.setErrorObject("Error! You don't own the correct cards!");
                     return false;
                 }
             }
@@ -167,17 +167,17 @@ public class ActionManager {
 //VALIDATION
         if(cardNumber!=0 && cardNumber!=1)
         {
-            gameManager.setErrorObject("Errore! Ma che carta hai tentato di distruggere?");
+            gameManager.setErrorObject("Error! Which card did you just tried to discard?");
             return false; //impossible?  cannot build a message like that
         }
         if(player.getLeaderCards()[cardNumber]==null)
         {
-            gameManager.setErrorObject("Errore! Hai già scartato questa carta!");
+            gameManager.setErrorObject("Error! You already discarded that card!");
             return false;
         }
         if(player.getLeaderCards()[cardNumber].getEnable())
         {
-            gameManager.setErrorObject("Errore! Non puoi disattivare una carta già attivata!");
+            gameManager.setErrorObject("Error! You can't discard a card that has already been enabled!");
             return false;
         }
 //MODEL UPDATE
@@ -195,7 +195,7 @@ public class ActionManager {
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
 
         if(player.getAction(0)){
-            gameManager.setErrorObject("Errore! Hai già fatto una produzione!");
+            gameManager.setErrorObject("Error! You already performed a very powerful action");
             return false;
         }
         else player.setAction(0);
@@ -203,7 +203,7 @@ public class ActionManager {
         if(leaderProduction[0]){
             LeaderCard l1 = player.getLeaderCards()[0];
             if(l1 == null || !l1.getEnable() || !l1.getSpecialAbility().isProduction()){
-                gameManager.setErrorObject("Non puoi produrre con questa leader Card!");
+                gameManager.setErrorObject("You cannot produce with the first leader card!");
                 return false;
             }
         }
@@ -211,7 +211,7 @@ public class ActionManager {
         if(leaderProduction[1]){
             LeaderCard l2 = player.getLeaderCards()[1];
             if(l2 == null || !l2.getEnable() || !l2.getSpecialAbility().isProduction()){
-                gameManager.setErrorObject("Non puoi produrre con questa leader Card!");
+                gameManager.setErrorObject("You cannot produce with the second leader card!");
                 return false;
             }
         }
@@ -219,22 +219,22 @@ public class ActionManager {
         DevelopmentCard[] top = player.getDevelopmentSlot().getOnTop();
         for(int i=0; i<3; i++){
             if(top[i]==null && standardProduction[i]){
-                gameManager.setErrorObject("Non puoi produrre con tali scelte standard!");
+                gameManager.setErrorObject("You cannot produce with that standard resources!");
                 return false;
             }
         }
 
         if(baseProduction && Arrays.stream(possibleResources).noneMatch(r-> r==message.getBasicOutput())){
-            gameManager.setErrorObject("Non puoi produrre questa risorsa con il potere base!");
+            gameManager.setErrorObject("You cannot produce that resource with that the Basic Power!");
             return false;
         }
 
         if(leaderProduction[0] && Arrays.stream(possibleResources).noneMatch(r-> r==message.getLeaderOutput1())){
-            gameManager.setErrorObject("Non puoi produrre questa risorsa con una carta leader!");
+            gameManager.setErrorObject("You cannot produce that resource with that a Leader Cards!");
             return false;
         }
         if(leaderProduction[1] && Arrays.stream(possibleResources).noneMatch(r-> r==message.getLeaderOutput2())){
-            gameManager.setErrorObject("Non puoi produrre questa risorsa con una carta leader!");
+            gameManager.setErrorObject("You cannot produce that resource with that a Leader Cards!");
             return false;
         }
 
@@ -293,7 +293,7 @@ public class ActionManager {
         //check if the player has enough resources
         for(Resource r : requiredResources.keySet()){
             if(initialResources.get(r) < requiredResources.get(r)) {
-                gameManager.setErrorObject("Errore! Ti mancano le risorse per attivare queste produzioni!");
+                gameManager.setErrorObject("Error! You miss the resource to get this production done!");
                 return false;
             }
         }
@@ -331,12 +331,12 @@ public class ActionManager {
         LeaderCard[] playerLeaderCards = player.getLeaderCards();
 
         if(firstExtraDepot>=0 && !playerLeaderCards[0].getSpecialAbility().isExtraDepot()){
-            gameManager.setErrorObject("Errore! La tua leader Card 1 non ha abilità speciale deposito!");
+            gameManager.setErrorObject("Error! Your Leader Card number 1 does not have an Extra Depot!");
             return false;
         }
 
         if(secondExtraDepot>=0 && !playerLeaderCards[1].getSpecialAbility().isExtraDepot()){
-            gameManager.setErrorObject("Errore! La tua leader Card 2 non ha abilità speciale deposito!");
+            gameManager.setErrorObject("Error! Your Leader Card number 2 does not have an Extra Depot!");
             return false;
         }
 //VALIDATION
@@ -345,15 +345,15 @@ public class ActionManager {
         WarehouseDepot demoDepot = new WarehouseDepot();
         ExtraDepot demoExtraDepot = new ExtraDepot(Resource.COIN);
         if(!demoDepot.setConfig(slot1, slot2, slot3)) {
-            gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel deposito!");
+            gameManager.setErrorObject("Error! You cannot put the resources like that in the depot!");
             return false;
         }
         if(firstExtraDepot!=-1 && !demoExtraDepot.setResource(firstExtraDepot)) {
-            gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel primo deposito extra!");
+            gameManager.setErrorObject("Error! You cannot put the resources like that in the first Extra Depot!");
             return false; //impossible? Cannot build message like that
         }
         if(secondExtraDepot!=-1 && !demoExtraDepot.setResource(secondExtraDepot)) {
-            gameManager.setErrorObject("Errore! Non puoi mettere le cose così nel secondo deposito extra!");
+            gameManager.setErrorObject("Error! You cannot put the resources like that in the second Extra Depot!");
             return false; //impossible? Cannot build message like that
         }
 
@@ -374,7 +374,7 @@ public class ActionManager {
 
         for(Resource resToControl : possibleResources){
             if(!initialResources.get(resToControl).equals(newResources.get(resToControl))){
-                gameManager.setErrorObject("Errore! Il numero di risorse non combacia!");
+                gameManager.setErrorObject("Error! The number of resources does not match!");
                 return false;
             }
         }
@@ -406,7 +406,7 @@ public class ActionManager {
         Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
         if(player.getAction(1)){
-            gameManager.setErrorObject("Errore! Hai già tentato di comprare una carta!");
+            gameManager.setErrorObject("Error! You already performed a very powerful action!");
             return false;
         }
         else player.setAction(1);
@@ -448,7 +448,7 @@ public class ActionManager {
         }
 
         if(cards.size() == 0) {
-            gameManager.setErrorObject("You cannot buy any card.");
+            gameManager.setErrorObject("Error! You cannot buy any card at all!");
             return false;
         }
 
@@ -467,7 +467,7 @@ public class ActionManager {
 
         if(finalCards.size()==0)
         {
-            gameManager.setErrorObject("You cannot place the cards in any slot.");
+            gameManager.setErrorObject("Error! You cannot place the cards in any slot!");
             return false;
         }
 
@@ -485,11 +485,11 @@ public class ActionManager {
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
         if(!developmentCardsVendor.isEnabled()) //how the hell did he get in here?
         {
-            gameManager.setErrorObject("Errore! è stato chiamato il metodo chooseDevelopmentCard (2/2) senza oggetto vendor attivo nel model!");
+            gameManager.setErrorObject("Error! The method chooseDevelopmentCard was somehow invoked without developmentCardsVendor middle-object enabled!");
             return false;
         }
 
-        DevelopmentCard dc = (new ArrayList<DevelopmentCard>(developmentCardsVendor.getCards().keySet())).get(cardNumber-1);
+        DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber-1);
 
         player.getDevelopmentSlot().addCard(dc, slotNumber);
         DevelopmentCard[][] visibleCards = game.getDevelopmentCardsDeck().getVisible();
@@ -543,7 +543,7 @@ public class ActionManager {
         int number = message.getNumber();
 
         if(player.getAction(2)){
-            gameManager.setErrorObject("Errore! Sei già andato al mercato!");
+            gameManager.setErrorObject("Error! You already performed a very powerful action");
             return false;
         }
         else player.setAction(2);
@@ -553,7 +553,7 @@ public class ActionManager {
 
         if(marketHelper.isEnabled())
         {
-            gameManager.setErrorObject("Errore in getMarketResource()! Oggetto marketHelper attivo nel model!");
+            gameManager.setErrorObject("Error! method getMarketResource was somehow invoked WITH marketHelper enabled!");
             return false;
         }
 
@@ -604,7 +604,7 @@ public class ActionManager {
 
         if(!marketHelper.isEnabled())
         {
-            gameManager.setErrorObject("Errore! Oggetto marketHelper NON attivo ed è stato chiamato il metodo newMarketChoice!");
+            gameManager.setErrorObject("Error! method newChoiceMarket was somehow invoked WITHOUT marketHelper enabled!");
             return false;
         }
         this.actionHelper.setNotificationMessage(player.getNickname(), message);
@@ -627,7 +627,7 @@ public class ActionManager {
             if(choice==0) {
                 if(choices[0]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[0]);
-                    System.out.println("Risorsa cambiata!");
+                    //System.out.println("Risorsa cambiata!");
                 }
                 else
                     error=true; //impossible?
@@ -635,7 +635,7 @@ public class ActionManager {
             else if (choice==1) {
                 if(choices[1]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[1]);
-                    System.out.println("Risorsa cambiata!");
+                    //System.out.println("Risorsa cambiata!");
                 }
                 else
                     error=true; //impossible?
@@ -647,7 +647,7 @@ public class ActionManager {
                 if(choices[0]) {
                     depot.add(currentResource);
                     marketHelper.removeResource();
-                    System.out.println("\nRisorsa aggiunta al deposito!");
+                    //System.out.println("\nRisorsa aggiunta al deposito!");
                 }
                 else error=true;
             }
@@ -661,7 +661,7 @@ public class ActionManager {
                             break;
                         }
                     }
-                    System.out.println("\nRisorsa aggiunta nel deposito extra!");
+                    //System.out.println("\nRisorsa aggiunta nel deposito extra!");
                 }
                 else error=true;
             }
@@ -671,7 +671,7 @@ public class ActionManager {
             if(choices[2]) {
                 marketHelper.removeResource();
                 faithTrackManager.advanceAllExcept(player);
-                System.out.println("\nRisorsa scartata! Non le volevi bene? Direi di no");
+                //System.out.println("\nRisorsa scartata! Non le volevi bene? Direi di no");
             }
             else error=true; //impossible?
         }
@@ -679,7 +679,7 @@ public class ActionManager {
         else if(choice==3){
             if(choices[3]) {
                 depot.swapRow(1,2);
-                System.out.println("\nHo scambiato le righe 1 e 2!");
+                //System.out.println("\nHo scambiato le righe 1 e 2!");
             }
             else error=true;
         }
@@ -687,7 +687,7 @@ public class ActionManager {
         else if(choice==4){
             if(choices[4]) {
                 depot.swapRow(1,3);
-                System.out.println("\nHo scambiato le righe 1 e 3!");
+                //System.out.println("\nHo scambiato le righe 1 e 3!");
             }
             else error=true;
         }
@@ -695,7 +695,7 @@ public class ActionManager {
         else if(choice==5){
             if(choices[5]) {
                 depot.swapRow(2,3);
-                System.out.println("\nHo scambiato le righe 2 e 3!");
+                //System.out.println("\nHo scambiato le righe 2 e 3!");
             }
             else error=true;
         }
@@ -703,7 +703,7 @@ public class ActionManager {
         else if(choice==6){
             if(choices[6]) {
                 marketHelper.skipForward();
-                System.out.println("\nRisorsa skippata! ");
+                //System.out.println("\nRisorsa skippata! ");
             }
             else error=true;
         }
@@ -711,14 +711,14 @@ public class ActionManager {
         else if(choice==7){
             if(choices[7]) {
                 marketHelper.skipBackward();
-                System.out.println("\nTorniamo indietro!");
+                //System.out.println("\nTorniamo indietro!");
             }
             else error=true;
         }
 
 
         if(error){
-            gameManager.setErrorObject("Errore! Hai fatto una scelta invalida, perfavore no!");
+            gameManager.setErrorObject("Error! You chose an invalid action!");
             return false;
         }
         else {
@@ -871,4 +871,13 @@ public class ActionManager {
         }
     }
 
+    public void disconnectPlayer(Player player, boolean currentPlayer) {
+        actionHelper.setNewMessage(" "+player.getNickname()+" has crashed! ");
+        if(currentPlayer) {
+            game.getDevelopmentCardsVendor().setEnabled(false);
+            game.getErrorObject().setEnabled(false);
+            game.getMarketHelper().setEnabled(false);
+            endTurn(player);
+        }
+    }
 }
