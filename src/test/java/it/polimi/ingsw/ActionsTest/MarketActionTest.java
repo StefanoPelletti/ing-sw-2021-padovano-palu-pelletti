@@ -41,9 +41,7 @@ public class MarketActionTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-        g.addAllObservers(c);
-
-        gm.getFaithTrackManager().addObserver(c);
+        gm.addAllObserver(c);
         c.emptyQueue();
         p = g.getPlayer(1);
     }
@@ -1276,8 +1274,7 @@ public class MarketActionTest {
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
         game.addPlayer("Giacomo Poretto", 1);
-        game.addAllObservers(a);
-        gameManager.getFaithTrackManager().addObserver(a);
+        gameManager.addAllObserver(a);
 
         Player player = game.getPlayer(1);
         player.setPosition(23);
@@ -1344,8 +1341,7 @@ public class MarketActionTest {
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
         game.addPlayer("Giacomo Poretto", 1);
-        game.addAllObservers(a);
-        gameManager.getFaithTrackManager().addObserver(a);
+        gameManager.addAllObserver(a);
 
         Player player = game.getPlayer(1);
         player.setPosition(22);

@@ -32,7 +32,7 @@ public class ActionTokenStack extends ModelObservable {
         }
         stack.set(stack.size()-1, result);
 
-
+//////// remove me?
         if (result.isForward2())
             notifyObservers(" Lorenzo has moved Twice on the Faith Track!");
         if (result.isRemover())

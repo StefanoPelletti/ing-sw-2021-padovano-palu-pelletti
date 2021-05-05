@@ -13,6 +13,7 @@ import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Utils.ModelObserver;
 
 import java.util.*;
 
@@ -22,11 +23,11 @@ public class GameManager {
     private FaithTrackManager faithTrackManager;
     private ActionManager actionManager;
     private boolean solo;
-
-
+    private ArrayList<Integer> idlePlayers;
+    private int lobbyMaxPlayers;
 
     private Boolean soloWinner; // if null: no one, if true: the player, if false: the Lorenzo
-    private int lobbyMaxPlayers;
+
 
     public GameManager(int lobbyMaxPlayers)
     {
@@ -36,11 +37,14 @@ public class GameManager {
         this.lobbyMaxPlayers = lobbyMaxPlayers;
         this.solo = (lobbyMaxPlayers == 1);
         this.soloWinner = null;
+        this.idlePlayers = new ArrayList<>();
     }
 
     public Player currentPlayer() {
         return game.getCurrentPlayer();
     }
+
+
 
 
     public boolean endTurn()
@@ -56,21 +60,33 @@ public class GameManager {
 
     public void setNextPlayer() {
         if (!solo) {
-            if(game.getCurrentPlayerInt()+1 > lobbyMaxPlayers) {
-                game.setCurrentPlayer(1);
-                game.setTurn(game.getTurn()+1);
-            }
-            else
-                game.setCurrentPlayer(game.getCurrentPlayerInt() + 1);
+            int nextPlayer = getNextPlayer(game.getCurrentPlayerInt()+1);
+            game.setCurrentPlayer(nextPlayer);
         }
         else
             game.setTurn(game.getTurn()+1);
     }
 
+    private int getNextPlayer(int playerNumber) {
+        if (playerNumber > lobbyMaxPlayers) {
+            game.setTurn(game.getTurn() + 1);
+            return getNextPlayer(1);
+        }
+        if (idlePlayers.stream().anyMatch(x -> x == playerNumber)) {
+            return getNextPlayer(playerNumber+1);
+        }
+        return playerNumber;
+    }
 
+    public void addIdlePlayer(Integer playerNumber)
+    {
+        this.idlePlayers.add(playerNumber);
+    }
 
-
-
+    public void removeIdlePlayer(Integer playerNumber)
+    {
+        this.idlePlayers.remove(playerNumber);
+    }
 
     public void setStatus(Status status)
     {
@@ -207,4 +223,12 @@ public class GameManager {
 
         return result;
     }
+
+    public void addAllObserver(ModelObserver observer)
+    {
+        game.addAllObservers(observer);
+        faithTrackManager.addObserver(observer);
+    }
+
+
 }

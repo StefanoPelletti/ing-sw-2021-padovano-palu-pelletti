@@ -30,9 +30,7 @@ public class LorenzoMoveTest {
 
         c = new Catcher();
         g.addPlayer("Giacomo Poretti", 1);
-        g.addAllObservers(c);
-
-        gm.getFaithTrackManager().addObserver(c);
+        gm.addAllObserver(c);
         c.emptyQueue();
         p = g.getPlayer(1);
     }

@@ -39,9 +39,7 @@ public class DiscardLeaderCardTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto", 4);
-        g.addAllObservers(c);
-
-        gm.getFaithTrackManager().addObserver(c);
+        gm.addAllObserver(c);
         c.emptyQueue();
         p = g.getPlayer(1);
     }

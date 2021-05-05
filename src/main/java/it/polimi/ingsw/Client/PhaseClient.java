@@ -134,7 +134,8 @@ class MenuPhase
                         e.printStackTrace();
                     }
 
-                case "halo": EE(); break;
+                case "halo": new Thread(this::EE).start();
+                break;
                 default:
                     System.out.println("Sorry, we didn't catch that");
             }

@@ -46,8 +46,7 @@ public class EndTurnActionTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-        g.addAllObservers(c);
-        gm.getFaithTrackManager().addObserver(c);
+        gm.addAllObserver(c);
         p = g.getPlayer(1);
         c.emptyQueue();
 
@@ -56,8 +55,7 @@ public class EndTurnActionTest {
         g2 = gm2.getGame();
         c2 = new Catcher();
         g2.addPlayer("Unico", 1);
-        g2.addAllObservers(c2);
-        gm2.getFaithTrackManager().addObserver(c2);
+        gm2.addAllObserver(c2);
         p2 = g2.getPlayer(1);
         c2.emptyQueue();
     }

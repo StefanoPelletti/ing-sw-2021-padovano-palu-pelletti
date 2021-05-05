@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Networking.Message;
 
-import it.polimi.ingsw.Server.Model.Enumerators.Resource;
-
 import java.io.Serializable;
 
 public class MSG_ACTION_MARKET_CHOICE extends Message implements Serializable {

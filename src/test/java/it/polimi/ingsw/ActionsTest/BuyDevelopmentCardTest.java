@@ -42,7 +42,7 @@ public class BuyDevelopmentCardTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-        g.addAllObservers(c);
+        gm.addAllObserver(c);
         p = g.getPlayer(1);
         c.emptyQueue();
     }

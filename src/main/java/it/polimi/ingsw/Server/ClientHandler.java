@@ -3,12 +3,13 @@ package it.polimi.ingsw.Server;
 import it.polimi.ingsw.Networking.*;
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_End;
-import it.polimi.ingsw.Server.Controller.GameManager;
 
 import java.util.*;
 
 import java.net.*;
 import java.io.*;
+
+enum Phase { GiveModel, Proceed, YourTurn, Disconnected, ReceiveUpdates, GameOver}
 
 public class ClientHandler implements Runnable {
 
@@ -17,19 +18,19 @@ public class ClientHandler implements Runnable {
     private int playerNumber;
 
     private Lobby lobby;
-    private String nickname;
+    private final String nickname;
     private OutputStream outputStream; // = socket.getOutputStream();
     private ObjectOutputStream objectOutputStream;// = new ObjectOutputStream(outputStream);
     private InputStream inputStream;// = socket.getInputStream();
     private ObjectInputStream objectInputStream;// = new ObjectInputStream(inputStream);
 
     private Boolean pendingConnection;
+    private Phase phase;
 
-    public ClientHandler( Socket clientSocket)
-    {
+    public ClientHandler(Socket clientSocket) {
         this.clientSocket = null;
         this.lobby = null;
-        this.nickname=null;
+        this.nickname = null;
 
         this.outputLock = new Object();
         this.playerNumber = 0;
@@ -47,24 +48,21 @@ public class ClientHandler implements Runnable {
 
             message = (Message) objectInputStream.readObject();
 //LOBBY REJOIN-------------------------
-            if(message.getMessageType() == MessageType.MSG_REJOIN_LOBBY)
-            {
+            if (message.getMessageType() == MessageType.MSG_REJOIN_LOBBY) {
                 MSG_REJOIN_LOBBY msg = (MSG_REJOIN_LOBBY) message;
                 int lobbyNumber = msg.getLobbyNumber();
                 String nickname = msg.getNickname();
 
                 lobby = Lobby.getLobby(lobbyNumber);
 
-                if(lobby == null)
-                {
+                if (lobby == null) {
                     send(new MSG_ERROR("Lobby not found"));
                     closeStreams();
                     return;
                 }
 
                 ClientHandler handler = lobby.findPendingClientHandler(nickname);
-                if(handler == null)
-                {
+                if (handler == null) {
                     send(new MSG_ERROR("Found no player that needs to reconnect with that nickname"));
                     closeStreams();
                     return;
@@ -101,7 +99,7 @@ public class ClientHandler implements Runnable {
 
                 Lobby.addLobby(this.lobby);
 
-                System.out.println(nickname + " created lobby "+i);
+                System.out.println(nickname + " created lobby " + i);
                 this.send(new MSG_OK_CREATE(i));
 
                 if (msg.getNumOfPlayers() == 1)
@@ -109,7 +107,9 @@ public class ClientHandler implements Runnable {
                 else
                     lobby.wait();
 //LOBBY JOINING-------------------------
-            } else if (message.getMessageType() == MessageType.MSG_JOIN_LOBBY) {
+            }
+//LOBBY JOIN---------------------------
+            else if (message.getMessageType() == MessageType.MSG_JOIN_LOBBY) {
                 MSG_JOIN_LOBBY msg = (MSG_JOIN_LOBBY) message;
                 int lobbyNumber = msg.getLobbyNumber();
                 String nickname = msg.getNickname();
@@ -119,9 +119,8 @@ public class ClientHandler implements Runnable {
                     nickname = this.lobby.onJoin(nickname, this.clientSocket, this);
                     if (nickname != null) {
                         send(new MSG_OK_JOIN(nickname));
-                        System.out.println(nickname + " joined lobby "+lobbyNumber);
-                    }
-                    else {
+                        System.out.println(nickname + " joined lobby " + lobbyNumber);
+                    } else {
                         send(new MSG_ERROR("Lobby full!"));
                         closeStreams();
                         return;
@@ -134,107 +133,168 @@ public class ClientHandler implements Runnable {
                 if (lobby.getNumberOfPresentPlayers() == lobby.getLobbyMaxPlayers()) {
                     lobby.init();
                     lobby.notifyAll();
-                }
-                else
+                } else
                     lobby.wait();
             } else {
                 this.send(new MSG_ERROR("Ma che mi hai inviato?"));
                 closeStreams();
                 return;
             }
+        }
+        catch (IOException | InterruptedException | ClassNotFoundException e)
+        {
+            e.printStackTrace();
+            return;
+        }
+        phase = Phase.GiveModel;
 
-            //send Complete ModelUpdate?
-            send(lobby.getFullModel());
-            send(new MSG_UPD_End());
+        //send Complete ModelUpdate?
+        //send(lobby.getFullModel());
+        //send(new MSG_UPD_End());
 
-            this.playerNumber = lobby.whoIs(this.nickname);
+        this.playerNumber = lobby.whoIs(this.nickname);
 
 //MAIN RUN(), loops
-            while (true) {
-                if (playerNumber == lobby.currentPlayer()) { // if this is true, then the Thread HAS TO listen to the client
-                    message = (Message) objectInputStream.readObject();
-                    Message finalMessage = message;
 
-                    new Thread(() -> {
-                        boolean result = lobby.onMessage(finalMessage, nickname);
-                        if (result) lobby.messagePlatform.update(new MSG_UPD_End());
-                    }).start();
-
-                    if (looper()) return;
-                } else //if playerNumber is not the currentPlayer, this thread is one of the "Inactive" players. THEN: send just the messages.
-                {
-                    if (looper()) return;
-                }
+        while (true) {
+            switch (phase) {
+                case GiveModel:
+                    phase = giveModel();
+                    break;
+                case Proceed:
+                    phase = proceed();
+                    break;
+                case YourTurn:
+                    phase = yourTurn();
+                    break;
+                case ReceiveUpdates:
+                    phase = receiveUpdates();
+                    break;
+                case Disconnected:
+                    phase = disconnect();
+                    break;
+                case GameOver:
+                    return;
             }
-
-        }
-        catch(IOException | ClassNotFoundException | InterruptedException e)
-        {
-
         }
 
     }
 
+    private Phase giveModel() {
+        try {
+            send(lobby.getFullModel());
+            return Phase.Proceed;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Phase.Disconnected;
+        }
+    }
 
-    private boolean looper() throws InterruptedException, IOException {
+    private Phase proceed() {
+        if(playerNumber == lobby.currentPlayer())
+            return Phase.YourTurn; // if this is true, then the Thread HAS TO listen to the client
+        else
+            return Phase.ReceiveUpdates; //if playerNumber is not the currentPlayer, this thread is one of the "Inactive" players. THEN: send just the messages.
+    }
+
+    private Phase yourTurn() {
+        try {
+            Message message;
+            message = (Message) objectInputStream.readObject();
+            Message finalMessage = message;
+
+            new Thread(() -> {
+                boolean result = lobby.onMessage(finalMessage, nickname);
+                if (result) lobby.messagePlatform.update(new MSG_UPD_End());
+            }).start();
+            return Phase.ReceiveUpdates;
+        }
+        catch (ClassNotFoundException | IOException e)
+        {
+            e.printStackTrace();
+            return Phase.Disconnected;
+        }
+    }
+
+    private Phase receiveUpdates() {
         Message message;
-        loop: while (true) {
+        try {
             message = lobby.messagePlatform.waitForLatestMessage();
-            switch (message.getMessageType()) {
+            switch(message.getMessageType())
+            {
+                case MSG_UPD_End:
+                case MSG_ERROR:
+                    send(message);
+                    return Phase.Proceed;
                 case MSG_UPD_LeaderBoard:
                     send(message);
                     closeStreams();
                     Lobby.removeLobby(this.lobby);
-                    return true;
-                case MSG_UPD_End:
-                case MSG_ERROR:
+                    return Phase.GameOver;
+                default:
+                    /*
+                    case MSG_NOTIFICATION:
+                    case MSG_UPD_DevCardsVendor:
+                    case MSG_UPD_LeaderCards:
+                    case MSG_UPD_Strongbox:
+                    case MSG_UPD_WarehouseDepot:
+                    case MSG_UPD_DevDeck:
+                    case MSG_UPD_Market:
+                    case MSG_UPD_Player:
+                    case MSG_UPD_Extradepot:
+                    case MSG_UPD_Game:
+                    case MSG_UPD_FaithTrack:
+                    case MSG_UPD_DevSlot:
+                    case MSG_UPD_ResourceObject:
+                    case MSG_UPD_MarketHelper:
+                    case MSG_UPD_LeaderCardsObject:
+                    */
+
                     send(message);
-                    break loop;
-                case MSG_NOTIFICATION:
-                case MSG_UPD_DevCardsVendor:
-                case MSG_UPD_LeaderCards:
-                case MSG_UPD_Strongbox:
-                case MSG_UPD_WarehouseDepot:
-                case MSG_UPD_DevDeck:
-                case MSG_UPD_Market:
-                case MSG_UPD_Player:
-                case MSG_UPD_Extradepot:
-                case MSG_UPD_Game:
-                case MSG_UPD_FaithTrack:
-                case MSG_UPD_DevSlot:
-                case MSG_UPD_ResourceObject:
-                case MSG_UPD_MarketHelper:
-                case MSG_UPD_LeaderCardsObject:
-                    send(message);
-                    break;
+                    return Phase.ReceiveUpdates;
             }
+
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+            return Phase.Disconnected;
         }
-        return false;
     }
 
-    private void closeStreams() throws IOException {
-        this.clientSocket.close();
-        this.inputStream.close();
-        this.objectInputStream.close();
-        this.outputStream.close();
-        this.objectOutputStream.close();
+    private Phase disconnect() {
+        System.out.println("An error has occurred and the ClientHandler will be disconnected");
+        closeStreams();
+        this.pendingConnection=true;
+        lobby.addIdlePlayer(this.playerNumber);
+
+        try {
+            while (this.pendingConnection) this.pendingConnection.wait();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        lobby.removeIdlePlayer(this.playerNumber);
+        return Phase.GiveModel;
     }
 
 
-    public void send(Message message) throws InterruptedException, IOException {
-        try{
-            synchronized (outputLock) {
-                objectOutputStream.writeObject(message);
-                objectOutputStream.reset();
-            }
+    private void closeStreams() {
+        try {
+            this.clientSocket.close();
+            this.inputStream.close();
+            this.objectInputStream.close();
+            this.outputStream.close();
+            this.objectOutputStream.close();
         }
-        catch(IOException e){
-            System.out.println("Connection error while sending a message");
-            closeStreams();
-            this.pendingConnection=true;
-            this.pendingConnection.wait();
-            //notify update model?
+        catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+
+    public void send(Message message) throws IOException {
+        objectOutputStream.writeObject(message);
+        objectOutputStream.reset();
     }
 
     public String getNickname() { return this.nickname; }
@@ -249,6 +309,7 @@ public class ClientHandler implements Runnable {
         this.objectInputStream = objectInputStream;
         this.outputStream = outputStream;
         this.objectOutputStream = objectOutputStream;
+
         this.pendingConnection=false;
         this.pendingConnection.notify();
     }

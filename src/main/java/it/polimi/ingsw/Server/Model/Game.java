@@ -131,6 +131,7 @@ public class Game extends ModelObservable {
         developmentCardsVendor.addObserver(observer);
         errorObject.addObserver(observer);
         marketHelper.addObserver(observer);
+        actionHelper.addObserver(observer);
         resourceObject.addObserver(observer);
         leaderBoard.addObserver(observer);
         actionTokenStack.addObserver(observer);

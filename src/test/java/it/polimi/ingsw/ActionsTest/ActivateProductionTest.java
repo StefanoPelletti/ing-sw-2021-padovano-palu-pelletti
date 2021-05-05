@@ -37,8 +37,7 @@ public class ActivateProductionTest {
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
 
-        gm.getFaithTrackManager().addObserver(c);
-        g.addAllObservers(c);
+        gm.addAllObserver(c);
         p = g.getPlayer(1);
         c.emptyQueue();
 

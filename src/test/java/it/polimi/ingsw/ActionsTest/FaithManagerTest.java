@@ -37,8 +37,7 @@ public class FaithManagerTest {
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
         g.addPlayer("Quarto",4);
-        g.addAllObservers(c);
-        ftm.addObserver(c);
+        gm.addAllObserver(c);
         p = g.getPlayer(1);
         p2 = g.getPlayer(2);
         c.emptyQueue();

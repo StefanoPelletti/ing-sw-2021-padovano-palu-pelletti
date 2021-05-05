@@ -55,8 +55,8 @@ public class ActivateLeaderCardTest {
                 new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,-1}, Color.GREEN, new Integer[] {1,-1})),
                 new DiscountResource(Resource.SERVANT));
 
-        gm.getFaithTrackManager().addObserver(c);
-        g.addAllObservers(c);
+        gm.addAllObserver(c);
+
 
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(l1);

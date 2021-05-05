@@ -50,10 +50,6 @@ public class Lobby {
         Collections.shuffle(playerNumbers);
         Game game = gameManager.getGame();
 
-        game.addAllObservers(messagePlatform);
-        gameManager.getFaithTrackManager().addObserver(messagePlatform);
-
-        gameManager.setStatus(Status.INIT);
         for(int i = 0; i<lobbyMaxPlayers; i++) {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
@@ -68,20 +64,20 @@ public class Lobby {
         if(lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
         else gameManager.setStatus(Status.INIT);
 
-        game.getLeaderCardsObject().setEnabled(true);
         game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
+        game.getLeaderCardsObject().setEnabled(true);
 
-
+        gameManager.addAllObserver(messagePlatform);
     }
 
     public boolean onMessage(Message message, String nickname) throws IllegalArgumentException{
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
 
-        boolean result = false;
         if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
             switch (message.getMessageType()) {
                 case MSG_INIT_CHOOSE_LEADERCARDS:
+                    //messagePlatform.update(new MSG_NOTIFICATION("tizio ha scelto carte!"));
                     return actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
                 case MSG_INIT_CHOOSE_RESOURCE:
                     return actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
@@ -93,12 +89,12 @@ public class Lobby {
                     return actionManager.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
                 case MSG_ACTION_ACTIVATE_PRODUCTION:
                     return actionManager.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
-                case MSG_ACTION_BUY_DEVELOPMENT_CARD:
-                    return actionManager.buyDevelopmentCard(player);
                 case MSG_ACTION_GET_MARKET_RESOURCES:
                     return actionManager.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
                 case MSG_ACTION_MARKET_CHOICE:
                     return actionManager.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
+                case MSG_ACTION_BUY_DEVELOPMENT_CARD:
+                    return actionManager.buyDevelopmentCard(player);
                 case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
                     return actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
                 case MSG_ACTION_ENDTURN:
@@ -133,6 +129,17 @@ public class Lobby {
             return newNickname;
         }
         else return null;
+    }
+
+
+    public void addIdlePlayer(Integer playerNumber)
+    {
+        gameManager.addIdlePlayer(playerNumber);
+    }
+
+    public void removeIdlePlayer(Integer playerNumber)
+    {
+        gameManager.removeIdlePlayer(playerNumber);
     }
 
     public synchronized ClientHandler findPendingClientHandler(String nickname)
