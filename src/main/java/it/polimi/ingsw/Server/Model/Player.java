@@ -18,6 +18,8 @@ public class Player extends ModelObservable {
     private final WarehouseDepot warehouseDepot;
     private final LeaderCard[] leaderCards;
     private final DevelopmentSlot developmentSlot;
+    private final boolean[] permittedActions;
+
 
     public Player( String nickname, int playerNumber )
     {
@@ -29,7 +31,7 @@ public class Player extends ModelObservable {
         this.strongbox = new Strongbox();
         this.warehouseDepot = new WarehouseDepot();
         this.developmentSlot = new DevelopmentSlot();
-
+        this.permittedActions = new boolean[3];
     }
 
     public String getNickname() { return nickname; }
@@ -48,6 +50,21 @@ public class Player extends ModelObservable {
         notifyObservers();
         return true;
     }
+
+    public void setAction(int nAction){
+        this.permittedActions[nAction] = true;
+    }
+
+    public void resetPermittedAction(){
+        this.permittedActions[0] = false;
+        this.permittedActions[1] = false;
+        this.permittedActions[2] = false;
+    }
+
+    public boolean getAction(int nAction){
+        return this.permittedActions[nAction];
+    }
+
     public int getPosition() { return position; }
     public boolean setPosition(int position) {
         if(position<0) return false;

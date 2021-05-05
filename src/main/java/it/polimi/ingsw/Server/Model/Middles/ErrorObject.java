@@ -11,8 +11,7 @@ public class ErrorObject extends ModelObservable  {
     private boolean enabled;
     private String errorMessage;
 
-    public ErrorObject()
-    {
+    public ErrorObject() {
         this.enabled=false;
         this.errorMessage = "";
     }

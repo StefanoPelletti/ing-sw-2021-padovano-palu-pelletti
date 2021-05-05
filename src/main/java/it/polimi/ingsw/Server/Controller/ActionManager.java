@@ -12,6 +12,7 @@ import it.polimi.ingsw.Server.Model.Middles.MarketHelper;
 import it.polimi.ingsw.Server.Model.Middles.ResourceObject;
 import it.polimi.ingsw.Server.Model.Requirements.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
+import it.polimi.ingsw.Server.Model.Middles.ActionHelper;
 
 
 import java.util.*;
@@ -21,17 +22,18 @@ public class ActionManager {
     private final GameManager gameManager;
     private final FaithTrackManager faithTrackManager;
     private final Game game;
+    private final ActionHelper actionHelper;
 
     public ActionManager(GameManager gameManager, FaithTrackManager faithTrackManager, Game game)
     {
         this.gameManager = gameManager;
         this.faithTrackManager = faithTrackManager;
         this.game = game;
+        this.actionHelper = game.getActionHelper();
     }
 
     public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message) {
         ArrayList<LeaderCard> cards = message.getCards();
-
         LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
         ResourceObject resourceObject = game.getResourceObject();
 
@@ -41,6 +43,7 @@ public class ActionManager {
             return false;
         }
 
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         player.associateLeaderCards(cards); //notifies player
         if(gameManager.getSolo()) {
             leaderCardsObject.setEnabled(false);
@@ -75,6 +78,7 @@ public class ActionManager {
             return false;
         }
 
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         player.getWarehouseDepot().add(resource); //notifies Warehouse
 
         if(resourceObject.getNumOfResources() == 2)
@@ -124,6 +128,7 @@ public class ActionManager {
                     return false;
                 }
             }
+            this.actionHelper.setNotificationMessage(player.getNickname(), message);
             player.setLeaderCards(cardNumber, true);
             return true;
         }
@@ -148,6 +153,7 @@ public class ActionManager {
                     return false;
                 }
             }
+            this.actionHelper.setNotificationMessage(player.getNickname(), message);
             player.setLeaderCards(cardNumber, true);
             return true;
         }
@@ -175,6 +181,7 @@ public class ActionManager {
             return false;
         }
 //MODEL UPDATE
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         player.setLeaderCards(cardNumber, false);
         faithTrackManager.advance(player);
         return true;
@@ -186,6 +193,12 @@ public class ActionManager {
         boolean baseProduction = message.isBasicProduction();
         boolean[] leaderProduction = message.getLeaderProduction();
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
+
+        if(player.getAction(0)){
+            gameManager.setErrorObject("Errore! Hai già fatto una produzione!");
+            return false;
+        }
+        else player.setAction(0);
 
         if(leaderProduction[0]){
             LeaderCard l1 = player.getLeaderCards()[0];
@@ -285,6 +298,7 @@ public class ActionManager {
             }
         }
 //MODEL UPDATE
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         //now we must consume the required resources
         consumeResources(player, requiredResources);
         //now we add output resources to the player's strongbox (and the faith points)
@@ -369,6 +383,7 @@ public class ActionManager {
             return true;
 
 //MODEL UPDATE
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         //after all those controls, player really deserves a new depot!
         player.getWarehouseDepot().setConfig(slot1, slot2, slot3);
         if(firstExtraDepot>=0){
@@ -389,6 +404,12 @@ public class ActionManager {
     public boolean buyDevelopmentCard(Player player) {
         DevelopmentCard[][] possibleCards = game.getDevelopmentCardsDeck().getVisible();
         Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
+
+        if(player.getAction(1)){
+            gameManager.setErrorObject("Errore! Hai già tentato di comprare una carta!");
+            return false;
+        }
+        else player.setAction(1);
 
         Map<Resource, Integer> playerResources = player.getResources();
 
@@ -450,6 +471,7 @@ public class ActionManager {
             return false;
         }
 
+        this.actionHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_BUY_DEVELOPMENT_CARD());
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
         developmentCardsVendor.setCards(finalCards);
         developmentCardsVendor.setEnabled(true);
@@ -499,6 +521,7 @@ public class ActionManager {
             }
         }
 
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         consumeResources(player, cost);
 
         developmentCardsVendor.setEnabled(false);
@@ -519,6 +542,12 @@ public class ActionManager {
         boolean column = message.getColumn();
         int number = message.getNumber();
 
+        if(player.getAction(2)){
+            gameManager.setErrorObject("Errore! Sei già andato al mercato!");
+            return false;
+        }
+        else player.setAction(2);
+
         if(column &&( number <0 || number >=4)) return false; //should be impossible, would throw an exception when building the message
         if(!column &&( number < 0 || number >= 3)) return false; // same as above
 
@@ -528,6 +557,7 @@ public class ActionManager {
             return false;
         }
 
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
         Market market = game.getMarket();
         ArrayList<MarketMarble> selectedMarbles;
         if(column) selectedMarbles = market.pushColumn(number);
@@ -577,6 +607,7 @@ public class ActionManager {
             gameManager.setErrorObject("Errore! Oggetto marketHelper NON attivo ed è stato chiamato il metodo newMarketChoice!");
             return false;
         }
+        this.actionHelper.setNotificationMessage(player.getNickname(), message);
 
         Resource currentResource = marketHelper.getCurrentResource();
         boolean isNormalChoice;
@@ -701,6 +732,8 @@ public class ActionManager {
     }
 
     public boolean endTurn(Player player) {
+        player.resetPermittedAction();
+        this.actionHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());
         if(gameManager.getSolo())
         {
             if(game.getStatus()==Status.GAME_OVER)
@@ -724,6 +757,7 @@ public class ActionManager {
         ActionToken token = game.getActionTokenStack().pickFirst();
         if(token.isRemover())
         {
+            actionHelper.setLorenzoNotificationMessage(0);
             game.getDevelopmentCardsDeck().removeCard(((RemoverToken) token).getColumn());
             if (game.getDevelopmentCardsDeck().isOneColumnDestroyed())
             {
@@ -732,11 +766,13 @@ public class ActionManager {
             }
         }
         else if(token.isForwardAndShuffle()) {
+            actionHelper.setLorenzoNotificationMessage(1);
             game.getActionTokenStack().shuffle();
             faithTrackManager.advanceLorenzo();
         }
         else if(token.isForward2())
         {
+            actionHelper.setLorenzoNotificationMessage(2);
             faithTrackManager.advanceLorenzo();
             faithTrackManager.advanceLorenzo();
         }

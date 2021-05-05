@@ -25,6 +25,7 @@ public class Game extends ModelObservable {
     private final FaithTrack faithTrack;
     private final DevelopmentCardsDeck developmentCardsDeck;
     private final MarketHelper marketHelper;
+    private final ActionHelper actionHelper;
     private final DevelopmentCardsVendor developmentCardsVendor;
     private final ErrorObject errorObject;
     private final LeaderCardsObject leaderCardsObject;
@@ -43,6 +44,7 @@ public class Game extends ModelObservable {
         developmentCardsDeck = new DevelopmentCardsDeck();
         actionTokenStack=new ActionTokenStack();
         marketHelper = new MarketHelper();
+        actionHelper = new ActionHelper();
         developmentCardsVendor = new DevelopmentCardsVendor();
         errorObject = new ErrorObject();
         leaderCardsObject = new LeaderCardsObject();
@@ -67,6 +69,7 @@ public class Game extends ModelObservable {
     public LeaderCardsDeck getLeaderCardsDeck() { return this.leaderCardsDeck; }
     public Market getMarket() { return this.market; }
     public MarketHelper getMarketHelper(){return this.marketHelper;}
+    public ActionHelper getActionHelper() { return actionHelper; }
     public ErrorObject getErrorObject() { return this.errorObject;}
     public DevelopmentCardsVendor getDevelopmentCardsVendor() { return this.developmentCardsVendor; }
     public FaithTrack getFaithTrack() { return this.faithTrack; }
