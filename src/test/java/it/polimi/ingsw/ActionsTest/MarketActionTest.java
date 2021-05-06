@@ -78,8 +78,8 @@ public class MarketActionTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
     }
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
@@ -111,7 +111,8 @@ public class MarketActionTest {
         //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
     }
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
@@ -139,7 +140,8 @@ public class MarketActionTest {
         //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
     }
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
@@ -166,7 +168,8 @@ public class MarketActionTest {
 
         //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.size());
     }
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
@@ -200,7 +203,8 @@ public class MarketActionTest {
         //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
     }
 
     @Test
@@ -245,7 +249,8 @@ public class MarketActionTest {
         //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
     }
 
     @Test
@@ -292,7 +297,8 @@ public class MarketActionTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
     }
 
     @Test
@@ -340,7 +346,8 @@ public class MarketActionTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
     }
 
     //the error is generated only if the marketHelper is enabled, and the getMarketResource gets (again) somehow invoked
@@ -363,7 +370,7 @@ public class MarketActionTest {
 
         //saving or asserting (in a simplified way) the starting condition
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         c.emptyQueue();
 
         //in this case the action should: activate ErrorObject, NOT modify the marketHelper, and return false
@@ -437,7 +444,8 @@ public class MarketActionTest {
         assertEquals(1, p.getWarehouseDepot().getResources().entrySet().stream().filter(x -> x.getKey() == Resource.SHIELD).map(Map.Entry::getValue).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
         c.emptyQueue();
 
         //action 2: save. the action should return false
@@ -449,7 +457,8 @@ public class MarketActionTest {
 
         //assert the model has generated a series of messages accordingly to the previous modifies
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.size());
 
         //setting new condition
         g.getErrorObject().setEnabled(false);
@@ -463,8 +472,9 @@ public class MarketActionTest {
         assertTrue(g.getErrorObject().isEnabled());
 
         //assert the model has generated a series of messages accordingly to the previous modifies
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
     }
 
     //Resources from the market: SHIELD SHIELD STONE
@@ -526,7 +536,8 @@ public class MarketActionTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
         resources = g.getMarketHelper().getResources();
         assertEquals(0, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -543,7 +554,8 @@ public class MarketActionTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
         assertEquals(1, ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).getNumber());
         assertEquals(1, ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).getNumber());
@@ -618,7 +630,8 @@ public class MarketActionTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -634,8 +647,9 @@ public class MarketActionTest {
         assertTrue( g.getMarketHelper().isEnabled());
         assertTrue( g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -700,7 +714,8 @@ public class MarketActionTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -716,8 +731,9 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -736,7 +752,8 @@ public class MarketActionTest {
 
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.size());
     }
 
     //Resources from the market: FAITH EXTRA SHIELD EXTRA
@@ -781,8 +798,8 @@ public class MarketActionTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(7, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(8, c.messages.size());
         c.emptyQueue();
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(6);
@@ -791,34 +808,41 @@ public class MarketActionTest {
         assertSame(Resource.EXTRA, g.getMarketHelper().getCurrentResource());
         assertTrue(am.newChoiceMarket(p, message));
         assertSame(Resource.SHIELD, g.getMarketHelper().getCurrentResource());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
         resources = g.getMarketHelper().getResources();
         assertEquals(3, resources.size());
         c.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(0); //put in depot
         assertTrue(am.newChoiceMarket(p, message));
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         resources = g.getMarketHelper().getResources();
         assertEquals(0, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(2, resources.stream().filter(x -> x == Resource.EXTRA).count());
         assertEquals(2, resources.size());
+        assertSame(Resource.EXTRA, g.getMarketHelper().getCurrentResource());
         c.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(0); // transform in Servant
-        assertSame(Resource.EXTRA, g.getMarketHelper().getCurrentResource());
+
+
         assertTrue(am.newChoiceMarket(p, message));
+
         assertSame(Resource.SERVANT, g.getMarketHelper().getCurrentResource());
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.stream().filter(x -> x == Resource.SERVANT).count());
         assertEquals(1, resources.stream().filter(x -> x == Resource.EXTRA).count());
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
-        c.emptyQueue();;
+        assertEquals(2, c.messages.size());
+        c.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(7); //skip backwards
         assertTrue(am.newChoiceMarket(p, message));
@@ -826,8 +850,9 @@ public class MarketActionTest {
         assertEquals(1, resources.stream().filter(x -> x == Resource.SERVANT).count());
         assertEquals(1, resources.stream().filter(x -> x == Resource.EXTRA).count());
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
         c.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(1); // transform in Shield
@@ -838,8 +863,9 @@ public class MarketActionTest {
         assertEquals(1, resources.stream().filter(x -> x == Resource.SERVANT).count());
         assertEquals(1, resources.stream().filter(x -> x == Resource.SHIELD).count());
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
     }
 
@@ -881,9 +907,10 @@ public class MarketActionTest {
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(4); //swap 1-3
         assertTrue(am.newChoiceMarket(p, message));
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.STONE);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
@@ -893,9 +920,10 @@ public class MarketActionTest {
         assertTrue(am.newChoiceMarket(p, message));
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.STONE);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.STONE);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
@@ -905,9 +933,10 @@ public class MarketActionTest {
         assertTrue(am.newChoiceMarket(p, message));
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.STONE);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.STONE);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.STONE);
@@ -916,9 +945,10 @@ public class MarketActionTest {
         message = new MSG_ACTION_MARKET_CHOICE(0); //put in Depot
         assertTrue(am.newChoiceMarket(p, message));
         assertFalse(g.getMarketHelper().isEnabled());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         assertSame(p.getWarehouseDepot().getShelf1(), Resource.SHIELD);
     }
 
@@ -949,8 +979,9 @@ public class MarketActionTest {
         assertTrue(am.newChoiceMarket(p, message));
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
         assertSame(g.getMarketHelper().getCurrentResource(), Resource.SHIELD);
         c.emptyQueue();
 
@@ -958,8 +989,9 @@ public class MarketActionTest {
         assertTrue(am.newChoiceMarket(p, message));
         resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
         assertSame(g.getMarketHelper().getCurrentResource(), Resource.STONE);
         c.emptyQueue();
 
@@ -967,8 +999,9 @@ public class MarketActionTest {
         assertTrue(am.newChoiceMarket(p, message));
         resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
         assertSame(g.getMarketHelper().getCurrentResource(), Resource.SHIELD);
         c.emptyQueue();
 
@@ -977,9 +1010,10 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(5, c.messages.size());
         assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 1).count());
         assertSame(g.getMarketHelper().getCurrentResource(), Resource.STONE);
         c.emptyQueue();
@@ -987,9 +1021,10 @@ public class MarketActionTest {
         message = new MSG_ACTION_MARKET_CHOICE(2); //discard
         assertTrue(am.newChoiceMarket(p, message));
         assertFalse(g.getMarketHelper().isEnabled());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(5, c.messages.size());
         assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 2).count());
         c.emptyQueue();
     }
@@ -1025,12 +1060,12 @@ public class MarketActionTest {
         assertEquals(3, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(3, resources.size());
         assertEquals(1, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
-        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(5, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(10, c.messages.size());
+        assertEquals(11, c.messages.size());
         assertEquals(24, p.getPosition());
         c.emptyQueue();
 
@@ -1041,9 +1076,10 @@ public class MarketActionTest {
         assertEquals(2, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(2, resources.size());
         assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 23).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(5, c.messages.size());
         c.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(2); //discard
@@ -1053,18 +1089,20 @@ public class MarketActionTest {
         assertEquals(1, resources.stream().filter(x -> x == Resource.STONE).count());
         assertEquals(1, resources.size());
         assertEquals(4, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(5, c.messages.size());
         c.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(2); //discard
         assertTrue(am.newChoiceMarket(p, message));
         assertFalse(g.getMarketHelper().isEnabled());
         assertEquals(4, g.getPlayerList().stream().filter(x -> x.getPosition() == 24).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
         c.emptyQueue();
     }
 
@@ -1109,18 +1147,20 @@ public class MarketActionTest {
         assertSame(p.getWarehouseDepot().getShelf1(), Resource.NONE);
         assertEquals(2, resources.stream().filter(x -> x == Resource.SERVANT).count());
         assertEquals(2, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         c.emptyQueue();
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(0); //put in Depot
         assertTrue(am.newChoiceMarket(p, message));
         resources = g.getMarketHelper().getResources();
         assertEquals(1, resources.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
 
         c.emptyQueue();
 
@@ -1130,10 +1170,10 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(3); //swap 1,2
         assertTrue(am.newChoiceMarket(p, message));
-        resources = g.getMarketHelper().getResources();
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         assertSame(p.getWarehouseDepot().getShelf1(), Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf2()[0], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.NONE);
@@ -1142,10 +1182,10 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(5); //swap 2,3
         assertTrue(am.newChoiceMarket(p, message));
-        resources = g.getMarketHelper().getResources();
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(3, c.messages.size());
         assertSame(p.getWarehouseDepot().getShelf1(), Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf2()[0], Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.SERVANT);
@@ -1161,8 +1201,9 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         assertEquals(Depot, p.getWarehouseDepot());
         resources = g.getMarketHelper().getResources();
@@ -1181,8 +1222,9 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         assertEquals(Depot, p.getWarehouseDepot());
         resources = g.getMarketHelper().getResources();
@@ -1229,8 +1271,9 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         assertEquals(Depot, p.getWarehouseDepot());
 
@@ -1243,8 +1286,9 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         assertEquals(Depot, p.getWarehouseDepot());
 
@@ -1257,8 +1301,9 @@ public class MarketActionTest {
         assertTrue(g.getMarketHelper().isEnabled());
         assertTrue(g.getErrorObject().isEnabled());
 
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(2, c.messages.size());
 
         assertEquals(Depot, p.getWarehouseDepot());
 
@@ -1302,8 +1347,8 @@ public class MarketActionTest {
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count()); //market updates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count()); //third zones activates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper activates
-        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
-        assertEquals(6, a.messages.size());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
+        assertEquals(7, a.messages.size());
         assertTrue(gameManager.getSoloWinner());
         assertEquals(24, player.getPosition());
         assertSame(game.getStatus(), Status.GAME_OVER);
@@ -1311,26 +1356,29 @@ public class MarketActionTest {
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
         assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
-        assertEquals(2, a.messages.size());
+        assertEquals(3, a.messages.size());
         assertEquals(23, game.getBlackCrossPosition());
         assertTrue(gameManager.getSoloWinner());
         a.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(2); //discards
         assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
-        assertEquals(2, a.messages.size());
+        assertEquals(3, a.messages.size());
         assertEquals(24, game.getBlackCrossPosition());
         assertTrue(gameManager.getSoloWinner());
         a.emptyQueue();
 
         //which is basically endTurnGameOverPlayerWins test in endTurnTest.
         assertFalse(actionManager.endTurn(player));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(1, a.messages.size());
+        assertEquals(2, a.messages.size());
     }
 
     @Test
@@ -1364,10 +1412,11 @@ public class MarketActionTest {
 
         assertTrue(actionManager.getMarketResources(player, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
         assertTrue(game.getMarketHelper().isEnabled());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count()); //market updates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper activates
-        assertEquals(3, a.messages.size());
+        assertEquals(4, a.messages.size());
         assertEquals(23, player.getPosition());
         a.emptyQueue();
 
@@ -1377,8 +1426,8 @@ public class MarketActionTest {
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count()); //third zones activates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
-        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
-        assertEquals(5, a.messages.size());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
+        assertEquals(6, a.messages.size());
         assertEquals(24, game.getBlackCrossPosition());
         assertFalse(gameManager.getSoloWinner());
         a.emptyQueue();
@@ -1386,8 +1435,10 @@ public class MarketActionTest {
 
         //which is basically endTurnGameOverPlayerWins test in endTurnTest.
         assertFalse(actionManager.endTurn(player));
+
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(1, a.messages.size());
+        assertEquals(2, a.messages.size());
     }
 
     //checks if Lorenzo advances normally
@@ -1399,8 +1450,7 @@ public class MarketActionTest {
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
         game.addPlayer("Primo", 1);
-        game.addAllObservers(a);
-        gameManager.getFaithTrackManager().addObserver(a);
+        gameManager.addAllObserver(a);
 
         Player player = game.getPlayer(1);
         player.setPosition(2);
@@ -1420,17 +1470,19 @@ public class MarketActionTest {
 
         assertTrue(actionManager.getMarketResources(player, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
         assertTrue(game.getMarketHelper().isEnabled());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Market).count()); //market updates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper activates
-        assertEquals(3, a.messages.size());
+        assertEquals(4, a.messages.size());
         a.emptyQueue();
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
         assertTrue(actionManager.newChoiceMarket(player,message));
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
-        assertEquals(2, a.messages.size());
+        assertEquals(3, a.messages.size());
         assertEquals(3, game.getBlackCrossPosition());
         assertNull(gameManager.getSoloWinner());
     }

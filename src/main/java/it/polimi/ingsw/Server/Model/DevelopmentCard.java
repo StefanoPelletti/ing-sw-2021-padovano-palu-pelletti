@@ -4,10 +4,8 @@ import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SplittableRandom;
 
 public class DevelopmentCard implements Serializable {
     private final int level;
@@ -55,8 +53,7 @@ public class DevelopmentCard implements Serializable {
         if(VP<1 || VP>12) return false;
         if(cost.isEmpty()) return false;
         if(power.getInput() == null ) return false;
-        if(power.getOutput() == null ) return false;
-        return true;
+        return power.getOutput() != null;
     }
 
     @Override
@@ -76,7 +73,7 @@ public class DevelopmentCard implements Serializable {
     @Override
     public String toString()
     {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         result.append("   DEVELOPMENT CARD!   ").append("\n");
         result.append("    level : ").append(this.level).append("\n");
         result.append("    color : ").append(this.color).append("\n");

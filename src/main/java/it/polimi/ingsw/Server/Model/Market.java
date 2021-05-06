@@ -19,7 +19,7 @@ public class Market extends ModelObservable {
     {
         grid = new MarketMarble[3][4];
 
-        internalList = new ArrayList<MarketMarble>();
+        internalList = new ArrayList<>();
 
         internalList.add( new WhiteMarble() );
         internalList.add( new WhiteMarble() );
@@ -77,7 +77,7 @@ public class Market extends ModelObservable {
     public ArrayList<MarketMarble> getRow( int row )
     {
         if(row<0||row>2) return null;
-        ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
+        ArrayList<MarketMarble> result = new ArrayList<>();
         for( int i = 0; i < 4; i++ )
             result.add( grid[row][i] );
         return result;
@@ -101,7 +101,7 @@ public class Market extends ModelObservable {
     public ArrayList<MarketMarble> getColumn( int column )
     {
         if(column<0||column>3) return null;
-        ArrayList<MarketMarble> result = new ArrayList<MarketMarble>();
+        ArrayList<MarketMarble> result = new ArrayList<>();
         for( int i = 0; i < 3; i++ )
             result.add( grid[i][column] );
         return result;
@@ -128,13 +128,13 @@ public class Market extends ModelObservable {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         result.append(" --  Market: -- ");
-        result.append("\n").append(" SlideMarble : ").append(slideMarble).append("\n");;
+        result.append("\n").append(" SlideMarble : ").append(slideMarble).append("\n");
 
         result.append(" [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation());
         result.append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation());
-        result.append(" ] ").append("\n");;
+        result.append(" ] ").append("\n");
 
         result.append(" [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation());
         result.append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation());
@@ -142,7 +142,7 @@ public class Market extends ModelObservable {
 
         result.append(" [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation());
         result.append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation());
-        result.append(" ] ").append("\n");;
+        result.append(" ] ").append("\n");
 
         return result.toString();
     }

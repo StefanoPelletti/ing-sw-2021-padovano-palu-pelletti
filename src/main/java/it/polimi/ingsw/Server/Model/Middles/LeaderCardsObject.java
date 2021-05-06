@@ -31,7 +31,7 @@ public class LeaderCardsObject extends ModelObservable  {
         }
     }
 
-    public ArrayList<LeaderCard> getCards() { return new ArrayList<LeaderCard>(this.cards); }
+    public ArrayList<LeaderCard> getCards() { return new ArrayList<>(this.cards); }
 
     private void notifyObservers(){
         this.notifyObservers(generateMessage());

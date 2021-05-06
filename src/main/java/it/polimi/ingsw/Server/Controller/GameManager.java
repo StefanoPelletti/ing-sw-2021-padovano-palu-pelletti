@@ -1,14 +1,6 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_DevCardsVendor;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderCardsObject;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_MarketHelper;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_ResourceObject;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
@@ -19,12 +11,12 @@ import java.util.*;
 
 public class GameManager {
 
-    private Game game;
-    private FaithTrackManager faithTrackManager;
-    private ActionManager actionManager;
-    private boolean solo;
-    private ArrayList<Integer> idlePlayers;
-    private int lobbyMaxPlayers;
+    private final Game game;
+    private final FaithTrackManager faithTrackManager;
+    private final ActionManager actionManager;
+    private final boolean solo;
+    private final ArrayList<Integer> idlePlayers;
+    private final int lobbyMaxPlayers;
 
     private Boolean soloWinner; // if null: no one, if true: the player, if false: the Lorenzo
 
@@ -92,40 +84,38 @@ public class GameManager {
     {
         game.changeStatus(status);
     }
+
     public Boolean getSoloWinner() {
         return soloWinner;
     }
+
     public void setSoloWinner(boolean value)
     {
         this.soloWinner = value;
     }
 
     public Status getStatus(){return game.getStatus();}
+
     public boolean getSolo() { return solo; }
+
     public int getLobbyMaxPlayers() {
         return lobbyMaxPlayers;
     }
+
     public Game getGame()
     {
         return game;
     }
-    public FaithTrackManager getFaithTrackManager() { return faithTrackManager; }
-    public ActionManager getActionManager() { return actionManager; }
-    public ArrayList<LeaderCard> pickFourLeaderCards() {
 
-        return game.getLeaderCardsDeck().pickFourCards();
-    }
-    public void setLeaderCards(ArrayList<LeaderCard> cards, String nickname)
-    {
-        Player p = game.getPlayer(nickname);
-        p.associateLeaderCards(cards);
-        //notify();
-    }
+    public FaithTrackManager getFaithTrackManager() { return faithTrackManager; }
+
+    public ActionManager getActionManager() { return actionManager; }
 
     public void resetErrorObject()
     {
         game.getErrorObject().setEnabled(false);
     }
+
     public void setErrorObject(String errorCause)
     {
         game.getErrorObject().setErrorMessage(errorCause);
@@ -227,7 +217,6 @@ public class GameManager {
     public void addAllObserver(ModelObserver observer)
     {
         game.addAllObservers(observer);
-        faithTrackManager.addObserver(observer);
     }
 
 

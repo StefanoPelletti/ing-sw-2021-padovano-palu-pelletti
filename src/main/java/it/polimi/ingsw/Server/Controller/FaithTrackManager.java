@@ -1,16 +1,14 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.FaithTrack;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Server.Model.Player;
-import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 
 import java.util.ArrayList;
 
-public class FaithTrackManager extends ModelObservable {
+public class FaithTrackManager {
 
     private final FaithTrack faithTrack;
     private final Game game;
@@ -101,7 +99,7 @@ public class FaithTrackManager extends ModelObservable {
                 return true;
         }
 
-        notifyObservers(new MSG_NOTIFICATION(message.toString()));
+        game.getActionHelper().setNewMessage(message.toString());
         return true;
     }
 
@@ -184,7 +182,7 @@ public class FaithTrackManager extends ModelObservable {
         }
 
 
-        notifyObservers(new MSG_NOTIFICATION(message.toString()));
+        game.getActionHelper().setNewMessage(message.toString());
         return true;
     }
 }

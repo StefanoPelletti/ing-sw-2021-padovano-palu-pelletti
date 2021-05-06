@@ -27,7 +27,7 @@ public class ResourceRequirements implements Requirement, Serializable {
         result.append("   You need ").append(numOfResources).append(" resource(s) in this way:   \n");
         for ( Resource r : requirements.keySet())
         {
-            result.append(requirements.get(r)).append(" ").append(r.toString()).append(r.toString());
+            result.append(requirements.get(r)).append(" ").append(r.toString()).append(r);
         }
         return result.toString();
     }

@@ -105,7 +105,8 @@ public class ChangeDepotConfigTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
 
     }
 
@@ -162,7 +163,8 @@ public class ChangeDepotConfigTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
 
     }
 
@@ -218,12 +220,13 @@ public class ChangeDepotConfigTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
     }
 
-    //shelf 1       : coim
-    //shelf 2       : shie shie
+    //shelf 1       : coin
+    //shelf 2       : shield shield
     //shelf 3       : serv serv coin
     //extradepot 1  : 0 coin
     //extradepot 2  : 0 shield
@@ -277,12 +280,13 @@ public class ChangeDepotConfigTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
     }
 
     //shelf 1       : none
-    //shelf 2       : shie shie
+    //shelf 2       : shield shield
     //shelf 3       : coi coin non
     //extradepot 1  : 0 coin
     //extradepot 2  : 0 shield
@@ -334,12 +338,13 @@ public class ChangeDepotConfigTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
 
     }
 
     //shelf 1       : none
-    //shelf 2       : shie shie
+    //shelf 2       : shield shield
     //shelf 3       : coin coi c
     //extradepot 1  : 0 coin
     //extradepot 2  : 0 shield
@@ -391,7 +396,8 @@ public class ChangeDepotConfigTest {
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Extradepot).count());
-        assertEquals(2, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.size());
 
     }
 
@@ -443,7 +449,8 @@ public class ChangeDepotConfigTest {
         assertTrue(p.getLeaderCards()[1].getEnable());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
-        assertEquals(1, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.size());
 
     }
 
@@ -489,12 +496,13 @@ public class ChangeDepotConfigTest {
         assertFalse(p.getLeaderCards()[0].getEnable());
         assertFalse(p.getLeaderCards()[1].getEnable());
 
+//no messages generated, cause no updates were made!
         assertEquals(0, c.messages.size());
 
     }
 
     @Test
-    public void INvalidDepotConfig()
+    public void InvalidDepotConfig()
     {
         Resource r0 = Resource.SHIELD;
         Resource[] r1 = new Resource[]{Resource.COIN, Resource.NONE};
@@ -522,7 +530,7 @@ public class ChangeDepotConfigTest {
     }
 
     @Test
-    public void INvalidExtraDepotConfig1()
+    public void InvalidExtraDepotConfig1()
     {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add( new LeaderCard(3,
@@ -566,7 +574,7 @@ public class ChangeDepotConfigTest {
     }
 
     @Test
-    public void INvalidLeaderCard()
+    public void InvalidLeaderCard()
     {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,

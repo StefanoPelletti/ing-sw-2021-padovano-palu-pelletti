@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
@@ -218,13 +218,12 @@ public class WarehouseDepot extends ModelObservable {
                 shelf2[0]=tmp;
                 shelf2[1]=Resource.NONE;
             }
-            else if(shelf2[0] == Resource.NONE && shelf2[1] == Resource.NONE )
-            {
+            else {
                 shelf1 = Resource.NONE;
                 shelf2[0] = tmp;
             }
         }
-        else if( ( r1==1&&r2==3) || (r1==3&&r2==1) )
+        else if(r1 == 1 || r1 == 3 && r2 == 1)
         {
             if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE ) return false;
             if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE) return false;
@@ -249,14 +248,12 @@ public class WarehouseDepot extends ModelObservable {
                 shelf3[0] = tmp;
                 shelf3[2] = Resource.NONE;
             }
-            else if(shelf3[0] == Resource.NONE && shelf3[1] == Resource.NONE && shelf3[2] == Resource.NONE)
-            {
+            else {
                 shelf1 = shelf3[0];
                 shelf3[0] = tmp;
             }
         }
-        else if( ( r1==2&&r2==3) || (r1==3&&r2==2) )
-        {
+        else {
             if(shelf3[0] != Resource.NONE && shelf3[1] != Resource.NONE && shelf3[2] != Resource.NONE) return false;
             Resource tmp1;
             Resource tmp2;
@@ -301,7 +298,6 @@ public class WarehouseDepot extends ModelObservable {
                 shelf2[1]=Resource.NONE;
                 shelf3[0]=tmp1;
                 shelf3[1]=tmp2;
-                shelf3[2]=Resource.NONE;
             }
             else if ( shelf3[1] != Resource.NONE)
             {
@@ -309,7 +305,6 @@ public class WarehouseDepot extends ModelObservable {
                 shelf2[1]=Resource.NONE;
                 shelf3[0]=tmp1;
                 shelf3[1]=tmp2;
-                shelf3[2]=Resource.NONE;
             }
             else if ( shelf3[2] != Resource.NONE)
             {
@@ -319,13 +314,11 @@ public class WarehouseDepot extends ModelObservable {
                 shelf3[1]=tmp2;
                 shelf3[2]=Resource.NONE;
             }
-            else if (shelf3[0] == Resource.NONE && shelf3[1] == Resource.NONE && shelf3[2] == Resource.NONE )
-            {
+            else {
                 shelf2[0] = Resource.NONE;
                 shelf2[1] = Resource.NONE;
                 shelf3[0] = tmp1;
                 shelf3[1] = tmp2;
-                shelf3[2]=Resource.NONE;
             }
         }
         notifyObservers();
@@ -334,7 +327,7 @@ public class WarehouseDepot extends ModelObservable {
 
     @Override
     public String toString(){
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         result.append("Shelf 1: ").append(this.shelf1.toString());
         result.append("Shelf 2: ").append(this.shelf2[0].toString()).append(", ").append(this.shelf2[1].toString());
         result.append("Shelf 3: ").append(this.shelf3[0].toString()).append(", ").append(this.shelf3[1].toString()).append(", ").append(this.shelf3[2].toString());

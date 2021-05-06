@@ -19,8 +19,8 @@ public class RemoverToken implements ActionToken{
     public int getColumn(){return column;}
 
     public boolean isRemover(){return true;}
-    public boolean isForward2() { return false;};
-    public boolean isForwardAndShuffle(){return false;};
+    public boolean isForward2() { return false;}
+    public boolean isForwardAndShuffle(){return false;}
     public Color getColor(){
         return this.color;
     }

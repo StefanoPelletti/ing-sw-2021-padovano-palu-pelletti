@@ -119,7 +119,8 @@ public class MarketTest {
         assertArrayEquals(priorMarbles.toArray(), postMarbles.toArray());
     }
 
-    @Test
+    // what does this test.. test?
+    @Deprecated
     public void testSet()
     {
         MarketMarble[][] re = { {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
@@ -132,7 +133,7 @@ public class MarketTest {
         {
             for(int c=0; c<4; c++)
             {
-                market.getGrid()[r][c].equals(new WhiteMarble());
+               market.getGrid()[r][c].equals( new WhiteMarble());
             }
         }
     }

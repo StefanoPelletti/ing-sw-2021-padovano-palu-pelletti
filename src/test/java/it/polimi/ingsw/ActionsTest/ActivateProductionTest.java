@@ -56,8 +56,8 @@ public class ActivateProductionTest {
                 null);
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -75,8 +75,8 @@ public class ActivateProductionTest {
                 Resource.COIN);
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -93,8 +93,8 @@ public class ActivateProductionTest {
                 Resource.COIN);
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -129,8 +129,8 @@ public class ActivateProductionTest {
                 null);
 
         assertFalse(am.activateProduction(p, message2));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -158,9 +158,10 @@ public class ActivateProductionTest {
         c.emptyQueue();
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
+
         c.emptyQueue();
 
         MSG_ACTION_ACTIVATE_PRODUCTION message2 = new MSG_ACTION_ACTIVATE_PRODUCTION(
@@ -172,8 +173,8 @@ public class ActivateProductionTest {
                 Resource.COIN,
                 Resource.FAITH);
         assertFalse(am.activateProduction(p, message2));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
 
         c.emptyQueue();
@@ -187,8 +188,8 @@ public class ActivateProductionTest {
                 Resource.EXTRA,
                 Resource.COIN);
         assertFalse(am.activateProduction(p, message3));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
 
         c.emptyQueue();
@@ -201,9 +202,10 @@ public class ActivateProductionTest {
                 null,
                 Resource.COIN,
                 Resource.EXTRA);
+
         assertFalse(am.activateProduction(p, message4));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -229,8 +231,8 @@ public class ActivateProductionTest {
         c.emptyQueue();
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -260,8 +262,8 @@ public class ActivateProductionTest {
         c.emptyQueue();
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -282,8 +284,8 @@ public class ActivateProductionTest {
                 null);
 
         assertFalse(am.activateProduction(p, message));
-        System.out.println(g.getErrorObject().getErrorMessage());
-        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
 
@@ -325,7 +327,8 @@ public class ActivateProductionTest {
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
         assertEquals(3, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
-        assertEquals(7, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(8, c.messages.size());
     }
 
     //verifies that a basic production is accepted if the player has enough resources
@@ -359,10 +362,13 @@ public class ActivateProductionTest {
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addResource(2);
         p.getStrongbox().addResource(Resource.COIN, 1);
         c.emptyQueue();
+
         assertTrue(am.activateProduction(p, message));
+
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Extradepot)).count());
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
     }
 
     //verifies that a leader production is accepted if the player has enough resources
@@ -389,6 +395,7 @@ public class ActivateProductionTest {
         p.setLeaderCards(1, true);
         p.getWarehouseDepot().add(Resource.COIN);
         c.emptyQueue();
+
         assertTrue(am.activateProduction(p, message));
 
         assertEquals(1, p.getPosition());
@@ -401,8 +408,9 @@ public class ActivateProductionTest {
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
 
-        assertEquals(3, c.messages.size());
+        assertEquals(4, c.messages.size());
     }
 
     //verifies that if a slot is selected for production, only the top card of that slot is used for the production
@@ -439,6 +447,7 @@ public class ActivateProductionTest {
         c.emptyQueue();
 
         assertTrue(am.activateProduction(p, message));
+
         assertEquals(0, p.getWarehouseDepot().getTotal());
         assertEquals(1, p.getStrongbox().getQuantity(Resource.STONE));
         assertEquals(0, p.getStrongbox().getQuantity(Resource.COIN));
@@ -447,7 +456,8 @@ public class ActivateProductionTest {
 
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
     }
 
 
@@ -499,11 +509,12 @@ public class ActivateProductionTest {
         p.getWarehouseDepot().add(Resource.COIN);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addResource(1);
         p.getStrongbox().addResource(Resource.SERVANT,1);
-
         p.getStrongbox().addResource(Resource.SHIELD, 1);
 
         c.emptyQueue();
+
         assertTrue(am.activateProduction(p, message));
+
         assertEquals(0, p.getWarehouseDepot().getTotal());
         assertEquals(0, ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).getNumber());
         assertEquals(4, p.getStrongbox().getQuantity(Resource.SERVANT));
@@ -516,8 +527,9 @@ public class ActivateProductionTest {
         assertEquals(6, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Extradepot)).count());
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
 
-        assertEquals(13, c.messages.size());
+        assertEquals(14, c.messages.size());
     }
 
 }

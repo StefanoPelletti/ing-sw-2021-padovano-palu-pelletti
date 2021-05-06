@@ -137,7 +137,6 @@ public class Game extends ModelObservable {
         actionHelper.addObserver(observer);
         resourceObject.addObserver(observer);
         leaderBoard.addObserver(observer);
-        actionTokenStack.addObserver(observer);
         for (LeaderCard l : leaderCardsDeck.getCards()) {
             if (l.getSpecialAbility().isExtraDepot()) {
                 ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();

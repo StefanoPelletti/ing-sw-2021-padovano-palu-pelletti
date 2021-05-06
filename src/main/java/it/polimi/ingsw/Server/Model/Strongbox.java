@@ -1,5 +1,5 @@
 package it.polimi.ingsw.Server.Model;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
+
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
@@ -64,7 +64,7 @@ public class Strongbox extends ModelObservable {
         if(obj == this) return true;
         if(!(obj instanceof Strongbox)) return false;
         Strongbox o = (Strongbox) obj;
-        return (this.resources.equals(((Strongbox) obj).resources));
+        return (this.resources.equals((o).resources));
     }
 
     @Override

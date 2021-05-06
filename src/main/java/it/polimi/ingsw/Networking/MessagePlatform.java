@@ -14,7 +14,7 @@ public class MessagePlatform implements ModelObserver {
 
     public MessagePlatform(int activePlayers)
     {
-        list = new ArrayList<Message>();
+        list = new ArrayList<>();
         this.activePlayers = activePlayers;
         t = activePlayers;
     }

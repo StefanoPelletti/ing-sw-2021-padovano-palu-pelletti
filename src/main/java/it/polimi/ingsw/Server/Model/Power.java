@@ -3,7 +3,6 @@ package it.polimi.ingsw.Server.Model;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Power implements Serializable {
@@ -35,7 +34,7 @@ public class Power implements Serializable {
     @Override
     public String toString()
     {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         result.append("    POWER: ").append("\n");
         result.append("input: ").append(input).append("\n");
         result.append("output ").append(output).append("\n");

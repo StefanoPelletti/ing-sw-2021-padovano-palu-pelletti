@@ -493,18 +493,13 @@ public class ActionManager {
 
         player.getDevelopmentSlot().addCard(dc, slotNumber);
         DevelopmentCard[][] visibleCards = game.getDevelopmentCardsDeck().getVisible();
-        boolean found = false;
-        int r = 0;
+        int r;
         int c = 0;
-        for(r = 0; r < 3; r++) {
+        loop: for(r = 0; r < 3; r++) {
             for(c = 0; c < 4; c++) {
                 if(dc.equals(visibleCards[r][c])) {
-                    found = true;
-                    break;
+                    break loop;
                 }
-            }
-            if(found) {
-                break;
             }
         }
 
@@ -528,6 +523,7 @@ public class ActionManager {
         if(player.getDevelopmentSlot().getNumOfCards()==7)
         {
             if(gameManager.getSolo()) {
+                actionHelper.setNewMessage("I mean, it's game over for Lorenzo. Go on, end the turn.");
                 gameManager.setStatus(Status.GAME_OVER);
                 gameManager.setSoloWinner(true);
             }

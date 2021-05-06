@@ -111,9 +111,12 @@ public class ActivateLeaderCardTest {
         c.emptyQueue();
 
         assertTrue(am.activateLeaderCard(p, message));
+
         assertTrue(l1.getEnable());
-        assertEquals(1, c.messages.size());
-        assertEquals(MessageType.MSG_UPD_Player, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.size());
     }
 
     //Verifies that if the player has the required cards, the leaderCard is activated
@@ -128,9 +131,13 @@ public class ActivateLeaderCardTest {
         c.emptyQueue();
 
         assertTrue(am.activateLeaderCard(p, message));
+
         assertTrue(l2.getEnable());
-        assertEquals(1, c.messages.size());
-        assertEquals(MessageType.MSG_UPD_Player, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.size());
+
     }
 
     //Verifies that if the player has the required cards, the leaderCard is activated
@@ -153,8 +160,11 @@ public class ActivateLeaderCardTest {
         c.emptyQueue();
 
         assertTrue(am.activateLeaderCard(p, message));
+
         assertTrue(l3.getEnable());
-        assertEquals(1, c.messages.size());
-        assertEquals(MessageType.MSG_UPD_Player, c.messages.get(0).getMessageType());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
+        assertEquals(2, c.messages.size());
     }
 }

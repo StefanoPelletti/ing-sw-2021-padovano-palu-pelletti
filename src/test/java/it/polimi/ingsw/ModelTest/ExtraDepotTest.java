@@ -19,12 +19,10 @@ public class ExtraDepotTest {
     }
     @Test
     public void correctResourceCoin() {
-        SpecialAbility sa = new ExtraDepot(Resource.COIN);
+        ExtraDepot sa = new ExtraDepot(Resource.COIN);
 
-        ExtraDepot ed = (ExtraDepot) sa;
-
-        assertEquals ( ed.getResourceType(),Resource.COIN);
-        assertSame (ed.getNumber() , 0);
+        assertEquals ( sa.getResourceType(),Resource.COIN);
+        assertSame (sa.getNumber() , 0);
     }
 
     @Test

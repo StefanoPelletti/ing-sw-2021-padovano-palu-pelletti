@@ -41,7 +41,7 @@ public class LeaderCard implements Serializable {
     @Override
     public String toString()
     {
-        StringBuilder result= new StringBuilder("");
+        StringBuilder result= new StringBuilder();
         result.append("   LEADER CARD!   ").append("\n");
         result.append("      VP    : ").append(this.VP).append("\n");
         result.append(" is enabled : ").append(this.enabled).append("\n").append("\n");

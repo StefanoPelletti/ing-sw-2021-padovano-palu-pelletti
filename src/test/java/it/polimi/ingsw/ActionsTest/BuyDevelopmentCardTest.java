@@ -2,7 +2,6 @@ package it.polimi.ingsw.ActionsTest;
 import it.polimi.ingsw.Networking.Message.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Controller.ActionManager;
-import it.polimi.ingsw.Server.Controller.FaithTrackManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
@@ -51,9 +50,8 @@ public class BuyDevelopmentCardTest {
     //ensures that DevelopmentCardsVendor is correctly set to disabled at the beginning.
     public void buyDevelopmentCardTest0() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
         assertFalse(dcv.isEnabled());
-
-
     }
 
     @Test
@@ -66,10 +64,16 @@ public class BuyDevelopmentCardTest {
 
         assertTrue(am.buyDevelopmentCard(p));
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
         assertTrue(dcv.isEnabled());
+
         //the cards that the player can buy and put in the slots at the beginning are only the 4 "level 1" cards.
         assertEquals(dcv.getCards().size(), 4);
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
+
+        assertEquals(4, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(6, c.messages.size());
     }
 
     @Test
@@ -126,7 +130,6 @@ public class BuyDevelopmentCardTest {
 
         p.associateLeaderCards(lc);
         p.getLeaderCards()[0].setEnable(true);
-        c.emptyQueue();
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -150,8 +153,12 @@ public class BuyDevelopmentCardTest {
         c.emptyQueue();
 
         assertTrue(am.buyDevelopmentCard(p));
+
         assertTrue(dcv.isEnabled());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
+        assertEquals(2, c.messages.size());
     }
 
     @Test
@@ -172,7 +179,6 @@ public class BuyDevelopmentCardTest {
         p.associateLeaderCards(lc);
         p.getLeaderCards()[0].setEnable(true);
         p.getLeaderCards()[1].setEnable(true);
-        c.emptyQueue();
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -195,8 +201,12 @@ public class BuyDevelopmentCardTest {
         c.emptyQueue();
 
         assertTrue(am.buyDevelopmentCard(p));
+
         assertTrue(dcv.isEnabled());
-        assertTrue(c.messages.stream().noneMatch(x -> x.getMessageType() == MessageType.MSG_ERROR));
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
+        assertEquals(2, c.messages.size());
     }
 
     @Test
@@ -217,7 +227,6 @@ public class BuyDevelopmentCardTest {
         p.associateLeaderCards(lc);
         p.getLeaderCards()[0].setEnable(true);
         p.getLeaderCards()[1].setEnable(true);
-        c.emptyQueue();
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -240,6 +249,7 @@ public class BuyDevelopmentCardTest {
         c.emptyQueue();
 
         assertFalse(am.buyDevelopmentCard(p));
+
         assertFalse(dcv.isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
@@ -253,12 +263,11 @@ public class BuyDevelopmentCardTest {
         assertFalse(am.buyDevelopmentCard(p));
         c.emptyQueue();
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,2);
+
         assertFalse(am.chooseDevelopmentCard(p,msg));
-        assertEquals(1, c.messages.size());
-        assertSame(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+
         assertFalse(dcv.isEnabled());
-        assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
-        assertEquals(0, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
     }
@@ -294,13 +303,17 @@ public class BuyDevelopmentCardTest {
         c.emptyQueue();
 
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+
         assertTrue(am.chooseDevelopmentCard(p, msg));
+
         assertFalse(dcv.isEnabled());
+
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Strongbox).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
-        assertEquals(6, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(7, c.messages.size());
     }
 
     @Test
@@ -321,7 +334,6 @@ public class BuyDevelopmentCardTest {
         p.associateLeaderCards(lc);
         p.getLeaderCards()[0].setEnable(true);
         p.getLeaderCards()[1].setEnable(true);
-        c.emptyQueue();
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -340,7 +352,6 @@ public class BuyDevelopmentCardTest {
 
         g.getDevelopmentCardsDeck().setGrid(grid);
         p.getStrongbox().addResource(Resource.SERVANT, 1);
-        c.emptyQueue();
 
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
@@ -353,7 +364,8 @@ public class BuyDevelopmentCardTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.size());
     }
 
     @Test
@@ -398,7 +410,6 @@ public class BuyDevelopmentCardTest {
         ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(1);
         ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
-        c.emptyQueue();
 
         p.getStrongbox().addResource(Resource.SERVANT, 2);
 
@@ -406,7 +417,9 @@ public class BuyDevelopmentCardTest {
         c.emptyQueue();
 
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+
         assertTrue(am.chooseDevelopmentCard(p, msg));
+
         assertFalse(dcv.isEnabled());
 
         assertEquals(0, p.getWarehouseDepot().getTotal());
@@ -420,7 +433,8 @@ public class BuyDevelopmentCardTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
-        assertEquals(13, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(14, c.messages.size());
     }
 
     @Test
@@ -443,9 +457,16 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+
         assertTrue(am.chooseDevelopmentCard(p, msg));
+
         assertFalse(dcv.isEnabled());
         assertEquals(Status.LAST_TURN, g.getStatus());
+
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
     }
 
     @Test
@@ -458,10 +479,8 @@ public class BuyDevelopmentCardTest {
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
         game.addPlayer("Primo", 1);
-        game.addAllObservers(a);
-        gameManager.getFaithTrackManager().addObserver(a);
+        gameManager.addAllObserver(a);
         Player player = game.getPlayer(1);
-        FaithTrackManager ftm1 = gameManager.getFaithTrackManager();
 
         player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),0);
         player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),1);
@@ -476,11 +495,20 @@ public class BuyDevelopmentCardTest {
         player.getStrongbox().addResource(Resource.COIN, 20);
 
         assertTrue(actionManager.buyDevelopmentCard(player));
+
         a.emptyQueue();
+
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+
         assertTrue(actionManager.chooseDevelopmentCard(player, msg));
+
         assertFalse(dcv.isEnabled());
         assertEquals(Status.GAME_OVER, game.getStatus());
         assertTrue(gameManager.getSoloWinner());
+
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevCardsVendor).count());
     }
 }

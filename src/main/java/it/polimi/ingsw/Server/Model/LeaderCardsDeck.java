@@ -8,11 +8,9 @@ import it.polimi.ingsw.Server.Model.SpecialAbilities.DiscountResource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.Production;
-import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public class LeaderCardsDeck {
@@ -21,7 +19,7 @@ public class LeaderCardsDeck {
 
     public LeaderCardsDeck() {
         t_pos = 0;
-        deck = new ArrayList<LeaderCard>();
+        deck = new ArrayList<>();
 
         deck.add(new LeaderCard(2,
                 new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN,  new Integer[] {1,-1})),
@@ -110,13 +108,13 @@ public class LeaderCardsDeck {
 
     public ArrayList<LeaderCard> getCards()
     {
-        return new ArrayList<LeaderCard>(deck);
+        return new ArrayList<>(deck);
     }
 
 // pickFourCards extracts the next 4 cards from a fixed stack.
 // becomes cyclical if called more than 4 times without shuffling
     public synchronized ArrayList<LeaderCard> pickFourCards() {
-        ArrayList<LeaderCard> cards = new ArrayList<LeaderCard>();
+        ArrayList<LeaderCard> cards = new ArrayList<>();
         for (int i=0; i<4; i++) {
             if (t_pos == 16) t_pos = 0;
             cards.add(deck.get(t_pos));

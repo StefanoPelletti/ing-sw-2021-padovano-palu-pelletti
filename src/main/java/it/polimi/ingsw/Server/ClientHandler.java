@@ -83,7 +83,7 @@ public class ClientHandler implements Runnable {
                 int i;
 
                 if (Lobby.getLobbies().size() > 500) {
-                    send(new MSG_ERROR("Ce stanno troppe lobby"));
+                    send(new MSG_ERROR("Too many lobbies!"));
                     closeStreams();
                     return;
                 }

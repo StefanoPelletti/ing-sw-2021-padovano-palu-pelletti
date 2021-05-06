@@ -17,13 +17,13 @@ public class ActionHelper extends ModelObservable {
         if(number == 0) actionMessage = "Lorenzo destroyed two cards on the devCardDeck!";
         if(number == 1) actionMessage = "Lorenzo gained one faithPoint and shuffled the ActionToken Stack!";
         if(number == 2) actionMessage = "Lorenzo gained two faithPoints!";
-        //notifyObservers();
+        notifyObservers();
     }
 
     public synchronized void setNewMessage(String message)
     {
         actionMessage = message;
-        //notifyObservers();
+        notifyObservers();
     }
 
     public synchronized void setNotificationMessage(String nickname, Message message){
@@ -76,7 +76,7 @@ public class ActionHelper extends ModelObservable {
                 actionMessage = nickname+ " has ended is turn";
                 break;
         }
-        //notifyObservers();
+        notifyObservers();
     }
 
     private void notifyObservers(){

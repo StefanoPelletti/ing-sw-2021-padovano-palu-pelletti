@@ -36,14 +36,14 @@ public class LeaderBoard extends ModelObservable  {
     public void putScore( String nickname, Integer score )
     {
         if(this.leaderboard==null)
-            leaderboard = new TreeMap<String, Integer>();
+            leaderboard = new TreeMap<>();
         leaderboard.put(nickname, score);
     }
 
     public void addScore(String nickname, Integer score)
     {
         if(this.leaderboard==null) {
-            leaderboard = new TreeMap<String, Integer>();
+            leaderboard = new TreeMap<>();
             leaderboard.put(nickname, score);
         }
         else
@@ -61,7 +61,7 @@ public class LeaderBoard extends ModelObservable  {
     @Override
     public String toString()
     {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         result.append("Leaderboard status: ");
         for( String nickname : leaderboard.keySet())
         {

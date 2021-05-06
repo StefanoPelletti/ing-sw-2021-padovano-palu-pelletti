@@ -38,7 +38,7 @@ public class DevelopmentCardsVendor extends ModelObservable {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         int i=1;
 
         if (cards != null) {

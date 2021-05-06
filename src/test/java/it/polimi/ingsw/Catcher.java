@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.Networking.Message.MSG_ERROR;
+import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
@@ -25,6 +26,8 @@ public class Catcher implements ModelObserver {
         System.out.print("\n Received "+message.getMessageType()+ " ");
         if(message.getMessageType()== MessageType.MSG_ERROR)
             System.out.print( ((MSG_ERROR) message).getErrorMessage() );
+        if(message.getMessageType()==MessageType.MSG_NOTIFICATION)
+            System.out.print( ((MSG_NOTIFICATION) message).getMessage());
     }
 
     public void printQueueHeaders()

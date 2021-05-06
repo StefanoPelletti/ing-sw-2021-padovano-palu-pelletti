@@ -77,7 +77,7 @@ public class FaithTrackTest {
         newZones[1] = true;
         newZones[2] = true;
 
-        assertTrue (newZones[0] && !faithTrack.getZones()[0]);
+        assertFalse(faithTrack.getZones()[0]);
         assertTrue (newZones[1] && !faithTrack.getZones()[1]);
         assertTrue (newZones[2] && !faithTrack.getZones()[2]);
     }
