@@ -194,24 +194,24 @@ class MenuPhase
     }
     private boolean checkCreateCommand(List<String> textList) {
         if (textList.size() != 5) {
-            System.out.println("Errore! mancano dei parametri oppure ce ne sono troppi!");
+            System.out.println("Error! The number of parameters is incorrect!");
             return false;
         }
         if (Integer.parseInt(textList.get(2)) >= 65536) {
-            System.out.println("Errore! il numero di porta è troppo potente!!");
+            System.out.println("Error! The port number is way too high!");
             return false;
         }
         if (Integer.parseInt(textList.get(2)) <= 1023) {
-            System.out.println("Errore! il numero di porta dev'essere maggiore di 1023!!");
+            System.out.println("Error! Your port number must be greater than 1023!");
             return false;
         }
         if (Integer.parseInt(textList.get(4)) > 4) {
-            System.out.println("Errore! Il numero di giocatori deve essere minore di 5!!");
+            System.out.println("Error! The number of players must be < 5");
             return false;
         }
         if (Integer.parseInt(textList.get(4)) < 1)
         {
-            System.out.println("Errore! il numero di giocatori dev'essere maggiore di 1!");
+            System.out.println("Error! There must be at least one player!");
             return false;
         }
         return true;
