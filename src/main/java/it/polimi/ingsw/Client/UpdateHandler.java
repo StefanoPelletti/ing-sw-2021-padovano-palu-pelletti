@@ -47,8 +47,8 @@ public class UpdateHandler implements Runnable{
                         synchronized (game){game.updateCurrentPlayer(message);}
                     case MSG_UPD_Extradepot:
                         synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_LeaderCards: //no method in gameSimplified?????
-                        synchronized (game){game.updateCurrentPlayer(message);}
+                  //  case MSG_UPD_LeaderCards: //no method in gameSimplified?????
+                  //      synchronized (game){game.updateCurrentPlayer(message);}
                     case MSG_UPD_WarehouseDepot:
                         synchronized (game){game.updateCurrentPlayer(message);}
                     case MSG_UPD_Strongbox:

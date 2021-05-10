@@ -80,4 +80,10 @@ public class PlayerSimplified {
     public String getNickname() { return this.nickname;}
     public int getPosition() { return this.position;}
     public int getPlayerNumber() { return this.playerNumber;}
+
+    public int getVP() { return VP; }
+    public LeaderCard[] getLeaderCards() { return leaderCards; }
+    public StrongboxSimplified getStrongbox() { return strongbox; }
+    public WarehouseDepotSimplified getWarehouseDepot() { return warehouseDepot; }
+    public DevelopmentSlotSimplified getDevelopmentSlot() { return developmentSlot; }
 }

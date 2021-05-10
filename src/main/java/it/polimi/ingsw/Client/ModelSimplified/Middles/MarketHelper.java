@@ -28,10 +28,19 @@ public class MarketHelper
         this.enabled = newEnabled;
         this.currentResource= newCurrentResource;
         this.resources= new ArrayList<Resource>(newResources);
-        this.choices = new boolean[newChoices.length];
-        System.arraycopy(newChoices,0,this.choices, 0, newChoices.length );
-        this.extraResourceChoices = new Resource[newExtraResourceChoices.length];
-        System.arraycopy(newExtraResourceChoices, 0, this.extraResourceChoices, 0, newExtraResourceChoices.length);
+        if ( newChoices == null)
+            this.choices = null;
+        else {
+            this.choices = new boolean[newChoices.length];
+            System.arraycopy(newChoices, 0, this.choices, 0, newChoices.length);
+        }
+        if( newExtraResourceChoices == null)
+            this.extraResourceChoices = null;
+        else
+        {
+            this.extraResourceChoices = new Resource[newExtraResourceChoices.length];
+            System.arraycopy(newExtraResourceChoices, 0, this.extraResourceChoices, 0, newExtraResourceChoices.length);
+        }
     }
 
     public ArrayList<Resource> getResources(){

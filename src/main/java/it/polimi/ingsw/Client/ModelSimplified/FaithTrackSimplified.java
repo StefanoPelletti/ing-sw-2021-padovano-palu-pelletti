@@ -32,7 +32,7 @@ public class FaithTrackSimplified {
         result.append("  FaithTrack: ");
 
         for(PlayerSimplified player : playerList) {
-            result.append(player.getNickname()).append(" is at position: ").append(player.getPosition());
+            result.append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
         }
         result.append(" --------------------------- ");
         if(zones[2])

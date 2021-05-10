@@ -7,7 +7,6 @@ import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
-import it.polimi.ingsw.Server.Model.Middles.DevelopmentCardsVendor;
 
 import java.net.*;
 import java.util.*;
@@ -173,9 +172,9 @@ public class Lobby {
 
     public static synchronized boolean checkLobbies(int i){
         for(Lobby l : lobbies){
-            if(l.getLobbyNumber()==i) return false;
+            if(l.getLobbyNumber()==i) return true;
         }
-        return true;
+        return false;
     }
 
     public synchronized int whoIs(String nickname)

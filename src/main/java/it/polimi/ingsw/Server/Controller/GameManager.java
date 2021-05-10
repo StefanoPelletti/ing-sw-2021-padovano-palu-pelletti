@@ -197,7 +197,11 @@ public class GameManager {
         {
             result.addPlayerUpdate(p.getPlayerNumber(), p.generateMessage());
 
+            result.addPlayerUpdate(p.getPlayerNumber(), p.getWarehouseDepot().generateMessage());
+
             result.addPlayerUpdate(p.getPlayerNumber(), p.getDevelopmentSlot().generateMessage() );
+
+            result.addPlayerUpdate(p.getPlayerNumber(), p.getStrongbox().generateMessage() );
 
             if(p.getCardsWithExtraDepotAbility().size()>0)
             {
@@ -207,8 +211,6 @@ public class GameManager {
                     result.addPlayerUpdate(p.getPlayerNumber(), depot.generateMessage());
                 }
             }
-
-            result.addPlayerUpdate(p.getPlayerNumber(), p.getStrongbox().generateMessage() );
         }
 
         return result;

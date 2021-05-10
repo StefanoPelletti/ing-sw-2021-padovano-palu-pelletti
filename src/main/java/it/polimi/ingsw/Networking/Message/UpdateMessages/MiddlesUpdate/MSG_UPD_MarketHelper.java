@@ -24,10 +24,21 @@ public class MSG_UPD_MarketHelper extends Message implements Serializable {
         this.enabled=enabled;
         this.resources = new ArrayList<>(resources);
         this.currentResource=currentResource;
-        this.choices = new boolean[choices.length];
-        System.arraycopy(choices,0,this.choices,0,choices.length);
-        this.extraResourceChoices = new Resource[extraResourceChoices.length];
-        System.arraycopy(extraResourceChoices,0,this.extraResourceChoices,0,extraResourceChoices.length);
+
+        if(choices == null)
+            this.choices = null;
+        else {
+            this.choices = new boolean[8];
+            System.arraycopy(choices, 0, this.choices, 0, choices.length);
+        }
+
+        if(extraResourceChoices == null)
+            this.extraResourceChoices = null;
+        else
+        {
+            this.extraResourceChoices = new Resource[extraResourceChoices.length];
+            System.arraycopy(extraResourceChoices,0,this.extraResourceChoices,0,extraResourceChoices.length);
+        }
     }
 
     public boolean getEnabled() { return this.enabled;}

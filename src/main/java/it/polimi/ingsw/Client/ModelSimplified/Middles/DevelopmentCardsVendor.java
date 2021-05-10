@@ -18,7 +18,10 @@ public class DevelopmentCardsVendor
     {
         Map<DevelopmentCard, boolean[]> newMap = message.getCards();
         boolean newEnable = message.getEnabled();
-        cards = new HashMap<DevelopmentCard, boolean[]>(newMap);
+        if(newMap != null)
+            cards = new HashMap<>(newMap);
+        else
+            cards = null;
         this.enabled = newEnable;
     }
 
@@ -41,6 +44,8 @@ public class DevelopmentCardsVendor
                 i++;
             }
         }
+        else
+            result.append(" No cards present");
         return result.toString();
     }
 }

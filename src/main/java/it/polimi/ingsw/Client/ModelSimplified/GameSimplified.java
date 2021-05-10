@@ -192,11 +192,31 @@ public class GameSimplified {
     public MarketHelper getMarketHelper() { return this.marketHelper;}
     public ResourceObject getResourceObject() { return this.resourceObject;}
 
+    public int getBlackCrossPosition() { return blackCrossPosition; }
+    public MarketSimplified getMarket() { return market; }
+    public DevelopmentCardsDeckSimplified getDevDeck() { return devDeck; }
+    public FaithTrackSimplified getFaithTrack() { return faithTrack; }
+    public List<PlayerSimplified> getPlayerSimplifiedList() { return playerSimplifiedList; }
+    public LeaderBoard getLeaderBoard() { return leaderBoard; }
+
     public List<PlayerSimplified> getPlayerList() { return this.playerSimplifiedList; }
     public int getCurrentPlayer() { return this.currentPlayer;}
     public int getTurn() { return this.turn;}
     public PlayerSimplified getCurrentPlayerRef() {
         Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p->p.getPlayerNumber()==currentPlayer).findFirst();
+        return result.orElse(null);
+    }
+
+
+    public int getMyPlayerNumber(String Nickname) {
+        for ( PlayerSimplified p : playerSimplifiedList ) {
+            if ( p.getNickname().equals(Nickname) ) return p.getPlayerNumber();
+        }
+        return 0;
+    }
+
+    public PlayerSimplified getPlayerRef(int PlayerNumber) {
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==PlayerNumber ).findFirst();
         return result.orElse(null);
     }
 }

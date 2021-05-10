@@ -18,7 +18,7 @@ public class ClientHandler implements Runnable {
     private int playerNumber;
 
     private Lobby lobby;
-    private final String nickname;
+    private String nickname;
     private OutputStream outputStream; // = socket.getOutputStream();
     private ObjectOutputStream objectOutputStream;// = new ObjectOutputStream(outputStream);
     private InputStream inputStream;// = socket.getInputStream();
@@ -28,7 +28,7 @@ public class ClientHandler implements Runnable {
     private Phase phase;
 
     public ClientHandler(Socket clientSocket) {
-        this.clientSocket = null;
+        this.clientSocket = clientSocket;
         this.lobby = null;
         this.nickname = null;
 
@@ -51,11 +51,13 @@ public class ClientHandler implements Runnable {
             if (message.getMessageType() == MessageType.MSG_REJOIN_LOBBY) {
                 MSG_REJOIN_LOBBY msg = (MSG_REJOIN_LOBBY) message;
                 int lobbyNumber = msg.getLobbyNumber();
+
                 String nickname = msg.getNickname();
+                this.nickname = nickname;
 
-                lobby = Lobby.getLobby(lobbyNumber);
+                this.lobby = Lobby.getLobby(lobbyNumber);
 
-                if (lobby == null) {
+                if (this.lobby == null) {
                     send(new MSG_ERROR("Lobby not found"));
                     closeStreams();
                     return;
@@ -70,16 +72,18 @@ public class ClientHandler implements Runnable {
 
                 send(new MSG_OK_REJOIN(handler.getNickname()));
                 handler.substituteStreams(this.clientSocket, this.inputStream, this.objectInputStream, this.outputStream, this.objectOutputStream);
+                System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" reconnected to lobby, giving up ");
                 return;
             }
 //LOBBY CREATION-------------------------
             else if (message.getMessageType() == MessageType.MSG_CREATE_LOBBY) {
                 MSG_CREATE_LOBBY msg = (MSG_CREATE_LOBBY) message;
                 String nickname = msg.getNickname();
+                this.nickname = nickname;
                 int numOfPlayers = msg.getNumOfPlayers();
 
                 Random random = new Random();
-                boolean found;
+                boolean found = false;
                 int i;
 
                 if (Lobby.getLobbies().size() > 500) {
@@ -87,26 +91,33 @@ public class ClientHandler implements Runnable {
                     closeStreams();
                     return;
                 }
+
                 do {
-                    found = false;
                     i = random.nextInt(500);
-                    for (Lobby l : Lobby.getLobbies())
-                        if (Lobby.checkLobbies(i)) found = true;
+                    found = Lobby.checkLobbies(i);
                 } while (found);
 
                 this.lobby = new Lobby(i, numOfPlayers);
-                this.lobby.onJoin(nickname, this.clientSocket, this);
+                synchronized (lobby) {
+                    this.lobby.onJoin(nickname, this.clientSocket, this);
 
-                Lobby.addLobby(this.lobby);
+                    Lobby.addLobby(this.lobby);
 
-                System.out.println(nickname + " created lobby " + i);
-                this.send(new MSG_OK_CREATE(i));
+                    System.out.println(nickname + " created lobby " + i);
+                    this.send(new MSG_OK_CREATE(i));
 
-                if (msg.getNumOfPlayers() == 1)
-                    lobby.init();
-                else
-                    lobby.wait();
-//LOBBY JOINING-------------------------
+                    if (msg.getNumOfPlayers() == 1) {
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" Solo lobby detected and init "+i);
+                        lobby.init();
+                    }
+                    else
+                    {
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" Created a lobby, waiting on lobby "+i);
+                        lobby.wait();
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" awoken on lobby "+i);
+                    }
+
+                }
             }
 //LOBBY JOIN---------------------------
             else if (message.getMessageType() == MessageType.MSG_JOIN_LOBBY) {
@@ -115,26 +126,35 @@ public class ClientHandler implements Runnable {
                 String nickname = msg.getNickname();
 
                 this.lobby = Lobby.getLobby(lobbyNumber);
-                if (this.lobby != null) {
-                    nickname = this.lobby.onJoin(nickname, this.clientSocket, this);
-                    if (nickname != null) {
-                        send(new MSG_OK_JOIN(nickname));
-                        System.out.println(nickname + " joined lobby " + lobbyNumber);
+                if(this.lobby == null)
+                {
+                    send(new MSG_ERROR("Lobby not found"));
+                    closeStreams();
+                    return;
+                }
+                synchronized (lobby) {
+                    this.nickname = this.lobby.onJoin(nickname, this.clientSocket, this);
+                    if (this.nickname != null) {
+                        send(new MSG_OK_JOIN(this.nickname));
+                        System.out.println(this.nickname + " joined lobby " + lobbyNumber);
                     } else {
                         send(new MSG_ERROR("Lobby full!"));
                         closeStreams();
                         return;
                     }
-                } else {
-                    send(new MSG_ERROR("Lobby not found"));
-                    closeStreams();
-                    return;
+
+                    if (lobby.getNumberOfPresentPlayers() == lobby.getLobbyMaxPlayers()) {
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" reached full lobby, lobby init and notify() "+lobbyNumber);
+                        lobby.init();
+                        lobby.notifyAll();
+                    } else
+                    {
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" waiting on lobby "+lobbyNumber);
+                        lobby.wait();
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" awoken on lobby "+lobbyNumber);
+                    }
+
                 }
-                if (lobby.getNumberOfPresentPlayers() == lobby.getLobbyMaxPlayers()) {
-                    lobby.init();
-                    lobby.notifyAll();
-                } else
-                    lobby.wait();
             } else {
                 this.send(new MSG_ERROR("Huh?"));
                 closeStreams();
@@ -182,6 +202,7 @@ public class ClientHandler implements Runnable {
 
     private Phase giveModel() {
         try {
+            System.out.println("[T "+Thread.currentThread().getName()+"] - "+this.nickname+" - sent full model ");
             send(lobby.getFullModel());
             return Phase.Proceed;
         } catch (IOException e) {
@@ -198,6 +219,7 @@ public class ClientHandler implements Runnable {
     }
 
     private Phase yourTurn() {
+        System.out.println("[T "+Thread.currentThread().getName()+"] - "+this.nickname+" - yourTurn ");
         try {
             Message message;
             message = (Message) objectInputStream.readObject();
@@ -217,6 +239,7 @@ public class ClientHandler implements Runnable {
     }
 
     private Phase receiveUpdates() {
+        System.out.println("[T "+Thread.currentThread().getName()+"] - "+this.nickname+" - waiting for update messages ");
         Message message;
         try {
             message = lobby.messagePlatform.waitForLatestMessage();
@@ -272,10 +295,12 @@ public class ClientHandler implements Runnable {
         lobby.messagePlatform.decrementActivePlayers();
         lobby.disconnectPlayer(this.nickname);
         try {
-            while (this.pendingConnection) this.pendingConnection.wait();
-            // while (status!= GAMEOVER && this.pendingConnection ) this.pendingconnection.wait()
-            // {    if (status == GAMEOVER) return GameOver
-            // else ...   HOW TO UNLOCK THIS?
+            synchronized (this.pendingConnection) {
+                while (this.pendingConnection) this.pendingConnection.wait();
+                // while (status!= GAMEOVER && this.pendingConnection ) this.pendingconnection.wait()
+                // {    if (status == GAMEOVER) return GameOver
+                // else ...   HOW TO UNLOCK THIS?
+            }
         }
         catch (InterruptedException e) {
             e.printStackTrace();
@@ -319,7 +344,12 @@ public class ClientHandler implements Runnable {
         this.outputStream = outputStream;
         this.objectOutputStream = objectOutputStream;
 
-        this.pendingConnection=false;
-        this.pendingConnection.notify();
+        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" exploded, going into dead state ");
+        synchronized (this.pendingConnection) {
+            this.pendingConnection=false;
+            this.pendingConnection.notify();
+        }
+
+        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" reconnected to lobby ");
     }
 }
