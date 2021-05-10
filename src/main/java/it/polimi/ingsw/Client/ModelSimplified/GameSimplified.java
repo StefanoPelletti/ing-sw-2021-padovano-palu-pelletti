@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
-
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 import it.polimi.ingsw.Client.ModelSimplified.Middles.*;
@@ -9,7 +8,6 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_De
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
-import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.*;
 
@@ -92,9 +90,7 @@ public class GameSimplified {
         this.faithTrack.update(message);
     }
 
-    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) {
-        this.developmentCardsVendor.update(message);
-    }
+    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) { this.developmentCardsVendor.update(message); }
 
     public void updateLeaderCardsObject(MSG_UPD_LeaderCardsObject message)
     {
@@ -217,6 +213,12 @@ public class GameSimplified {
 
     public PlayerSimplified getPlayerRef(int PlayerNumber) {
         Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==PlayerNumber ).findFirst();
+        return result.orElse(null);
+    }
+
+    public PlayerSimplified getPlayerRef(String nickname)
+    {
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
         return result.orElse(null);
     }
 }

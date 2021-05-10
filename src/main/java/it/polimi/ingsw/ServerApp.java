@@ -7,8 +7,7 @@ import java.io.*;
 
 public class ServerApp
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws UnknownHostException {
         final int port = 43210;
         ServerSocket serverSocket;
 
@@ -21,9 +20,10 @@ public class ServerApp
             return;
         }
 
-        System.out.println("Server online, listening on: " + serverSocket.getLocalPort()+"  "+serverSocket.getInetAddress());
+        System.out.println("Server online, listening on: "+InetAddress.getLocalHost().getHostAddress()+":"+serverSocket.getLocalPort());
 
         Socket socket;
+
         while(true)
         {
             try
