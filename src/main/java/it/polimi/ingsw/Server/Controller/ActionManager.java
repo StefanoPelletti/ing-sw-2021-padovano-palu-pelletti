@@ -194,11 +194,11 @@ public class ActionManager {
         boolean[] leaderProduction = message.getLeaderProduction();
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
 
-        if(player.getAction(0)){
+        if(player.getAction()){
             gameManager.setErrorObject("Error! You already performed a very powerful action");
             return false;
         }
-        else player.setAction(0);
+        else player.setAction();
 
         if(leaderProduction[0]){
             LeaderCard l1 = player.getLeaderCards()[0];
@@ -405,11 +405,11 @@ public class ActionManager {
         DevelopmentCard[][] possibleCards = game.getDevelopmentCardsDeck().getVisible();
         Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
-        if(player.getAction(1)){
+        if(player.getAction()){
             gameManager.setErrorObject("Error! You already performed a very powerful action!");
             return false;
         }
-        else player.setAction(1);
+        else player.setAction();
 
         Map<Resource, Integer> playerResources = player.getResources();
 
@@ -538,11 +538,11 @@ public class ActionManager {
         boolean column = message.getColumn();
         int number = message.getNumber();
 
-        if(player.getAction(2)){
+        if(player.getAction()){
             gameManager.setErrorObject("Error! You already performed a very powerful action");
             return false;
         }
-        else player.setAction(2);
+        else player.setAction();
 
         if(column &&( number <0 || number >=4)) return false; //should be impossible, would throw an exception when building the message
         if(!column &&( number < 0 || number >= 3)) return false; // same as above
