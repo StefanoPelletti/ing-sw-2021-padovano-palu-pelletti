@@ -12,7 +12,6 @@ import it.polimi.ingsw.Server.Model.LeaderCard;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.channels.ScatteringByteChannel;
 import java.util.*;
 
 import javax.swing.*;
@@ -67,6 +66,7 @@ class Halo
     static boolean solo;
     static boolean yourTurn;
     static boolean action = false;
+    static boolean handler = false;
 }
 
 class ClosingPhase
@@ -123,7 +123,7 @@ class MenuPhase
 
                         if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
                             MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
-                            System.out.println("Your lobby number is " + msg.getLobbyNumber());
+                            System.out.println("Connected! Your lobby number is " + msg.getLobbyNumber());
                             Halo.myNickname = textList.get(1);
                             if (Integer.parseInt(textList.get(2))==1)
                                 Halo.solo = true;
@@ -155,7 +155,7 @@ class MenuPhase
 
                         if (message.getMessageType() == MessageType.MSG_OK_JOIN) {
                             MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
-                            System.out.println("Your assigned nickname is " + msg.getAssignedNickname());
+                            System.out.println("Connected! Your assigned nickname is " + msg.getAssignedNickname());
                             Halo.myNickname = msg.getAssignedNickname();
                             Halo.solo = false;
                             return Phase.Game;
@@ -210,7 +210,7 @@ class MenuPhase
 
                         if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
                             MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
-                            System.out.println("Your lobby number is " + msg.getLobbyNumber());
+                            System.out.println("Connected! Your lobby number is " + msg.getLobbyNumber());
                             Halo.myNickname = textList.get(3);
                             if (Integer.parseInt(textList.get(4))==1)
                                 Halo.solo = true;
@@ -243,7 +243,7 @@ class MenuPhase
                         message = (Message) Halo.objectInputStream.readObject();
                         if (message.getMessageType() == MessageType.MSG_OK_JOIN) {
                             MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
-                            System.out.println("Your assigned nickname is " + msg.getAssignedNickname());
+                            System.out.println("Connected! Your assigned nickname is " + msg.getAssignedNickname());
                             Halo.myNickname = msg.getAssignedNickname();
                             Halo.solo = false;
                             return Phase.Game;
@@ -275,7 +275,7 @@ class MenuPhase
                         message = (Message) Halo.objectInputStream.readObject();
                         if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
                             MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
-                            System.out.println("Your assigned nickname is " + msg.getAssignedNickname());
+                            System.out.println("Connected! Your assigned nickname is " + msg.getAssignedNickname());
                             Halo.myNickname = msg.getAssignedNickname();
                             Halo.solo = false;
                             return Phase.Game;
@@ -432,11 +432,11 @@ class MenuPhase
 class GamePhase
 {
 
-
     public Phase run()
     {
         Message message;
         boolean execute;
+        boolean wasThere;
 
         System.out.println(" Waiting for Initial update model. Console is unresponsive.");
         try
@@ -459,42 +459,53 @@ class GamePhase
             List<String> textList = new ArrayList<>();
             String text;
 
-            Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
-            if (Halo.yourTurn)
-                System.out.println("Is your turn!");
-            else
-                new Thread( new UpdateHandler()).start();
+
 
             while(true)
             {
+                Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
+                if (Halo.yourTurn)
+                    System.out.println("Still your move!");
+                else
+                {
+                    if(!Halo.handler)
+                        new Thread( new UpdateHandler(false)).start();
+                }
+
                 execute = true;
+                wasThere = true;
 
 //phase 1: write situation from model
-                if(Halo.yourTurn) {
+                if(Halo.yourTurn && !Halo.handler) {
                     if (Halo.game.isMiddleActive()) {
                         if (Halo.game.isLeaderCardsObjectEnabled()) {
                             System.out.println("[LeaderCardsObject enabled] Hey, please pick two leaderCards.");
                             System.out.println(Halo.game.getLeaderCardsObject().toString());
-                            System.out.println("Please write the first number: ");
+                            System.out.println("Please write the first card number:  ");
+                            System.out.print("> ");
                         }
                         else if( Halo.game.isResourceObjectEnabled() ) {
                             System.out.println("[ResourceObject enabled] Hey, please pick a resource.");
                             System.out.println(Halo.game.getResourceObject().toString());
+                            System.out.print("> ");
                         }
                         else if ( Halo.game.isMarketHelperEnabled() ) {
                             System.out.println("[MarketHelper enabled] Hey, choose option.");
                             System.out.println(Halo.game.getMarketHelper().toString());
+                            System.out.print("> ");
                         }
                         else if ( Halo.game.isDevelopmentCardsVendorEnabled() )
                         {
                             System.out.println("[DevelopmentCardsVendor enabled] Hey, choose a card and a slot.");
                             System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
+                            System.out.print("> ");
                         }
                     }
+                    wasThere = false;
                 }
 
 //phase 2: gets input
-                System.out.print("> ");
+                if (wasThere) System.out.print("> ");
                 text = Halo.input.nextLine();
 
                 textList.clear();
@@ -540,7 +551,9 @@ class GamePhase
                             list.add(Halo.game.getLeaderCardsObject().getCard(second));
                             MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
                             Halo.objectOutputStream.writeObject(msgToSend);
-                            (new UpdateHandler()).run();
+                            (new UpdateHandler(true)).run();
+                            new Thread(new UpdateHandler(false)).start();
+
                         }
                         else if (Halo.game.isResourceObjectEnabled()) {
                             Resource resource = Resource.NONE;
@@ -574,7 +587,10 @@ class GamePhase
 
                             MSG_INIT_CHOOSE_RESOURCE msgToSend = new MSG_INIT_CHOOSE_RESOURCE( resource );
                             Halo.objectOutputStream.writeObject(msgToSend);
-                            (new UpdateHandler()).run();
+                            boolean skip = (Halo.game.getResourceObject().getNumOfResources()==2);
+                            (new UpdateHandler(true)).run();
+                            if(!skip) //if 2 don't start, will cycle again on this
+                                new Thread(new UpdateHandler(false)).start();
                         }
                         else if (Halo.game.isMarketHelperEnabled()) {
                             int choice = 0;
@@ -597,7 +613,7 @@ class GamePhase
 
                             MSG_ACTION_MARKET_CHOICE msgToSend = new MSG_ACTION_MARKET_CHOICE(choice);
                             Halo.objectOutputStream.writeObject(msgToSend);
-                            (new UpdateHandler()).run();
+                            (new UpdateHandler(true)).run();
                         }
                         else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                             int cardNum;
@@ -617,7 +633,7 @@ class GamePhase
                             }
                             MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum);
                             Halo.objectOutputStream.writeObject(msgToSend);
-                            (new UpdateHandler()).run();
+                            (new UpdateHandler(true)).run();
                         }
                         execute = false;
                     }
@@ -819,7 +835,7 @@ class GamePhase
 
                                                 MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
                                                 Halo.objectOutputStream.writeObject(msgToSend1);
-                                                (new UpdateHandler()).run();
+                                                (new UpdateHandler(true)).run();
                                                 break;
                                             case 2:
                                                 int cardToDiscard = 0;
@@ -845,7 +861,7 @@ class GamePhase
 
                                                 MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
                                                 Halo.objectOutputStream.writeObject(msgToSend2);
-                                                (new UpdateHandler()).run();
+                                                (new UpdateHandler(true)).run();
                                                 break;
                                             case 3:
                                                 //for Giacomino <3
@@ -856,7 +872,7 @@ class GamePhase
                                             case 5:
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
-                                                (new UpdateHandler()).run();
+                                                (new UpdateHandler(true)).run();
                                                 break;
                                             case 6:
                                                 int row;
@@ -876,7 +892,9 @@ class GamePhase
                                                 }
                                                 break;
                                             case 7:
-
+                                                MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
+                                                Halo.objectOutputStream.writeObject(msgToSend7);
+                                                new Thread(new UpdateHandler(false)).start();
                                                 break;
                                         }
                                     }
@@ -1141,7 +1159,7 @@ class GamePhase
         try
         {
             int number = Integer.parseInt(textList.get(0));
-            if (number < 0 || number > 5 ) {
+            if (number < 1 || number > 4 ) {
                 System.out.println("Sorry, you have to choose between 1 and 4.");
                 return false;
             }
@@ -1163,8 +1181,8 @@ class GamePhase
         try
         {
             int number = Integer.parseInt(textList.get(0));
-            if (number < 0 || number > 5) {
-                System.out.println("Sorry, the player number is below the minimum.");
+            if (number < 1 || number > 5) {
+                System.out.println("Sorry, the player number must be between 1 and 4.");
                 return false;
             }
             if(number == first) {

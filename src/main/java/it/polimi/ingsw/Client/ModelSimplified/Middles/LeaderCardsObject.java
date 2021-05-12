@@ -36,7 +36,7 @@ public class LeaderCardsObject
         if(enabled) {
             result.append(" These are the cards: ").append("\n");
             for (int i = 0; i < cards.size(); i++) {
-                result.append(" Card number # ").append(i+1).append("\n");
+                result.append("\n").append(" Card number # ").append(i+1).append("\n");
                 result.append(cards.get(i).toString());
             }
         }

@@ -85,15 +85,16 @@ public class ClientHandler implements Runnable {
                 Random random = new Random();
                 boolean found = false;
                 int i;
+                int lobbyMaxSize = 50;
 
-                if (Lobby.getLobbies().size() > 500) {
+                if (Lobby.getLobbies().size() > lobbyMaxSize) {
                     send(new MSG_ERROR("Too many lobbies!"));
                     closeStreams();
                     return;
                 }
 
                 do {
-                    i = random.nextInt(500);
+                    i = random.nextInt(lobbyMaxSize);
                     found = Lobby.checkLobbies(i);
                 } while (found);
 
@@ -242,7 +243,8 @@ public class ClientHandler implements Runnable {
         System.out.println("[T "+Thread.currentThread().getName()+"] - "+this.nickname+" - waiting for update messages ");
         Message message;
         try {
-            message = lobby.messagePlatform.waitForLatestMessage();
+            message = lobby.messagePlatform.waitForLatestMessage(this.playerNumber);
+            System.out.println("[T "+Thread.currentThread().getName()+"] - "+this.nickname+" - grabbed  "+message.getMessageType());
             switch(message.getMessageType())
             {
                 case MSG_UPD_End:

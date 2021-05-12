@@ -165,19 +165,19 @@ public class GameSimplified {
         switch(message.getMessageType())
         {
             case MSG_UPD_Player:
-                playerSimplifiedList.get(currentPlayer).update((MSG_UPD_Player) message);
+                getCurrentPlayerRef().update((MSG_UPD_Player) message);
                 break;
             case MSG_UPD_WarehouseDepot:
-                playerSimplifiedList.get(currentPlayer).updateWarehouseDepot((MSG_UPD_WarehouseDepot) message);
+                getCurrentPlayerRef().updateWarehouseDepot((MSG_UPD_WarehouseDepot) message);
                 break;
             case MSG_UPD_DevSlot:
-                playerSimplifiedList.get(currentPlayer).updateDevelopmentSlot((MSG_UPD_DevSlot) message);
+                getCurrentPlayerRef().updateDevelopmentSlot((MSG_UPD_DevSlot) message);
                 break;
             case MSG_UPD_Extradepot:
-                playerSimplifiedList.get(currentPlayer).updateExtradepot((MSG_UPD_Extradepot) message);
+                getCurrentPlayerRef().updateExtradepot((MSG_UPD_Extradepot) message);
                 break;
             case MSG_UPD_Strongbox:
-                playerSimplifiedList.get(currentPlayer).updateStrongbox((MSG_UPD_Strongbox) message);
+                getCurrentPlayerRef().updateStrongbox((MSG_UPD_Strongbox) message);
                 break;
         }
     }

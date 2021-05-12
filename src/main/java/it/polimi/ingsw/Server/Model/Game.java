@@ -136,6 +136,7 @@ public class Game extends ModelObservable {
         marketHelper.addObserver(observer);
         actionHelper.addObserver(observer);
         resourceObject.addObserver(observer);
+        leaderCardsObject.addObserver(observer);
         leaderBoard.addObserver(observer);
         for (LeaderCard l : leaderCardsDeck.getCards()) {
             if (l.getSpecialAbility().isExtraDepot()) {

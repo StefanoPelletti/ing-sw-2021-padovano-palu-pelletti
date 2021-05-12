@@ -9,8 +9,17 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 
 public class UpdateHandler implements Runnable{
 
+    boolean master;
+    public UpdateHandler(boolean master)
+    {
+        this.master = master;
+    }
+
     @Override
     public void run() {
+
+        Halo.handler = true;
+
         Message message;
         while(true){
             try {
@@ -57,10 +66,47 @@ public class UpdateHandler implements Runnable{
                     case MSG_UPD_End:
                         synchronized (Halo.game){
                             Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
-                            if (Halo.yourTurn) {
-                                System.out.println("Is your turn! You may use the <action> command!");
+                            if(Halo.yourTurn && !master) {
+                                if (Halo.game.isMiddleActive()) {
+                                    if (Halo.game.isLeaderCardsObjectEnabled()) {
+                                        System.out.println("[LeaderCardsObject enabled] Hey, please pick two leaderCards.");
+                                        System.out.println(Halo.game.getLeaderCardsObject().toString());
+                                        System.out.println("Please write the first card number: ");
+                                        System.out.print("> ");
+                                    }
+                                    else if( Halo.game.isResourceObjectEnabled() ) {
+                                        System.out.println("[ResourceObject enabled] Hey, please pick a resource.");
+                                        System.out.println(Halo.game.getResourceObject().toString());
+                                        System.out.print("> ");
+                                    }
+                                    else if ( Halo.game.isMarketHelperEnabled() ) {
+                                        System.out.println("[MarketHelper enabled] Hey, choose option.");
+                                        System.out.println(Halo.game.getMarketHelper().toString());
+                                        System.out.print("> ");
+                                    }
+                                    else if ( Halo.game.isDevelopmentCardsVendorEnabled() )
+                                    {
+                                        System.out.println("[DevelopmentCardsVendor enabled] Hey, choose a card and a slot.");
+                                        System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
+                                        System.out.print("> ");
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("Your Turn! You may use the <action> command!");
+                                    System.out.print("> ");
+                                }
+                                Halo.handler = false;
                                 return;
                             }
+                            if(master) {
+                                //Halo.handler = false;
+                                // wtf, If I place this a true (which I really WANT to do, everything blows up!)
+                                // streamCorrupted Exception everywhere!
+                                return;
+                            }
+                            else
+                                System.out.print("> ");
                         }
                         break;
 //final update
@@ -72,7 +118,9 @@ public class UpdateHandler implements Runnable{
                         System.out.println(( (MSG_NOTIFICATION) message).getMessage());
                 }
             }
-            catch(IOException | ClassNotFoundException ignored){}
+            catch(IOException | ClassNotFoundException | ClassCastException e){
+                e.printStackTrace();
+            }
 
 
         }

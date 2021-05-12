@@ -44,6 +44,6 @@ public class Production implements SpecialAbility, Serializable {
     @Override
     public String toString()
     {
-        return "  SpecialAbility: \nGive me that "+getInput()+", I'll transform it in Faith and something you wish!";
+        return "\n  SpecialAbility: \nGive me that "+getInput()+", I'll transform it in Faith and something you wish!";
     }
 }
