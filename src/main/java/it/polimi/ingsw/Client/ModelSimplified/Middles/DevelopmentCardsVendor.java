@@ -28,6 +28,10 @@ public class DevelopmentCardsVendor
         this.enabled = newEnable;
     }
 
+    public Map<DevelopmentCard, boolean[]> getCards() {
+        return cards;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("");
