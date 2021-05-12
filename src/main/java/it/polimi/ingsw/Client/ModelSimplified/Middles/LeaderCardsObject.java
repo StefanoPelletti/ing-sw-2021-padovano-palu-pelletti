@@ -23,4 +23,25 @@ public class LeaderCardsObject
         this.cards = new ArrayList<>(newCards);
     }
 
+    public LeaderCard getCard(int position)
+    {
+        if (cards == null) return null;
+        return cards.get(position);
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        if(enabled) {
+            result.append(" These are the cards: ").append("\n");
+            for (int i = 0; i < cards.size(); i++) {
+                result.append(" Card number # ").append(i+1).append("\n");
+                result.append(cards.get(i).toString());
+            }
+        }
+        else
+            result.append(" LeaderCardsObject is not enabled.");
+        return result.toString();
+    }
 }

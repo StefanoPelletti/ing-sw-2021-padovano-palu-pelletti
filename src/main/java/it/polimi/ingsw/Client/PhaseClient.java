@@ -5,11 +5,14 @@ import it.polimi.ingsw.Client.ModelSimplified.GameSimplified;
 import it.polimi.ingsw.Client.ModelSimplified.PlayerSimplified;
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Server.Model.DevelopmentCard;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.LeaderCard;
 
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.channels.ScatteringByteChannel;
 import java.util.*;
 
 import javax.swing.*;
@@ -38,12 +41,11 @@ public class PhaseClient  {
                     phase = (new ErrorPhase()).run();
                     break;
                 case Quit:
-                    System.out.println("Adios!");
+                    (new ClosingPhase()).run();
                     return;
             }
         }
     }
-
 }
 
 
@@ -63,6 +65,25 @@ class Halo
     static PlayerSimplified myPlayerRef;
     static String myNickname;
     static boolean solo;
+    static boolean yourTurn;
+    static boolean action = false;
+}
+
+class ClosingPhase
+{
+    public void run()
+    {
+        try {
+            Halo.socket.close();
+            Halo.outputStream.close();
+            Halo.inputStream.close();
+            Halo.objectOutputStream.close();
+            Halo.objectInputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 class MenuPhase
@@ -410,9 +431,12 @@ class MenuPhase
 
 class GamePhase
 {
+
+
     public Phase run()
     {
         Message message;
+        boolean execute;
 
         System.out.println(" Waiting for Initial update model. Console is unresponsive.");
         try
@@ -425,184 +449,451 @@ class GamePhase
 
             Halo.game = new GameSimplified();
             Halo.game.updateAll(msg);
-            System.out.println(" Model received ");
+            System.out.println(" Model received. Console is responsive. ");
 
             Halo.myPlayerNumber = Halo.game.getMyPlayerNumber(Halo.myNickname);
             if ( Halo.myPlayerNumber == 0) return Phase.Error;
             Halo.myPlayerRef = Halo.game.getPlayerRef(Halo.myPlayerNumber);
 
-
             System.out.println("Remember the HELP command to show a list of commands.");
             List<String> textList = new ArrayList<>();
             String text;
 
+            Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
+            if (Halo.yourTurn)
+                System.out.println("Is your turn!");
+            else
+                new Thread( new UpdateHandler()).start();
 
-//thread 1: console manager
             while(true)
             {
+                execute = true;
+
+//phase 1: write situation from model
+                if(Halo.yourTurn) {
+                    if (Halo.game.isMiddleActive()) {
+                        if (Halo.game.isLeaderCardsObjectEnabled()) {
+                            System.out.println("[LeaderCardsObject enabled] Hey, please pick two leaderCards.");
+                            System.out.println(Halo.game.getLeaderCardsObject().toString());
+                            System.out.println("Please write the first number: ");
+                        }
+                        else if( Halo.game.isResourceObjectEnabled() ) {
+                            System.out.println("[ResourceObject enabled] Hey, please pick a resource.");
+                            System.out.println(Halo.game.getResourceObject().toString());
+                        }
+                        else if ( Halo.game.isMarketHelperEnabled() ) {
+                            System.out.println("[MarketHelper enabled] Hey, choose option.");
+                            System.out.println(Halo.game.getMarketHelper().toString());
+                        }
+                        else if ( Halo.game.isDevelopmentCardsVendorEnabled() )
+                        {
+                            System.out.println("[DevelopmentCardsVendor enabled] Hey, choose a card and a slot.");
+                            System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
+                        }
+                    }
+                }
+
+//phase 2: gets input
                 System.out.print("> ");
                 text = Halo.input.nextLine();
 
                 textList.clear();
                 textList = new ArrayList<>( (Arrays.asList(text.split("\\s+"))));
 
-                switch(textList.get(0).toLowerCase())
-                {
-                    case "quit":
-                        return Phase.Quit;
-                    case "help":
-                        System.out.println("  List of commands! " +
-                                "         \n ----------------");
-                        System.out.println("=> quit                            : kills the thread and exits the program");
-                        System.out.println("=> help                            : displays the possible terminal commands");
-                        System.out.println("=> show <something>                : shows one of my Assets");
-                        System.out.println("something :>  'leaderCards'");
-                        System.out.println("          :>  'players' ");
-                        System.out.println("          :>  'market' ");
-                        System.out.println("          :>  'depot' ");
-                        System.out.println("          :>  'strongbox' ");
-                        System.out.println("          :>  'devslot' ");
-                        System.out.println("          :>  'devdeck' ");
-                        System.out.println("          :>  'faithtrack' ");
-                        System.out.println("          :>  'myvp' ");
-                        System.out.println("=> show <nickname> <something>     : shows one of the other players' assets.\n" +
-                                           "                                     Specify the nickname of the player.        ");
-                        System.out.println("=> show player <num> <something>   : shows one of the other players' assets.\n" +
-                                           "                                     Specify the player's number. ");
-                        System.out.println("num       :>  1, .. , maxLobbySize ");
-                        System.out.println("something :>  'leaderCards'");
-                        System.out.println("          :>  'vp'");
-                        System.out.println("          :>  'depot'");
-                        System.out.println("          :>  'strongbox'");
-                        System.out.println("          :>  'devslot'");
-                        break;
-                    case "show":
-                        if (!checkShowCommand(textList)) break;
-                        synchronized (Halo.game) {
-                            if (textList.size() == 2) // show depot
-                            {
-                                switch (textList.get(1).toLowerCase()) {
-                                    case "players":
-                                        for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
-                                            System.out.println(" " + p.getNickname() + " - " + p.getPlayerNumber());
-                                        break;
-                                    case "market":
-                                        System.out.println(Halo.game.getMarket().toString());
-                                        break;
-                                    case "depot":
-                                        System.out.println(Halo.myPlayerRef.getWarehouseDepot().toString());
-                                        break;
-                                    case "strongbox":
-                                        System.out.println(Halo.myPlayerRef.getStrongbox().toString());
-                                        break;
-                                    case "devslot":
-                                        System.out.println(Halo.myPlayerRef.getDevelopmentSlot().toString());
-                                        break;
-                                    case "devdeck":
-                                        System.out.println(Halo.game.getDevDeck().toString());
-                                        break;
-                                    case "faithtrack":
-                                        System.out.println(Halo.game.getFaithTrack().toString());
-                                        break;
-                                    case "myvp":
-                                        System.out.println(" my VP : " + Halo.myPlayerRef.getVP());
-                                        break;
-                                    case "leadercards":
-                                        LeaderCard[] cards = Halo.myPlayerRef.getLeaderCards();
-                                        if (cards[0] != null) {
-                                            System.out.println(" Leader Card #1: " + cards[0]);
-                                        } else
-                                            System.out.println(" Leader Card #1: none");
-                                        if (cards[1] != null) {
-                                            System.out.println(" Leader Card #2: " + cards[1]);
-                                        } else
-                                            System.out.println(" Leader Card #2: none");
-                                        break;
-                                    default:
-                                        System.out.println(" Somehow I reached this default. Wow.");
+//phase 3: input gets converted into specific action??????????????
+                // must correct synchronization
+                if(Halo.yourTurn) {
+                    if (Halo.game.isMiddleActive()) {
+                        if (Halo.game.isLeaderCardsObjectEnabled()) {
+                            int first = 0;
+                            int second = 0;
+                            obtainNumberLoop: while (true) {
+                                if (check1_4Number(textList)) {
+                                    first = Integer.parseInt(textList.get(0));
 
+                                    while (true) {
+                                        System.out.println("Please write the second number: ");
+                                        System.out.print("> ");
+                                        text = Halo.input.nextLine();
+                                        textList.clear();
+                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                                        if (checkLeaderCardObjectNumber(textList, first)) {
+                                            second = Integer.parseInt(textList.get(0));
+                                            System.out.println("Thanks, you choose " + first + " and " + second);
+                                            break obtainNumberLoop;
+                                        }
+                                    }
+
+
+                                } else {
+                                    System.out.println("Please write the first number: ");
+                                    System.out.print("> ");
+                                    text = Halo.input.nextLine();
+                                    textList.clear();
+                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                 }
-                            } else if (textList.size() == 4) {
-                                PlayerSimplified player = Halo.game.getPlayerRef(Integer.parseInt(textList.get(2)));
-                                switch (textList.get(3).toLowerCase()) {
-                                    case "vp":
-                                        System.out.println(" his/her VP : " + player.getVP());
-                                        break;
-                                    case "leadercards":
-                                        LeaderCard[] cards = player.getLeaderCards();
-                                        if (cards[0] != null) {
-                                            if (cards[0].getEnable())
-                                                System.out.println(" Leader Card #1: " + cards[0].toString());
-                                            else
-                                                System.out.println(" Leader Card #1: covered");
-                                        } else
-                                            System.out.println(" Leader Card #1: none");
-                                        if (cards[1] != null) {
-                                            if (cards[1].getEnable())
-                                                System.out.println(" Leader Card #2: " + cards[1].toString());
-                                            else
-                                                System.out.println(" Leader Card #2: covered");
-                                        } else
-                                            System.out.println(" Leader Card #2: none");
-                                        break;
-                                    case "depot":
-                                        System.out.println(player.getWarehouseDepot());
-                                        break;
-                                    case "strongbox":
-                                        System.out.println(player.getStrongbox());
-                                        break;
-                                    case "devslot":
-                                        System.out.println(player.getDevelopmentSlot());
-                                        break;
-                                    default:
-                                        System.out.println(" Somehow I reached this default. Check sequence.");
-                                }
-                            } else //if(size==3)
+                            }
+
+                            ArrayList<LeaderCard> list = new ArrayList<>();
+                            list.add(Halo.game.getLeaderCardsObject().getCard(first));
+                            list.add(Halo.game.getLeaderCardsObject().getCard(second));
+                            MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
+                            Halo.objectOutputStream.writeObject(msgToSend);
+                            (new UpdateHandler()).run();
+                        }
+                        else if (Halo.game.isResourceObjectEnabled()) {
+                            Resource resource = Resource.NONE;
+                            while(true)
                             {
-                                PlayerSimplified player = Halo.game.getPlayerRef(textList.get(1));
-                                if (player == null) {
-                                    System.out.println(" There's no such player with that name. ");
+                                if (check1_4Number(textList))
+                                {
+                                    int number = Integer.parseInt(textList.get(0));
+                                    switch (number)
+                                    {
+                                        case 1: resource = Resource.SHIELD;
+                                        break;
+                                        case 2: resource = Resource.COIN;
+                                        break;
+                                        case 3: resource = Resource.SERVANT;
+                                        break;
+                                        case 4: resource = Resource.STONE;
+                                        break;
+                                    }
                                     break;
                                 }
-                                switch (textList.get(2).toLowerCase()) {
-                                    case "vp":
-                                        System.out.println(" his/her VP : " + player.getVP());
+                                else
+                                {
+                                    System.out.println("Please choose a number between 1 and 4: ");
+                                    System.out.print("> ");
+                                    text = Halo.input.nextLine();
+                                    textList.clear();
+                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                }
+                            }
+
+                            MSG_INIT_CHOOSE_RESOURCE msgToSend = new MSG_INIT_CHOOSE_RESOURCE( resource );
+                            Halo.objectOutputStream.writeObject(msgToSend);
+                            (new UpdateHandler()).run();
+                        }
+                        else if (Halo.game.isMarketHelperEnabled()) {
+                            int choice = 0;
+
+                            while(true)
+                            {
+                                if(checkChoice(textList))
+                                {
+                                    choice = Integer.parseInt(textList.get(0));
+                                    break;
+                                }
+                                else {
+                                    System.out.println(" Please choose something");
+                                    System.out.print("> ");
+                                    text = Halo.input.nextLine();
+                                    textList.clear();
+                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                }
+                            }
+
+                            MSG_ACTION_MARKET_CHOICE msgToSend = new MSG_ACTION_MARKET_CHOICE(choice);
+                            Halo.objectOutputStream.writeObject(msgToSend);
+                            (new UpdateHandler()).run();
+                        }
+                        else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
+                            int cardNum;
+                            int slotNum;
+                            while(true) {
+                                if(checkNumbers(textList)) {
+                                    cardNum = Integer.parseInt(textList.get(0));
+                                    slotNum = Integer.parseInt(textList.get(1));
+                                    break;
+                                } else {
+                                    System.out.println("Please write the card you want to buy and to slot you want to put it in: ");
+                                    System.out.print("> ");
+                                    text = Halo.input.nextLine();
+                                    textList.clear();
+                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                }
+                            }
+                            MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum);
+                            Halo.objectOutputStream.writeObject(msgToSend);
+                            (new UpdateHandler()).run();
+                        }
+                        execute = false;
+                    }
+                }
+
+                if(execute) {
+                    switch (textList.get(0).toLowerCase()) {
+                        case "quit":
+                            return Phase.Quit; //testing purposes
+                        case "help": {
+                            System.out.println("  List of commands! " +
+                                    "         \n ----------------");
+                            System.out.println("=> quit                            : kills the thread and exits the program");
+                            System.out.println("=> help                            : displays the possible terminal commands");
+                            System.out.println("=> show <something>                : shows one of my Assets");
+                            System.out.println("something :>  'leaderCards'");
+                            System.out.println("          :>  'players' ");
+                            System.out.println("          :>  'market' ");
+                            System.out.println("          :>  'depot' ");
+                            System.out.println("          :>  'strongbox' ");
+                            System.out.println("          :>  'devslot' ");
+                            System.out.println("          :>  'devdeck' ");
+                            System.out.println("          :>  'faithtrack' ");
+                            System.out.println("          :>  'myvp' ");
+                            System.out.println("=> show <nickname> <something>     : shows one of the other players' assets.\n" +
+                                    "                                     Specify the nickname of the player.        ");
+                            System.out.println("=> show player <num> <something>   : shows one of the other players' assets.\n" +
+                                    "                                     Specify the player's number. ");
+                            System.out.println("num       :>  1, .. , maxLobbySize ");
+                            System.out.println("something :>  'leaderCards'");
+                            System.out.println("          :>  'vp'");
+                            System.out.println("          :>  'depot'");
+                            System.out.println("          :>  'strongbox'");
+                            System.out.println("          :>  'devslot'");
+                        }
+                        break;
+                        case "show": {
+                            if (!checkShowCommand(textList)) break;
+                            synchronized (Halo.game) {
+                                if (textList.size() == 2) // show depot
+                                {
+                                    switch (textList.get(1).toLowerCase()) {
+                                        case "players":
+                                            for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
+                                                System.out.println(" " + p.getNickname() + " - " + p.getPlayerNumber());
+                                            break;
+                                        case "market":
+                                            System.out.println(Halo.game.getMarket().toString());
+                                            break;
+                                        case "depot":
+                                            System.out.println(Halo.myPlayerRef.getWarehouseDepot().toString());
+                                            break;
+                                        case "strongbox":
+                                            System.out.println(Halo.myPlayerRef.getStrongbox().toString());
+                                            break;
+                                        case "devslot":
+                                            System.out.println(Halo.myPlayerRef.getDevelopmentSlot().toString());
+                                            break;
+                                        case "devdeck":
+                                            System.out.println(Halo.game.getDevDeck().toString());
+                                            break;
+                                        case "faithtrack":
+                                            System.out.println(Halo.game.getFaithTrack().toString());
+                                            break;
+                                        case "myvp":
+                                            System.out.println(" my VP : " + Halo.myPlayerRef.getVP());
+                                            break;
+                                        case "leadercards":
+                                            LeaderCard[] cards = Halo.myPlayerRef.getLeaderCards();
+                                            if (cards[0] != null) {
+                                                System.out.println(" Leader Card #1: " + cards[0]);
+                                            } else
+                                                System.out.println(" Leader Card #1: none");
+                                            if (cards[1] != null) {
+                                                System.out.println(" Leader Card #2: " + cards[1]);
+                                            } else
+                                                System.out.println(" Leader Card #2: none");
+                                            break;
+                                        default:
+                                            System.out.println(" Somehow I reached this default. Wow.");
+
+                                    }
+                                } else if (textList.size() == 4) {
+                                    PlayerSimplified player = Halo.game.getPlayerRef(Integer.parseInt(textList.get(2)));
+                                    switch (textList.get(3).toLowerCase()) {
+                                        case "vp":
+                                            System.out.println(" his/her VP : " + player.getVP());
+                                            break;
+                                        case "leadercards":
+                                            LeaderCard[] cards = player.getLeaderCards();
+                                            if (cards[0] != null) {
+                                                if (cards[0].getEnable())
+                                                    System.out.println(" Leader Card #1: " + cards[0].toString());
+                                                else
+                                                    System.out.println(" Leader Card #1: covered");
+                                            } else
+                                                System.out.println(" Leader Card #1: none");
+                                            if (cards[1] != null) {
+                                                if (cards[1].getEnable())
+                                                    System.out.println(" Leader Card #2: " + cards[1].toString());
+                                                else
+                                                    System.out.println(" Leader Card #2: covered");
+                                            } else
+                                                System.out.println(" Leader Card #2: none");
+                                            break;
+                                        case "depot":
+                                            System.out.println(player.getWarehouseDepot());
+                                            break;
+                                        case "strongbox":
+                                            System.out.println(player.getStrongbox());
+                                            break;
+                                        case "devslot":
+                                            System.out.println(player.getDevelopmentSlot());
+                                            break;
+                                        default:
+                                            System.out.println(" Somehow I reached this default. Check sequence.");
+                                    }
+                                } else //if(size==3)
+                                {
+                                    PlayerSimplified player = Halo.game.getPlayerRef(textList.get(1));
+                                    if (player == null) {
+                                        System.out.println(" There's no such player with that name. ");
                                         break;
-                                    case "leadercards":
-                                        LeaderCard[] cards = player.getLeaderCards();
-                                        if (cards[0] != null) {
-                                            if (cards[0].getEnable())
-                                                System.out.println(" Leader Card #1: " + cards[0].toString());
-                                            else
-                                                System.out.println(" Leader Card #1: covered");
-                                        } else
-                                            System.out.println(" Leader Card #1: none");
-                                        if (cards[1] != null) {
-                                            if (cards[1].getEnable())
-                                                System.out.println(" Leader Card #2: " + cards[1].toString());
-                                            else
-                                                System.out.println(" Leader Card #2: covered");
-                                        } else
-                                            System.out.println(" Leader Card #2: none");
-                                        break;
-                                    case "depot":
-                                        System.out.println(player.getWarehouseDepot());
-                                        break;
-                                    case "strongbox":
-                                        System.out.println(player.getStrongbox());
-                                        break;
-                                    case "devslot":
-                                        System.out.println(player.getDevelopmentSlot());
-                                        break;
-                                    default:
-                                        System.out.println(" Somehow I reached this default. Check sequence.");
+                                    }
+                                    switch (textList.get(2).toLowerCase()) {
+                                        case "vp":
+                                            System.out.println(" his/her VP : " + player.getVP());
+                                            break;
+                                        case "leadercards":
+                                            LeaderCard[] cards = player.getLeaderCards();
+                                            if (cards[0] != null) {
+                                                if (cards[0].getEnable())
+                                                    System.out.println(" Leader Card #1: " + cards[0].toString());
+                                                else
+                                                    System.out.println(" Leader Card #1: covered");
+                                            } else
+                                                System.out.println(" Leader Card #1: none");
+                                            if (cards[1] != null) {
+                                                if (cards[1].getEnable())
+                                                    System.out.println(" Leader Card #2: " + cards[1].toString());
+                                                else
+                                                    System.out.println(" Leader Card #2: covered");
+                                            } else
+                                                System.out.println(" Leader Card #2: none");
+                                            break;
+                                        case "depot":
+                                            System.out.println(player.getWarehouseDepot());
+                                            break;
+                                        case "strongbox":
+                                            System.out.println(player.getStrongbox());
+                                            break;
+                                        case "devslot":
+                                            System.out.println(player.getDevelopmentSlot());
+                                            break;
+                                        default:
+                                            System.out.println(" Somehow I reached this default. Check sequence.");
+                                    }
                                 }
                             }
                         }
                         break;
-                    default:
-                        System.out.println("Sorry, I didn't catch that");
+                        case "action":
+                            if (Halo.yourTurn) {
+                                printActions();
+                                loop: while(true)
+                                {
+                                    System.out.println("Please pick a number: ");
+                                    System.out.print("> ");
+                                    text = Halo.input.nextLine();
+                                    textList.clear();
+                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
+                                    if(checkAction(textList))
+                                    {
+                                        int choice = Integer.parseInt(textList.get(0));
+                                        switch (choice)
+                                        {
+                                            case 1:
+                                                int cardToActivate = 0;
+                                                LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
+                                                LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
+
+                                                if(l1a!=null) System.out.println(" 1 to enable the first card ");
+                                                if(l2a!=null) System.out.println(" 2 to enable the second card ");
+
+                                                while (true)
+                                                {
+                                                    System.out.print("> ");
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                                                    if(checkLeaderCardsNumber(textList))
+                                                    {
+                                                        cardToActivate = Integer.parseInt(textList.get(0));
+                                                        break;
+                                                    }
+                                                }
+
+                                                MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
+                                                Halo.objectOutputStream.writeObject(msgToSend1);
+                                                (new UpdateHandler()).run();
+                                                break;
+                                            case 2:
+                                                int cardToDiscard = 0;
+                                                LeaderCard l1d = Halo.myPlayerRef.getLeaderCards()[0];
+                                                LeaderCard l2d = Halo.myPlayerRef.getLeaderCards()[1];
+
+                                                if(l1d!=null) System.out.println(" 1 to disable the first card ");
+                                                if(l2d!=null) System.out.println(" 2 to disable the second card ");
+
+                                                while (true)
+                                                {
+                                                    System.out.print("> ");
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                                                    if(checkLeaderCardsNumber(textList))
+                                                    {
+                                                        cardToDiscard = Integer.parseInt(textList.get(0));
+                                                        break;
+                                                    }
+                                                }
+
+                                                MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
+                                                Halo.objectOutputStream.writeObject(msgToSend2);
+                                                (new UpdateHandler()).run();
+                                                break;
+                                            case 3:
+                                                //for Giacomino <3
+                                                break;
+                                            case 4:
+                                                //for Giacomino <3
+                                                break;
+                                            case 5:
+                                                MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
+                                                Halo.objectOutputStream.writeObject(msgToSend5);
+                                                (new UpdateHandler()).run();
+                                                break;
+                                            case 6:
+                                                int row;
+                                                int col;
+                                                System.out.println("Insert 1 for a row or 2 for a column");
+
+                                                while (true) {
+                                                    System.out.print("> ");
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                                                    if(checkRowOrColumn(textList)) {
+                                                        //to be continued
+                                                        break;
+                                                    }
+                                                }
+                                                break;
+                                            case 7:
+
+                                                break;
+                                        }
+                                    }
+                                }
+
+
+
+
+
+                            } else {
+                                System.out.println("Hey, wait for your turn!");
+                            }
+                            break;
+                        default:
+                            System.out.println("Sorry, I didn't catch that");
+
+                    }
                 }
             }
 
@@ -634,6 +925,259 @@ class GamePhase
         }
 
         //return Phase.MainMenu;
+    }
+
+    private boolean checkRowOrColumn(List<String> textList) {
+        if(textList.size() == 1) {
+            try {
+                int RowOrCol = Integer.parseInt(textList.get(0));
+                if (RowOrCol != 1 && RowOrCol != 2) {
+                    System.out.println("The number must be 1 or 2!");
+                    return false;
+                }
+            } catch(NumberFormatException e) {
+                    System.out.println("It is not a number!");
+                    return false;
+            }
+        } else {
+            System.out.println("The number of parameters is different then expected.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkLeaderCardsNumber(List<String> textList) {
+        if(textList.size()>1)
+        {
+            System.out.println(" Please insert just a number");
+            return false;
+        }
+        try
+        {
+            int number = Integer.parseInt(textList.get(0));
+            LeaderCard l1 = Halo.myPlayerRef.getLeaderCards()[0];
+            LeaderCard l2 = Halo.myPlayerRef.getLeaderCards()[1];
+            if( number == 1)
+            {
+                if(l1==null)
+                {
+                    System.out.println("Sorry, but that card is discarded");
+                    return false;
+                }
+                else if (l1.getEnable())
+                {
+                    System.out.println("Sorry, but that card is already activated");
+                    return false;
+                }
+            }
+            if( number == 2)
+            {
+                if(l2==null)
+                {
+                    System.out.println("Sorry, but that card is discarded");
+                    return false;
+                }
+                else if (l2.getEnable())
+                {
+                    System.out.println("Sorry, but that card is already activated");
+                    return false;
+                }
+            }
+        }
+        catch ( NumberFormatException e )
+        {
+            System.out.println("Sorry, but that was not a number");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkAction(List<String> textList) {
+        if(textList.size()>1)
+        {
+            System.out.println(" Please insert just a number");
+            return false;
+        }
+        try
+        {
+            int number = Integer.parseInt(textList.get(0));
+            if( number < 1 || number >7)
+            {
+                System.out.println(" Please pick a number between 1 and 7");
+                return false;
+            }
+//check very powerful action    already playedE
+            if ( Halo.action && (number==3|| number==5|| number ==6))
+            {
+                System.out.println(" You already did a main move");
+                return false;
+            }
+
+            LeaderCard l1 = Halo.myPlayerRef.getLeaderCards()[0];
+            LeaderCard l2 = Halo.myPlayerRef.getLeaderCards()[1];
+//check action 1 and 2
+            if (number == 1 || number == 2)
+            {
+                if(l1 == null && l2 == null) {
+                    System.out.println(" You can't, because the cards are absent ");
+                    return false;
+                }
+                if(l1!=null) {
+                    if(l2!=null) {
+                        if (l1.getEnable() && l2.getEnable()) {
+                            System.out.println(" You can't, because the cards are already activated ");
+                            return false;
+                        }
+                    }
+                    else {
+                        if(l1.getEnable()) {
+                            System.out.println(" You can't, because the first card is already enabled and the second one is absent ");
+                            return false;
+                        }
+                    }
+                }
+                else {
+                    if(l2.getEnable()) {
+                        System.out.println(" You can't, the first card is absent and the second one is already enabled ");
+                        return false;
+                    }
+                }
+            }
+//check activate production
+            if ( number == 3)
+            {
+                //for giacomo (?)
+            }
+//check changeDepotConfig
+//check buyDevelopmentCard
+//getMarketResource
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Sorry, but that was not a number");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void printActions() {
+        System.out.println("  List of actions! " +
+                "         \n ----------------");
+        System.out.println("=> 1                               : activate a leader card");
+        System.out.println("=> 2                               : discard a leader card");
+        System.out.println("=> 3                               : activate production");
+        System.out.println("=> 4                               : change depot configuration");
+        System.out.println("=> 5                               : buy development card");
+        System.out.println("=> 6                               : get market resources");
+        System.out.println("=> 7                               : end turn");
+    }
+
+    private boolean checkNumbers(List<String> textList) {
+        if(textList.size() == 2) {
+            try {
+                int cardNum = Integer.parseInt(textList.get(0));
+                int slotNum = Integer.parseInt(textList.get(1));
+                Map<DevelopmentCard, boolean[]> cards;
+                cards = Halo.game.getDevelopmentCardsVendor().getCards();
+
+                if (cardNum > cards.size() || cardNum < 1) {
+                    System.out.println("That's not a possible card!");
+                    return false;
+                }
+                if (slotNum < 0 || slotNum > 2) {
+                    System.out.println("That's not a proper slot!");
+                    return false;
+                }
+                if (!cards.get(cardNum - 1)[slotNum - 1]) {
+                    System.out.println("Error! You can't place that card in this slot");
+                    return false;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("Sorry, that was not a number");
+                return false;
+            }
+        } else {
+            System.out.println("The number of parameters is different then expected.");
+        }
+        return true;
+    }
+
+    private boolean checkChoice(List<String> textList)
+    {
+        if(textList.size()>1)
+        {
+            System.out.println(" Please insert just a number");
+            return false;
+        }
+
+        boolean[] choices = Halo.game.getMarketHelper().getChoices();
+        try
+        {
+            int number = Integer.parseInt(textList.get(0));
+            if ( !choices[number-1] )
+            {
+                System.out.println(" That wasn't a possible choice");
+                return false;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Sorry, but that was not a number");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean check1_4Number(List<String> textList) {
+        if (textList.size()>1)
+        {
+            System.out.println(" Please insert just a number");
+            return false;
+        }
+        try
+        {
+            int number = Integer.parseInt(textList.get(0));
+            if (number < 0 || number > 5 ) {
+                System.out.println("Sorry, you have to choose between 1 and 4.");
+                return false;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Sorry, but that was not a number");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkLeaderCardObjectNumber(List<String> textList, int first) {
+        if (textList.size()>1)
+        {
+            System.out.println(" Please insert just a number");
+            return false;
+        }
+        try
+        {
+            int number = Integer.parseInt(textList.get(0));
+            if (number < 0 || number > 5) {
+                System.out.println("Sorry, the player number is below the minimum.");
+                return false;
+            }
+            if(number == first) {
+                System.out.println("Sorry, but you inserted the same number as before.");
+                return false;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("Sorry, but that was not a number");
+            return false;
+        }
+        return true;
     }
 
     private boolean checkShowCommand(List<String> textList) {
@@ -706,68 +1250,3 @@ class ErrorPhase
         return Phase.MainMenu;
     }
 }
-
-/*
-class UpdateHandler implements Runnable{
-
-    private final Socket clientSocket;
-    private final ObjectInputStream objectInputStream;
-    private final GameSimplified game;
-
-    public UpdateHandler(Socket clientSocket, ObjectInputStream objectInputStream, GameSimplified game){
-        this.clientSocket = clientSocket;
-        this.objectInputStream = objectInputStream;
-        this.game = game;
-    }
-
-    @Override
-    public void run() {
-        Message message;
-        while(true){
-            try {
-                message = (Message) objectInputStream.readObject();
-                switch (message.getMessageType()){
-                    case MSG_UPD_Full:
-                        synchronized (game){ game.updateAll((MSG_UPD_Full) message);}
-                    case MSG_UPD_Game:
-                        synchronized (game){game.updateGame((MSG_UPD_Game) message);}
-                    case MSG_UPD_Market:
-                        synchronized (game){game.updateMarket((MSG_UPD_Market) message);}
-                    case MSG_UPD_DevDeck:
-                        synchronized (game){game.updateDevelopmentCardsDeck((MSG_UPD_DevDeck) message);}
-                    case MSG_UPD_DevCardsVendor:
-                        synchronized (game){game.updateDevelopmentCardsVendor((MSG_UPD_DevCardsVendor) message);}
-                    case MSG_UPD_FaithTrack:
-                        synchronized (game){game.updateFaithTrack((MSG_UPD_FaithTrack) message);}
-                    case MSG_UPD_LeaderBoard: //who closes the connection?
-                        synchronized (game){game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);}
-                        return;
-                    case MSG_UPD_DevSlot:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_Extradepot:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_WarehouseDepot:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_Strongbox:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_Player:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_LeaderCardsObject:
-                        synchronized (game){game.updateLeaderCardsObject((MSG_UPD_LeaderCardsObject) message);}
-                    case MSG_UPD_ResourceObject:
-                        synchronized (game){game.updateResourceObject((MSG_UPD_ResourceObject) message);}
-                    case MSG_UPD_MarketHelper:
-                        synchronized (game){game.updateMarketHelper((MSG_UPD_MarketHelper) message);}
-                    case MSG_UPD_End:
-                        synchronized (game){
-
-                        }
-                }
-            }
-            catch(IOException | ClassNotFoundException e){}
-
-
-        }
-    }
-}
-*/

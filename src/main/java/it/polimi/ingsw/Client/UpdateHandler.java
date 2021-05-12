@@ -1,73 +1,78 @@
 package it.polimi.ingsw.Client;
 
 import java.io.*;
-import java.net.*;
 
-import it.polimi.ingsw.Client.ModelSimplified.GameSimplified;
+import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 
 public class UpdateHandler implements Runnable{
-
-    private final Socket clientSocket;
-    private final ObjectInputStream objectInputStream;
-    private final GameSimplified game;
-
-    public UpdateHandler(Socket clientSocket, ObjectInputStream objectInputStream, GameSimplified game){
-        this.clientSocket = clientSocket;
-        this.objectInputStream = objectInputStream;
-        this.game = game;
-    }
 
     @Override
     public void run() {
         Message message;
         while(true){
             try {
-                message = (Message) objectInputStream.readObject();
+                message = (Message) Halo.objectInputStream.readObject();
                 switch (message.getMessageType()){
-                    case MSG_UPD_Full:
-                        synchronized (game){ game.updateAll((MSG_UPD_Full) message);}
-                    case MSG_UPD_Game:
-                        synchronized (game){game.updateGame((MSG_UPD_Game) message);}
-                    case MSG_UPD_Market:
-                        synchronized (game){game.updateMarket((MSG_UPD_Market) message);}
-                    case MSG_UPD_DevDeck:
-                        synchronized (game){game.updateDevelopmentCardsDeck((MSG_UPD_DevDeck) message);}
-                    case MSG_UPD_DevCardsVendor:
-                        synchronized (game){game.updateDevelopmentCardsVendor((MSG_UPD_DevCardsVendor) message);}
-                    case MSG_UPD_FaithTrack:
-                        synchronized (game){game.updateFaithTrack((MSG_UPD_FaithTrack) message);}
-                    case MSG_UPD_LeaderBoard: //who closes the connection?
-                        synchronized (game){game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);}
-                        return;
-                    case MSG_UPD_DevSlot:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_Extradepot:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                  //  case MSG_UPD_LeaderCards: //no method in gameSimplified?????
-                  //      synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_WarehouseDepot:
-                        synchronized (game){game.updateCurrentPlayer(message);}
-                    case MSG_UPD_Strongbox:
-                        synchronized (game){game.updateCurrentPlayer(message);}
+// Player updates
                     case MSG_UPD_Player:
-                        synchronized (game){game.updateCurrentPlayer(message);}
+                        synchronized (Halo.game){ Halo.game.updatePlayer(message);}
+                        break;
+// Current Player updates
+                    case MSG_UPD_DevSlot:
+                    case MSG_UPD_Extradepot:
+                    case MSG_UPD_WarehouseDepot:
+                    case MSG_UPD_Strongbox:
+                        synchronized (Halo.game){ Halo.game.updateCurrentPlayer(message);}
+                        break;
+// Middle objects update
+                    case MSG_UPD_DevCardsVendor:
+                        synchronized (Halo.game){ Halo.game.updateDevelopmentCardsVendor((MSG_UPD_DevCardsVendor) message);}
+                        break;
                     case MSG_UPD_LeaderCardsObject:
-                        synchronized (game){game.updateLeaderCardsObject((MSG_UPD_LeaderCardsObject) message);}
+                        synchronized (Halo.game){Halo.game.updateLeaderCardsObject((MSG_UPD_LeaderCardsObject) message);}
+                        break;
                     case MSG_UPD_ResourceObject:
-                        synchronized (game){game.updateResourceObject((MSG_UPD_ResourceObject) message);}
+                        synchronized (Halo.game){Halo.game.updateResourceObject((MSG_UPD_ResourceObject) message);}
+                        break;
                     case MSG_UPD_MarketHelper:
-                        synchronized (game){game.updateMarketHelper((MSG_UPD_MarketHelper) message);}
+                        synchronized (Halo.game){Halo.game.updateMarketHelper((MSG_UPD_MarketHelper) message);}
+                        break;
+// Shared objects update
+                    case MSG_UPD_Game:
+                        synchronized (Halo.game){ Halo.game.updateGame((MSG_UPD_Game) message);}
+                        break;
+                    case MSG_UPD_Market:
+                        synchronized (Halo.game){ Halo.game.updateMarket((MSG_UPD_Market) message);}
+                        break;
+                    case MSG_UPD_DevDeck:
+                        synchronized (Halo.game){ Halo.game.updateDevelopmentCardsDeck((MSG_UPD_DevDeck) message);}
+                        break;
+                    case MSG_UPD_FaithTrack:
+                        synchronized (Halo.game){ Halo.game.updateFaithTrack((MSG_UPD_FaithTrack) message);}
+                        break;
+//End update
                     case MSG_UPD_End:
-                        synchronized (game){
-
+                        synchronized (Halo.game){
+                            Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
+                            if (Halo.yourTurn) {
+                                System.out.println("Is your turn! You may use the <action> command!");
+                                return;
+                            }
                         }
+                        break;
+//final update
+                    case MSG_UPD_LeaderBoard: //who closes the connection?
+                        synchronized (Halo.game){ Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);}
+                        return;
+//Notification
+                    case MSG_NOTIFICATION:
+                        System.out.println(( (MSG_NOTIFICATION) message).getMessage());
                 }
             }
-            catch(IOException | ClassNotFoundException e){}
+            catch(IOException | ClassNotFoundException ignored){}
 
 
         }

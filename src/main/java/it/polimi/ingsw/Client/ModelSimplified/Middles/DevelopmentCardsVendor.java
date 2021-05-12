@@ -8,6 +8,9 @@ import java.util.*;
 public class DevelopmentCardsVendor
 {
     private boolean enabled;
+
+
+
     private Map<DevelopmentCard, boolean[]> cards;
 
     public boolean isEnabled() {

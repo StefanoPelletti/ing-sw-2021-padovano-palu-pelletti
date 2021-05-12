@@ -24,4 +24,21 @@ public class ResourceObject
     {
         return this.numOfResources;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        if(enabled)
+        {
+            result.append(" Number of resource to get: "+numOfResources).append("\n");
+            result.append(" 1:  SHIELD");
+            result.append(" 2:  COIN");
+            result.append(" 3:  SERVANT");
+            result.append(" 4:  STONE");
+        }
+        else
+            result.append(" ResourceObject is not enabled.");
+        return result.toString();
+    }
 }

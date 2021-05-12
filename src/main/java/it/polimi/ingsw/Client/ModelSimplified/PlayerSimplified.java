@@ -2,7 +2,10 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.LeaderCard;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
 
 import java.util.*;
 
@@ -47,7 +50,20 @@ public class PlayerSimplified {
     }
 
     public void updateExtradepot(MSG_UPD_Extradepot message) {
-
+        Resource resource = message.getResource();
+        int quantity = message.getNumber();
+        for(int i=0; i<2; i++)
+        {
+            if(leaderCards[i]!=null )
+            {
+                if(leaderCards[i].getSpecialAbility().isExtraDepot())
+                {
+                    ExtraDepot depot = (ExtraDepot) leaderCards[i].getSpecialAbility();
+                    if (depot.getResourceType()==resource)
+                        depot.setResource(quantity);
+                }
+            }
+        }
     }
     public void updateStrongbox(MSG_UPD_Strongbox message)
     {

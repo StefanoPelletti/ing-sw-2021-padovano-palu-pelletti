@@ -8,6 +8,7 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_De
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
+import it.polimi.ingsw.Server.Model.LeaderCard;
 
 import java.util.*;
 
@@ -211,8 +212,8 @@ public class GameSimplified {
         return 0;
     }
 
-    public PlayerSimplified getPlayerRef(int PlayerNumber) {
-        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==PlayerNumber ).findFirst();
+    public PlayerSimplified getPlayerRef(int playerNumber) {
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==playerNumber ).findFirst();
         return result.orElse(null);
     }
 
@@ -220,5 +221,24 @@ public class GameSimplified {
     {
         Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
         return result.orElse(null);
+    }
+
+    public boolean isMyTurn(int myPlayerNumber) {
+        return (this.currentPlayer == myPlayerNumber);
+    }
+
+    public void updatePlayer(Message message) {
+        MSG_UPD_Player msg = (MSG_UPD_Player) message;
+        int playerNumber = msg.getPlayerNumber();
+
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==playerNumber ).findFirst();
+        //Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
+        PlayerSimplified player = result.get();
+
+        player.update( msg );
+    }
+
+    public boolean isMiddleActive() {
+        return isLeaderCardsObjectEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isResourceObjectEnabled();
     }
 }

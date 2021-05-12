@@ -27,7 +27,7 @@ public class MarketHelper
 
         this.enabled = newEnabled;
         this.currentResource= newCurrentResource;
-        this.resources= new ArrayList<Resource>(newResources);
+        this.resources= new ArrayList<>(newResources);
         if ( newChoices == null)
             this.choices = null;
         else {
