@@ -36,7 +36,7 @@ public class ActionHelper extends ModelObservable {
                 break;
             case MSG_INIT_CHOOSE_RESOURCE:
                 Resource r1 = ((MSG_INIT_CHOOSE_RESOURCE) message).getResource();
-                actionMessage = nickname + " has chosen an inital resource: " + r1;
+                actionMessage = nickname + " has chosen an initial resource: " + r1;
                 break;
             case MSG_ACTION_DISCARD_LEADERCARD:
                 actionMessage = nickname + " has discarded his leadercard number "+ ((MSG_ACTION_DISCARD_LEADERCARD) message).getCardNumber();

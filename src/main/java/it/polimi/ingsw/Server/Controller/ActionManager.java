@@ -536,7 +536,7 @@ public class ActionManager {
     public boolean getMarketResources(Player player, MSG_ACTION_GET_MARKET_RESOURCES message){
         MarketHelper marketHelper = game.getMarketHelper();
         boolean column = message.getColumn();
-        int number = message.getNumber();
+        int number = message.getNumber()-1;
 
         if(player.getAction()){
             gameManager.setErrorObject("Error! You already performed a very powerful action");

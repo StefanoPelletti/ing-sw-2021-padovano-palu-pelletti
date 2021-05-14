@@ -862,7 +862,7 @@ class GamePhase
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                                     if (!checkResourceDepot(textList, 1)) System.out.println(" > Ohoh my friend, that's not possible in shelf 1. Try again."+Halo.ANSI_RESET);
                                                     else{
-                                                        shelf1 = convertStringToResource(textList.get(0));
+                                                        shelf1 = convertStringToResource(textList.get(0).toLowerCase());
                                                         break;
                                                     }
                                                 }
@@ -874,8 +874,8 @@ class GamePhase
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                                     if(!checkResourceDepot(textList, 2)) System.out.println(" > Ohoh my friend, that's not possible in shelf 2. Try again."+Halo.ANSI_RESET);
                                                     else {
-                                                        shelf2[0] = convertStringToResource(textList.get(0));
-                                                        shelf2[1] = convertStringToResource(textList.get(1));
+                                                        shelf2[0] = convertStringToResource(textList.get(0).toLowerCase());
+                                                        shelf2[1] = convertStringToResource(textList.get(1).toLowerCase());
                                                         break;
                                                     }
                                                 }
@@ -887,9 +887,9 @@ class GamePhase
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                                     if(!checkResourceDepot(textList, 3)) System.out.println(" > Ohoh my friend, that's not possible in shelf 3. Try again."+Halo.ANSI_RESET);
                                                     else {
-                                                        shelf3[0] = convertStringToResource(textList.get(0));
-                                                        shelf3[1] = convertStringToResource(textList.get(1));
-                                                        shelf3[2] = convertStringToResource(textList.get(2));
+                                                        shelf3[0] = convertStringToResource(textList.get(0).toLowerCase());
+                                                        shelf3[1] = convertStringToResource(textList.get(1).toLowerCase());
+                                                        shelf3[2] = convertStringToResource(textList.get(2).toLowerCase());
                                                         break;
                                                     }
                                                 }
@@ -900,19 +900,24 @@ class GamePhase
                                                 if(Halo.myPlayerRef.getLeaderCards()[0]!=null) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
                                                         if (Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
-                                                            System.out.println(" > I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to fill it");
+                                                            System.out.println(" > I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to Phil Heath");
 
                                                             while (true) {
                                                                 System.out.print(" Number of Resources: ");
                                                                 text = Halo.input.nextLine();
                                                                 textList.clear();
                                                                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                int num = Integer.parseInt(textList.get(0));
-                                                                if (num < 0 || num > 2)
-                                                                    System.out.println(" > That's not correct for an extraDepot. Try again."+Halo.ANSI_RESET);
-                                                                else {
-                                                                    firstExtra = num;
-                                                                    break;
+                                                                try {
+                                                                    int num = Integer.parseInt(textList.get(0));
+                                                                    if (num < 0 || num > 2)
+                                                                        System.out.println(" > That's not correct for an extraDepot. Try again." + Halo.ANSI_RESET);
+                                                                    else {
+                                                                        firstExtra = num;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                catch(NumberFormatException e){
+                                                                    System.out.println("EHIEHIEHI that's not a number! wanna mess with me?");
                                                                 }
                                                             }
                                                         }
@@ -921,19 +926,25 @@ class GamePhase
                                                 if(Halo.myPlayerRef.getLeaderCards()[1]!=null) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
                                                         if (Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
-                                                            System.out.println(" > I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to fill it");
+                                                            System.out.println(" > I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to Phil Heath");
 
                                                             while (true) {
                                                                 System.out.print(" Number of Resources: ");
                                                                 text = Halo.input.nextLine();
                                                                 textList.clear();
                                                                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                int num = Integer.parseInt(textList.get(0));
-                                                                if (num < 0 || num > 2)
-                                                                    System.out.println(" > That's not correct for an extraDepot. Try again."+Halo.ANSI_RESET);
-                                                                else {
-                                                                    secondExtra = num;
-                                                                    break;
+                                                                int num;
+                                                                try {
+                                                                    num = Integer.parseInt(textList.get(0));
+                                                                    if (num < 0 || num > 2)
+                                                                        System.out.println(" > That's not correct for an extraDepot. Try again."+Halo.ANSI_RESET);
+                                                                    else {
+                                                                        secondExtra = num;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                catch(NumberFormatException e){
+                                                                    System.out.println("EHIEHIEHI that's not a number! wanna mess with me?");
                                                                 }
                                                             }
                                                         }
@@ -945,12 +956,17 @@ class GamePhase
                                                 break loop;
 //ACTION BUY
                                             case 5:
+                                                //buy card
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
                                                 break loop;
+
                                             case 6:
-                                                int row;
-                                                int col;
+                                                //market
+                                                int num;
+                                                boolean column;
+                                                System.out.println("Here's the market, if this is not qol I don't know what could be then:");
+                                                System.out.println(Halo.game.getMarket());
                                                 System.out.println(" > Insert 1 for a row or 2 for a column");
 
                                                 while (true) {
@@ -960,11 +976,40 @@ class GamePhase
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
                                                     if(checkRowOrColumn(textList)) {
-                                                        //to be continued //nice tommaso
+                                                        num = Integer.parseInt(textList.get(0));
                                                         break;
                                                     }
+                                                    else System.out.println("Invalid input");
                                                 }
+                                                if(num == 1) {
+                                                    column = false;
+                                                    System.out.println("\nPlease choose the row (must be between 1 and 3)");
+                                                }
+                                                else {
+                                                    System.out.println("\nPlease choose the column (must be between 1 and 4)");
+                                                    column = true;
+                                                }
+
+                                                while(true) {
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                    try {
+                                                        if(textList.size()!=1) System.out.println("I said you have to choose a number, you don't need to write a book");
+                                                        else{
+                                                            num = Integer.parseInt(textList.get(0));
+                                                            if(!column && (num<1||num>3)) System.out.println("That isn't a correct row (must be between 1 and 3)");
+                                                            else if(column && (num<1||num>4)) System.out.println("That isn't a correct column (must be between 1 and 4)");
+                                                            else break;
+                                                        }
+                                                    } catch (NumberFormatException e) {
+                                                        System.out.println("That's not a number!");
+                                                    }
+                                                }
+                                                MSG_ACTION_GET_MARKET_RESOURCES msgToSend3 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num);
+                                                Halo.objectOutputStream.writeObject(msgToSend3);
                                                 break loop;
+
                                             case 7:
                                                 MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
                                                 Halo.objectOutputStream.writeObject(msgToSend7);
@@ -996,29 +1041,22 @@ class GamePhase
         if(textList.size() == 1) {
             try {
                 int RowOrCol = Integer.parseInt(textList.get(0));
-                if (RowOrCol != 1 && RowOrCol != 2) {
-                    System.out.println("The number must be 1 or 2!");
-                    return false;
+                if (RowOrCol == 1 || RowOrCol == 2) {
+                    return true;
                 }
             } catch(NumberFormatException e) {
-                    System.out.println("It is not a number!");
                     return false;
             }
-        } else {
-            System.out.println("The number of parameters is different then expected.");
-            return false;
         }
-        return true;
+        return false;
     }
 
     private boolean checkResourceDepot(List<String> textList, int shelf) {
 
         if(textList.size()!=shelf) return false;
-
-        String resource;
-        for(int i = 0; i < textList.size(); i++){
-            resource = textList.get(i);
-            if(!(resource.equalsIgnoreCase("stone") || resource.equalsIgnoreCase("coin") || resource.equalsIgnoreCase("shield") || resource.equalsIgnoreCase("servant")|| resource.equalsIgnoreCase("none"))) return false;
+        for (String resource: textList) {
+            if (!(resource.equalsIgnoreCase("stone") || resource.equalsIgnoreCase("coin") || resource.equalsIgnoreCase("shield") || resource.equalsIgnoreCase("servant") || resource.equalsIgnoreCase("none")))
+                return false;
         }
 
         return true;
@@ -1203,7 +1241,8 @@ class GamePhase
         try
         {
             int number = Integer.parseInt(textList.get(0));
-            if ( !choices[number-1] )
+            if(number<0||number>7) System.out.println("Invalid input");
+            else if ( !choices[number] )
             {
                 System.out.println(Halo.ANSI_RED+" > That wasn't a possible choice"+Halo.ANSI_RESET);
                 return false;

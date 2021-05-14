@@ -81,6 +81,7 @@ public class UpdateHandler implements Runnable{
                                         System.out.print(" resource number: ");
                                     } else if (Halo.game.isMarketHelperEnabled()) {
                                         System.out.println(Halo.game.getMarketHelper().toString());
+                                        System.out.println(Halo.game.getCurrentPlayerRef().getWarehouseDepot());
                                         System.out.println(" > Please select an option:");
                                         System.out.print(" choice: ");
                                     } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
