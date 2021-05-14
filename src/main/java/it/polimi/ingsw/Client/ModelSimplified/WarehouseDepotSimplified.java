@@ -36,12 +36,13 @@ public class WarehouseDepotSimplified {
 
     @Override
     public String toString() {
-        return "Shelf 1:"+
-                this.shelf1.toString()+"\nShelf 2:"+
-                this.shelf2[0].toString()+","+
-                this.shelf2[1].toString()+"\nShelf 3:"+
-                this.shelf3[0].toString()+","+
-                this.shelf3[1].toString()+","+
-                this.shelf3[2].toString();
+        StringBuilder result = new StringBuilder();
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        result.append(" Warehouse Depot:").append("\n");
+        result.append("  Shelf 1:  ").append(this.shelf1).append("\n");
+        result.append("  Shelf 2:  ").append(this.shelf2[0]).append(" - ").append(this.shelf2[1]).append("\n");
+        result.append("  Shelf 3:  ").append(this.shelf3[0]).append(" - ").append(this.shelf3[1]).append(" - ").append(this.shelf3[2]).append("\n");
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        return result.toString();
     }
 }

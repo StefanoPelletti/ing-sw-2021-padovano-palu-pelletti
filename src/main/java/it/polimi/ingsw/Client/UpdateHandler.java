@@ -9,12 +9,6 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 
 public class UpdateHandler implements Runnable{
 
-    boolean master;
-    public UpdateHandler(boolean master)
-    {
-        this.master = master;
-    }
-
     @Override
     public void run() {
 
@@ -72,44 +66,32 @@ public class UpdateHandler implements Runnable{
                             if(Halo.yourTurn) {
                                 if (Halo.game.isMiddleActive()) {
                                     if (Halo.game.isLeaderCardsObjectEnabled()) {
-                                        // \u001B[31m   RED
-                                        // \u001B[32m   GREEN
-                                        // \u001B[33m   YELLOW
-                                        // \u001B[34m   BLUE
-                                        // \u001B[35m   PURPLE
-                                        System.out.println("[LeaderCardsObject enabled] Hey, Please pick 2 leaderCards.");
+                                        System.out.println(" >> Two free Leader Cards!");
                                         System.out.println(Halo.game.getLeaderCardsObject().toString());
-                                        System.out.println("Please write the first card number: ");
-                                        System.out.print("> ");
-                                    }
-                                    else if( Halo.game.isResourceObjectEnabled() ) {
-                                        System.out.println("[ResourceObject enabled] Hey, please pick a resource.");
+                                        System.out.println(" > Please pick the first card of your wish:");
+                                    } else if (Halo.game.isResourceObjectEnabled()) {
+                                        System.out.println(" >> Free resources!");
                                         System.out.println(Halo.game.getResourceObject().toString());
-                                        System.out.print("> ");
-                                    }
-                                    else if ( Halo.game.isMarketHelperEnabled() ) {
-                                        System.out.println("[MarketHelper enabled] Hey, choose option.");
+                                        System.out.println(" > Please pick the resource you want:");
+                                    } else if (Halo.game.isMarketHelperEnabled()) {
                                         System.out.println(Halo.game.getMarketHelper().toString());
-                                        System.out.print("> ");
-                                    }
-                                    else if ( Halo.game.isDevelopmentCardsVendorEnabled() )
-                                    {
-                                        System.out.println("[DevelopmentCardsVendor enabled] Hey, choose a card and a slot.");
+                                        System.out.println(" > Please select an option:");
+                                    } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                                         System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
-                                        System.out.print("> ");
+                                        System.out.println(" > Please select a card number and a slot number:");
                                     }
                                 }
-                                else
-                                {
-                                    System.out.println("Your Turn! You may use the <action> command!");
+                                else {
+                                    System.out.println(" >> Your Turn! You may use the <action> command!");
                                 }
 
                             }
-                            Halo.handler = false;
-                            System.out.println("UpdateHandler distrutto master: "+master);
+                            else{
 
-                            return;
+                                System.out.println(" >> Turn of     "+ Halo.game.getCurrentPlayerRef().getNickname());
+                            }
                         }
+                        break;
 //final update
                     case MSG_UPD_LeaderBoard: //who closes the connection?
                         synchronized (Halo.game){ Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);}
@@ -120,6 +102,7 @@ public class UpdateHandler implements Runnable{
                         break;
 
                     case MSG_ERROR:
+                        System.out.println(" <> SRV: "+Halo.game.getCurrentPlayerRef().getNickname()+" got an error: ");
                         System.out.println(((MSG_ERROR) message).getErrorMessage());
                         break;
                 }

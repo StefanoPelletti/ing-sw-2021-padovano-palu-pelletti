@@ -239,6 +239,10 @@ public class GameSimplified {
     }
 
     public boolean isMiddleActive() {
-        return isLeaderCardsObjectEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isResourceObjectEnabled();
+        return isLeaderCardsObjectEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled()|| isResourceObjectEnabled();
+    }
+
+    public boolean isLeaderBoardEnabled() {
+        return this.leaderBoard.isEnabled();
     }
 }

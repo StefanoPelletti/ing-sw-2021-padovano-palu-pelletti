@@ -45,8 +45,9 @@ public class LeaderCard implements Serializable {
         result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
         result.append("  LEADER CARD!");
         if(enabled)
-            result.append(" The card is ENABLED \n").append("\n");
-        result.append("   VP: ").append(this.VP).append("\n");
+            result.append(" The card is ENABLED");
+
+        result.append("\n").append("   VP: ").append(this.VP).append("\n");
 
         result.append(this.requirement);
         result.append(this.specialAbility);
