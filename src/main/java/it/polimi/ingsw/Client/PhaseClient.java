@@ -460,7 +460,6 @@ class GamePhase
             Halo.myPlayerNumber = Halo.game.getMyPlayerNumber(Halo.myNickname);
             if ( Halo.myPlayerNumber == 0) return Phase.Error;
             Halo.myPlayerRef = Halo.game.getPlayerRef(Halo.myPlayerNumber);
-
             System.out.println(" >> Remember the HELP command to show a list of commands.");
             List<String> textList = new ArrayList<>();
             String text;
@@ -585,7 +584,6 @@ class GamePhase
                             }
                             MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum);
                             Halo.objectOutputStream.writeObject(msgToSend);
-                            (new UpdateHandler(true)).run();
                         }
                         else if (Halo.game.isLeaderBoardEnabled())
                         {
@@ -917,6 +915,7 @@ class GamePhase
                                                 }
 
                                                 MSG_ACTION_CHANGE_DEPOT_CONFIG msgToSend4 = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
+                                                Halo.objectOutputStream.writeObject(msgToSend4);
                                                 break loop;
 
                                             case 5:
@@ -992,7 +991,7 @@ class GamePhase
         String resource;
         for(int i = 0; i < textList.size(); i++){
             resource = textList.get(i);
-            if(!(resource.equals("stone") || resource.equals("coin") || resource.equals("shield") || resource.equals("servant"))) return false;
+            if(!(resource.equalsIgnoreCase("stone") || resource.equalsIgnoreCase("coin") || resource.equalsIgnoreCase("shield") || resource.equalsIgnoreCase("servant")|| resource.equalsIgnoreCase("none"))) return false;
         }
 
         return true;
@@ -1003,6 +1002,7 @@ class GamePhase
         if(resource.equals("coin")) return Resource.COIN;
         if(resource.equals("shield")) return Resource.SHIELD;
         if(resource.equals("stone")) return Resource.STONE;
+        if(resource.equals("none")) return Resource.NONE;
         return null;
     }
 

@@ -11,11 +11,13 @@ public class UpdateHandler implements Runnable{
 
     @Override
     public void run() {
+        Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
-        Halo.handler = true;
-
-        System.out.println("UpdateHandler avviato master: "+master);
-
+        if(Halo.yourTurn) { // && Halo.game.isLeaderCardsObjectEnabled()
+            System.out.println(" >> Two free Leader Cards!");
+            System.out.println(Halo.game.getLeaderCardsObject().toString());
+            System.out.println(" > Please pick the first card of your wish:");
+        }
 
         Message message;
         while(true){
