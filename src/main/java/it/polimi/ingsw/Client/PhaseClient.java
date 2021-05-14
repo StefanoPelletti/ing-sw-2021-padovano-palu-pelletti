@@ -965,7 +965,7 @@ class GamePhase
                                                 //market
                                                 int num;
                                                 boolean column;
-                                                System.out.println("Here's the market, if this is not qol I don't know what could be then:");
+                                                System.out.println(" >> Here's the market, if this is not qol I don't know what could be then:");
                                                 System.out.println(Halo.game.getMarket());
                                                 System.out.println(" > Insert 1 for a row or 2 for a column");
 
@@ -979,14 +979,14 @@ class GamePhase
                                                         num = Integer.parseInt(textList.get(0));
                                                         break;
                                                     }
-                                                    else System.out.println("Invalid input");
+                                                    else System.out.println(" > Invalid input");
                                                 }
                                                 if(num == 1) {
                                                     column = false;
-                                                    System.out.println("\nPlease choose the row (must be between 1 and 3)");
+                                                    System.out.println("\n > Please choose the row (must be between 1 and 3)");
                                                 }
                                                 else {
-                                                    System.out.println("\nPlease choose the column (must be between 1 and 4)");
+                                                    System.out.println("\n > Please choose the column (must be between 1 and 4)");
                                                     column = true;
                                                 }
 
@@ -995,18 +995,18 @@ class GamePhase
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                                     try {
-                                                        if(textList.size()!=1) System.out.println("I said you have to choose a number, you don't need to write a book");
+                                                        if(textList.size()!=1) System.out.println(" > I said you have to choose a number, you don't need to write a book");
                                                         else{
                                                             num = Integer.parseInt(textList.get(0));
-                                                            if(!column && (num<1||num>3)) System.out.println("That isn't a correct row (must be between 1 and 3)");
-                                                            else if(column && (num<1||num>4)) System.out.println("That isn't a correct column (must be between 1 and 4)");
+                                                            if(!column && (num<1||num>3)) System.out.println(" > That isn't a correct row (must be between 1 and 3)");
+                                                            else if(column && (num<1||num>4)) System.out.println(" > That isn't a correct column (must be between 1 and 4)");
                                                             else break;
                                                         }
                                                     } catch (NumberFormatException e) {
-                                                        System.out.println("That's not a number!");
+                                                        System.out.println(" > That's not a number!");
                                                     }
                                                 }
-                                                MSG_ACTION_GET_MARKET_RESOURCES msgToSend3 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num);
+                                                MSG_ACTION_GET_MARKET_RESOURCES msgToSend3 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num-1);
                                                 Halo.objectOutputStream.writeObject(msgToSend3);
                                                 break loop;
 

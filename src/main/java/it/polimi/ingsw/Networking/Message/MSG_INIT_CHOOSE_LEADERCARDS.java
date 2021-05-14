@@ -13,6 +13,7 @@ public class MSG_INIT_CHOOSE_LEADERCARDS extends Message implements Serializable
     {
         super(MessageType.MSG_INIT_CHOOSE_LEADERCARDS);
         if ( cards.size()!=2 ) throw new IllegalArgumentException();
+        if ( cards.get(0).equals(cards.get(1))) throw new IllegalArgumentException();
         this.cards = new ArrayList<>(cards);
     }
 

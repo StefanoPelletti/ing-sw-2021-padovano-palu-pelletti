@@ -38,7 +38,7 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
     }
 
     public boolean[] getStandardProduction() {
-        return standardProduction.clone();
+        return standardProduction;
     }
 
     public boolean isBasicProduction() {
@@ -46,11 +46,11 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
     }
 
     public boolean[] getLeaderProduction() {
-        return leaderProduction.clone();
+        return leaderProduction;
     }
 
     public ArrayList<Resource> getBasicInput(){
-        return (ArrayList<Resource>) this.basicInput.clone();
+        return this.basicInput;
     }
 
     public Resource getBasicOutput(){

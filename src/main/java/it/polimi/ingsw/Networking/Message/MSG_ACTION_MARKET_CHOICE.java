@@ -9,6 +9,8 @@ public class MSG_ACTION_MARKET_CHOICE extends Message implements Serializable {
     public MSG_ACTION_MARKET_CHOICE(int choice){
         super(MessageType.MSG_ACTION_MARKET_CHOICE);
 
+        if( choice < 0 || choice > 8) throw new IllegalArgumentException();
+
         this.choice = choice;
     }
 
