@@ -29,16 +29,17 @@ public class ResourceObject
     public String toString()
     {
         StringBuilder result = new StringBuilder();
+        result.append(" RESOURCE OBJECT IS HERE TO HELP! ");
         if(enabled)
         {
-            result.append(" Number of resource to get: "+numOfResources).append("\n");
-            result.append(" 1:  SHIELD");
-            result.append(" 2:  COIN");
-            result.append(" 3:  SERVANT");
-            result.append(" 4:  STONE");
+            result.append("  Number of resource to get: ").append(numOfResources).append("\n");
+            result.append("   1:  SHIELD");
+            result.append("   2:  COIN");
+            result.append("   3:  SERVANT");
+            result.append("   4:  STONE");
         }
         else
-            result.append(" ResourceObject is not enabled.");
+            result.append("  ResourceObject is not enabled.");
         return result.toString();
     }
 }

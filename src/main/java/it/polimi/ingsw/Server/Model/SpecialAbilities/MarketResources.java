@@ -44,6 +44,9 @@ public class MarketResources implements SpecialAbility, Serializable {
     @Override
     public String toString()
     {
-        return "\n  SpecialAbility: \nI have the ability to transform white marbles in "+getConvertedResource()+", do I remind you of someone else?";
+        StringBuilder result= new StringBuilder();
+        result.append("   Special Ability: ").append("\n");
+        result.append("    I have the ability to transform white marbles in ").append(resource).append("!").append("\n");
+        return result.toString();
     }
 }

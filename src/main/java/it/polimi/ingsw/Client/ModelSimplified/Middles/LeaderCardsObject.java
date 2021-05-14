@@ -33,15 +33,16 @@ public class LeaderCardsObject
     public String toString()
     {
         StringBuilder result = new StringBuilder();
+        result.append(" LEADERCARD PICKER IS HERE TO HELP! ");
         if(enabled) {
-            result.append(" These are the cards: ").append("\n");
+            result.append("  These are the cards: ").append("\n");
             for (int i = 0; i < cards.size(); i++) {
-                result.append("\n").append(" Card number # ").append(i+1).append("\n");
+                result.append("\n").append("   Card number #").append(i+1).append("\n");
                 result.append(cards.get(i).toString());
             }
         }
         else
-            result.append(" LeaderCardsObject is not enabled.");
+            result.append("  LeaderCardsObject is not enabled.");
         return result.toString();
     }
 }

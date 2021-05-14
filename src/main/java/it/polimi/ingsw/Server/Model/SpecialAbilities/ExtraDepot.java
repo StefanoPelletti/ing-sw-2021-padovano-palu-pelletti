@@ -74,7 +74,11 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
     @Override
     public String toString()
     {
-        return "\n  SpecialAbility: \nI have "+getNumber()+" "+getResourceType()+ " in my belly! ";
+        StringBuilder result= new StringBuilder();
+        result.append("   Special Ability: ").append("\n");
+        result.append("    I can contain  ").append(resource).append(" in my belly!").append("\n");
+        if( number>0) result.append("    In fact, I have ").append(number).append("!").append("\n");
+        return result.toString();
     }
 
     private void notifyObservers(){

@@ -36,15 +36,15 @@ public class DevelopmentCardsVendor
     public String toString() {
         StringBuilder result = new StringBuilder("");
         int i = 1;
-
+        result.append(" THE VENDOR IS HERE TO HELP! ");
         if (cards != null) {
             for (DevelopmentCard dc : cards.keySet()) {
-                result.append(" the Card number: ").append(i);
-                result.append(dc);
+                result.append("  the Card number: ").append(i);
+                result.append(dc).append("\n");
                 int k = 1;
                 for (boolean b : cards.get(dc)) {
                     if (b) {
-                        result.append("'\nCould be placed in slot number: ").append(k);
+                        result.append("  can be placed in slot number: ").append(k).append("\n");
                     }
                     k++;
                 }

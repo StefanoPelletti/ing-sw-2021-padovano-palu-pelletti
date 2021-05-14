@@ -20,6 +20,9 @@ public class UpdateHandler implements Runnable{
 
         Halo.handler = true;
 
+        System.out.println("UpdateHandler avviato master: "+master);
+
+
         Message message;
         while(true){
             try {
@@ -66,10 +69,15 @@ public class UpdateHandler implements Runnable{
                     case MSG_UPD_End:
                         synchronized (Halo.game){
                             Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
-                            if(Halo.yourTurn && !master) {
+                            if(Halo.yourTurn) {
                                 if (Halo.game.isMiddleActive()) {
                                     if (Halo.game.isLeaderCardsObjectEnabled()) {
-                                        System.out.println("[LeaderCardsObject enabled] Hey, please pick two leaderCards.");
+                                        // \u001B[31m   RED
+                                        // \u001B[32m   GREEN
+                                        // \u001B[33m   YELLOW
+                                        // \u001B[34m   BLUE
+                                        // \u001B[35m   PURPLE
+                                        System.out.println("[LeaderCardsObject enabled] Hey, Please pick 2 leaderCards.");
                                         System.out.println(Halo.game.getLeaderCardsObject().toString());
                                         System.out.println("Please write the first card number: ");
                                         System.out.print("> ");
@@ -94,21 +102,14 @@ public class UpdateHandler implements Runnable{
                                 else
                                 {
                                     System.out.println("Your Turn! You may use the <action> command!");
-                                    System.out.print("> ");
                                 }
-                                Halo.handler = false;
-                                return;
+
                             }
-                            if(master) {
-                                //Halo.handler = false;
-                                // wtf, If I place this a true (which I really WANT to do, everything blows up!)
-                                // streamCorrupted Exception everywhere!
-                                return;
-                            }
-                            else
-                                System.out.print("> ");
+                            Halo.handler = false;
+                            System.out.println("UpdateHandler distrutto master: "+master);
+
+                            return;
                         }
-                        break;
 //final update
                     case MSG_UPD_LeaderBoard: //who closes the connection?
                         synchronized (Halo.game){ Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);}
@@ -119,10 +120,10 @@ public class UpdateHandler implements Runnable{
                 }
             }
             catch(IOException | ClassNotFoundException | ClassCastException e){
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println(e.getMessage());
+                return;
             }
-
-
         }
     }
 }

@@ -29,15 +29,22 @@ public class CardRequirements implements Requirement, Serializable {
     {
         StringBuilder result= new StringBuilder();
         Integer numOfCards = requirements.values().stream().map(integers -> integers[0]).reduce(0, Integer::sum);
-        result.append("Requirement: ");
-        result.append("   You need ").append(numOfCards).append(" card(s) with this stats:   \n");
+        result.append("   Requirement: ").append("\n");
+        result.append("    You need ").append(numOfCards);
+        if(numOfCards>1)
+            result.append(" cards, with these stats: ").append("\n");
+        else
+            result.append(" card, with these stats: ").append("\n");
+
         for ( Color c : requirements.keySet())
         {
-            result.append(requirements.get(c)[0]).append(" ").append(c.toString()).append(" card(s)");
+            result.append("     ").append(requirements.get(c)[0]).append(" ").append(c.toString()).append(" card(s)");
             if(requirements.get(c)[1] != -1)
                 result.append(" at level ").append(requirements.get(c)[1]);
+            result.append("\n");
         }
         return result.toString();
+
     }
 
     @Override

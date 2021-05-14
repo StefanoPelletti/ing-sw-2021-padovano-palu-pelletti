@@ -85,9 +85,15 @@ public class ClientHandler implements Runnable {
                 Random random = new Random();
                 boolean found = false;
                 int i;
-                int lobbyMaxSize = 50;
-
-                if (Lobby.getLobbies().size() > lobbyMaxSize) {
+                int lobbyMaxSize = 1;
+                if (numOfPlayers < 1 || numOfPlayers > 4) {
+                    System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" tried to create a lobby, but the too many lobbies");
+                    send(new MSG_ERROR("The number of players is not!"));
+                    closeStreams();
+                    return;
+                }
+                if (Lobby.getLobbies().size() >= lobbyMaxSize) {
+                    System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" tried to create a lobby, but the too many lobbies");
                     send(new MSG_ERROR("Too many lobbies!"));
                     closeStreams();
                     return;
@@ -139,6 +145,7 @@ public class ClientHandler implements Runnable {
                         send(new MSG_OK_JOIN(this.nickname));
                         System.out.println(this.nickname + " joined lobby " + lobbyNumber);
                     } else {
+                        System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" looked for a non existing lobby");
                         send(new MSG_ERROR("Lobby full!"));
                         closeStreams();
                         return;

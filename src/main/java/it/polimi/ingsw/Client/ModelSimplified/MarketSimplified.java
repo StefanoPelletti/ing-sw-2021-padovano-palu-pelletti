@@ -37,13 +37,14 @@ public class MarketSimplified {
 
     @Override
     public String toString() {
-        return " -- Market: -- " +
-                "\n SlideMarble : " + slideMarble.toString() +
-                "\n [ "+ grid[0][0].toAbbreviation()+ " | "+grid[0][1].toAbbreviation()+ " | "
-                +grid[0][2].toAbbreviation()+ " | "+grid[0][3].toAbbreviation()+ " ]"+
-                "\n [ "+ grid[1][0].toAbbreviation()+ " | "+grid[1][1].toAbbreviation()+ " | "
-                +grid[1][2].toAbbreviation()+ " | "+grid[1][3].toAbbreviation()+ " ]"+
-                "\n [ "+ grid[2][0].toAbbreviation()+ " | "+grid[2][1].toAbbreviation()+ " | "
-                +grid[2][2].toAbbreviation()+ " | "+grid[2][3].toAbbreviation()+ " ]"+"\n";
+        StringBuilder result = new StringBuilder();
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        result.append("  MARKET! ").append("\n");
+        result.append("   Marble on the Slide: ").append(slideMarble).append("\n").append("\n");
+        result.append("   [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation()).append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation()).append(" ]").append("\n");
+        result.append("   [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation()).append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation()).append(" ]").append("\n");
+        result.append("   [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation()).append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation()).append(" ]").append("\n");
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        return result.toString();
     }
 }

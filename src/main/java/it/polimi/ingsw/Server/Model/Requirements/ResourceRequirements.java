@@ -24,13 +24,26 @@ public class ResourceRequirements implements Requirement, Serializable {
     {
         StringBuilder result= new StringBuilder();
         Integer numOfResources = requirements.values().stream().reduce(0, Integer::sum);
-        result.append("Requirement: ");
-        result.append("   You need ").append(numOfResources).append(" resource(s) in this way:   \n");
+        result.append("   Requirement: ").append("\n");
+        result.append("    You need ").append(numOfResources);
+        if(numOfResources>1)
+            result.append(" resources, in this way: ").append("\n");
+        else
+            result.append(" resource, which is: ").append("\n");
+
         for ( Resource r : requirements.keySet())
         {
-            result.append(requirements.get(r)).append(" ").append(r.toString()).append(r);
+            //   STONE : numOf
+            result.append("     ").append(requirements.get(r)).append(": ").append(r).append("\n");
         }
         return result.toString();
+
+        /*
+         Requirement:
+          You need 2 resources, in this way:
+           STONE: 2
+           SHIELD: 1
+         */
     }
 
     @Override

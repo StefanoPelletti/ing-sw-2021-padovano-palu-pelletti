@@ -42,12 +42,15 @@ public class LeaderCard implements Serializable {
     public String toString()
     {
         StringBuilder result= new StringBuilder();
-        result.append("   LEADER CARD!   ").append("\n");
-        result.append("      VP    : ").append(this.VP).append("\n");
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        result.append("  LEADER CARD!");
         if(enabled)
             result.append(" The card is ENABLED \n").append("\n");
+        result.append("   VP: ").append(this.VP).append("\n");
+
         result.append(this.requirement);
         result.append(this.specialAbility);
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
         return result.toString();
     }
 

@@ -29,24 +29,26 @@ public class FaithTrackSimplified {
         StringBuilder result = new StringBuilder("");
         int i = 1;
         List<PlayerSimplified> playerList = game.getPlayerList();
-        result.append("  FaithTrack: ");
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        result.append("  FaithTrack: ").append("\n");
 
         for(PlayerSimplified player : playerList) {
-            result.append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
+            result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
         }
-        result.append(" --------------------------- ");
+        result.append("\n");
         if(zones[2])
-            result.append(" Third and last zone has been activated!");
+            result.append("   Third and last zone has been activated!");
         else {
             if (zones[1])
-                result.append(" Second zone has been activated!");
+                result.append("   Second zone has been activated!");
             else {
                 if (zones[0])
-                    result.append(" The First zone has been activated!");
+                    result.append("   The First zone has been activated!");
                 else
-                    result.append(" No zone has been activated yet!");
+                    result.append("   No zone has been activated yet!");
             }
         }
+        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
         return result.toString();
     }
 
