@@ -8,6 +8,7 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.LeaderCard;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
 
 
 import java.io.*;
@@ -846,7 +847,8 @@ class GamePhase
                                                 MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
                                                 Halo.objectOutputStream.writeObject(msgToSend1);
                                                 (new UpdateHandler(true)).run();
-                                                break;
+                                                break loop;
+
                                             case 2:
                                                 int cardToDiscard = 0;
                                                 LeaderCard l1d = Halo.myPlayerRef.getLeaderCards()[0];
@@ -872,18 +874,110 @@ class GamePhase
                                                 MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
                                                 Halo.objectOutputStream.writeObject(msgToSend2);
                                                 (new UpdateHandler(true)).run();
-                                                break;
+                                                break loop;
+
                                             case 3:
-                                                //for Giacomino <3
-                                                break;
+                                                //production
+                                                break loop;
+
                                             case 4:
-                                                //for Giacomino <3
-                                                break;
+                                                //change depot
+                                                System.out.println("My friend, please give me the new configuration of your warehousedepot. Shelf1:");
+                                                Resource shelf1;
+                                                Resource[] shelf2 = new Resource[2];
+                                                Resource[] shelf3 = new Resource[3];
+                                                while(true) {
+                                                    System.out.print("> ");
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                    if (!checkResourceDepot(textList, 1)) System.out.println("Ohoh my friend, that's not possible in shelf 1");
+                                                    else{
+                                                        shelf1 = convertStringToResource(textList.get(0));
+                                                        break;
+                                                    }
+                                                }
+                                                System.out.println("Shelf 2:");
+
+                                                while(true){
+                                                    System.out.print("> ");
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                    if(!checkResourceDepot(textList, 2)) System.out.println("Ohoh my friend, that's not possible in shelf 2");
+                                                    else {
+                                                        shelf2[0] = convertStringToResource(textList.get(0));
+                                                        shelf2[1] = convertStringToResource(textList.get(1));
+                                                        break;
+                                                    }
+                                                }
+
+                                                System.out.println("Shelf 3:");
+                                                while(true){
+                                                    System.out.print("> ");
+                                                    text = Halo.input.nextLine();
+                                                    textList.clear();
+                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                    if(!checkResourceDepot(textList, 3)) System.out.println("Ohoh my friend, that's not possible in shelf 3");
+                                                    else {
+                                                        shelf3[0] = convertStringToResource(textList.get(0));
+                                                        shelf3[1] = convertStringToResource(textList.get(1));
+                                                        shelf3[2] = convertStringToResource(textList.get(2));
+                                                        break;
+                                                    }
+                                                }
+
+                                                int firstExtra = -1;
+                                                int secondExtra = -1;
+
+                                                if(Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()){
+                                                    if(Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
+                                                        System.out.println("I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to fill it");
+
+                                                        while (true) {
+                                                            System.out.print("> ");
+                                                            text = Halo.input.nextLine();
+                                                            textList.clear();
+                                                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                            int num = Integer.parseInt(textList.get(0));
+                                                            if (num < 0 || num > 2)
+                                                                System.out.println("That's not correct for an extraDepot");
+                                                            else {
+                                                                firstExtra = num;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if(Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()){
+                                                    if(Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
+                                                        System.out.println("I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to fill it");
+
+                                                        while (true) {
+                                                            System.out.print("> ");
+                                                            text = Halo.input.nextLine();
+                                                            textList.clear();
+                                                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                            int num = Integer.parseInt(textList.get(0));
+                                                            if (num < 0 || num > 2)
+                                                                System.out.println("That's not correct for an extraDepot");
+                                                            else {
+                                                                secondExtra = num;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                MSG_ACTION_CHANGE_DEPOT_CONFIG msgToSend4 = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
+                                                break loop;
+
                                             case 5:
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
                                                 (new UpdateHandler(true)).run();
-                                                break;
+                                                break loop;
                                             case 6:
                                                 int row;
                                                 int col;
@@ -900,12 +994,12 @@ class GamePhase
                                                         break;
                                                     }
                                                 }
-                                                break;
+                                                break loop;
                                             case 7:
                                                 MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
                                                 Halo.objectOutputStream.writeObject(msgToSend7);
                                                 new Thread(new UpdateHandler(false)).start();
-                                                break;
+                                                break loop;
                                         }
                                     }
                                 }
@@ -972,6 +1066,27 @@ class GamePhase
             return false;
         }
         return true;
+    }
+
+    private boolean checkResourceDepot(List<String> textList, int shelf) {
+
+        if(textList.size()!=shelf) return false;
+
+        String resource;
+        for(int i = 0; i < textList.size(); i++){
+            resource = textList.get(i);
+            if(!(resource.equals("stone") || resource.equals("coin") || resource.equals("shield") || resource.equals("servant"))) return false;
+        }
+
+        return true;
+    }
+
+    private Resource convertStringToResource(String resource){
+        if(resource.equals("servant")) return Resource.SERVANT;
+        if(resource.equals("coin")) return Resource.COIN;
+        if(resource.equals("shield")) return Resource.SHIELD;
+        if(resource.equals("stone")) return Resource.STONE;
+        return null;
     }
 
     private boolean checkLeaderCardsNumber(List<String> textList) {

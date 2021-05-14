@@ -3,7 +3,7 @@ package it.polimi.ingsw.Client;
 import java.io.*;
 
 import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
-import it.polimi.ingsw.Networking.Message.Message;
+import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
 
@@ -117,6 +117,11 @@ public class UpdateHandler implements Runnable{
 //Notification
                     case MSG_NOTIFICATION:
                         System.out.println(( (MSG_NOTIFICATION) message).getMessage());
+                        break;
+
+                    case MSG_ERROR:
+                        System.out.println(((MSG_ERROR) message).getErrorMessage());
+                        break;
                 }
             }
             catch(IOException | ClassNotFoundException | ClassCastException e){
