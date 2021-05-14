@@ -73,7 +73,7 @@ public class ActionHelper extends ModelObservable {
                 actionMessage = nickname + " has chosen a card to buy";
                 break;
             case MSG_ACTION_ENDTURN:
-                actionMessage = nickname+ " has ended is turn";
+                actionMessage = nickname+ " has ended its turn";
                 break;
         }
         notifyObservers();

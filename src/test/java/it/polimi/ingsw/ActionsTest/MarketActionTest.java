@@ -1375,7 +1375,7 @@ public class MarketActionTest {
         a.emptyQueue();
 
         //which is basically endTurnGameOverPlayerWins test in endTurnTest.
-        assertFalse(actionManager.endTurn(player));
+        assertFalse(actionManager.endTurn(player,true));
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(2, a.messages.size());
@@ -1434,7 +1434,7 @@ public class MarketActionTest {
 
 
         //which is basically endTurnGameOverPlayerWins test in endTurnTest.
-        assertFalse(actionManager.endTurn(player));
+        assertFalse(actionManager.endTurn(player,true));
 
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());

@@ -55,13 +55,13 @@ public class ActionManager {
                 resourceObject.setNumOfResources(1);
                 resourceObject.setEnabled(true); //notifies resourceObject
                 //game.setCurrentPlayer(2); //notifies Game
-                endTurn(game.getCurrentPlayer()); //notifies Game
-                return endTurn(game.getCurrentPlayer()); //notifies Game (overwrite) and update_end
+                endTurn(game.getCurrentPlayer(), false); //notifies Game
+                return endTurn(game.getCurrentPlayer(), false); //notifies Game (overwrite) and update_end
             }
             else
             {
                 leaderCardsObject.setCards(game.getLeaderCardsDeck().pickFourCards());
-                endTurn(player);
+                endTurn(player, false);
             }
         }
         return true;
@@ -99,7 +99,7 @@ public class ActionManager {
                 else
                     resourceObject.setNumOfResources(1);
             }
-            endTurn(player);
+            endTurn(player, false);
         }
         return true;
     }
@@ -727,9 +727,10 @@ public class ActionManager {
         }
     }
 
-    public boolean endTurn(Player player) {
+    public boolean endTurn(Player player, boolean notify) {
         player.resetPermittedAction();
-        this.actionHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());
+        if(notify)
+            this.actionHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());
         if(gameManager.getSolo())
         {
             if(game.getStatus()==Status.GAME_OVER)
@@ -873,7 +874,7 @@ public class ActionManager {
             game.getDevelopmentCardsVendor().setEnabled(false);
             game.getErrorObject().setEnabled(false);
             game.getMarketHelper().setEnabled(false);
-            endTurn(player);
+            endTurn(player, true);
         }
     }
 }

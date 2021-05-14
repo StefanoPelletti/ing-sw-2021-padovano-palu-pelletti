@@ -97,7 +97,7 @@ public class Lobby {
                 case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
                     return actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
                 case MSG_ACTION_ENDTURN:
-                    return actionManager.endTurn(player);
+                    return actionManager.endTurn(player, true);
                 default:
                     System.out.println(" SRV: help I don't know what they sent me.");
             }

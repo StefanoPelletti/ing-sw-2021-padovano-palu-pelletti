@@ -58,7 +58,7 @@ public class LorenzoMoveTest {
         {
             reset();
 
-            assertTrue(am.endTurn(p)); //at the beginning of the game this should always return true.
+            assertTrue(am.endTurn(p, true)); //at the beginning of the game this should always return true.
             String msg = "";
             Optional<String> m = c.messages.stream()
                     .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
@@ -108,7 +108,7 @@ public class LorenzoMoveTest {
         do {
             g.setBlackCrossPosition(7);
             c.emptyQueue();
-            assertTrue(am.endTurn(p)); //at the beginning of the game this should always return true.
+            assertTrue(am.endTurn(p, true)); //at the beginning of the game this should always return true.
             String msg = "";
             Optional<String> m = c.messages.stream()
                     .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
@@ -137,7 +137,7 @@ public class LorenzoMoveTest {
         do {
             g.setBlackCrossPosition(23);
             c.emptyQueue();
-            am.endTurn(p);
+            am.endTurn(p, true);
             String msg = "";
             Optional<String> m = c.messages.stream()
                     .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
@@ -172,7 +172,7 @@ public class LorenzoMoveTest {
             }
 
             c.emptyQueue();
-            am.endTurn(p);
+            am.endTurn(p, true);
             String msg = "";
             Optional<String> m = c.messages.stream()
                     .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)

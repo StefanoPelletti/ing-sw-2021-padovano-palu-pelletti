@@ -64,7 +64,7 @@ public class EndTurnActionTest {
     //this test ensures that the next player is set correctly.
     public void endTurnTest0() {
         g.changeStatus(Status.STANDARD_TURN);
-        assertTrue(am.endTurn(p));
+        assertTrue(am.endTurn(p, true));
         assertEquals(g.getCurrentPlayerInt(), 2);
         //just the currentPlayer should change
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
@@ -82,7 +82,7 @@ public class EndTurnActionTest {
         c.emptyQueue();
 
         //both the turn AND the currentPlayer should change
-        assertTrue(am.endTurn(p));
+        assertTrue(am.endTurn(p, true));
 
         //assert Model changes
         assertEquals(g.getTurn(), turn + 1);
@@ -103,7 +103,7 @@ public class EndTurnActionTest {
         c.emptyQueue();
 
         //returns false because the LeaderBoard message is the last one.
-        assertFalse(am.endTurn(p));
+        assertFalse(am.endTurn(p, true));
 
         //assert Model changes
         assertTrue(g.getLeaderBoard().isEnabled());
@@ -125,7 +125,7 @@ public class EndTurnActionTest {
         gm2.setSoloWinner(true); // <- if this is set to true, the game will end
 
         //returns false because the LeaderBoard message is the last one.
-        assertFalse(am2.endTurn(p2));
+        assertFalse(am2.endTurn(p2, true));
 
         //assert Model changes
         assertTrue(g2.getLeaderBoard().isEnabled());
@@ -147,7 +147,7 @@ public class EndTurnActionTest {
         gm2.setSoloWinner(false);
 
         //returns false because the LeaderBoard message is the last one.
-        assertFalse(am2.endTurn(p2));
+        assertFalse(am2.endTurn(p2, true));
 
         //assert correct messages are generated
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
@@ -163,7 +163,7 @@ public class EndTurnActionTest {
         int turn = g2.getTurn();
 
         //returns True because it needs a MSG_UPD_end message afterwards
-        assertTrue(am2.endTurn(p2));
+        assertTrue(am2.endTurn(p2, true));
 
         //assert Model changes
         assertEquals(g2.getTurn(), turn + 1);
