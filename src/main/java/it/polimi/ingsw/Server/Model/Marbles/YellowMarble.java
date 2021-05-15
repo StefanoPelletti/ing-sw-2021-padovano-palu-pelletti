@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class YellowMarble implements MarketMarble, Serializable {
     private final Color color;
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     public YellowMarble() { color = Color.YELLOW; }
 
@@ -16,6 +18,6 @@ public class YellowMarble implements MarketMarble, Serializable {
     }
 
     @Override
-    public String toString() { return " " + color + " Marble  "; }
-    public String toAbbreviation() { return color.toAbbreviation(); }
+    public String toString() { return " " + ANSI_YELLOW + color + ANSI_RESET + " Marble  "; }
+    public String toAbbreviation() { return ANSI_YELLOW + color.toAbbreviation() + ANSI_RESET; }
 }

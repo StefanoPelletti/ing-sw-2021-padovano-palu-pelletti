@@ -17,8 +17,8 @@ public class UpdateHandler implements Runnable{
         if(Halo.yourTurn) { // && Halo.game.isLeaderCardsObjectEnabled()
             System.out.println(" <> Two free Leader Cards!");
             System.out.println(Halo.game.getLeaderCardsObject().toString());
-            System.out.println(" > Please pick the first card of your wish:");
-            System.out.print(" card number: ");
+            System.out.println(" > Please pick the first card:");
+            System.out.print(" Card number: ");
         }
 
         Message message;
@@ -72,18 +72,18 @@ public class UpdateHandler implements Runnable{
                                     if (Halo.game.isLeaderCardsObjectEnabled()) {
                                         System.out.println(" <> Two free Leader Cards!");
                                         System.out.println(Halo.game.getLeaderCardsObject().toString());
-                                        System.out.println(" > Please pick the first card of your wish:");
-                                        System.out.print(" card number: ");
+                                        System.out.println(" > Please pick the first card:");
+                                        System.out.print(" Card number: ");
                                     } else if (Halo.game.isResourceObjectEnabled()) {
                                         System.out.println(" <> Free resources!");
                                         System.out.println(Halo.game.getResourceObject().toString());
                                         System.out.println(" > Please pick the resource you want:");
-                                        System.out.print(" resource number: ");
+                                        System.out.print(" Resource number: ");
                                     } else if (Halo.game.isMarketHelperEnabled()) {
                                         System.out.println(Halo.game.getMarketHelper().toString());
                                         System.out.println(Halo.game.getCurrentPlayerRef().getWarehouseDepot());
                                         System.out.println(" > Please select an option:");
-                                        System.out.print(" choice: ");
+                                        System.out.print(" Choice: ");
                                     } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                                         System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
                                         System.out.println(" > Please select a card number and a slot number:");
@@ -119,14 +119,14 @@ public class UpdateHandler implements Runnable{
                         return;
 //Notification
                     case MSG_NOTIFICATION:
-                        System.out.println(( (MSG_NOTIFICATION) message).getMessage());
+                        System.out.println(" <> " + ( (MSG_NOTIFICATION) message).getMessage());
                         break;
 
                     case MSG_ERROR:
                         if(Halo.yourTurn)
                             System.out.println(Halo.ANSI_RED+" <> You got an error: "+Halo.ANSI_RESET);
                         else
-                            System.out.println(Halo.ANSI_RED+" <> player "+Halo.game.getCurrentPlayerRef().getNickname()+" got an error: "+Halo.ANSI_RESET);
+                            System.out.println(Halo.ANSI_RED+" <> player "+ Halo.game.getCurrentPlayerRef().getNickname()+" got an error: "+Halo.ANSI_RESET);
                         System.out.println(Halo.ANSI_RED+" <> "+((MSG_ERROR) message).getErrorMessage()+Halo.ANSI_RESET);
                         break;
                 }

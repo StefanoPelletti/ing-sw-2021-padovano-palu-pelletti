@@ -33,11 +33,12 @@ public class LeaderCardsObject
     public String toString()
     {
         StringBuilder result = new StringBuilder();
-        result.append(" LEADERCARD PICKER IS HERE TO HELP! ");
+        result.append("\n");
+        result.append("\u001B[36m" + " LEADERCARD PICKER IS HERE TO HELP! " + "\u001B[0m").append("\n");
         if(enabled) {
-            result.append("  These are the cards: ").append("\n");
+            result.append(" These are the cards: ").append("\n");
             for (int i = 0; i < cards.size(); i++) {
-                result.append("\n").append("   Card number #").append(i+1).append("\n");
+                result.append("\n\n").append(" Card number #").append(i+1).append("\n");
                 result.append(cards.get(i).toString());
             }
         }

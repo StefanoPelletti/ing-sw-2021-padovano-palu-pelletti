@@ -24,7 +24,7 @@ public class ResourceRequirements implements Requirement, Serializable {
     {
         StringBuilder result= new StringBuilder();
         Integer numOfResources = requirements.values().stream().reduce(0, Integer::sum);
-        result.append("   Requirement: ").append("\n");
+        result.append("\u001B[35m" + "   REQUIREMENTS: " + "\u001B[0m").append("\n");
         result.append("    You need ").append(numOfResources);
         if(numOfResources>1)
             result.append(" resources, in this way: ").append("\n");

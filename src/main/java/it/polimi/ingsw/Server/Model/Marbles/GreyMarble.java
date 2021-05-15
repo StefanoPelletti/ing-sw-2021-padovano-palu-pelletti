@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class GreyMarble implements MarketMarble, Serializable {
     private final Color color;
+    public static final String ANSI_RESET = "\u001B[0m";
+
 
     public GreyMarble() { color = Color.GREY; }
 

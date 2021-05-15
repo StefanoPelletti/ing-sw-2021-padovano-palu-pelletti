@@ -14,6 +14,7 @@ import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -482,7 +483,7 @@ class GamePhase
             Halo.myPlayerNumber = Halo.game.getMyPlayerNumber(Halo.myNickname);
             if ( Halo.myPlayerNumber == 0) return Phase.Error;
             Halo.myPlayerRef = Halo.game.getPlayerRef(Halo.myPlayerNumber);
-            System.out.println(" >> remember "+Halo.ANSI_CYAN+"help"+Halo.ANSI_RESET+" for a list of commands.");
+            System.out.println(" >> Remember "+Halo.ANSI_CYAN+"help"+Halo.ANSI_RESET+" for a list of commands.");
             List<String> textList = new ArrayList<>();
             String text;
 
@@ -509,8 +510,8 @@ class GamePhase
                                     first = Integer.parseInt(textList.get(0));
 
                                     while (true) {
-                                        System.out.println(" > Please pick the second card of your wish");
-                                        System.out.print(" card number: ");
+                                        System.out.println(" > Please pick the second card: ");
+                                        System.out.print(" Card number: ");
                                         text = Halo.input.nextLine();
                                         textList.clear();
                                         textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -524,7 +525,7 @@ class GamePhase
 
 
                                 } else {
-                                    System.out.print(" card number: ");
+                                    System.out.print(" Card number: ");
                                     text = Halo.input.nextLine();
                                     textList.clear();
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -559,7 +560,7 @@ class GamePhase
                                 }
                                 else
                                 {
-                                    System.out.print(" resource number: ");
+                                    System.out.print(" Resource number: ");
                                     text = Halo.input.nextLine();
                                     textList.clear();
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -580,7 +581,7 @@ class GamePhase
                                     break;
                                 }
                                 else {
-                                    System.out.print(" choice: ");
+                                    System.out.print(" Choice: ");
                                     text = Halo.input.nextLine();
                                     textList.clear();
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -599,7 +600,7 @@ class GamePhase
                                     slotNum = Integer.parseInt(textList.get(1));
                                     break;
                                 } else {
-                                    System.out.println(" > Please write the card you want to buy and to slot you want to put it in!  ");
+                                    System.out.println(" > Please write the card you want to buy and the slot you want to put it in!  ");
                                     text = Halo.input.nextLine();
                                     textList.clear();
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -794,16 +795,16 @@ class GamePhase
                                         {
 //ACTION ACTIVATE LEADERCARD
                                             case 1:
-                                                int cardToActivate = 0;
+                                                int cardToActivate = -1;
                                                 LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
 
-                                                if(l1a!=null) System.out.println(" 1 to enable the first card ");
-                                                if(l2a!=null) System.out.println(" 2 to enable the second card ");
+                                                if(l1a!=null) System.out.println("  Press 1 to enable the first card ");
+                                                if(l2a!=null) System.out.println(" Press 2 to enable the second card ");
 
                                                 while (true)
                                                 {
-                                                    System.out.print(" card number: ");
+                                                    System.out.print(" Card number: ");
                                                     text = Halo.input.nextLine();
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -815,7 +816,7 @@ class GamePhase
                                                     }
                                                 }
 
-                                                MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
+                                                MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
                                                 Halo.objectOutputStream.writeObject(msgToSend1);
                                                 break loop;
 //ACTION DISCARD LEADERCARD
@@ -824,12 +825,12 @@ class GamePhase
                                                 LeaderCard l1d = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2d = Halo.myPlayerRef.getLeaderCards()[1];
 
-                                                if(l1d!=null) System.out.println(" 1 to disable the first card ");
-                                                if(l2d!=null) System.out.println(" 2 to disable the second card ");
+                                                if(l1d!=null) System.out.println(" Press 1 to disable the first card ");
+                                                if(l2d!=null) System.out.println(" Press 2 to disable the second card ");
 
                                                 while (true)
                                                 {
-                                                    System.out.print(" card number: ");
+                                                    System.out.print(" Card number: ");
                                                     text = Halo.input.nextLine();
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -917,7 +918,7 @@ class GamePhase
                                                                     }
                                                                 }
                                                                 catch(NumberFormatException e){
-                                                                    System.out.println("EHIEHIEHI that's not a number! wanna mess with me?");
+                                                                    System.out.println("EHIEHIEHI that's not a number! Wanna mess with me?");
                                                                 }
                                                             }
                                                         }
@@ -944,7 +945,7 @@ class GamePhase
                                                                     }
                                                                 }
                                                                 catch(NumberFormatException e){
-                                                                    System.out.println("EHIEHIEHI that's not a number! wanna mess with me?");
+                                                                    System.out.println("EHIEHIEHI that's not a number! Wanna mess with me?");
                                                                 }
                                                             }
                                                         }
@@ -1188,14 +1189,14 @@ class GamePhase
     }
 
     private void printActions() {
-        System.out.println("  List of actions! \n\n");
-        System.out.println("=>   1   : activate a leader card");
-        System.out.println("=>   2   : discard a leader card");
-        System.out.println("=>   3   : activate production");
-        System.out.println("=>   4   : change depot configuration");
-        System.out.println("=>   5   : buy development card");
-        System.out.println("=>   6   : get market resources");
-        System.out.println("=>   7   : end turn");
+        System.out.println( "\u001B[36m" + "  LIST OF ACTIONS! " + "\u001B[0m");
+        System.out.println("  =>   1   : activate a leader card");
+        System.out.println("  =>   2   : discard a leader card");
+        System.out.println("  =>   3   : activate production");
+        System.out.println("  =>   4   : change depot configuration");
+        System.out.println("  =>   5   : buy development card");
+        System.out.println("  =>   6   : get market resources");
+        System.out.println("  =>   7   : end turn");
     }
 
     private boolean checkNumbers(List<String> textList) {

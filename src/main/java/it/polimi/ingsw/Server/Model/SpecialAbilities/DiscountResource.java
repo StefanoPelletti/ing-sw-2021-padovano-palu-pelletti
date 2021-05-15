@@ -45,8 +45,8 @@ public class DiscountResource implements SpecialAbility, Serializable {
     public String toString()
     {
         StringBuilder result= new StringBuilder();
-        result.append("   Special Ability: ").append("\n");
-        result.append("    Hear my plea! Discount this resource: ").append(resource).append("\n");
+        result.append("\u001B[31m" + "   SPECIAL ABILITY: " + "\u001B[0m").append("\n");
+        result.append("    Discount this resource: ").append(resource).append("\n");
         return result.toString();
     }
 }

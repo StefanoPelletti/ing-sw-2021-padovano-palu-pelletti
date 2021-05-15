@@ -45,8 +45,8 @@ public class Production implements SpecialAbility, Serializable {
     public String toString()
     {
         StringBuilder result= new StringBuilder();
-        result.append("   Special Ability: ").append("\n");
-        result.append("    Give me that ").append(input).append(", I'll transform it in Faith and something you wish!").append("\n");
+        result.append("\u001B[31m" + "   SPECIAL ABILITY: " + "\u001B[0m").append("\n");
+        result.append("    You can transform any ").append(input).append(" in Faith and something else you wish!").append("\n");
         return result.toString();
     }
 }
