@@ -91,7 +91,7 @@ public class UpdateHandler implements Runnable{
                                     }
                                 }
                                 else {
-                                    if(still == false)
+                                    if(!still)
                                     {
                                         System.out.println(Halo.ANSI_GREEN+ " <> Your Turn! You may use the <action> command!"+Halo.ANSI_RESET);
                                         still = true;

@@ -60,7 +60,8 @@ public class ActionHelper extends ModelObservable {
                 break;
             case MSG_ACTION_GET_MARKET_RESOURCES:
                 actionMessage = nickname + " has decided to go to the market";
-                if(((MSG_ACTION_GET_MARKET_RESOURCES) message).getColumn()) actionMessage+=" and picked the column "+((MSG_ACTION_GET_MARKET_RESOURCES) message).getNumber();
+                int num = ((MSG_ACTION_GET_MARKET_RESOURCES) message).getNumber()+1;
+                if(((MSG_ACTION_GET_MARKET_RESOURCES) message).getColumn()) actionMessage+=" and picked the column "+num;
                 else  actionMessage+=" and picked the row "+((MSG_ACTION_GET_MARKET_RESOURCES) message).getNumber();
                 break;
             case MSG_ACTION_MARKET_CHOICE:

@@ -271,7 +271,6 @@ public class ActionManager {
             gameManager.setErrorObject("Error! You already performed a very powerful action");
             return false;
         }
-        else player.setAction();
 
         if(leaderProduction[0]){
             LeaderCard l1 = player.getLeaderCards()[0];
@@ -371,6 +370,7 @@ public class ActionManager {
             }
         }
 //MODEL UPDATE
+        player.setAction();
         this.actionHelper.setNotificationMessage(player.getNickname(), message);
         //now we must consume the required resources
         consumeResources(player, requiredResources);
@@ -514,7 +514,7 @@ public class ActionManager {
             gameManager.setErrorObject("Error! You already performed a very powerful action!");
             return false;
         }
-        else player.setAction();
+
 
         Map<Resource, Integer> playerResources = player.getResources();
 
@@ -580,6 +580,7 @@ public class ActionManager {
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
         developmentCardsVendor.setCards(finalCards);
         developmentCardsVendor.setEnabled(true);
+        player.setAction();
         return true;
     }
 
@@ -672,7 +673,6 @@ public class ActionManager {
             gameManager.setErrorObject("Error! You already performed a very powerful action");
             return false;
         }
-        else player.setAction();
 
         if(marketHelper.isEnabled())
         {
@@ -714,6 +714,7 @@ public class ActionManager {
             }
         }
 
+        player.setAction();
         if(resources.size()==0)
             return true;
         marketHelper.setResources(resources);
