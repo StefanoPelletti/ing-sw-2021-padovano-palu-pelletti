@@ -23,8 +23,8 @@ public class FaithTrackSimplified {
             this.zones[i] = newZones[i];
     }
 
-    @Override
-    public String toString()
+
+    public String toString(boolean solo)
     {
         StringBuilder result = new StringBuilder("");
         int i = 1;
@@ -35,6 +35,8 @@ public class FaithTrackSimplified {
         for(PlayerSimplified player : playerList) {
             result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
         }
+        if(solo)
+            result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
         result.append("\n");
         if(zones[2])
             result.append("   Third and last zone has been activated!");

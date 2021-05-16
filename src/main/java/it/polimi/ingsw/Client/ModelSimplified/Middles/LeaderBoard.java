@@ -32,7 +32,7 @@ public class LeaderBoard {
         return result.toString();
     }
 
-    public String toResult(String thisPlayer)
+    public String toResult(String thisPlayer, boolean solo)
     {
         StringBuilder result = new StringBuilder("");
         if(this.leaderboard == null) return result.append("Empty LeaderBoard.").toString();
@@ -42,29 +42,46 @@ public class LeaderBoard {
         for( String nickname : leaderboard.keySet()) {
             if (leaderboard.get(nickname) > maxValue) maxValue = leaderboard.get(nickname);
         }
-
-        if(leaderboard.get(thisPlayer).equals(maxValue))
+        if(solo)
         {
+            String key = new String("Lorenzo");
+            if( leaderboard.get(key) == 1) //lorenzo Lost
+            {
+                result.append(" You just won. Happy now? ").append("\n");
+                result.append("\n").append(thisPlayer).append("    ");
+                result.append(" - ").append(leaderboard.get(thisPlayer)).append(" points");
+            }
+            if( leaderboard.get(key) == 2) //lorenzo won
+            {
+                result.append(" I mean, you lost. GG").append("\n");
+                result.append("\n").append(thisPlayer);
+                result.append("\t").append(leaderboard.get(thisPlayer));
+            }
+        }
+        else {
+            if(leaderboard.get(thisPlayer).equals(maxValue))
+            {
+                for( String nickname : leaderboard.keySet())
+                {
+                    if(nickname.equals(thisPlayer))
+                        continue;
+                    if(maxValue.equals(leaderboard.get(nickname)))
+                        tie = true;
+                }
+                if (tie)
+                    result.append(" Extremely lucky guy, you Tied. ").append("\n");
+                else
+                    result.append(" You just won. Happy now? ").append("\n");
+            }
+            else
+                result.append(" I mean, you lost. GG").append("\n");
+
+            result.append("\n ----------------").append("\n");
             for( String nickname : leaderboard.keySet())
             {
-                if(nickname.equals(thisPlayer))
-                    continue;
-                if(maxValue.equals(leaderboard.get(nickname)))
-                    tie = true;
+                result.append("\n").append(nickname);
+                result.append("\t").append(leaderboard.get(nickname));
             }
-            if (tie)
-                result.append(" Extremely lucky guy, you Tied. ");
-            else
-                result.append(" You just won. Happy now? ");
-        }
-        else
-            result.append(" I mean, you lost. GG");
-
-        result.append("\n ----------------");
-        for( String nickname : leaderboard.keySet())
-        {
-            result.append("\n").append(nickname);
-            result.append("\t").append(leaderboard.get(nickname));
         }
         return result.toString();
     }

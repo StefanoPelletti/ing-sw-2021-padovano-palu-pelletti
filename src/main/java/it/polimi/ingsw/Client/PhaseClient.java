@@ -546,13 +546,14 @@ class GamePhase {
 
             while (true) {
                 execute = true;
+//phase 1: not found
 //phase 2: gets input
                 text = Halo.input.nextLine();
 
                 textList.clear();
                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-//phase 3: input gets converted into specific action??????????????
+//phase 3: input gets converted into specific action
                 // must correct synchronization
                 if (Halo.yourTurn) {
                     if (Halo.game.isMiddleActive()) {
@@ -676,7 +677,7 @@ class GamePhase {
                             MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum);
                             Halo.objectOutputStream.writeObject(msgToSend);
                         } else if (Halo.game.isLeaderBoardEnabled()) {
-                            // something
+                            Halo.closeStreams();
                             return Phase.MainMenu;
                         }
                         execute = false;
@@ -703,6 +704,7 @@ class GamePhase {
                             System.out.println("          :>  'devdeck' ");
                             System.out.println("          :>  'faithtrack' ");
                             System.out.println("          :>  'myvp' ");
+                            System.out.println("          :>  'turn' ");
                             System.out.println("=> " + Halo.ANSI_CYAN + "show" + Halo.ANSI_PURPLE + " <nickname> <something>" + Halo.ANSI_RESET + "     : shows one of the other players' assets.\n" +
                                     "                                     Specify the nickname of the player.        ");
                             System.out.println("=> " + Halo.ANSI_CYAN + "show player " + Halo.ANSI_PURPLE + "<num> <something>" + Halo.ANSI_RESET + "   : shows one of the other players' assets.\n" +
@@ -742,10 +744,13 @@ class GamePhase {
                                             System.out.println(Halo.game.getDevDeck().toString());
                                             break;
                                         case "faithtrack":
-                                            System.out.println(Halo.game.getFaithTrack().toString());
+                                            System.out.println(Halo.game.getFaithTrack().toString(Halo.solo));
                                             break;
                                         case "myvp":
                                             System.out.println(" my VP : " + Halo.myPlayerRef.getVP());
+                                            break;
+                                        case "turn":
+                                            System.out.println(" current turn is : " + Halo.game.getTurn());
                                             break;
                                         case "leadercards":
                                             LeaderCard[] cards = Halo.myPlayerRef.getLeaderCards();
@@ -1687,6 +1692,7 @@ class GamePhase {
             if (textList.get(1).equalsIgnoreCase("faithtrack")) return true;
             if (textList.get(1).equalsIgnoreCase("myvp")) return true;
             if (textList.get(1).equalsIgnoreCase("leadercards")) return true;
+            if (textList.get(1).equalsIgnoreCase("turn")) return true;
             System.out.println(Halo.ANSI_RED + " > Error! You can't show this. I don't even know what 'this' is!" + Halo.ANSI_RESET);
             return false;
         }
@@ -1718,16 +1724,13 @@ class GamePhase {
                 return false;
             }
         }
-        if (textList.size() == 3) {
-            if (textList.get(2).equalsIgnoreCase("vp")) return true;
-            if (textList.get(2).equalsIgnoreCase("leadercards")) return true;
-            if (textList.get(2).equalsIgnoreCase("depot")) return true;
-            if (textList.get(2).equalsIgnoreCase("strongbox")) return true;
-            if (textList.get(2).equalsIgnoreCase("devslot")) return true;
-            System.out.println(Halo.ANSI_RED + " > Error! You can't show this. I don't even know what 'this' is!" + Halo.ANSI_RESET);
-            return false;
-        }
-        return true;
+        if (textList.get(2).equalsIgnoreCase("vp")) return true;
+        if (textList.get(2).equalsIgnoreCase("leadercards")) return true;
+        if (textList.get(2).equalsIgnoreCase("depot")) return true;
+        if (textList.get(2).equalsIgnoreCase("strongbox")) return true;
+        if (textList.get(2).equalsIgnoreCase("devslot")) return true;
+        System.out.println(Halo.ANSI_RED + " > Error! You can't show this. I don't even know what 'this' is!" + Halo.ANSI_RESET);
+        return false;
     }
 }
 

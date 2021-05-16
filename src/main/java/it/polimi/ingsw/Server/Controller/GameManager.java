@@ -158,9 +158,9 @@ public class GameManager {
         if (solo) {
             if (soloWinner) // if (Lorenzo has lost)
             {
-                leaderBoard.addScore("Lorenzo, the Loser", 1);
+                leaderBoard.addScore("Lorenzo", 1);
             } else {
-                leaderBoard.addScore("Lorenzo, the Winner", 2);
+                leaderBoard.addScore("Lorenzo", 2);
             }
         }
 
