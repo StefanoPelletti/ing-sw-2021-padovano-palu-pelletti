@@ -15,9 +15,8 @@ import java.util.*;
 public class Lobby {
     List<Socket> socketList;
     List<String> nicknameList;
-    List<ClientHandler> threadsList;
+    List<ClientHandler> clientHandlers;
 
-    public MessagePlatform messagePlatform;
     private GameManager gameManager;
     private ActionManager actionManager;
     private final static ArrayList<Lobby> lobbies = new ArrayList<>();
@@ -28,35 +27,32 @@ public class Lobby {
 
     boolean solo;
 
-    public Lobby(int lobbyNumber, int lobbyMaxPlayers)
-    {
+    public Lobby(int lobbyNumber, int lobbyMaxPlayers) {
         solo = (lobbyMaxPlayers == 1);
         this.socketList = new LinkedList<>();
         this.nicknameList = new LinkedList<>();
-        this.threadsList = new LinkedList<>();
+        this.clientHandlers = new LinkedList<>();
         this.lobbyNumber = lobbyNumber;
         this.lobbyMaxPlayers = lobbyMaxPlayers;
-
-        this.messagePlatform = new MessagePlatform(lobbyMaxPlayers);
 
         this.started = false;
         this.deleted = false;
     }
 
     public synchronized void init() {
-        this.started=true;
+        this.started = true;
         this.gameManager = new GameManager(this.lobbyMaxPlayers);
         this.actionManager = gameManager.getActionManager();
         List<Integer> playerNumbers = new LinkedList<>();
 
-        for(int i = 1; i<=lobbyMaxPlayers; i++) {
+        for (int i = 1; i <= lobbyMaxPlayers; i++) {
             playerNumbers.add(i);
         }
 
         Collections.shuffle(playerNumbers);
         Game game = gameManager.getGame();
 
-        for(int i = 0; i<lobbyMaxPlayers; i++) {
+        for (int i = 0; i < lobbyMaxPlayers; i++) {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
 
@@ -67,178 +63,160 @@ public class Lobby {
         }
         */
 
-        if(lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
+        if (lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
         else gameManager.setStatus(Status.INIT);
 
         game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
         game.getLeaderCardsObject().setEnabled(true);
 
-        gameManager.addAllObserver(messagePlatform);
-    }
-
-    public boolean onMessage(Message message, String nickname){
-        gameManager.resetErrorObject();
-        Player player = gameManager.currentPlayer();
-
-        if(player.getNickname().equals(nickname) && gameManager.getStatus()!= Status.GAME_OVER) {
-            switch (message.getMessageType()) {
-                case MSG_INIT_CHOOSE_LEADERCARDS:
-                    return actionManager.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
-                case MSG_INIT_CHOOSE_RESOURCE:
-                    return actionManager.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
-                case MSG_ACTION_ACTIVATE_LEADERCARD:
-                    return actionManager.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
-                case MSG_ACTION_DISCARD_LEADERCARD:
-                    return actionManager.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
-                case MSG_ACTION_CHANGE_DEPOT_CONFIG:
-                    return actionManager.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
-                case MSG_ACTION_ACTIVATE_PRODUCTION:
-                    return actionManager.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
-                case MSG_ACTION_GET_MARKET_RESOURCES:
-                    return actionManager.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
-                case MSG_ACTION_MARKET_CHOICE:
-                    return actionManager.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
-                case MSG_ACTION_BUY_DEVELOPMENT_CARD:
-                    return actionManager.buyDevelopmentCard(player);
-                case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
-                    return actionManager.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
-                case MSG_ACTION_ENDTURN:
-                    return actionManager.endTurn(player, true);
-                default:
-                    System.out.println(" SRV: help I don't know what they sent me.");
-            }
+        for (ClientHandler c : clientHandlers) {
+            gameManager.addAllObserver(c);
         }
-        return false;
     }
 
-    public synchronized String onJoin(String nickname, Socket socket ,ClientHandler clientHandler){
-        if(this.lobbyMaxPlayers > nicknameList.size()) {
-            threadsList.add(clientHandler);
+    public synchronized void onMessage(Message message, String nickname) {
+        synchronized (actionManager) {
+            actionManager.onMessage(message, nickname);
+        }
+    }
+
+    public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
+        if (this.lobbyMaxPlayers > nicknameList.size()) {
+            clientHandlers.add(clientHandler);
             socketList.add(socket);
             String newNickname = nickname;
 
-            if(nicknameList.stream().anyMatch(n-> n.equals(nickname))){
-                if(nicknameList.stream().anyMatch(n-> n.equals(nickname+" (1)"))){
-                    if(nicknameList.stream().anyMatch(n-> n.equals(nickname+" (2)"))){
-                        newNickname= nickname +" (3)";
+            if (nicknameList.stream().anyMatch(n -> n.equals(nickname))) {
+                if (nicknameList.stream().anyMatch(n -> n.equals(nickname + " (1)"))) {
+                    if (nicknameList.stream().anyMatch(n -> n.equals(nickname + " (2)"))) {
+                        newNickname = nickname + " (3)";
+                    } else {
+                        newNickname = nickname + " (2)";
                     }
-                    else{
-                        newNickname= nickname +" (2)";
-                    }
-                }
-                else{
-                    newNickname= nickname +" (1)";
+                } else {
+                    newNickname = nickname + " (1)";
                 }
             }
             nicknameList.add(newNickname);
             return newNickname;
-        }
-        else return null;
+        } else return null;
     }
 
-
-    public void addIdlePlayer(Integer playerNumber)
-    {
+    public synchronized void addIdlePlayer(Integer playerNumber) {
         gameManager.addIdlePlayer(playerNumber);
     }
 
-    public void removeIdlePlayer(Integer playerNumber)
-    {
+    public void removeIdlePlayer(Integer playerNumber) {
         gameManager.removeIdlePlayer(playerNumber);
     }
 
-    public void disconnectPlayer(String nickname)
-    {
+    public void disconnectPlayer(String nickname) {
         Player player = gameManager.getGame().getPlayer(nickname);
-        if(player.equals( gameManager.currentPlayer() )) {
-            actionManager.disconnectPlayer(player, true);
-            messagePlatform.update(new MSG_UPD_End());
+        int currentPlayerNumber = gameManager.getGame().getCurrentPlayerInt();
+        synchronized (actionManager) {
+            actionManager.disconnectPlayer(player, currentPlayerNumber);
         }
-        else
-            actionManager.disconnectPlayer(player, false);
 
     }
 
 
-    public synchronized ClientHandler findPendingClientHandler(String nickname)
-    {
-        return this.threadsList.stream().filter(ClientHandler::isPendingConnection).sorted(
-                (a,b) -> {
+    public synchronized ClientHandler findPendingClientHandler(String nickname) {
+        return this.clientHandlers.stream().filter(ClientHandler::isPendingConnection).sorted(
+                (a, b) -> {
                     return Integer.compare(b.getNickname().length(), a.getNickname().length());
-                }).filter( x -> x.getNickname().startsWith(nickname)).findFirst().get();
+                }).filter(x -> x.getNickname().startsWith(nickname)).findFirst().get();
     }
 
-    public int getLobbyMaxPlayers() { return this.lobbyMaxPlayers; }
+    public int getLobbyMaxPlayers() {
+        return this.lobbyMaxPlayers;
+    }
 
-    public int getLobbyNumber() { return this.lobbyNumber; }
+    public int getLobbyNumber() {
+        return this.lobbyNumber;
+    }
 
     public int getNumberOfPresentPlayers() {
-        assert ( this.socketList.size() == this.nicknameList.size());
+        assert (this.socketList.size() == this.nicknameList.size());
         return this.socketList.size();
     }
 
-    public synchronized int getNumOfPlayers() { return this.nicknameList.size(); }
+    public synchronized int getNumOfPlayers() {
+        return this.nicknameList.size();
+    }
 
-    public static synchronized boolean checkLobbies(int i){
-        for(Lobby l : lobbies){
-            if(l.getLobbyNumber()==i) return true;
+    public static synchronized boolean checkLobbies(int i) {
+        for (Lobby l : lobbies) {
+            if (l.getLobbyNumber() == i) return true;
         }
         return false;
     }
 
-    public synchronized int whoIs(String nickname)
-    {
+    public synchronized int whoIs(String nickname) {
         return gameManager.getGame().getPlayer(nickname).getPlayerNumber();
     }
 
-    public static synchronized Lobby getLobby(int n){
-        for(Lobby lobby : lobbies){
-            if(lobby.getLobbyNumber()== n) return lobby;
+    public static synchronized Lobby getLobby(int n) {
+        for (Lobby lobby : lobbies) {
+            if (lobby.getLobbyNumber() == n) return lobby;
         }
         return null;
     }
 
-    public synchronized int currentPlayer()
-    {
+    public synchronized int currentPlayer() {
         return gameManager.getGame().getCurrentPlayerInt();
     }
 
-    public synchronized MSG_UPD_Full getFullModel()
-    {
+    public synchronized MSG_UPD_Full getFullModel() {
         return gameManager.getFullModel();
     }
 
-    public static synchronized void addLobby(Lobby lobby){
+    public static synchronized void addLobby(Lobby lobby) {
         Lobby.lobbies.add(lobby);
         Lobby.createCountDownThread(lobby);
     }
 
-    public static synchronized ArrayList<Lobby> getLobbies(){
+    public static synchronized ArrayList<Lobby> getLobbies() {
         return Lobby.lobbies;
     }
 
-    public static synchronized void removeLobby(Lobby lobby){Lobby.lobbies.remove(lobby);}
+    public static synchronized void removeLobby(Lobby lobby) {
+        Lobby.lobbies.remove(lobby);
+    }
 
-    public static void createCountDownThread(Lobby lobby)
-    {
+    public static void createCountDownThread(Lobby lobby) {
         new Thread(new CountDownThread(lobby, 30)).start();
     }
 
-    public synchronized boolean isStarted() { return this.started; }
-    public synchronized boolean isDeleted() { return this.deleted; }
-    public synchronized void setStarted(boolean started) { this.started = started; }
-    public synchronized void setDeleted(boolean deleted) { this.deleted = deleted; }
+    public synchronized boolean isStarted() {
+        return this.started;
+    }
 
-    public synchronized void wakeUpAllPendingClientHandlers()
-    {
-        for(ClientHandler c : threadsList)
-        {
-            if(c.isPendingConnection())
-            {
+    public synchronized boolean isDeleted() {
+        return this.deleted;
+    }
+
+    public synchronized void setStarted(boolean started) {
+        this.started = started;
+    }
+
+    public synchronized void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public synchronized void wakeUpAllPendingClientHandlers() {
+        for (ClientHandler c : clientHandlers) {
+            if (c.isPendingConnection()) {
                 c.wakeUp();
             }
         }
     }
 
+    public boolean isGameOver() {
+        return gameManager.isGameOver();
+    }
+
+    public void notifyReconnection(String nickname) {
+        actionManager.notifyReconnection(nickname);
+    }
 }
 

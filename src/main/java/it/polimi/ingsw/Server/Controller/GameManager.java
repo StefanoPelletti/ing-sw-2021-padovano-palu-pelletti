@@ -21,8 +21,7 @@ public class GameManager {
     private Boolean soloWinner; // if null: no one, if true: the player, if false: the Lorenzo
 
 
-    public GameManager(int lobbyMaxPlayers)
-    {
+    public GameManager(int lobbyMaxPlayers) {
         this.game = new Game();
         this.faithTrackManager = new FaithTrackManager(this.game, this);
         this.actionManager = new ActionManager(this, this.faithTrackManager, this.game);
@@ -37,12 +36,9 @@ public class GameManager {
     }
 
 
-
-
-    public boolean endTurn()
-    {
+    public boolean endTurn() {
         setNextPlayer();
-        if(!solo && game.getStatus()==Status.LAST_TURN && game.getCurrentPlayerInt()==1){
+        if (!solo && game.getStatus() == Status.LAST_TURN && game.getCurrentPlayerInt() == 1) {
             setStatus(Status.GAME_OVER);
             return endgame(); //which is return FALSE
         }
@@ -51,12 +47,12 @@ public class GameManager {
     }
 
     public void setNextPlayer() {
-        if (!solo) {
-            int nextPlayer = getNextPlayer(game.getCurrentPlayerInt()+1);
+        if (solo)
+            game.setTurn(game.getTurn() + 1);
+        else {
+            int nextPlayer = getNextPlayer(game.getCurrentPlayerInt() + 1);
             game.setCurrentPlayer(nextPlayer);
         }
-        else
-            game.setTurn(game.getTurn()+1);
     }
 
     private int getNextPlayer(int playerNumber) {
@@ -65,23 +61,20 @@ public class GameManager {
             return getNextPlayer(1);
         }
         if (idlePlayers.stream().anyMatch(x -> x == playerNumber)) {
-            return getNextPlayer(playerNumber+1);
+            return getNextPlayer(playerNumber + 1);
         }
         return playerNumber;
     }
 
-    public void addIdlePlayer(Integer playerNumber)
-    {
+    public void addIdlePlayer(Integer playerNumber) {
         this.idlePlayers.add(playerNumber);
     }
 
-    public void removeIdlePlayer(Integer playerNumber)
-    {
+    public void removeIdlePlayer(Integer playerNumber) {
         this.idlePlayers.remove(playerNumber);
     }
 
-    public void setStatus(Status status)
-    {
+    public void setStatus(Status status) {
         game.changeStatus(status);
     }
 
@@ -89,35 +82,39 @@ public class GameManager {
         return soloWinner;
     }
 
-    public void setSoloWinner(boolean value)
-    {
+    public void setSoloWinner(boolean value) {
         this.soloWinner = value;
     }
 
-    public Status getStatus(){return game.getStatus();}
+    public Status getStatus() {
+        return game.getStatus();
+    }
 
-    public boolean getSolo() { return solo; }
+    public boolean getSolo() {
+        return solo;
+    }
 
     public int getLobbyMaxPlayers() {
         return lobbyMaxPlayers;
     }
 
-    public Game getGame()
-    {
+    public Game getGame() {
         return game;
     }
 
-    public FaithTrackManager getFaithTrackManager() { return faithTrackManager; }
+    public FaithTrackManager getFaithTrackManager() {
+        return faithTrackManager;
+    }
 
-    public ActionManager getActionManager() { return actionManager; }
+    public ActionManager getActionManager() {
+        return actionManager;
+    }
 
-    public void resetErrorObject()
-    {
+    public void resetErrorObject() {
         game.getErrorObject().setEnabled(false);
     }
 
-    public void setErrorObject(String errorCause)
-    {
+    public void setErrorObject(String errorCause) {
         game.getErrorObject().setErrorMessage(errorCause);
         game.getErrorObject().setEnabled(true);
     }
@@ -126,45 +123,43 @@ public class GameManager {
     // if it is a SOLO game, the leaderBoard will contain the player-score and Lorenzo
     //       Lorenzo could be the loser (points will be 1)
     //       Lorenzo could be the winner (points will be 2)
-    public boolean endgame(){
+    public boolean endgame() {
         LeaderBoard leaderBoard = game.getLeaderBoard();
-        for(Player p : game.getPlayerList()){
+        for (Player p : game.getPlayerList()) {
             int points = p.getVP();
 
-            for(DevelopmentCard card : p.getDevelopmentSlot().getCards()){
-                points+=card.getVP();
+            for (DevelopmentCard card : p.getDevelopmentSlot().getCards()) {
+                points += card.getVP();
             }
-            for(LeaderCard leaderCard : p.getLeaderCards()){
-                if(leaderCard != null) {
-                    points+=leaderCard.getVP();
+            for (LeaderCard leaderCard : p.getLeaderCards()) {
+                if (leaderCard != null) {
+                    points += leaderCard.getVP();
                 }
             }
             float totResources = p.getTotal();
-            points+= (int) Math.floor(totResources/5);
+            points += (int) Math.floor(totResources / 5);
 
 
-            int faithPoints=0;
+            int faithPoints = 0;
             int position = p.getPosition();
-            if(position >= 3) faithPoints = 1;
-            if(position >= 6) faithPoints = 2;
-            if(position >= 9) faithPoints = 4;
-            if(position >= 12) faithPoints = 6;
-            if(position >= 15) faithPoints = 9;
-            if(position >= 18) faithPoints = 12;
-            if(position >= 21) faithPoints = 16;
-            if(position == 24) faithPoints = 20;
+            if (position >= 3) faithPoints = 1;
+            if (position >= 6) faithPoints = 2;
+            if (position >= 9) faithPoints = 4;
+            if (position >= 12) faithPoints = 6;
+            if (position >= 15) faithPoints = 9;
+            if (position >= 18) faithPoints = 12;
+            if (position >= 21) faithPoints = 16;
+            if (position == 24) faithPoints = 20;
 
-            points+=faithPoints;
+            points += faithPoints;
             leaderBoard.addScore(p.getNickname(), points);
         }
 
-        if(solo) {
-            if(soloWinner) // if (Lorenzo has lost)
+        if (solo) {
+            if (soloWinner) // if (Lorenzo has lost)
             {
-                leaderBoard.addScore("Lorenzo, the Loser", 1 );
-            }
-            else
-            {
+                leaderBoard.addScore("Lorenzo, the Loser", 1);
+            } else {
                 leaderBoard.addScore("Lorenzo, the Winner", 2);
             }
         }
@@ -173,40 +168,36 @@ public class GameManager {
         return false;
     }
 
-    public MSG_UPD_Full getFullModel()
-    {
+    public MSG_UPD_Full getFullModel() {
         MSG_UPD_Full result = new MSG_UPD_Full();
 
-        result.setDevCardsVendor( game.getDevelopmentCardsVendor().generateMessage() );
+        result.setDevCardsVendor(game.getDevelopmentCardsVendor().generateMessage());
 
-        result.setLeaderCardsObject( game.getLeaderCardsObject().generateMessage() );
+        result.setLeaderCardsObject(game.getLeaderCardsObject().generateMessage());
 
-        result.setMarketHelper( game.getMarketHelper().generateMessage() );
+        result.setMarketHelper(game.getMarketHelper().generateMessage());
 
-        result.setResourceObject( game.getResourceObject().generateMessage() );
+        result.setResourceObject(game.getResourceObject().generateMessage());
 
-        result.setGame( game.generateMessage());
+        result.setGame(game.generateMessage());
 
-        result.setDevDeck( game.getDevelopmentCardsDeck().generateMessage() );
+        result.setDevDeck(game.getDevelopmentCardsDeck().generateMessage());
 
-        result.setFaithTrack( game.getFaithTrack().generateMessage() );
+        result.setFaithTrack(game.getFaithTrack().generateMessage());
 
-        result.setMarket( game.getMarket().generateMessage() );
+        result.setMarket(game.getMarket().generateMessage());
 
-        for ( Player p : game.getPlayerList() )
-        {
+        for (Player p : game.getPlayerList()) {
             result.addPlayerUpdate(p.getPlayerNumber(), p.generateMessage());
 
             result.addPlayerUpdate(p.getPlayerNumber(), p.getWarehouseDepot().generateMessage());
 
-            result.addPlayerUpdate(p.getPlayerNumber(), p.getDevelopmentSlot().generateMessage() );
+            result.addPlayerUpdate(p.getPlayerNumber(), p.getDevelopmentSlot().generateMessage());
 
-            result.addPlayerUpdate(p.getPlayerNumber(), p.getStrongbox().generateMessage() );
+            result.addPlayerUpdate(p.getPlayerNumber(), p.getStrongbox().generateMessage());
 
-            if(p.getCardsWithExtraDepotAbility().size()>0)
-            {
-                for(LeaderCard card : p.getCardsWithExtraDepotAbility())
-                {
+            if (p.getCardsWithExtraDepotAbility().size() > 0) {
+                for (LeaderCard card : p.getCardsWithExtraDepotAbility()) {
                     ExtraDepot depot = (ExtraDepot) card.getSpecialAbility();
                     result.addPlayerUpdate(p.getPlayerNumber(), depot.generateMessage());
                 }
@@ -216,10 +207,12 @@ public class GameManager {
         return result;
     }
 
-    public void addAllObserver(ModelObserver observer)
-    {
+    public void addAllObserver(ModelObserver observer) {
         game.addAllObservers(observer);
     }
 
 
+    public boolean isGameOver() {
+        return (getStatus() == Status.GAME_OVER);
+    }
 }

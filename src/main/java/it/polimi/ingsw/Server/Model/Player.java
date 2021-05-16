@@ -21,6 +21,10 @@ public class Player extends ModelObservable {
     private final DevelopmentSlot developmentSlot;
     private boolean permittedAction;
 
+    private boolean disconnectedBeforeLeaderCard;
+    private boolean disconnectedAfterLeaderCard;
+    private boolean disconnectedBeforeResource;
+    private boolean disconnectedAfterResource;
 
     public Player( String nickname, int playerNumber )
     {
@@ -181,6 +185,15 @@ public class Player extends ModelObservable {
             result.add(leaderCards[1]);
         return result;
     }
+
+    public boolean isDisconnectedBeforeLeaderCard() { return disconnectedBeforeLeaderCard; }
+    public void setDisconnectedBeforeLeaderCard(boolean disconnectedBeforeLeaderCard) { this.disconnectedBeforeLeaderCard = disconnectedBeforeLeaderCard; }
+    public boolean isDisconnectedAfterLeaderCard() { return disconnectedAfterLeaderCard; }
+    public void setDisconnectedAfterLeaderCard(boolean disconnectedAfterLeaderCard) { this.disconnectedAfterLeaderCard = disconnectedAfterLeaderCard; }
+    public boolean isDisconnectedBeforeResource() { return disconnectedBeforeResource; }
+    public void setDisconnectedBeforeResource(boolean disconnectedBeforeResource) { this.disconnectedBeforeResource = disconnectedBeforeResource; }
+    public boolean isDisconnectedAfterResource() { return disconnectedAfterResource; }
+    public void setDisconnectedAfterResource(boolean disconnectedAfterResource) { this.disconnectedAfterResource = disconnectedAfterResource; }
 
     @Override
     public boolean equals( Object obj )

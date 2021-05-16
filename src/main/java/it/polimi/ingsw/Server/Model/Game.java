@@ -25,7 +25,7 @@ public class Game extends ModelObservable {
     private final FaithTrack faithTrack;
     private final DevelopmentCardsDeck developmentCardsDeck;
     private final MarketHelper marketHelper;
-    private final ActionHelper actionHelper;
+    private final MessageHelper messageHelper;
     private final DevelopmentCardsVendor developmentCardsVendor;
     private final ErrorObject errorObject;
     private final LeaderCardsObject leaderCardsObject;
@@ -44,7 +44,7 @@ public class Game extends ModelObservable {
         developmentCardsDeck = new DevelopmentCardsDeck();
         actionTokenStack=new ActionTokenStack();
         marketHelper = new MarketHelper();
-        actionHelper = new ActionHelper();
+        messageHelper = new MessageHelper();
         developmentCardsVendor = new DevelopmentCardsVendor();
         errorObject = new ErrorObject();
         leaderCardsObject = new LeaderCardsObject();
@@ -69,7 +69,7 @@ public class Game extends ModelObservable {
     public LeaderCardsDeck getLeaderCardsDeck() { return this.leaderCardsDeck; }
     public Market getMarket() { return this.market; }
     public MarketHelper getMarketHelper(){return this.marketHelper;}
-    public ActionHelper getActionHelper() { return actionHelper; }
+    public MessageHelper getActionHelper() { return messageHelper; }
     public ErrorObject getErrorObject() { return this.errorObject;}
     public DevelopmentCardsVendor getDevelopmentCardsVendor() { return this.developmentCardsVendor; }
     public FaithTrack getFaithTrack() { return this.faithTrack; }
@@ -113,6 +113,7 @@ public class Game extends ModelObservable {
             Message m = new MSG_NOTIFICATION("LAST TURN!");
             notifyObservers(m);
         }
+        System.out.println(" STATUS MODIFIED "+status);
         this.status = status;
     }
 
@@ -134,7 +135,7 @@ public class Game extends ModelObservable {
         developmentCardsVendor.addObserver(observer);
         errorObject.addObserver(observer);
         marketHelper.addObserver(observer);
-        actionHelper.addObserver(observer);
+        messageHelper.addObserver(observer);
         resourceObject.addObserver(observer);
         leaderCardsObject.addObserver(observer);
         leaderBoard.addObserver(observer);

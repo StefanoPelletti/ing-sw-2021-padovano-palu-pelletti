@@ -12,6 +12,7 @@ public class UpdateHandler implements Runnable{
     @Override
     public void run() {
         boolean still = false;
+
         Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
         if(Halo.yourTurn) { // && Halo.game.isLeaderCardsObjectEnabled()
@@ -25,7 +26,10 @@ public class UpdateHandler implements Runnable{
         while(true){
             try {
                 message = (Message) Halo.objectInputStream.readObject();
+
                 switch (message.getMessageType()){
+// Full model
+
 // Player updates
                     case MSG_UPD_Player:
                         synchronized (Halo.game){ Halo.game.updatePlayer(message);}
