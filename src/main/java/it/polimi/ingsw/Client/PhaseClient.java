@@ -15,8 +15,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 enum Phase{ Quit, MainMenu, Game, Error }
@@ -591,8 +589,15 @@ class GamePhase {
                             ArrayList<LeaderCard> list = new ArrayList<>();
                             list.add(Halo.game.getLeaderCardsObject().getCard(first - 1));
                             list.add(Halo.game.getLeaderCardsObject().getCard(second - 1));
-                            MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
-                            Halo.objectOutputStream.writeObject(msgToSend);
+                            try
+                            {
+                                MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
+                                Halo.objectOutputStream.writeObject(msgToSend);
+                            } catch( IllegalArgumentException e)
+                            {
+                                System.out.println(" We could not build that message, please enter again the first card number: ");
+                            }
+
                         }
                         else if (Halo.game.isResourceObjectEnabled()) {
                             Resource resource = Resource.NONE;
@@ -621,11 +626,17 @@ class GamePhase {
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                 }
                             }
+                            try
+                            {
+                                MSG_INIT_CHOOSE_RESOURCE msgToSend = new MSG_INIT_CHOOSE_RESOURCE(resource);
+                                Halo.objectOutputStream.writeObject(msgToSend);
+                            } catch (IllegalArgumentException e)
+                            {
+                                System.out.println(" We could not build that message, please enter again the resource number: ");
+                            }
 
-                            MSG_INIT_CHOOSE_RESOURCE msgToSend = new MSG_INIT_CHOOSE_RESOURCE(resource);
-                            Halo.objectOutputStream.writeObject(msgToSend);
                         } else if (Halo.game.isMarketHelperEnabled()) {
-                            int choice = 0;
+                            int choice;
 
                             while (true) {
                                 if (checkChoice(textList)) {
@@ -638,14 +649,20 @@ class GamePhase {
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                 }
                             }
+                            try
+                            {
+                                MSG_ACTION_MARKET_CHOICE msgToSend = new MSG_ACTION_MARKET_CHOICE(choice);
+                                Halo.objectOutputStream.writeObject(msgToSend);
+                            } catch (IllegalArgumentException e)
+                            {
+                                System.out.println(" We could not build that message, please enter again the choice: ");
+                            }
 
-                            MSG_ACTION_MARKET_CHOICE msgToSend = new MSG_ACTION_MARKET_CHOICE(choice);
-                            Halo.objectOutputStream.writeObject(msgToSend);
                         } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                             int cardNum;
                             int slotNum;
                             while (true) {
-                                if (checkNumbers(textList)) {
+                                if (checkNumberDevSlot(textList)) {
                                     cardNum = Integer.parseInt(textList.get(0));
                                     slotNum = Integer.parseInt(textList.get(1));
                                     break;
@@ -845,52 +862,78 @@ class GamePhase {
                                                 int cardToActivate = -1;
                                                 LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
+                                                if(checkLeaderCards()) {
+                                                    System.out.println(" <*> Press 0 to cancel the action ");
+                                                    if (l1a != null)
+                                                        System.out.println(" Press 1 to enable the first card ");
+                                                    if (l2a != null)
+                                                        System.out.println(" Press 2 to enable the second card ");
 
-                                                if (l1a != null)
-                                                    System.out.println(" Press 1 to enable the first card ");
-                                                if (l2a != null)
-                                                    System.out.println(" Press 2 to enable the second card ");
+                                                    while (true) {
+                                                        System.out.print(" Card number: ");
+                                                        text = Halo.input.nextLine();
+                                                        textList.clear();
+                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-                                                while (true) {
-                                                    System.out.print(" Card number: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                    if (checkLeaderCardsNumber(textList)) {
-                                                        cardToActivate = Integer.parseInt(textList.get(0));
-                                                        break;
+                                                        if (checkLeaderCardsNumber(textList)) {
+                                                            cardToActivate = Integer.parseInt(textList.get(0));
+                                                            if(cardToActivate==0)
+                                                            {
+                                                                System.out.println(" > Going back to main menu");
+                                                                break loop;
+                                                            }
+                                                            break;
+                                                        }
+                                                    }
+                                                    try {
+                                                        MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
+                                                        Halo.objectOutputStream.writeObject(msgToSend1);
+                                                    } catch( IllegalArgumentException e)
+                                                    {
+                                                        System.out.println(" >> Somehow we could not build that message");
                                                     }
                                                 }
-
-                                                MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
-                                                Halo.objectOutputStream.writeObject(msgToSend1);
+                                                else
+                                                {
+                                                    System.out.println(" > Both of your cards are discarded, so you can't do much");
+                                                }
                                                 break loop;
 //ACTION DISCARD LEADERCARD
                                             case 2:
                                                 int cardToDiscard;
                                                 LeaderCard l1d = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2d = Halo.myPlayerRef.getLeaderCards()[1];
+                                                if(checkLeaderCards()) {
+                                                    if (l1d != null)
+                                                        System.out.println(" Press 1 to disable the first card ");
+                                                    if (l2d != null)
+                                                        System.out.println(" Press 2 to disable the second card ");
 
-                                                if (l1d != null)
-                                                    System.out.println(" Press 1 to disable the first card ");
-                                                if (l2d != null)
-                                                    System.out.println(" Press 2 to disable the second card ");
+                                                    while (true) {
+                                                        System.out.print(" Card number: ");
+                                                        text = Halo.input.nextLine();
+                                                        textList.clear();
+                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-                                                while (true) {
-                                                    System.out.print(" Card number: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                    if (checkLeaderCardsNumber(textList)) {
-                                                        cardToDiscard = Integer.parseInt(textList.get(0)) - 1;
-                                                        break;
+                                                        if (checkLeaderCardsNumber(textList)) {
+                                                            cardToDiscard = Integer.parseInt(textList.get(0)) - 1;
+                                                            if(cardToDiscard==0)
+                                                            {
+                                                                System.out.println(" > Going back to main menu");
+                                                                break loop;
+                                                            }
+                                                            break;
+                                                        }
+                                                    }
+                                                    try
+                                                    {
+                                                        MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
+                                                        Halo.objectOutputStream.writeObject(msgToSend2);
+                                                    } catch (IllegalArgumentException e)
+                                                    {
+                                                        System.out.println(" > Both of your cards are discarded, so you can't do much");
                                                     }
                                                 }
-
-                                                MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
-                                                Halo.objectOutputStream.writeObject(msgToSend2);
                                                 break loop;
 //ACTION ACTIVATE PRODUCTION
                                             case 3:
@@ -910,42 +953,50 @@ class GamePhase {
                                                 System.out.println(Halo.myPlayerRef.getStrongbox());
                                                 if(Halo.myPlayerRef.getLeaderCards()[0] != null) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                        System.out.println("Extra depot: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
+                                                        System.out.println("Extra depot of Card Number 1: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
                                                     }
                                                 }
-                                                if(Halo.myPlayerRef.getLeaderCards()[0] != null) {
+                                                if(Halo.myPlayerRef.getLeaderCards()[1] != null) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                        System.out.println("Extra depot: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
+                                                        System.out.println("Extra depot of Card Number 2: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
                                                     }
                                                 }
-                                                System.out.println(" >> BASE PRODUCTION\nDo you want to activate it? 1 for yes, 2 for no");
+                                                System.out.println(" >> BASE PRODUCTION\nDo you want to activate it? 0 to exit, 1 for yes, 2 for no");
                                                 while (true) {
                                                     text = Halo.input.nextLine();
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!check1Or2(textList))
-                                                        System.out.println("Invalid input, try again");
-                                                    else {
+                                                    if (checkNumber0_1_2(textList)) {
                                                         input = Integer.parseInt(textList.get(0));
-                                                        if (input == 1) basic = true;
+                                                        if(input==0)
+                                                        {
+                                                            System.out.println(" > Going back to main menu");
+                                                            break loop;
+                                                        }
+                                                        if (input == 1)
+                                                            basic = true;
                                                         break;
+                                                    }
+                                                    else {
+                                                        System.out.println("Invalid input, try again");
                                                     }
                                                 }
 
                                                 if (basic) {
-                                                    System.out.println("Which resources do you want as input for the basic production? (You must decide 2 resources)");
+                                                    System.out.println("Which resources do you want as input for the basic production? Write'em as: stone shield");
                                                     while (true) {
                                                         text = Halo.input.nextLine();
                                                         textList.clear();
                                                         textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if(!checkResource(textList, 2, false)) System.out.println("They are not a valid basic input!");
+                                                        if(!checkResource(textList, 2, false))
+                                                            System.out.println("They are not a valid basic input!");
                                                         else{
                                                             basicInput.add(convertStringToResource(textList.get(0)));
                                                             basicInput.add(convertStringToResource(textList.get(1)));
                                                             break;
                                                         }
                                                     }
-                                                    System.out.println("Which resource do you want as output for the basic production?");
+                                                    System.out.println("Which resource do you want as output for the basic production? Write it as: stone");
                                                     while (true) {
                                                         text = Halo.input.nextLine();
                                                         textList.clear();
@@ -958,22 +1009,30 @@ class GamePhase {
                                                     }
                                                 }
 
-                                                System.out.println(">> STANDARD PRODUCTION.\nDo you want to activate it? 1 for yes, 2 for no");
+                                                System.out.println(">> STANDARD PRODUCTION.\nDo you want to activate it? 0 to quit, 1 for yes, 2 for no");
                                                 while (true) {
                                                     text = Halo.input.nextLine();
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!check1Or2(textList))
-                                                        System.out.println("Invalid input, try again");
-                                                    else {
+                                                    if (checkNumber0_1_2(textList))
+                                                    {
                                                         input = Integer.parseInt(textList.get(0));
-                                                        if (input == 1) std = true;
+                                                        if(input==0)
+                                                        {
+                                                            System.out.println(" > Going back to main menu");
+                                                            break loop;
+                                                        }
+                                                        if (input == 1)
+                                                            std = true;
                                                         break;
+                                                    }
+                                                    else {
+                                                        System.out.println("Invalid input, try again");
                                                     }
                                                 }
                                                 if (std) {
                                                     System.out.println(Halo.myPlayerRef.getDevelopmentSlot());
-                                                    System.out.println("Which cards do you want to activate?");
+                                                    System.out.println("Which cards do you want to activate? write the numbers as: 2 3");
                                                     while (true) {
                                                         text = Halo.input.nextLine();
                                                         textList.clear();
@@ -993,13 +1052,19 @@ class GamePhase {
                                                             LeaderCard l = Halo.myPlayerRef.getLeaderCards()[i];
                                                             if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
                                                                 System.out.println(l);
-                                                                System.out.println("Do you want to activate this card? (1 for yes, 2 for no)");
+                                                                System.out.println("Do you want to activate this card? 0 to quit, or 1 for yes, 2 for no");
                                                                 while (true) {
                                                                     text = Halo.input.nextLine();
                                                                     textList.clear();
                                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                    if (check1Or2(textList)) {
-                                                                        if (Integer.parseInt(textList.get(0)) == 1)
+                                                                    if (checkNumber0_1_2(textList)) {
+                                                                        int number = Integer.parseInt(textList.get(0));
+                                                                        if(number == 0)
+                                                                        {
+                                                                            System.out.println(" > Going back to main menu");
+                                                                            break loop;
+                                                                        }
+                                                                        if (number == 1)
                                                                             leader[i] = true;
                                                                         break;
                                                                     } else
@@ -1037,16 +1102,21 @@ class GamePhase {
                                                 }
 
                                                 if(basic || std ||  leader[0] || leader[1]) {
-                                                    MSG_ACTION_ACTIVATE_PRODUCTION msgToSend3 = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
-                                                    Halo.objectOutputStream.writeObject(msgToSend3);
+                                                    try {
+                                                        MSG_ACTION_ACTIVATE_PRODUCTION msgToSend3 = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
+                                                        Halo.objectOutputStream.writeObject(msgToSend3);
+                                                    } catch (IllegalArgumentException e)
+                                                    {
+                                                        System.out.println(" We couldn't build the message like that.");
+                                                    }
                                                 } else {
-                                                    System.out.println("You have not produced anything");
+                                                    System.out.println(" Produce you must, result you do not get");
                                                 }
                                                 break loop;
 //ACTION CHANGE DEPOT CONFIG
                                             case 4:
                                                 //change depot
-                                                System.out.println(" >> Please insert the new configuration for your Warehouse Depot.");
+                                                System.out.println(" >> Please insert the new configuration for your Warehouse Depot. Write'm as: stone none shield");
                                                 Resource shelf1;
                                                 Resource[] shelf2 = new Resource[2];
                                                 Resource[] shelf3 = new Resource[3];
@@ -1098,23 +1168,22 @@ class GamePhase {
                                                 if (Halo.myPlayerRef.getLeaderCards()[0] != null) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
                                                         if (Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
-                                                            System.out.println(" > I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to Phil Heath");
+                                                            System.out.println(" > I noticed you have an extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + ". Please tell me how much I have to Phil Heath. 0 to quit");
 
                                                             while (true) {
                                                                 System.out.print(" Number of Resources: ");
                                                                 text = Halo.input.nextLine();
                                                                 textList.clear();
                                                                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                try {
-                                                                    int num = Integer.parseInt(textList.get(0));
-                                                                    if (num < 0 || num > 2)
-                                                                        System.out.println(" > That's not correct for an extraDepot. Try again." + Halo.ANSI_RESET);
-                                                                    else {
-                                                                        firstExtra = num;
-                                                                        break;
+                                                                if(checkNumber0_1_2(textList))
+                                                                {
+                                                                    firstExtra = Integer.parseInt(textList.get(0));
+                                                                    if(firstExtra == 0)
+                                                                    {
+                                                                        System.out.println(" > Going back to main menu");
+                                                                        break loop;
                                                                     }
-                                                                } catch (NumberFormatException e) {
-                                                                    System.out.println("EHIEHIEHI that's not a number! Wanna mess with me?");
+                                                                    break;
                                                                 }
                                                             }
                                                         }
@@ -1130,29 +1199,34 @@ class GamePhase {
                                                                 text = Halo.input.nextLine();
                                                                 textList.clear();
                                                                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                int num;
-                                                                try {
-                                                                    num = Integer.parseInt(textList.get(0));
-                                                                    if (num < 0 || num > 2)
-                                                                        System.out.println(" > That's not correct for an extraDepot. Try again." + Halo.ANSI_RESET);
-                                                                    else {
-                                                                        secondExtra = num;
-                                                                        break;
+                                                                if(checkNumber0_1_2(textList))
+                                                                {
+                                                                    secondExtra = Integer.parseInt(textList.get(0));
+                                                                    if(secondExtra == 0)
+                                                                    {
+                                                                        System.out.println(" > Going back to main menu");
+                                                                        break loop;
                                                                     }
-                                                                } catch (NumberFormatException e) {
-                                                                    System.out.println("EHIEHIEHI that's not a number! Wanna mess with me?");
+                                                                    break;
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 }
+                                                try
+                                                {
+                                                    MSG_ACTION_CHANGE_DEPOT_CONFIG msgToSend4 = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
+                                                    Halo.objectOutputStream.writeObject(msgToSend4);
+                                                } catch(IllegalArgumentException e)
+                                                {
+                                                    System.out.println(" We couldn't build the message like that");
+                                                }
 
-                                                MSG_ACTION_CHANGE_DEPOT_CONFIG msgToSend4 = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
-                                                Halo.objectOutputStream.writeObject(msgToSend4);
                                                 break loop;
 //ACTION BUY
                                             case 5:
                                                 //buy card
+                                                System.out.println(" > Asking the Vendor which cards we can buy...");
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
                                                 break loop;
@@ -1163,7 +1237,7 @@ class GamePhase {
                                                 boolean column;
                                                 System.out.println(" >> Here's the market, if this is not qol I don't know what could be then:");
                                                 System.out.println(Halo.game.getMarket());
-                                                System.out.println(" > Insert 1 for a row or 2 for a column");
+                                                System.out.println(" > Insert 1 for a row or 2 for a column, 0 to quit");
 
                                                 while (true) {
                                                     System.out.print(" row or column: ");
@@ -1171,16 +1245,21 @@ class GamePhase {
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-                                                    if (check1Or2(textList)) {
+                                                    if (checkNumber0_1_2(textList)) {
                                                         num = Integer.parseInt(textList.get(0));
+                                                        if(num == 0)
+                                                        {
+                                                            System.out.println(" > Going back to main menu");
+                                                            break loop;
+                                                        }
                                                         break;
-                                                    } else System.out.println(" > Invalid input");
+                                                    }
                                                 }
                                                 if (num == 1) {
                                                     column = false;
-                                                    System.out.println("\n > Please choose the row (must be between 1 and 3)");
+                                                    System.out.println("\n > Please choose the row (must be between 1 and 3). 0 to quit");
                                                 } else {
-                                                    System.out.println("\n > Please choose the column (must be between 1 and 4)");
+                                                    System.out.println("\n > Please choose the column (must be between 1 and 4). 0 to quit");
                                                     column = true;
                                                 }
 
@@ -1188,23 +1267,25 @@ class GamePhase {
                                                     text = Halo.input.nextLine();
                                                     textList.clear();
                                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    try {
-                                                        if (textList.size() != 1)
-                                                            System.out.println(" > I said you have to choose a number, you don't need to write a book");
-                                                        else {
-                                                            num = Integer.parseInt(textList.get(0));
-                                                            if (!column && (num < 1 || num > 3))
-                                                                System.out.println(" > That isn't a correct row (must be between 1 and 3)");
-                                                            else if (column && (num < 1 || num > 4))
-                                                                System.out.println(" > That isn't a correct column (must be between 1 and 4)");
-                                                            else break;
+                                                    if(checkNumberMarket(textList, column)) {
+                                                        num = Integer.parseInt(textList.get(0));
+                                                        if(num==0)
+                                                        {
+                                                            System.out.println(" Going back to main menu");
+                                                            break loop;
                                                         }
-                                                    } catch (NumberFormatException e) {
-                                                        System.out.println(" > That's not a number!");
+                                                        break;
                                                     }
                                                 }
-                                                MSG_ACTION_GET_MARKET_RESOURCES msgToSend6 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num - 1);
-                                                Halo.objectOutputStream.writeObject(msgToSend6);
+                                                try
+                                                {
+                                                    MSG_ACTION_GET_MARKET_RESOURCES msgToSend6 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num - 1);
+                                                    Halo.objectOutputStream.writeObject(msgToSend6);
+                                                }
+                                                catch(IllegalArgumentException e)
+                                                {
+                                                    System.out.println(" > We could not build that message");
+                                                }
                                                 break loop;
 //ACTION BUY DEV CARDS
                                             case 7:
@@ -1212,7 +1293,8 @@ class GamePhase {
                                                 Halo.objectOutputStream.writeObject(msgToSend7);
                                                 break loop;
 //GO BACK
-                                            case 8:
+                                            case 0:
+                                                System.out.println(" Going back to main menu");
                                                 break loop;
                                         }
                                     }
@@ -1237,18 +1319,89 @@ class GamePhase {
         //return Phase.MainMenu;
     }
 
-    private boolean check1Or2(List<String> textList) {
-        if (textList.size() == 1) {
-            try {
-                int RowOrCol = Integer.parseInt(textList.get(0));
-                if (RowOrCol == 1 || RowOrCol == 2) {
-                    return true;
+    private boolean checkNumberMarket(List<String> textList, boolean column) {
+        if(textList.size()>1)
+        {
+            System.out.println(" > Too many parameters");
+            return false;
+        }
+        try
+        {
+            int number = Integer.parseInt(textList.get(0));
+            if(column)
+            {
+                if(number < 0 || number > 4)
+                {
+                    System.out.println(" > The column number must be 1, 2, 3, 4. Or 0 to quit.");
+                    return false;
                 }
-            } catch (NumberFormatException e) {
+            }
+            else
+            {
+                if(number < 0 || number > 3)
+                {
+                    System.out.println(" > The row number must be 1, 2, 3. Or 0 to quit.");
+                    return false;
+                }
+            }
+        } catch (NumberFormatException e)
+        {
+            System.out.println(" > That was not a number");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkLeaderCards() {
+        LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
+        LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
+        if(l1a==null && l2a==null)
+        {
+            System.out.println(" > Both cards are discarded!");
+            return false;
+        }
+        if(l1a!=null) {
+            if(l2a!=null) {
+                if(l1a.getEnable() && l2a.getEnable()) {
+                    System.out.println(" > Both cards are already activated!");
+                    return false;
+                }
+            }
+            else {
+                if(l1a.getEnable()) {
+                    System.out.println(" > The only card present, the first, is already activated!");
+                    return false;
+                }
+            }
+        }
+        else {
+            if(l2a.getEnable()) {
+                System.out.println(" > The only card present, the second, is already activated!");
                 return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    private boolean checkNumber0_1_2(List<String> textList) {
+        if (textList.size() == 1) {
+            try {
+                int number = Integer.parseInt(textList.get(0));
+                if (number != 0 && number != 1 && number != 2) {
+                    System.out.println(" > Please insert 0, 1 or 2");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(" > That was not a number");
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println(" > Too many parameters");
+            return false;
+        }
+        return true;
     }
 
     private boolean checkStandardProductionInput(List<String> input) {
@@ -1325,6 +1478,11 @@ class GamePhase {
             int number = Integer.parseInt(textList.get(0));
             LeaderCard l1 = Halo.myPlayerRef.getLeaderCards()[0];
             LeaderCard l2 = Halo.myPlayerRef.getLeaderCards()[1];
+            if(number < 0 || number > 2)
+            {
+                System.out.println(Halo.ANSI_RED + " > Please choose 0, 1 or 2" + Halo.ANSI_RESET);
+                return false;
+            }
             if (number == 1) {
                 if (l1 == null) {
                     System.out.println(Halo.ANSI_RED + " > Sorry, but that card is discarded" + Halo.ANSI_RESET);
@@ -1412,6 +1570,7 @@ class GamePhase {
 
     private void printActions() {
         System.out.println("\u001B[36m" + "  LIST OF ACTIONS! " + "\u001B[0m");
+        System.out.println("  =>   0   : go back");
         System.out.println("  =>   1   : activate a leader card");
         System.out.println("  =>   2   : discard a leader card");
         System.out.println("  =>   3   : activate production");
@@ -1421,7 +1580,7 @@ class GamePhase {
         System.out.println("  =>   7   : end turn");
     }
 
-    private boolean checkNumbers(List<String> textList) {
+    private boolean checkNumberDevSlot(List<String> textList) {
         if (textList.size() == 2) {
             try {
                 int cardNum = Integer.parseInt(textList.get(0));
