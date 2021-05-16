@@ -24,22 +24,6 @@
       <version>RELEASE</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>16</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-fxml</artifactId>
-      <version>16</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx</artifactId>
-      <version>16</version>
-      <type>pom</type>
-    </dependency>
   </dependencies>
 
 

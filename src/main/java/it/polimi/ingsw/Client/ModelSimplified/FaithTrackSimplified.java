@@ -29,8 +29,8 @@ public class FaithTrackSimplified {
         StringBuilder result = new StringBuilder("");
         int i = 1;
         List<PlayerSimplified> playerList = game.getPlayerList();
-        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
-        result.append("  FaithTrack: ").append("\n");
+        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("                  FAITH TRACK: ").append("\n");
 
         for(PlayerSimplified player : playerList) {
             result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
@@ -48,7 +48,7 @@ public class FaithTrackSimplified {
                     result.append("   No zone has been activated yet!");
             }
         }
-        result.append("\n").append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        result.append("\n").append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         return result.toString();
     }
 
