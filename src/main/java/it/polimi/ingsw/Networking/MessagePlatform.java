@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Networking;
 
+import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.Message;
+import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
 
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ public class MessagePlatform implements ModelObserver {
         while( didThreadFetch(playerNumber) ) {
             System.out.println("["+Thread.currentThread().getName()+"] going to sleep");
             this.wait();
-
         }
 
         Message msg = list.get(0);
@@ -37,6 +38,9 @@ public class MessagePlatform implements ModelObserver {
         t--;
         if(t==0)
         {
+            System.out.println(" messagePlatform: removed "+list.get(0).getMessageType());
+            if(list.get(0).getMessageType()== MessageType.MSG_NOTIFICATION)
+                System.out.println("Content of MSG_NOTIFICATION"+ ((MSG_NOTIFICATION)list.get(0)).getMessage());
             list.remove(0);
             t = activePlayers;
             regenerate();
@@ -80,6 +84,8 @@ public class MessagePlatform implements ModelObserver {
 
     public synchronized void incrementActivePlayers()
     {
+        if(t==activePlayers)
+            t++;
         activePlayers++;
     }
 }

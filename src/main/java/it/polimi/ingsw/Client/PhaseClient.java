@@ -80,6 +80,19 @@ class Halo
     static boolean solo;
     static boolean yourTurn;
     static boolean action = false;
+
+    public static void closeStreams() {
+        try {
+            Halo.socket.close();
+            Halo.outputStream.close();
+            Halo.inputStream.close();
+            Halo.objectOutputStream.close();
+            Halo.objectInputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 class ClosingPhase
@@ -161,7 +174,7 @@ class MenuPhase
                             MSG_ERROR msg = (MSG_ERROR) message;
                             System.out.println(Halo.ANSI_RED + " >> Error! " + Halo.ANSI_RESET);
                             System.out.println(Halo.ANSI_RED + " <> "+msg.getErrorMessage() + Halo.ANSI_RESET);
-                            closeStreams();
+                            Halo.closeStreams();
                             return Phase.Error;
                         }
 
@@ -198,7 +211,7 @@ class MenuPhase
                             MSG_ERROR msg = (MSG_ERROR) message;
                             System.out.println(Halo.ANSI_RED + " >> Error! " + Halo.ANSI_RESET);
                             System.out.println(Halo.ANSI_RED + " <> "+msg.getErrorMessage() + Halo.ANSI_RESET);
-                            closeStreams();
+                            Halo.closeStreams();
                             return Phase.Error;
                         }
                     } catch (IOException | ClassNotFoundException | NumberFormatException e) {
@@ -263,7 +276,7 @@ class MenuPhase
                             MSG_ERROR msg = (MSG_ERROR) message;
                             System.out.println(Halo.ANSI_RED + " >> Error! " + Halo.ANSI_RESET);
                             System.out.println(Halo.ANSI_RED + " <> "+msg.getErrorMessage() + Halo.ANSI_RESET);
-                            closeStreams();
+                            Halo.closeStreams();
                             return Phase.Error;
                         }
 
@@ -301,7 +314,7 @@ class MenuPhase
                             MSG_ERROR msg = (MSG_ERROR) message;
                             System.out.println(Halo.ANSI_RED + " >> Error! " + Halo.ANSI_RESET);
                             System.out.println(Halo.ANSI_RED + " <> "+msg.getErrorMessage() + Halo.ANSI_RESET);
-                            closeStreams();
+                            Halo.closeStreams();
                             return Phase.Error;
                         }
                     } catch (IOException | ClassNotFoundException | NumberFormatException e) {
@@ -335,7 +348,7 @@ class MenuPhase
                             MSG_ERROR msg = (MSG_ERROR) message;
                             System.out.println(Halo.ANSI_RED + " >> Error! " + Halo.ANSI_RESET);
                             System.out.println(Halo.ANSI_RED + " <> "+msg.getErrorMessage() + Halo.ANSI_RESET);
-                            closeStreams();
+                            Halo.closeStreams();
                             return Phase.Error;
                         }
                     } catch(IOException | ClassNotFoundException | NumberFormatException e)
@@ -362,13 +375,6 @@ class MenuPhase
         Halo.objectInputStream = new ObjectInputStream(Halo.inputStream);
     }
 
-    private void closeStreams() throws IOException {
-        Halo.socket.close();
-        Halo.outputStream.close();
-        Halo.inputStream.close();
-        Halo.objectOutputStream.close();
-        Halo.objectInputStream.close();
-    }
     private boolean checkCreateCommand(List<String> textList) {
         if (textList.size() != 5) {
             System.out.println(Halo.ANSI_RED +" > Error! The number of parameters is incorrect!"+ Halo.ANSI_RESET);
@@ -648,7 +654,8 @@ class GamePhase
                 if(execute) {
                     switch (textList.get(0).toLowerCase()) {
                         case "quit":
-                            return Phase.Quit; //testing purposes
+                            Halo.closeStreams();
+                            return Phase.MainMenu; //testing purposes
                         case "help": {
                             System.out.println("  List of commands! \n \n");
                             System.out.println("=> "+Halo.ANSI_CYAN+"quit"+Halo.ANSI_RESET+"                             : kills the thread and exits the program");
