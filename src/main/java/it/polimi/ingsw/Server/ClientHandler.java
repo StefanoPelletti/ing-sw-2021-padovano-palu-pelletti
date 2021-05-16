@@ -9,12 +9,13 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-enum Phase { GiveModel, Proceed, YourTurn, Disconnected, ReceiveUpdates, GameOver}
+enum Phase { GiveModel, Proceed, YourTurn, Disconnected, ReceiveUpdates, GameOver, TimeOut}
 
 public class ClientHandler implements Runnable {
 
     private Socket clientSocket;
     private final Object outputLock;
+    private final Object pendingLock;
     private int playerNumber;
 
     private Lobby lobby;
@@ -33,6 +34,7 @@ public class ClientHandler implements Runnable {
         this.nickname = null;
 
         this.outputLock = new Object();
+        this.pendingLock = new Object();
         this.playerNumber = 0;
         this.pendingConnection = false;
     }
@@ -86,9 +88,10 @@ public class ClientHandler implements Runnable {
                 boolean found = false;
                 int i;
                 int lobbyMaxSize = 1;
+
                 if (numOfPlayers < 1 || numOfPlayers > 4) {
-                    System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" tried to create a lobby, but the too many lobbies");
-                    send(new MSG_ERROR("The number of players is not!"));
+                    System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" tried to create a lobby with a wrong number of player");
+                    send(new MSG_ERROR("The number of players is not correct!"));
                     closeStreams();
                     return;
                 }
@@ -174,13 +177,17 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
             return;
         }
-        phase = Phase.GiveModel;
 
-        //send Complete ModelUpdate?
-        //send(lobby.getFullModel());
-        //send(new MSG_UPD_End());
 
-        this.playerNumber = lobby.whoIs(this.nickname);
+        if(lobby.isDeleted()) //if timeout occurred
+        {
+            phase = Phase.TimeOut;
+        }
+        else
+        {
+            phase = Phase.GiveModel;
+            this.playerNumber = lobby.whoIs(this.nickname);
+        }
 
 //MAIN RUN(), loops
 
@@ -202,6 +209,9 @@ public class ClientHandler implements Runnable {
                     phase = disconnect();
                     break;
                 case GameOver: //basically kills the thread
+                    return;
+                case TimeOut:
+                    timeOut();
                     return;
             }
         }
@@ -261,6 +271,7 @@ public class ClientHandler implements Runnable {
                 case MSG_UPD_LeaderBoard:
                     send(message);
                     closeStreams();
+                    lobby.setDeleted(true);
                     Lobby.removeLobby(this.lobby);
                     return Phase.GameOver;
                 default:
@@ -292,32 +303,16 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private Phase disconnect() {
-        System.out.println("An error has occurred and the ClientHandler will be disconnected");
-        closeStreams();
 
-        //check if last player -> kill other threads (how? see below [275], same situation)
-        //in this case he should win? or he should continue alone? must discuss!
 
-        this.pendingConnection=true;
-        lobby.addIdlePlayer(this.playerNumber);
-        lobby.messagePlatform.decrementActivePlayers();
-        lobby.disconnectPlayer(this.nickname);
+    private void timeOut() {
+        System.out.println("[T "+Thread.currentThread().getName()+"] - "+" timeOut of the Lobby. Disconnection.");
         try {
-            synchronized (this.pendingConnection) {
-                while (this.pendingConnection) this.pendingConnection.wait();
-                // while (status!= GAMEOVER && this.pendingConnection ) this.pendingconnection.wait()
-                // {    if (status == GAMEOVER) return GameOver
-                // else ...   HOW TO UNLOCK THIS?
-            }
-        }
-        catch (InterruptedException e) {
+            send(new MSG_ERROR("Not all Players have joined the lobby in time."));
+            closeStreams();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        lobby.messagePlatform.incrementActivePlayers();
-        lobby.removeIdlePlayer(this.playerNumber);
-        return Phase.GiveModel;
     }
 
 
@@ -342,7 +337,40 @@ public class ClientHandler implements Runnable {
 
     public String getNickname() { return this.nickname; }
 
-    public Boolean getPendingConnection() { return pendingConnection; }
+    public Boolean isPendingConnection() { return pendingConnection; }
+
+    private Phase disconnect() {
+        System.out.println("[T "+Thread.currentThread().getName()+"] - "+"An error has occurred and the ClientHandler will be disconnected");
+        closeStreams();
+
+        //check if last player -> kill other threads (how? see below [275], same situation)
+        //in this case he should win? or he should continue alone? must discuss!
+
+        this.pendingConnection=true;
+        lobby.addIdlePlayer(this.playerNumber);
+        lobby.messagePlatform.decrementActivePlayers();
+        lobby.disconnectPlayer(this.nickname);
+        try {
+            synchronized (this.pendingLock) {
+                while (this.pendingConnection) this.pendingLock.wait();
+                // while (status!= GAMEOVER && this.pendingConnection ) this.pendingconnection.wait()
+                // {    if (status == GAMEOVER) return GameOver
+                // else ...   HOW TO UNLOCK THIS?
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+// if the game is over when he wakes up
+        if(lobby.isDeleted()) {
+            closeStreams();
+            return Phase.GameOver;
+        }
+
+        lobby.messagePlatform.incrementActivePlayers();
+        lobby.removeIdlePlayer(this.playerNumber);
+        return Phase.GiveModel;
+    }
 
     public void substituteStreams(Socket socket, InputStream inputStream, ObjectInputStream objectInputStream,
                                   OutputStream outputStream, ObjectOutputStream objectOutputStream)
@@ -354,11 +382,22 @@ public class ClientHandler implements Runnable {
         this.objectOutputStream = objectOutputStream;
 
         System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" exploded, going into dead state ");
+        wakeUp();
+        /*
         synchronized (this.pendingConnection) {
             this.pendingConnection=false;
             this.pendingConnection.notify();
         }
 
+         */
+
         System.out.println("["+Thread.currentThread().getName()+"] - "+this.nickname+" reconnected to lobby ");
+    }
+
+    public void wakeUp() {
+        synchronized (this.pendingLock) {
+            this.pendingConnection = false;
+            this.pendingLock.notify(); //or notifyAll
+        }
     }
 }

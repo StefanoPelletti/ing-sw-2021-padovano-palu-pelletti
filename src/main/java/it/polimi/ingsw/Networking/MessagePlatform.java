@@ -71,6 +71,10 @@ public class MessagePlatform implements ModelObserver {
             list.remove(0);
             t = activePlayers;
         }
+        else
+        {
+            t--;
+        }
 
     }
 

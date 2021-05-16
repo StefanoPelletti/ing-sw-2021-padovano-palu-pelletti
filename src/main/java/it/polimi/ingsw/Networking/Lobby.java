@@ -21,8 +21,10 @@ public class Lobby {
     private GameManager gameManager;
     private ActionManager actionManager;
     private final static ArrayList<Lobby> lobbies = new ArrayList<>();
-    int lobbyNumber;
-    int lobbyMaxPlayers;
+    private final int lobbyNumber;
+    private final int lobbyMaxPlayers;
+    private boolean started;
+    private boolean deleted;
 
     boolean solo;
 
@@ -36,9 +38,13 @@ public class Lobby {
         this.lobbyMaxPlayers = lobbyMaxPlayers;
 
         this.messagePlatform = new MessagePlatform(lobbyMaxPlayers);
+
+        this.started = false;
+        this.deleted = false;
     }
 
-    public void init() {
+    public synchronized void init() {
+        this.started=true;
         this.gameManager = new GameManager(this.lobbyMaxPlayers);
         this.actionManager = gameManager.getActionManager();
         List<Integer> playerNumbers = new LinkedList<>();
@@ -70,7 +76,7 @@ public class Lobby {
         gameManager.addAllObserver(messagePlatform);
     }
 
-    public boolean onMessage(Message message, String nickname) throws IllegalArgumentException{
+    public boolean onMessage(Message message, String nickname){
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
 
@@ -144,16 +150,19 @@ public class Lobby {
     public void disconnectPlayer(String nickname)
     {
         Player player = gameManager.getGame().getPlayer(nickname);
-        if(player.equals( gameManager.currentPlayer() ))
+        if(player.equals( gameManager.currentPlayer() )) {
             actionManager.disconnectPlayer(player, true);
+            messagePlatform.update(new MSG_UPD_End());
+        }
         else
             actionManager.disconnectPlayer(player, false);
+
     }
 
 
     public synchronized ClientHandler findPendingClientHandler(String nickname)
     {
-        return this.threadsList.stream().filter(ClientHandler::getPendingConnection).sorted(
+        return this.threadsList.stream().filter(ClientHandler::isPendingConnection).sorted(
                 (a,b) -> {
                     return Integer.compare(b.getNickname().length(), a.getNickname().length());
                 }).filter( x -> x.getNickname().startsWith(nickname)).findFirst().get();
@@ -201,6 +210,7 @@ public class Lobby {
 
     public static synchronized void addLobby(Lobby lobby){
         Lobby.lobbies.add(lobby);
+        Lobby.createCountDownThread(lobby);
     }
 
     public static synchronized ArrayList<Lobby> getLobbies(){
@@ -208,4 +218,27 @@ public class Lobby {
     }
 
     public static synchronized void removeLobby(Lobby lobby){Lobby.lobbies.remove(lobby);}
+
+    public static void createCountDownThread(Lobby lobby)
+    {
+        new Thread(new CountDownThread(lobby, 30)).start();
+    }
+
+    public synchronized boolean isStarted() { return this.started; }
+    public synchronized boolean isDeleted() { return this.deleted; }
+    public synchronized void setStarted(boolean started) { this.started = started; }
+    public synchronized void setDeleted(boolean deleted) { this.deleted = deleted; }
+
+    public synchronized void wakeUpAllPendingClientHandlers()
+    {
+        for(ClientHandler c : threadsList)
+        {
+            if(c.isPendingConnection())
+            {
+                c.wakeUp();
+            }
+        }
+    }
+
 }
+

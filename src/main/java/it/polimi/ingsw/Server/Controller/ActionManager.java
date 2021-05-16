@@ -1009,7 +1009,7 @@ public class ActionManager {
             game.getDevelopmentCardsVendor().setEnabled(false);
             game.getErrorObject().setEnabled(false);
             game.getMarketHelper().setEnabled(false);
-            endTurn(player, true);
+            endTurn(player, true); //or false?
         }
     }
 }

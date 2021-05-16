@@ -48,7 +48,7 @@ public class FaithTrackSimplified {
                     result.append("   No zone has been activated yet!");
             }
         }
-        result.append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
+        result.append("\n").append("_____+_____+_____+_____+_____+_____+_____+_____").append("\n");
         return result.toString();
     }
 

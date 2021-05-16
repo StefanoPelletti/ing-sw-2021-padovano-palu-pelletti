@@ -130,8 +130,8 @@ public class DiscardLeaderCardTest {
         assertTrue(am.discardLeaderCard(p, new MSG_ACTION_DISCARD_LEADERCARD(0)));
 
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
 
         assertNull(p.getLeaderCards()[0]);
         assertTrue(p.getLeaderCards()[1].getEnable());
@@ -193,8 +193,8 @@ public class DiscardLeaderCardTest {
         assertFalse(p.getLeaderCards()[1].getEnable());
         assertEquals(1, p.getPosition());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
         c.emptyQueue();
 
         assertTrue(am.discardLeaderCard(p, new MSG_ACTION_DISCARD_LEADERCARD(1)));
@@ -202,8 +202,8 @@ public class DiscardLeaderCardTest {
         assertNull(p.getLeaderCards()[1]);
         assertEquals(2, p.getPosition());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(3, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.size());
         c.emptyQueue();
     }
 }

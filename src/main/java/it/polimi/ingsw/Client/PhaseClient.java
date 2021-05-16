@@ -26,6 +26,8 @@ public class PhaseClient  {
 
     public static void main( String[] args ) {
 
+        System.out.println(" >> Welcome player.");
+
         Phase phase = Phase.MainMenu;
 
         while(true)
@@ -100,7 +102,7 @@ class ClosingPhase
 class MenuPhase
 {
     public Phase run() {
-        System.out.println(" >> Welcome player.");
+        System.out.println(" >> Main Menu.");
         System.out.println(" >> write "+Halo.ANSI_CYAN+"help"+Halo.ANSI_RESET+" for a list of commands.");
         List<String> textList = new ArrayList<>();
         String text;
@@ -323,10 +325,10 @@ class MenuPhase
 
                         message = (Message) Halo.objectInputStream.readObject();
                         if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
-                            MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
+                            MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
                             System.out.println(Halo.ANSI_GREEN + " >> Connected! " + Halo.ANSI_RESET);
-                            System.out.println(Halo.ANSI_GREEN + " <> Your assigned nickname is "+ msg.getAssignedNickname() + Halo.ANSI_RESET);
-                            Halo.myNickname = msg.getAssignedNickname();
+                            System.out.println(Halo.ANSI_GREEN + " <> Your assigned nickname is "+ msg.getNickname() + Halo.ANSI_RESET);
+                            Halo.myNickname = msg.getNickname();
                             Halo.solo = false;
                             return Phase.Game;
                         } else if (message.getMessageType() == MessageType.MSG_ERROR) {
@@ -494,7 +496,8 @@ class GamePhase
         try
         {
             message = (Message) Halo.objectInputStream.readObject();
-            if(message.getMessageType()!=MessageType.MSG_UPD_Full) {
+            if(message.getMessageType()==MessageType.MSG_ERROR) {
+                System.out.println(Halo.ANSI_RED + " <> "+ ((MSG_ERROR) message).getErrorMessage());
                 return Phase.Error;
             }
             MSG_UPD_Full msg = (MSG_UPD_Full) message;
@@ -823,7 +826,7 @@ class GamePhase
                                                 LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
 
-                                                if(l1a!=null) System.out.println("  Press 1 to enable the first card ");
+                                                if(l1a!=null) System.out.println(" Press 1 to enable the first card ");
                                                 if(l2a!=null) System.out.println(" Press 2 to enable the second card ");
 
                                                 while (true)
@@ -1121,7 +1124,7 @@ class GamePhase
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
                                                 break loop;
-
+//ACTION GET MARKET RESOURCES
                                             case 6:
                                                 //market
                                                 int num;
@@ -1170,12 +1173,12 @@ class GamePhase
                                                 MSG_ACTION_GET_MARKET_RESOURCES msgToSend6 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num-1);
                                                 Halo.objectOutputStream.writeObject(msgToSend6);
                                                 break loop;
-
+//ACTION BUY DEV CARDS
                                             case 7:
                                                 MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
                                                 Halo.objectOutputStream.writeObject(msgToSend7);
                                                 break loop;
-
+//GO BACK
                                             case 8:
                                                 break loop;
                                         }

@@ -327,8 +327,8 @@ public class ActivateProductionTest {
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
         assertEquals(3, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(8, c.messages.size());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(10, c.messages.size());
     }
 
     //verifies that a basic production is accepted if the player has enough resources
@@ -408,9 +408,9 @@ public class ActivateProductionTest {
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_WarehouseDepot)).count());
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
 
-        assertEquals(4, c.messages.size());
+        assertEquals(5, c.messages.size());
     }
 
     //verifies that if a slot is selected for production, only the top card of that slot is used for the production
@@ -527,9 +527,9 @@ public class ActivateProductionTest {
         assertEquals(6, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Strongbox)).count());
         assertEquals(1, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Extradepot)).count());
         assertEquals(2, c.messages.stream().filter(m-> m.getMessageType().equals(MessageType.MSG_UPD_Player)).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
 
-        assertEquals(14, c.messages.size());
+        assertEquals(16, c.messages.size());
     }
 
 }

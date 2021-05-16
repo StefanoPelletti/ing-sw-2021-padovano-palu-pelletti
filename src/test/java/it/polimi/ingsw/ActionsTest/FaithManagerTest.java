@@ -78,8 +78,8 @@ public class FaithManagerTest {
 
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.size());
     }
 
     @Test
@@ -100,8 +100,8 @@ public class FaithManagerTest {
 
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.size());
     }
 
     @Test
@@ -122,8 +122,8 @@ public class FaithManagerTest {
 
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(5, c.messages.size());
+        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(6, c.messages.size());
     }
 
     @Test
@@ -150,8 +150,8 @@ public class FaithManagerTest {
 
         assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(4, a.messages.size());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, a.messages.size());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class FaithManagerTest {
 
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(5, c.messages.size());
+        assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(6, c.messages.size());
     }
 }

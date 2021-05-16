@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Model;
 
 import java.util.*;
 
+import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Player;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
@@ -68,8 +69,10 @@ public class Player extends ModelObservable {
         if(position<0) return false;
         this.position = position;
         notifyObservers();
+        notifyMovement();
         return true;
     }
+
     public int getPlayerNumber() { return playerNumber; }
 
     public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
@@ -202,6 +205,10 @@ public class Player extends ModelObservable {
                 this.strongbox.equals(o.strongbox) &&
                 this.warehouseDepot.equals(o.warehouseDepot) &&
                 this.developmentSlot.equals(o.developmentSlot));
+    }
+
+    private void notifyMovement() {
+        this.notifyObservers(new MSG_NOTIFICATION(this.nickname + " has advanced on the Faith Track! Now at position: "+this.position));
     }
 
     private void notifyObservers(){
