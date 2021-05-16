@@ -41,9 +41,10 @@ public class DevelopmentSlotSimplified {
             }
         }
 
-        result.append("------ Development Slot ------ \n");
+        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("                  DEVELOPMENT SLOT:    \n");
 
-        result.append("Slot 1: \n");
+        result.append("\u001B[36m" + "Slot 1: \n" + "\u001B[0m");
         if(onTop[0] != null) {
             result.append(onTop[0].toString());
         } else {
@@ -58,7 +59,7 @@ public class DevelopmentSlotSimplified {
         }
 
         result.append("\n");
-        result.append("Slot 2: \n");
+        result.append("\u001B[36m" + "Slot 2: \n" + "\u001B[0m");
         if(onTop[1] != null) {
             result.append(onTop[1].toString());
         } else {
@@ -73,7 +74,7 @@ public class DevelopmentSlotSimplified {
         }
 
         result.append("\n");
-        result.append("Slot 3: \n");
+        result.append("\u001B[36m" + "Slot 3: \n" + "\u001B[0m");
         if(onTop[2] != null) {
             result.append(onTop[2].toString());
         } else {
@@ -86,6 +87,7 @@ public class DevelopmentSlotSimplified {
                 break;
             }
         }
+        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
 
         return result.toString();
     }

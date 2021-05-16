@@ -244,7 +244,6 @@ class MenuPhase {
                             Halo.closeStreams();
                             return Phase.Error;
                         }
-
                     } catch (IOException | ClassNotFoundException | NumberFormatException e) {
                         e.printStackTrace();
                         return Phase.MainMenu;
@@ -254,24 +253,24 @@ class MenuPhase {
                     return Phase.Quit;
                 case "help":
                     System.out.println(" >> List of commands! \n \n");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "quit" + Halo.ANSI_RESET + "                            : kills the thread and exits the program");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "help" + Halo.ANSI_RESET + "                            : displays the possible terminal commands");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "set" + Halo.ANSI_RESET + " " + Halo.ANSI_PURPLE + "<something> <value>" + Halo.ANSI_RESET + "         : sets a new default port or address");
-                    System.out.println("                                     default values: " + Halo.ANSI_GREEN + Halo.defaultAddress + ":" + Halo.defaultPort + Halo.ANSI_RESET);
-                    System.out.println(Halo.ANSI_PURPLE + "something" + Halo.ANSI_RESET + " :>  'port'");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"quit"+Halo.ANSI_RESET+"                            : kills the thread and exits the program");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"help"+Halo.ANSI_RESET+"                            : displays the possible terminal commands");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"set"+Halo.ANSI_RESET+" "+Halo.ANSI_PURPLE+"<something> <value>"+Halo.ANSI_RESET+"         : sets a new default port or address");
+                    System.out.println("                                     default values: "+Halo.ANSI_GREEN+Halo.defaultAddress + ":"+Halo.defaultPort+Halo.ANSI_RESET);
+                    System.out.println(Halo.ANSI_PURPLE+"something"+Halo.ANSI_RESET+" :>  'port'");
                     System.out.println("          :>  'address' ");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "c" + Halo.ANSI_RESET + " " + Halo.ANSI_PURPLE + "<nickname> <capacity>" + Halo.ANSI_RESET + "         : quickly creates a new lobby using default values");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "j" + Halo.ANSI_RESET + " " + Halo.ANSI_PURPLE + "<nickname> <lobbyNumber>" + Halo.ANSI_RESET + "      : quickly joins a lobby using default values");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "create" + Halo.ANSI_RESET + " " + Halo.ANSI_PURPLE + "<ip> <port> <nickname> <capacity>" + Halo.ANSI_RESET + "  ");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"c"+Halo.ANSI_RESET+" "+Halo.ANSI_PURPLE+"<nickname> <capacity>"+Halo.ANSI_RESET+"         : quickly creates a new lobby using default values");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"j"+Halo.ANSI_RESET+" "+Halo.ANSI_PURPLE+"<nickname> <lobbyNumber>"+Halo.ANSI_RESET+"      : quickly joins a lobby using default values");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"create"+Halo.ANSI_RESET+" "+Halo.ANSI_PURPLE+"<ip> <port> <nickname> <capacity>"+Halo.ANSI_RESET+"  ");
                     System.out.println("                                   : creates a new lobby using custom port number \n" +
-                            "                                     and address values");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "join" + Halo.ANSI_RESET + " " + Halo.ANSI_PURPLE + "<ip> <port> <nickname> <lobbyNumber>" + Halo.ANSI_RESET + "  ");
+                                       "                                     and address values");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"join"+Halo.ANSI_RESET+" "+Halo.ANSI_PURPLE+"<ip> <port> <nickname> <lobbyNumber>"+Halo.ANSI_RESET+"  ");
                     System.out.println("                                   : joins an existing lobby using custom port number \n" +
-                            "                                     and address values");
-                    System.out.println("=> " + Halo.ANSI_CYAN + "rejoin" + Halo.ANSI_RESET + " " + Halo.ANSI_PURPLE + "<ip> <port> <nickname> <lobbyNumber>" + Halo.ANSI_RESET + "  ");
+                                       "                                     and address values");
+                    System.out.println("=> "+Halo.ANSI_CYAN+"rejoin"+Halo.ANSI_RESET+" "+Halo.ANSI_PURPLE+"<ip> <port> <nickname> <lobbyNumber>"+Halo.ANSI_RESET+"  ");
                     System.out.println("                                   : gives the ability to reconnect to a lobby,  \n" +
-                            "                                     if connection was lost. Nickname must match \n" +
-                            "                                     the previously used one. ");
+                                       "                                     if connection was lost. Nickname must match \n" +
+                                       "                                     the previously used one. ");
                     break;
                 case "create":  // CREATE localhost 43210 Tommaso 4
                     if (!checkCreateCommand(textList)) break;
@@ -504,8 +503,7 @@ class MenuPhase {
             try {
                 Thread.sleep(333);
                 System.out.println(s);
-            } catch (InterruptedException ignored) {
-            }
+            } catch (InterruptedException ignored) { }
         }
     }
 }
@@ -563,8 +561,7 @@ class GamePhase {
                         if (Halo.game.isLeaderCardsObjectEnabled()) {
                             int first = 0;
                             int second = 0;
-                            obtainNumberLoop:
-                            while (true) {
+                            obtainNumberLoop: while (true) {
                                 if (check1_4Number(textList)) {
                                     first = Integer.parseInt(textList.get(0));
 
@@ -596,7 +593,8 @@ class GamePhase {
                             list.add(Halo.game.getLeaderCardsObject().getCard(second - 1));
                             MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
                             Halo.objectOutputStream.writeObject(msgToSend);
-                        } else if (Halo.game.isResourceObjectEnabled()) {
+                        }
+                        else if (Halo.game.isResourceObjectEnabled()) {
                             Resource resource = Resource.NONE;
                             while (true) {
                                 if (check1_4Number(textList)) {
@@ -831,8 +829,8 @@ class GamePhase {
                         case "action":
                             if (Halo.yourTurn) {
                                 printActions();
-                                loop:
-                                while (true) {
+                                loop: while(true)
+                                {
                                     System.out.println("Please pick a number: ");
                                     System.out.print("> ");
                                     text = Halo.input.nextLine();
@@ -910,11 +908,15 @@ class GamePhase {
                                                 System.out.println("Here's your depot and strongbox");
                                                 System.out.println(Halo.myPlayerRef.getWarehouseDepot());
                                                 System.out.println(Halo.myPlayerRef.getStrongbox());
-                                                if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                    System.out.println("Extra depot: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
+                                                if(Halo.myPlayerRef.getLeaderCards()[0] != null) {
+                                                    if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                                                        System.out.println("Extra depot: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
+                                                    }
                                                 }
-                                                if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                    System.out.println("Extra depot: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
+                                                if(Halo.myPlayerRef.getLeaderCards()[0] != null) {
+                                                    if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                                                        System.out.println("Extra depot: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
+                                                    }
                                                 }
                                                 System.out.println(" >> BASE PRODUCTION\nDo you want to activate it? 1 for yes, 2 for no");
                                                 while (true) {
@@ -936,9 +938,8 @@ class GamePhase {
                                                         text = Halo.input.nextLine();
                                                         textList.clear();
                                                         textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (!checkResource(textList, 2, false))
-                                                            System.out.println("They are not a valid basic output!");
-                                                        else {
+                                                        if(!checkResource(textList, 2, false)) System.out.println("They are not a valid basic input!");
+                                                        else{
                                                             basicInput.add(convertStringToResource(textList.get(0)));
                                                             basicInput.add(convertStringToResource(textList.get(1)));
                                                             break;
@@ -949,9 +950,8 @@ class GamePhase {
                                                         text = Halo.input.nextLine();
                                                         textList.clear();
                                                         textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (!checkResource(textList, 1, false))
-                                                            System.out.println("That's not a valid basic input!");
-                                                        else {
+                                                        if(!checkResource(textList, 1, false)) System.out.println("That's not a valid basic output!");
+                                                        else{
                                                             basicOutput = convertStringToResource(textList.get(0));
                                                             break;
                                                         }
@@ -986,23 +986,25 @@ class GamePhase {
                                                         }
                                                     }
                                                 }
-
-                                                if (Arrays.stream(Halo.myPlayerRef.getLeaderCards()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
-                                                    System.out.println(" >> LEADER PRODUCTION");
-                                                    for (int i = 0; i < 2; i++) {
-                                                        LeaderCard l = Halo.myPlayerRef.getLeaderCards()[i];
-                                                        if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
-                                                            System.out.println(l);
-                                                            System.out.println("Do you want to activate this card? (1 for yes, 2 for no)");
-                                                            while (true) {
-                                                                text = Halo.input.nextLine();
-                                                                textList.clear();
-                                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                if (check1Or2(textList)) {
-                                                                    if (Integer.parseInt(textList.get(0)) == 1)
-                                                                        leader[i] = true;
-                                                                    break;
-                                                                } else System.out.println("Invalid input, try again");
+                                                if((Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable())|| (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable())) {
+                                                    if (Arrays.stream(Halo.myPlayerRef.getLeaderCards()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
+                                                        System.out.println(" >> LEADER PRODUCTION");
+                                                        for (int i = 0; i < 2; i++) {
+                                                            LeaderCard l = Halo.myPlayerRef.getLeaderCards()[i];
+                                                            if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
+                                                                System.out.println(l);
+                                                                System.out.println("Do you want to activate this card? (1 for yes, 2 for no)");
+                                                                while (true) {
+                                                                    text = Halo.input.nextLine();
+                                                                    textList.clear();
+                                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                                                    if (check1Or2(textList)) {
+                                                                        if (Integer.parseInt(textList.get(0)) == 1)
+                                                                            leader[i] = true;
+                                                                        break;
+                                                                    } else
+                                                                        System.out.println("Invalid input, try again");
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -1033,13 +1035,18 @@ class GamePhase {
                                                         } else System.out.println("Invalid input, try again");
                                                     }
                                                 }
-                                                MSG_ACTION_ACTIVATE_PRODUCTION msgToSend3 = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
-                                                Halo.objectOutputStream.writeObject(msgToSend3);
+
+                                                if(basic || std ||  leader[0] || leader[1]) {
+                                                    MSG_ACTION_ACTIVATE_PRODUCTION msgToSend3 = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
+                                                    Halo.objectOutputStream.writeObject(msgToSend3);
+                                                } else {
+                                                    System.out.println("You have not produced anything");
+                                                }
                                                 break loop;
 //ACTION CHANGE DEPOT CONFIG
                                             case 4:
                                                 //change depot
-                                                System.out.println(" >> My friend, please give me the new configuration of your Warehouse Depot.");
+                                                System.out.println(" >> Please insert the new configuration for your Warehouse Depot.");
                                                 Resource shelf1;
                                                 Resource[] shelf2 = new Resource[2];
                                                 Resource[] shelf3 = new Resource[3];

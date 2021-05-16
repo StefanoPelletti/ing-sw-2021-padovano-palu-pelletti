@@ -67,7 +67,7 @@ public class MarketHelper
         result.append("\u001B[36m" + " MARKETHELPER IS HERE TO HELP! " + "\u001B[0m").append("\n");
         result.append(" The Resources you gathered from the market are: ").append("\n");
         result.append(" ").append(resources).append("\n");
-        result.append(" Currently selected resource is a ").append(getCurrentResource()).append(". What do you want to do with them?").append("\n");
+        result.append(" Currently selected resource is a ").append(getCurrentResource()).append(". What do you want to do with it?").append("\n");
         //result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         result.append(" Available options: ").append("\n");
         if(getCurrentResource()!=Resource.EXTRA)
