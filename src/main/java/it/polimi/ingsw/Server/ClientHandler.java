@@ -369,6 +369,7 @@ public class ClientHandler implements Runnable {
 
         lobby.messagePlatform.incrementActivePlayers();
         lobby.removeIdlePlayer(this.playerNumber);
+        lobby.messagePlatform.update(new MSG_NOTIFICATION(this.nickname+" reconnected to lobby!"));
         return Phase.GiveModel;
     }
 
