@@ -903,7 +903,7 @@ public class ActionManager {
 
         if(game.getStatus()==Status.INIT)
         {
-            if(currentPlayer > newPlayer.getPlayerNumber())
+            if(currentPlayer >= newPlayer.getPlayerNumber())
             {
                 if(game.getLeaderCardsObject().isEnabled())
                 {
@@ -913,13 +913,15 @@ public class ActionManager {
                         gameManager.endTurn();
                         newPlayer = game.getCurrentPlayer();
                     }
-                    if(newPlayer.getPlayerNumber()==3 || newPlayer.getPlayerNumber()==2)
-                    {
-                        game.getResourceObject().setNumOfResources(1);
+                    if(newPlayer.getPlayerNumber()!=1) {
+                        if (newPlayer.getPlayerNumber() == 3 || newPlayer.getPlayerNumber() == 2) {
+                            game.getResourceObject().setNumOfResources(1);
+                        } else
+                            game.getResourceObject().setNumOfResources(2);
+                        game.getResourceObject().setEnabled(true);
                     }
                     else
-                        game.getResourceObject().setNumOfResources(2);
-                    game.getResourceObject().setEnabled(true);
+                        gameManager.setStatus(Status.STANDARD_TURN);
                 }
                 else if ( game.getResourceObject().isEnabled() )
                 {

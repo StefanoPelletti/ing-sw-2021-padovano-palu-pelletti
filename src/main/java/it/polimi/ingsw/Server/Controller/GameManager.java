@@ -44,6 +44,8 @@ public class GameManager {
         {
             if(idlePlayers.contains(i))
                 firstAvailablePlayer=i+1;
+            else
+                break;
         }
 
         if (!solo && game.getStatus() == Status.LAST_TURN && game.getCurrentPlayerInt() == firstAvailablePlayer) {

@@ -198,9 +198,11 @@ public class ClientHandler implements Runnable, ModelObserver {
                     lobby.setDeleted(true);
                     lobby.wakeUpAllPendingClientHandlers();
                     Lobby.removeLobby(this.lobby);
+                    System.out.println("[T " + Thread.currentThread().getName() + "] - " + this.nickname + " - died cause of GameOver condition ");
                     return;
                 case TimeOut:
                     timeOut();
+                    System.out.println("[T " + Thread.currentThread().getName() + "] - " + this.nickname + " - died cause of TimeOut condition ");
                     return;
             }
         }
@@ -291,7 +293,8 @@ public class ClientHandler implements Runnable, ModelObserver {
         lobby.addIdlePlayer(this.playerNumber);
         if(lobby.areAllPlayersIdle())
             new Thread(new allDisconnectedThread(this.lobby)).start();
-        lobby.disconnectPlayer(this.nickname);
+        else
+            lobby.disconnectPlayer(this.nickname);
         try {
             synchronized (this.pendingLock) {
                 while (this.pendingConnection) this.pendingLock.wait();
