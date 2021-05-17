@@ -546,6 +546,11 @@ class GamePhase {
 
             while (true) {
                 execute = true;
+
+                if (Halo.game.isLeaderBoardEnabled()) {
+                    Halo.closeStreams();
+                    Halo.yourTurn = false;
+                }
 //phase 1: not found
 //phase 2: gets input
                 text = Halo.input.nextLine();
@@ -677,8 +682,8 @@ class GamePhase {
                             MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum-1);
                             Halo.objectOutputStream.writeObject(msgToSend);
                         } else if (Halo.game.isLeaderBoardEnabled()) {
+                            Halo.yourTurn = false;
                             Halo.closeStreams();
-                            return Phase.MainMenu;
                         }
                         execute = false;
                     }
