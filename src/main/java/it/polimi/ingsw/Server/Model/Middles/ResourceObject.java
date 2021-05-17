@@ -4,12 +4,11 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_R
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 
-public class ResourceObject extends ModelObservable  {
+public class ResourceObject extends ModelObservable {
     private boolean enabled;
     private int numOfResources;
 
-    public ResourceObject()
-    {
+    public ResourceObject() {
         this.enabled = false;
         this.numOfResources = 0;
     }
@@ -29,23 +28,23 @@ public class ResourceObject extends ModelObservable  {
 
     public void decNumOfResources() {
         this.numOfResources--;
-        if(enabled) {
-            notifyObservers();
-        }
-    }
-    public void setNumOfResources(int numOfResources) {
-        this.numOfResources = numOfResources;
-        if(enabled) {
+        if (enabled) {
             notifyObservers();
         }
     }
 
-    private void notifyObservers(){
+    public void setNumOfResources(int numOfResources) {
+        this.numOfResources = numOfResources;
+        if (enabled) {
+            notifyObservers();
+        }
+    }
+
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_ResourceObject generateMessage()
-    {
+    public MSG_UPD_ResourceObject generateMessage() {
         return new MSG_UPD_ResourceObject(
                 this.enabled,
                 this.numOfResources

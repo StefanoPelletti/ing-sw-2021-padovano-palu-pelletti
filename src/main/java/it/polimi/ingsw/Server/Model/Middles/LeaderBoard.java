@@ -7,78 +7,69 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class LeaderBoard extends ModelObservable  {
+public class LeaderBoard extends ModelObservable {
     private boolean enabled;
     private Map<String, Integer> leaderboard;
 
-    public LeaderBoard()
-    {
-        this.enabled=false;
+    public LeaderBoard() {
+        this.enabled = false;
         this.leaderboard = null;
     }
 
-    public boolean isEnabled() { return this.enabled; }
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 
-    public void setEnabled(boolean enabled)
-    {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        if(!enabled)
+        if (!enabled)
             leaderboard = null;
         notifyObservers();
-         notifyObservers(new MSG_Stop());
+        notifyObservers(new MSG_Stop());
     }
 
     public Map<String, Integer> getLeaderboard() {
-        if (this.leaderboard==null)
+        if (this.leaderboard == null)
             return null;
         else
             return new TreeMap<>(this.leaderboard);
     }
 
-    public void putScore( String nickname, Integer score )
-    {
-        if(this.leaderboard==null)
+    public void putScore(String nickname, Integer score) {
+        if (this.leaderboard == null)
             leaderboard = new TreeMap<>();
         leaderboard.put(nickname, score);
     }
 
-    public void addScore(String nickname, Integer score)
-    {
-        if(this.leaderboard==null) {
+    public void addScore(String nickname, Integer score) {
+        if (this.leaderboard == null) {
             leaderboard = new TreeMap<>();
             leaderboard.put(nickname, score);
-        }
-        else
-        {
-            if(leaderboard.containsKey(nickname))
-            {
+        } else {
+            if (leaderboard.containsKey(nickname)) {
                 Integer ret = leaderboard.replace(nickname, score);
-                leaderboard.replace(nickname, score+ret);
-            }
-            else
+                leaderboard.replace(nickname, score + ret);
+            } else
                 leaderboard.put(nickname, score);
         }
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("Leaderboard status: ");
-        for( String nickname : leaderboard.keySet())
-        {
+        for (String nickname : leaderboard.keySet()) {
             result.append("\n").append(nickname);
             result.append("\t").append(leaderboard.get(nickname));
         }
         return result.toString();
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_LeaderBoard generateMessage()
-    {
+    public MSG_UPD_LeaderBoard generateMessage() {
         return new MSG_UPD_LeaderBoard(
                 this.enabled,
                 this.leaderboard

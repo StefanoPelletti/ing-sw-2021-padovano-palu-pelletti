@@ -7,5 +7,7 @@ public class MSG_Stop extends Message {
         super(MessageType.MSG_Stop);
     }
 
-    public MessageType getMessageType() { return super.getMessageType(); }
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

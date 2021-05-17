@@ -18,7 +18,9 @@ public class LeaderCard implements Serializable {
         this.enabled = false;
     }
 
-    public int getVP() { return VP; }
+    public int getVP() {
+        return VP;
+    }
 
     public Requirement getRequirement() {
         return requirement;
@@ -39,32 +41,30 @@ public class LeaderCard implements Serializable {
 
 
     @Override
-    public String toString()
-    {
-        StringBuilder result= new StringBuilder();
+    public String toString() {
+        StringBuilder result = new StringBuilder();
         result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         result.append("                 LEADER CARD! ");
-        if(enabled)
+        if (enabled)
             result.append(" The card is ENABLED");
 
         result.append("\n").append("\u001B[33m" + "   VP: " + "\u001B[0m").append(this.VP).append("\n");
 
         result.append(this.requirement);
         result.append(this.specialAbility);
-        result.append("\u001B[36m" +"_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         return result.toString();
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof LeaderCard)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof LeaderCard)) return false;
         LeaderCard o = (LeaderCard) obj;
-        return(this.VP == o.VP &&
+        return (this.VP == o.VP &&
                 this.requirement.equals(o.requirement) &&
                 this.specialAbility.equals(o.specialAbility) &&
-                this.enabled==o.enabled);
+                this.enabled == o.enabled);
 
     }
 }

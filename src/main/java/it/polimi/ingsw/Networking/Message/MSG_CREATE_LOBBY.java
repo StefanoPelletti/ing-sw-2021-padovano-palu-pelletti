@@ -11,8 +11,10 @@ public class MSG_CREATE_LOBBY extends Message implements Serializable {
     {
         super(MessageType.MSG_CREATE_LOBBY);
 
-        if(numOfPlayers<=0 || numOfPlayers>4) throw new IllegalArgumentException();
-        if(nickname==null) throw new IllegalArgumentException();
+        if(numOfPlayers<=0 || numOfPlayers>4)
+            throw new IllegalArgumentException();
+        if(nickname==null)
+            throw new IllegalArgumentException();
 
         this.numOfPlayers=numOfPlayers;
         this.nickname=nickname;

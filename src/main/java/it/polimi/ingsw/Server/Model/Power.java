@@ -23,17 +23,15 @@ public class Power implements Serializable {
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof Power)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Power)) return false;
         Power o = (Power) obj;
-        return(this.input.equals(o.input) && this.output.equals(o.output));
+        return (this.input.equals(o.input) && this.output.equals(o.output));
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("    POWER: ").append("\n");
         result.append("input: ").append(input).append("\n");

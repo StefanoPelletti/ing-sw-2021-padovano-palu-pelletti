@@ -15,26 +15,26 @@ public class PlayerTest {
     Player player;
 
     @BeforeEach
-    public void reset(){
-        player=new Player("Pino", 1);
+    public void reset() {
+        player = new Player("Pino", 1);
     }
 
     //checks if the method getNickname() is correct
     @Test
-    public void getNicknameTest(){
+    public void getNicknameTest() {
         assertEquals(player.getNickname(), "Pino");
     }
 
 
     //verifies that the method getPlayerNumber() is correct
     @Test
-    public void getPlayerNumberTest(){
+    public void getPlayerNumberTest() {
         assertEquals(player.getPlayerNumber(), 1);
     }
 
     //verifies that when the player is created his attributes are initialized correctly
     @Test
-    public void onInitTest(){
+    public void onInitTest() {
         assertNotNull(player.getWarehouseDepot());
         assertNotNull(player.getDevelopmentSlot());
         assertNotNull(player.getWarehouseDepot());
@@ -45,38 +45,38 @@ public class PlayerTest {
 
     //verifies that the method setVP(VP) does not accept negative parameter
     @Test
-    public void setNegativeVP(){
+    public void setNegativeVP() {
         assertFalse(player.setVP(-1));
     }
 
     //verifies that the method setVP(VP) returns true if VP>0
     @Test
-    public void setOkVP(){
+    public void setOkVP() {
         assertTrue(player.setVP(1));
     }
 
     //verifies that the method setVP(VP) works properly
     @Test
-    public void setVPTest(){
+    public void setVPTest() {
         player.setVP(2);
         assertEquals(player.getVP(), 2);
     }
 
     //verifies that the method addVP(VP) does not accept negative parameter
     @Test
-    public void addNegativeVP(){
+    public void addNegativeVP() {
         assertFalse(player.addVP(-1));
     }
 
     //verifies that the method setVP(VP) returns true if VP>0
     @Test
-    public void addOkVP(){
+    public void addOkVP() {
         assertTrue(player.addVP(1));
     }
 
     //verifies that the method addVP(VP) works properly
     @Test
-    public void addVPTest(){
+    public void addVPTest() {
         player.setVP(2);
         player.addVP(200);
         assertEquals(player.getVP(), 202);
@@ -86,7 +86,7 @@ public class PlayerTest {
 
     //verifies that method setPositionTest works properly
     @Test
-    public void setPositionTest(){
+    public void setPositionTest() {
         assertTrue(player.setPosition(4));
         assertEquals(player.getPosition(), 4);
         assertFalse(player.setPosition(-1));
@@ -95,8 +95,8 @@ public class PlayerTest {
 
     //verifies that method associate LeaderCards works properly
     @Test
-    public void associateLeaderCardsTest(){
-        LeaderCardsDeck ld= new LeaderCardsDeck();
+    public void associateLeaderCardsTest() {
+        LeaderCardsDeck ld = new LeaderCardsDeck();
         ArrayList<LeaderCard> l = new ArrayList<>(ld.pickFourCards());
         player.associateLeaderCards(l);
         assertEquals(l.get(0), player.getLeaderCards()[0]);
@@ -105,8 +105,8 @@ public class PlayerTest {
 
     //verifies that the leaderCard methods do not return null
     @Test
-    public void leaderCardsTest(){
-        LeaderCardsDeck ld= new LeaderCardsDeck();
+    public void leaderCardsTest() {
+        LeaderCardsDeck ld = new LeaderCardsDeck();
         ArrayList<LeaderCard> l = new ArrayList<>();
         l.add(ld.pickFourCards().get(0));
         l.add(ld.pickFourCards().get(1));
@@ -119,7 +119,7 @@ public class PlayerTest {
 
     //tests method getTotal()
     @Test
-    public void getTotalTest(){
+    public void getTotalTest() {
         assertEquals(0, player.getTotal()); //at the beginning, total must be 0
 
         player.getWarehouseDepot().add(Resource.SERVANT);
@@ -150,9 +150,9 @@ public class PlayerTest {
 
     //tests method getResources
     @Test
-    public void getResourcesTest(){
+    public void getResourcesTest() {
         Map<Resource, Integer> resources = player.getResources(); //initially player ha 0 resources
-        for(Resource r: resources.keySet()){
+        for (Resource r : resources.keySet()) {
             assertEquals(0, resources.get(r));
         }
 
@@ -191,9 +191,9 @@ public class PlayerTest {
 
     //tests method getDepotAndExtraDepotResources()
     @Test
-    public void getDepotAndExtraDepotResourcesTest(){
+    public void getDepotAndExtraDepotResourcesTest() {
         Map<Resource, Integer> resources = player.getDepotAndExtraDepotResources(); //initially player ha 0 resources
-        for(Resource r: resources.keySet()){
+        for (Resource r : resources.keySet()) {
             assertEquals(0, resources.get(r));
         }
 

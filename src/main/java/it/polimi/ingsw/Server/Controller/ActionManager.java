@@ -108,7 +108,7 @@ public class ActionManager {
         if (gameManager.getSolo()) {
             leaderCardsObject.setEnabled(false);
         } else {
-            if(game.getStatus()==Status.INIT) {
+            if (game.getStatus() == Status.INIT) {
                 if (game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
                 {
                     endTurn(game.getCurrentPlayer(), false); //notifies Game (overwrite) and update_end
@@ -119,25 +119,20 @@ public class ActionManager {
                     return true;
                 } else {
                     endTurn(player, false);
-                    if(leaderCardsObject.isEnabled())
+                    if (leaderCardsObject.isEnabled())
                         leaderCardsObject.setCards(game.getLeaderCardsDeck().pickFourCards());
                 }
-            }
-            else //status is STANDARD TURN
+            } else //status is STANDARD TURN
             {
                 leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
                 player.setDisconnectedBeforeLeaderCard(false);
-                if(player.isDisconnectedBeforeResource())
-                {
-                    if(player.getPlayerNumber()==3 || player.getPlayerNumber()==2)
-                    {
+                if (player.isDisconnectedBeforeResource()) {
+                    if (player.getPlayerNumber() == 3 || player.getPlayerNumber() == 2) {
                         game.getResourceObject().setNumOfResources(1);
-                    }
-                    else //playerNumber is 4
+                    } else //playerNumber is 4
                         game.getResourceObject().setNumOfResources(2);
                     game.getResourceObject().setEnabled(true);
-                }
-                else
+                } else
                     endTurn(game.getCurrentPlayer(), false); //notifies Game
             }
         }
@@ -165,7 +160,7 @@ public class ActionManager {
 
         this.messageHelper.setNotificationMessage(player.getNickname(), message);
         player.getWarehouseDepot().add(resource); //notifies Warehouse
-        if(game.getStatus()==Status.INIT) {
+        if (game.getStatus() == Status.INIT) {
             if (resourceObject.getNumOfResources() == 2)
                 player.getWarehouseDepot().swapRow(1, 2);
             resourceObject.decNumOfResources();
@@ -184,8 +179,7 @@ public class ActionManager {
                 }
                 endTurn(player, false);
             }
-        }
-        else //status is STANDARD TURN, part of the reconnection routine
+        } else //status is STANDARD TURN, part of the reconnection routine
         {
             player.setDisconnectedBeforeResource(false);
             if (resourceObject.getNumOfResources() == 2)
@@ -901,30 +895,23 @@ public class ActionManager {
         boolean result = gameManager.endTurn();
         Player newPlayer = game.getCurrentPlayer();
 
-        if(game.getStatus()==Status.INIT)
-        {
-            if(currentPlayer >= newPlayer.getPlayerNumber())
-            {
-                if(game.getLeaderCardsObject().isEnabled())
-                {
+        if (game.getStatus() == Status.INIT) {
+            if (currentPlayer >= newPlayer.getPlayerNumber()) {
+                if (game.getLeaderCardsObject().isEnabled()) {
                     game.getLeaderCardsObject().setEnabled(false);
-                    if(newPlayer.getPlayerNumber()==1)
-                    {
+                    if (newPlayer.getPlayerNumber() == 1) {
                         gameManager.endTurn();
                         newPlayer = game.getCurrentPlayer();
                     }
-                    if(newPlayer.getPlayerNumber()!=1) {
+                    if (newPlayer.getPlayerNumber() != 1) {
                         if (newPlayer.getPlayerNumber() == 3 || newPlayer.getPlayerNumber() == 2) {
                             game.getResourceObject().setNumOfResources(1);
                         } else
                             game.getResourceObject().setNumOfResources(2);
                         game.getResourceObject().setEnabled(true);
-                    }
-                    else
+                    } else
                         gameManager.setStatus(Status.STANDARD_TURN);
-                }
-                else if ( game.getResourceObject().isEnabled() )
-                {
+                } else if (game.getResourceObject().isEnabled()) {
                     game.changeStatus(Status.STANDARD_TURN);
                     game.getResourceObject().setEnabled(false);
                 }
@@ -933,23 +920,17 @@ public class ActionManager {
 
 
 //reconnection part
-        if(newPlayer.isDisconnectedBeforeLeaderCard())
-        {
+        if (newPlayer.isDisconnectedBeforeLeaderCard()) {
             game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
             game.getLeaderCardsObject().setEnabled(true);
-        }
-        else if( newPlayer.isDisconnectedBeforeResource() )
-        {
-            if(newPlayer.getPlayerNumber()==1)
-            {
+        } else if (newPlayer.isDisconnectedBeforeResource()) {
+            if (newPlayer.getPlayerNumber() == 1) {
                 newPlayer.setDisconnectedBeforeResource(false);
                 return result;
             }
-            if(newPlayer.getPlayerNumber()==3 || newPlayer.getPlayerNumber()==2)
-            {
+            if (newPlayer.getPlayerNumber() == 3 || newPlayer.getPlayerNumber() == 2) {
                 game.getResourceObject().setNumOfResources(1);
-            }
-            else
+            } else
                 game.getResourceObject().setNumOfResources(2);
             game.getResourceObject().setEnabled(true);
         }
@@ -1114,9 +1095,7 @@ public class ActionManager {
                     game.setTurn(1);
                     endTurn(player, false);
                 }
-            }
-            else
-            {
+            } else {
                 endTurn(player, false); //or false?
             }
             messageHelper.setUpdateEnd();

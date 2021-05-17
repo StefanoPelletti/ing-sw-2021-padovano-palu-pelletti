@@ -9,36 +9,32 @@ public class FaithTrackSimplified {
     private boolean[] zones;
     private GameSimplified game;
 
-    public FaithTrackSimplified(GameSimplified game)
-    {
+    public FaithTrackSimplified(GameSimplified game) {
         zones = new boolean[3];
         this.game = game;
     }
 
-    public void update(MSG_UPD_FaithTrack message)
-    {
+    public void update(MSG_UPD_FaithTrack message) {
         boolean[] newZones = message.getZones();
 
-        for ( int i = 0 ; i < 3; i++)
-            this.zones[i] = newZones[i];
+        System.arraycopy(newZones, 0, this.zones, 0, 3);
     }
 
 
-    public String toString(boolean solo)
-    {
-        StringBuilder result = new StringBuilder("");
+    public String toString(boolean solo) {
+        StringBuilder result = new StringBuilder();
         int i = 1;
         List<PlayerSimplified> playerList = game.getPlayerList();
         result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         result.append("                  FAITH TRACK: ").append("\n");
 
-        for(PlayerSimplified player : playerList) {
+        for (PlayerSimplified player : playerList) {
             result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
         }
-        if(solo)
+        if (solo)
             result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
         result.append("\n");
-        if(zones[2])
+        if (zones[2])
             result.append("   Third and last zone has been activated!");
         else {
             if (zones[1])
@@ -53,7 +49,4 @@ public class FaithTrackSimplified {
         result.append("\n").append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         return result.toString();
     }
-
-
 }
-

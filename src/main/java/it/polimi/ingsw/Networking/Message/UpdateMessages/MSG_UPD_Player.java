@@ -15,8 +15,7 @@ public class MSG_UPD_Player extends Message implements Serializable {
     private final int position;
     private final LeaderCard[] leaderCards;
 
-    public MSG_UPD_Player(int VP, int playerNumber, String nickname, int position, LeaderCard[] leaderCards)
-    {
+    public MSG_UPD_Player(int VP, int playerNumber, String nickname, int position, LeaderCard[] leaderCards) {
         super(MessageType.MSG_UPD_Player);
 
         this.VP = VP;
@@ -27,11 +26,27 @@ public class MSG_UPD_Player extends Message implements Serializable {
         System.arraycopy(leaderCards, 0, this.leaderCards, 0, 2);
     }
 
-    public int getVP() { return this.VP; }
-    public int getPlayerNumber() { return this.playerNumber;}
-    public String getNickname() { return this.nickname;}
-    public int getPosition() { return this.position; }
-    public LeaderCard[] getLeaderCards() { return this.leaderCards; }
+    public int getVP() {
+        return this.VP;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public int getPlayerNumber() {
+        return this.playerNumber;
+    }
+
+    public String getNickname() {
+        return this.nickname;
+    }
+
+    public int getPosition() {
+        return this.position;
+    }
+
+    public LeaderCard[] getLeaderCards() {
+        return this.leaderCards;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

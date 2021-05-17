@@ -9,7 +9,9 @@ import java.util.ArrayList;
 public class WhiteMarble implements MarketMarble, Serializable {
     private final Color color;
 
-    public WhiteMarble() { color = Color.WHITE; }
+    public WhiteMarble() {
+        color = Color.WHITE;
+    }
 
     public void addResource(ArrayList<Resource> ResourceList) {
         ResourceList.add(Resource.EXTRA);
@@ -19,5 +21,8 @@ public class WhiteMarble implements MarketMarble, Serializable {
     public String toString() {
         return " " + color + " Marble  ";
     }
-    public String toAbbreviation() { return color.toAbbreviation(); }
+
+    public String toAbbreviation() {
+        return color.toAbbreviation();
+    }
 }

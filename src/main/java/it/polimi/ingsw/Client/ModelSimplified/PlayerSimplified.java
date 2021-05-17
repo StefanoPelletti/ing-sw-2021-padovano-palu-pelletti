@@ -20,8 +20,7 @@ public class PlayerSimplified {
     private final WarehouseDepotSimplified warehouseDepot;
     private final DevelopmentSlotSimplified developmentSlot;
 
-    public PlayerSimplified(int playerNumber)
-    {
+    public PlayerSimplified(int playerNumber) {
         this.VP = 0;
         this.playerNumber = playerNumber;
         this.nickname = "";
@@ -32,8 +31,7 @@ public class PlayerSimplified {
         this.developmentSlot = new DevelopmentSlotSimplified();
     }
 
-    public void update(MSG_UPD_Player message)
-    {
+    public void update(MSG_UPD_Player message) {
         int newVP = message.getVP();
         int newPlayerNumber = message.getPlayerNumber();
         String newNickname = message.getNickname();
@@ -52,54 +50,71 @@ public class PlayerSimplified {
     public void updateExtradepot(MSG_UPD_Extradepot message) {
         Resource resource = message.getResource();
         int quantity = message.getNumber();
-        for(int i=0; i<2; i++)
-        {
-            if(leaderCards[i]!=null )
-            {
-                if(leaderCards[i].getSpecialAbility().isExtraDepot())
-                {
+        for (int i = 0; i < 2; i++) {
+            if (leaderCards[i] != null) {
+                if (leaderCards[i].getSpecialAbility().isExtraDepot()) {
                     ExtraDepot depot = (ExtraDepot) leaderCards[i].getSpecialAbility();
-                    if (depot.getResourceType()==resource)
+                    if (depot.getResourceType() == resource)
                         depot.setResource(quantity);
                 }
             }
         }
     }
-    public void updateStrongbox(MSG_UPD_Strongbox message)
-    {
+
+    public void updateStrongbox(MSG_UPD_Strongbox message) {
         this.strongbox.update(message);
     }
 
-    public void updateWarehouseDepot(MSG_UPD_WarehouseDepot message)
-    {
+    public void updateWarehouseDepot(MSG_UPD_WarehouseDepot message) {
         this.warehouseDepot.update(message);
     }
 
-    public void updateDevelopmentSlot(MSG_UPD_DevSlot message)
-    {
+    public void updateDevelopmentSlot(MSG_UPD_DevSlot message) {
         this.developmentSlot.update(message);
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         result.append("Warehouse Depot: \n");
-        result.append(warehouseDepot.toString());
+        result.append(warehouseDepot);
         result.append("----------------");
         result.append(" Strongbox: \n");
-        result.append(strongbox.toString());
+        result.append(strongbox);
         result.append("DevelopmentSlot : \n");
-        result.append(developmentSlot.toString());
+        result.append(developmentSlot);
         return result.toString();
     }
 
-    public String getNickname() { return this.nickname;}
-    public int getPosition() { return this.position;}
-    public int getPlayerNumber() { return this.playerNumber;}
+    public String getNickname() {
+        return this.nickname;
+    }
 
-    public int getVP() { return VP; }
-    public LeaderCard[] getLeaderCards() { return leaderCards; }
-    public StrongboxSimplified getStrongbox() { return strongbox; }
-    public WarehouseDepotSimplified getWarehouseDepot() { return warehouseDepot; }
-    public DevelopmentSlotSimplified getDevelopmentSlot() { return developmentSlot; }
+    public int getPosition() {
+        return this.position;
+    }
+
+    public int getPlayerNumber() {
+        return this.playerNumber;
+    }
+
+    public int getVP() {
+        return VP;
+    }
+
+    public LeaderCard[] getLeaderCards() {
+        return leaderCards;
+    }
+
+    public StrongboxSimplified getStrongbox() {
+        return strongbox;
+    }
+
+    public WarehouseDepotSimplified getWarehouseDepot() {
+        return warehouseDepot;
+    }
+
+    public DevelopmentSlotSimplified getDevelopmentSlot() {
+        return developmentSlot;
+    }
 }

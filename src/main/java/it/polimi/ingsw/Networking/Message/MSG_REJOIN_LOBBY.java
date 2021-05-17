@@ -10,12 +10,19 @@ public class MSG_REJOIN_LOBBY extends Message implements Serializable {
     public MSG_REJOIN_LOBBY(String nickname, int lobbyNumber) {
         super(MessageType.MSG_REJOIN_LOBBY);
 
-        this.nickname=nickname;
-        this.lobbyNumber=lobbyNumber;
+        this.nickname = nickname;
+        this.lobbyNumber = lobbyNumber;
     }
 
-    public String getNickname() { return this.nickname; }
-    public int getLobbyNumber() { return this.lobbyNumber; }
+    public String getNickname() {
+        return this.nickname;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType(); }
+    public int getLobbyNumber() {
+        return this.lobbyNumber;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

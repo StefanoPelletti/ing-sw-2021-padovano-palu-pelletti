@@ -8,21 +8,24 @@ import java.util.*;
 public abstract class ModelObservable {
     private ArrayList<ModelObserver> observers;
 
-    public ModelObservable(){
-        observers= new ArrayList<>();
+    public ModelObservable() {
+        observers = new ArrayList<>();
     }
 
-    public void addObserver(ModelObserver observer){
+    public void addObserver(ModelObserver observer) {
         observers.add(observer);
     }
-    public void removeObserver(ModelObserver observer) { observers.remove(observer);}
 
-    public ArrayList<ModelObserver> getObservers(){
+    public void removeObserver(ModelObserver observer) {
+        observers.remove(observer);
+    }
+
+    public ArrayList<ModelObserver> getObservers() {
         return this.observers;
     }
 
-    public void notifyObservers(Message message){
-        for(ModelObserver o : observers){
+    public void notifyObservers(Message message) {
+        for (ModelObserver o : observers) {
             o.update(message);
         }
     }

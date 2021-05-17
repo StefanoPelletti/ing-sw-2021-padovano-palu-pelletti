@@ -15,13 +15,12 @@ public class Strongbox extends ModelObservable {
     }
 
     public boolean addResource(Resource resource, int quantity) {
-        if(resource==Resource.EXTRA || resource==Resource.NONE || resource==Resource.FAITH ||resource==null || quantity<0)  return false;
+        if (resource == Resource.EXTRA || resource == Resource.NONE || resource == Resource.FAITH || resource == null || quantity < 0)
+            return false;
         Integer tmp = resources.get(resource);
-        if ( tmp == null ) {
+        if (tmp == null) {
             resources.put(resource, quantity);
-        }
-        else
-        {
+        } else {
             resources.put(resource, tmp + quantity);
         }
         notifyObservers();
@@ -30,18 +29,14 @@ public class Strongbox extends ModelObservable {
 
     public boolean remove(Resource resource, int quantity) {
         Integer tmp = resources.get(resource);
-        if ( tmp == null || quantity<0) {
+        if (tmp == null || quantity < 0) {
             return false;
-        }
-        else
-        {
-            if( (tmp - quantity) >= 0) /*there will be resources after the remove */
-                {
+        } else {
+            if ((tmp - quantity) >= 0) /*there will be resources after the remove */ {
                 resources.put(resource, tmp - quantity);
                 notifyObservers();
                 return true;
-            }
-            else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
+            } else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
             {
                 //resources.remove(resource);
                 return false;
@@ -59,27 +54,25 @@ public class Strongbox extends ModelObservable {
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof Strongbox)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Strongbox)) return false;
         Strongbox o = (Strongbox) obj;
         return (this.resources.equals((o).resources));
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append(" the Strongbox contains: ").append("\n");
-        for( Resource r : resources.keySet())
-        {
+        for (Resource r : resources.keySet()) {
             result.append(resources.get(r)).append(" of ").append(r.toString());
             result.append("\n");
         }
         return result.toString();
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
@@ -87,6 +80,5 @@ public class Strongbox extends ModelObservable {
         return new MSG_UPD_Strongbox(
                 resources
         );
-
     }
 }

@@ -10,13 +10,13 @@ public class StrongboxTest {
 
     //Create a new Strongbox for each test
     @BeforeEach
-    public void reset(){
-        s=new Strongbox();
+    public void reset() {
+        s = new Strongbox();
     }
 
     //tests if initially there are no resource (method getResource(resource) returns null)
     @Test
-    public void initiallyNoResources(){
+    public void initiallyNoResources() {
         assertNull(s.getQuantity(Resource.COIN));
         assertNull(s.getQuantity(Resource.SHIELD));
         assertNull(s.getQuantity(Resource.STONE));
@@ -25,7 +25,7 @@ public class StrongboxTest {
 
     //tests if method add(resource, quantity) returns false when quantity<0. Strongbox does not change
     @Test
-    public void quantitySubZero(){
+    public void quantitySubZero() {
         s.addResource(Resource.SERVANT, 1);
         assertFalse(s.addResource(Resource.SERVANT, -1));
         assertEquals(s.getQuantity(Resource.SERVANT), 1);
@@ -33,7 +33,7 @@ public class StrongboxTest {
 
     //tests if method add(resource, quantity) returns false when resource is invalid
     @Test
-    public void addInvalidResource(){
+    public void addInvalidResource() {
         assertFalse(s.addResource(Resource.EXTRA, 3));
         assertFalse(s.addResource(Resource.NONE, 3));
         assertFalse(s.addResource(Resource.FAITH, 3));
@@ -41,29 +41,29 @@ public class StrongboxTest {
 
     //tests if method add(resource, quantity) returns true when resource is valid
     @Test
-    public void addValidResourceReturnsTrue(){
-        assertTrue(s.addResource(Resource.COIN,40));
+    public void addValidResourceReturnsTrue() {
+        assertTrue(s.addResource(Resource.COIN, 40));
         assertTrue(s.addResource(Resource.SERVANT, 0));
     }
 
     //tests if method add(resource, quantity) actually adds the given amount of resource
     //in the strongbox when resource is not already present
     @Test
-    public void addValidResource(){
+    public void addValidResource() {
         s.addResource(Resource.COIN, 0);
         s.addResource(Resource.SHIELD, 3);
         s.addResource(Resource.STONE, 23);
         s.addResource(Resource.SERVANT, 1);
-        assertEquals(s.getQuantity(Resource.COIN),0);
-        assertEquals(s.getQuantity(Resource.SHIELD),3);
-        assertEquals(s.getQuantity(Resource.STONE),23);
-        assertEquals(s.getQuantity(Resource.SERVANT),1);
+        assertEquals(s.getQuantity(Resource.COIN), 0);
+        assertEquals(s.getQuantity(Resource.SHIELD), 3);
+        assertEquals(s.getQuantity(Resource.STONE), 23);
+        assertEquals(s.getQuantity(Resource.SERVANT), 1);
     }
 
     //tests if method add(resource, quantity) adds the given amount of resource
     //in the strongbox when resource is already present
     @Test
-    public void addAlreadyPresentResource(){
+    public void addAlreadyPresentResource() {
         s.addResource(Resource.COIN, 3);
         s.addResource(Resource.COIN, 4);
         assertEquals(s.getQuantity(Resource.COIN), 7);
@@ -71,7 +71,7 @@ public class StrongboxTest {
 
     //tests if method remove(resource, quantity) does not remove anything when quantity<0
     @Test
-    public void removeQuantitySubZero(){
+    public void removeQuantitySubZero() {
         s.addResource(Resource.COIN, 4);
         assertFalse(s.remove(Resource.COIN, -2));
         assertEquals(s.getQuantity(Resource.COIN), 4);
@@ -79,14 +79,14 @@ public class StrongboxTest {
 
     //tests if method remove(resource, quantity) returns false when resource is invalid
     @Test
-    public void removeInvalidResource(){
-        assertFalse(s.remove(Resource.EXTRA,1));
+    public void removeInvalidResource() {
+        assertFalse(s.remove(Resource.EXTRA, 1));
         assertFalse(s.remove(Resource.NONE, 1));
     }
 
     //tries to remove more resource than possible
     @Test
-    public void removeNotPossible(){
+    public void removeNotPossible() {
         s.addResource(Resource.COIN, 3);
         assertFalse(s.remove(Resource.COIN, 4));
         assertEquals(s.getQuantity(Resource.COIN), 3);
@@ -94,7 +94,7 @@ public class StrongboxTest {
 
     //tries to remove an accepted amount of resources
     @Test
-    public void removePossible(){
+    public void removePossible() {
         s.addResource(Resource.COIN, 3);
         assertTrue(s.remove(Resource.COIN, 2));
         assertEquals(s.getQuantity(Resource.COIN), 1);
@@ -102,7 +102,7 @@ public class StrongboxTest {
 
     //tests if method getQuantity(resource) returns null if resource is an invalid resource
     @Test
-    public void getInvalidResource(){
+    public void getInvalidResource() {
         s.addResource(Resource.COIN, 4);
         s.addResource(Resource.SHIELD, 3);
         s.addResource(Resource.STONE, 23);
@@ -113,7 +113,7 @@ public class StrongboxTest {
 
     //tests if the method getTotal() returns the correct amount of resources
     @Test
-    public void getTotalTest(){
+    public void getTotalTest() {
         s.addResource(Resource.COIN, 2);
         s.addResource(Resource.SHIELD, 50);
         s.addResource(Resource.STONE, 4);
@@ -121,8 +121,7 @@ public class StrongboxTest {
     }
 
     @Test
-    public void toStringFormat()
-    {
+    public void toStringFormat() {
         s.addResource(Resource.COIN, 2);
         s.addResource(Resource.SHIELD, 5);
         s.addResource(Resource.STONE, 4);

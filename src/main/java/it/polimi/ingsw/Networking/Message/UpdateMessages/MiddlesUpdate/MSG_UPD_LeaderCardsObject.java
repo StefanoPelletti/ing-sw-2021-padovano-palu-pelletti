@@ -14,12 +14,20 @@ public class MSG_UPD_LeaderCardsObject extends Message implements Serializable {
 
     public MSG_UPD_LeaderCardsObject(boolean enabled, ArrayList<LeaderCard> cards) {
         super(MessageType.MSG_UPD_LeaderCardsObject);
+
         this.enabled = enabled;
-        this.cards = new ArrayList<LeaderCard>(cards);
+        this.cards = new ArrayList<>(cards);
     }
 
-    public boolean getEnabled() { return this.enabled; }
-    public ArrayList<LeaderCard> getCards() { return this.cards;}
+    public boolean getEnabled() {
+        return this.enabled;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public ArrayList<LeaderCard> getCards() {
+        return this.cards;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

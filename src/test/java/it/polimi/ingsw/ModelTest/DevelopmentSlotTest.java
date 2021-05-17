@@ -14,10 +14,9 @@ public class DevelopmentSlotTest {
     DevelopmentCardsDeck dcd;
 
     @BeforeEach
-    public void reset()
-    {
-         ds = new DevelopmentSlot();
-         dcd = new DevelopmentCardsDeck();
+    public void reset() {
+        ds = new DevelopmentSlot();
+        dcd = new DevelopmentCardsDeck();
     }
 
     @Test
@@ -35,28 +34,28 @@ public class DevelopmentSlotTest {
     public void addCardTest2() {
 
         //adds a card that's actually level 1
-        DevelopmentCard dc = dcd.removeCard(2,0);
-        assertTrue(ds.addCard(dc,1));
+        DevelopmentCard dc = dcd.removeCard(2, 0);
+        assertTrue(ds.addCard(dc, 1));
 
         //tries to add a card that's level 1 on a card that's level 1
-        dc = dcd.removeCard(2,1);
-        assertFalse(ds.addCard(dc,1));
+        dc = dcd.removeCard(2, 1);
+        assertFalse(ds.addCard(dc, 1));
 
         //adds a card that's level 2 on a card that's level 1
-        dc = dcd.removeCard(1,1);
-        assertTrue(ds.addCard(dc,1));
+        dc = dcd.removeCard(1, 1);
+        assertTrue(ds.addCard(dc, 1));
 
         //tries to add a card that's level 2 on a card that's level 2
-        dc = dcd.removeCard(1,3);
-        assertFalse(ds.addCard(dc,1));
+        dc = dcd.removeCard(1, 3);
+        assertFalse(ds.addCard(dc, 1));
 
         //adds a card that's level 3 on a card that's level 2
-        dc = dcd.removeCard(0,1);
-        assertTrue(ds.addCard(dc,1));
+        dc = dcd.removeCard(0, 1);
+        assertTrue(ds.addCard(dc, 1));
 
         //tries to add a card that's level 3 on a card that's level 3
-        dc = dcd.removeCard(0,1);
-        assertFalse(ds.addCard(dc,1));
+        dc = dcd.removeCard(0, 1);
+        assertFalse(ds.addCard(dc, 1));
     }
 
     @Test
@@ -66,22 +65,20 @@ public class DevelopmentSlotTest {
         ArrayList<DevelopmentCard> ls = new ArrayList<>();
         List<DevelopmentCard> ls2;
 
-        ls.add(dcd.removeCard(0,0));
-        ls.add(dcd.removeCard(1,0));
-        ls.add(dcd.removeCard(2,0));
+        ls.add(dcd.removeCard(0, 0));
+        ls.add(dcd.removeCard(1, 0));
+        ls.add(dcd.removeCard(2, 0));
 
-        ls2 = ls.stream().filter( x -> {
-            for(int i = 0; i < 3; i++)
-                if(ds.validateNewCard(x,i))
+        ls2 = ls.stream().filter(x -> {
+            for (int i = 0; i < 3; i++)
+                if (ds.validateNewCard(x, i))
                     return true;
             return false;
         }).collect(Collectors.toList());
 
-        for(DevelopmentCard dc : ls2)
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                assertTrue(ds.validateNewCard(dc,i));
+        for (DevelopmentCard dc : ls2) {
+            for (int i = 0; i < 3; i++) {
+                assertTrue(ds.validateNewCard(dc, i));
             }
         }
     }
@@ -91,10 +88,8 @@ public class DevelopmentSlotTest {
     public void getAllCardsTest1() {
 
         DevelopmentCard[][] dc = ds.getAllCards();
-        for(int n = 0; n < 3; n++)
-        {
-            for (int h = 0; h < 3; h++)
-            {
+        for (int n = 0; n < 3; n++) {
+            for (int h = 0; h < 3; h++) {
                 assertNull(dc[n][h]);
             }
         }
@@ -107,9 +102,9 @@ public class DevelopmentSlotTest {
         DevelopmentCard[][] ldc = new DevelopmentCard[3][3];
 
         //initializing ldc
-        for(int i = 0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
 
-            for(int j = 0; j<3; j++) {
+            for (int j = 0; j < 3; j++) {
                 ldc[i][j] = null;
             }
         }
@@ -117,12 +112,12 @@ public class DevelopmentSlotTest {
         int i = 0;
         int j = 0;
         int k;
-        for(int c = 0; c < 3; c++) {
+        for (int c = 0; c < 3; c++) {
             k = 0;
-            for(int r = 2; r >= 0; r--) {
-                DevelopmentCard dc = dcd.removeCard(r,c);
+            for (int r = 2; r >= 0; r--) {
+                DevelopmentCard dc = dcd.removeCard(r, c);
                 ldc[j][k] = dc;
-                assertTrue(ds.addCard(dc,i));
+                assertTrue(ds.addCard(dc, i));
                 k++;
             }
             j++;
@@ -130,8 +125,8 @@ public class DevelopmentSlotTest {
         }
 
         DevelopmentCard[][] temp = ds.getAllCards();
-        for(int q = 0; q < 3; q++) {
-            for(int t = 0; t < 3; t++) {
+        for (int q = 0; q < 3; q++) {
+            for (int t = 0; t < 3; t++) {
                 assertEquals(temp[q][t], ldc[q][t]);
             }
         }
@@ -143,7 +138,7 @@ public class DevelopmentSlotTest {
         DevelopmentSlot ds = new DevelopmentSlot();
         List<DevelopmentCard> dc = ds.getTopCards();
 
-        for(DevelopmentCard c : dc) {
+        for (DevelopmentCard c : dc) {
             assertNull(c);
         }
     }
@@ -154,19 +149,19 @@ public class DevelopmentSlotTest {
 
         DevelopmentCard[] ldc = new DevelopmentCard[3];
 
-        ldc[0] = dcd.removeCard(2,0);
+        ldc[0] = dcd.removeCard(2, 0);
         ds.addCard(ldc[0], 0);
-        ds.addCard(dcd.removeCard(2,1), 1);
-        ldc[1] = dcd.removeCard(1,0);
+        ds.addCard(dcd.removeCard(2, 1), 1);
+        ldc[1] = dcd.removeCard(1, 0);
         ds.addCard(ldc[1], 1);
-        ldc[2] = dcd.removeCard(2,2);
+        ldc[2] = dcd.removeCard(2, 2);
         ds.addCard(ldc[2], 2);
 
         List<DevelopmentCard> dc = ds.getTopCards();
 
         int i = 0;
-        for(DevelopmentCard c : dc) {
-            assertEquals(c,ldc[i]);
+        for (DevelopmentCard c : dc) {
+            assertEquals(c, ldc[i]);
             i++;
         }
     }

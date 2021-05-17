@@ -11,9 +11,8 @@ public class DevelopmentCardsVendor extends ModelObservable {
     boolean enabled;
     Map<DevelopmentCard, boolean[]> cards;
 
-    public DevelopmentCardsVendor()
-    {
-        this.enabled=false;
+    public DevelopmentCardsVendor() {
+        this.enabled = false;
         cards = null;
     }
 
@@ -23,7 +22,7 @@ public class DevelopmentCardsVendor extends ModelObservable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        if(!enabled)
+        if (!enabled)
             cards = null;
         notifyObservers();
     }
@@ -39,7 +38,7 @@ public class DevelopmentCardsVendor extends ModelObservable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        int i=1;
+        int i = 1;
 
         if (cards != null) {
             for (DevelopmentCard dc : cards.keySet()) {
@@ -58,11 +57,11 @@ public class DevelopmentCardsVendor extends ModelObservable {
         return result.toString();
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
-    public MSG_UPD_DevCardsVendor generateMessage()
-    {
+
+    public MSG_UPD_DevCardsVendor generateMessage() {
         return new MSG_UPD_DevCardsVendor(
                 this.enabled,
                 this.cards

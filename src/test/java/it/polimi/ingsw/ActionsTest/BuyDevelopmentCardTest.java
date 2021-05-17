@@ -29,8 +29,7 @@ public class BuyDevelopmentCardTest {
     Catcher c;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(4);
         am = gm.getActionManager();
         g = gm.getGame();
@@ -40,7 +39,7 @@ public class BuyDevelopmentCardTest {
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
-        g.addPlayer("Quarto",4);
+        g.addPlayer("Quarto", 4);
         gm.addAllObserver(c);
         p = g.getPlayer(1);
         c.emptyQueue();
@@ -98,7 +97,7 @@ public class BuyDevelopmentCardTest {
         p.getStrongbox().addResource(Resource.COIN, 20);
 
 
-        for(int c = 0; c < 4; c++) {
+        for (int c = 0; c < 4; c++) {
             for (int p = 0; p < 4; p++) {
                 g.getDevelopmentCardsDeck().removeCard(2, c);
             }
@@ -121,21 +120,21 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                    new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
-                    new DiscountResource(Resource.STONE)));
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(3,
-                    new ResourceRequirements(Map.of(Resource.STONE, 5)),
-                    new ExtraDepot(Resource.SERVANT)));
+                new ResourceRequirements(Map.of(Resource.STONE, 5)),
+                new ExtraDepot(Resource.SERVANT)));
 
         p.associateLeaderCards(lc);
         p.getLeaderCards()[0].setEnable(true);
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 4; c++) {
-                for(int p = 0; p < 4; p++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
                     grid[r][c][p] = null;
                 }
             }
@@ -169,11 +168,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -182,9 +181,9 @@ public class BuyDevelopmentCardTest {
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 4; c++) {
-                for(int p = 0; p < 4; p++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
                     grid[r][c][p] = null;
                 }
             }
@@ -217,11 +216,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -230,16 +229,16 @@ public class BuyDevelopmentCardTest {
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 4; c++) {
-                for(int p = 0; p < 4; p++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
                     grid[r][c][p] = null;
                 }
             }
         }
 
         grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
-                Map.of(Resource.SHIELD, 2 ,Resource.SERVANT, 1, Resource.STONE, 1) ,
+                Map.of(Resource.SHIELD, 2, Resource.SERVANT, 1, Resource.STONE, 1),
                 new Power(Map.of(Resource.STONE, 1),
                         Map.of(Resource.SERVANT, 1)));
 
@@ -262,9 +261,9 @@ public class BuyDevelopmentCardTest {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
         assertFalse(am.buyDevelopmentCard(p));
         c.emptyQueue();
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,2);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 2);
 
-        assertFalse(am.chooseDevelopmentCard(p,msg));
+        assertFalse(am.chooseDevelopmentCard(p, msg));
 
         assertFalse(dcv.isEnabled());
 
@@ -284,9 +283,9 @@ public class BuyDevelopmentCardTest {
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 4; c++) {
-                for(int p = 0; p < 4; p++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
                     grid[r][c][p] = null;
                 }
             }
@@ -302,7 +301,7 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
 
         assertTrue(am.chooseDevelopmentCard(p, msg));
 
@@ -324,11 +323,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -337,9 +336,9 @@ public class BuyDevelopmentCardTest {
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 4; c++) {
-                for(int p = 0; p < 4; p++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
                     grid[r][c][p] = null;
                 }
             }
@@ -348,7 +347,7 @@ public class BuyDevelopmentCardTest {
         grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
                 Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
                 new Power(Map.of(Resource.STONE, 1),
-                       Map.of(Resource.SERVANT, 1)));
+                        Map.of(Resource.SERVANT, 1)));
 
         g.getDevelopmentCardsDeck().setGrid(grid);
         p.getStrongbox().addResource(Resource.SERVANT, 1);
@@ -356,7 +355,7 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
         assertTrue(am.chooseDevelopmentCard(p, msg));
         assertFalse(dcv.isEnabled());
 
@@ -376,9 +375,9 @@ public class BuyDevelopmentCardTest {
         //creates a card
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 4; c++) {
-                for(int p = 0; p < 4; p++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
                     grid[r][c][p] = null;
                 }
             }
@@ -393,7 +392,7 @@ public class BuyDevelopmentCardTest {
 
         //adds the resources that are needed
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -407,8 +406,8 @@ public class BuyDevelopmentCardTest {
         Resource r0 = Resource.COIN;
         Resource[] r1 = new Resource[]{Resource.SHIELD, Resource.SHIELD};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.SERVANT};
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(1);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(1);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
 
         p.getStrongbox().addResource(Resource.SERVANT, 2);
@@ -416,7 +415,7 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
 
         assertTrue(am.chooseDevelopmentCard(p, msg));
 
@@ -442,12 +441,12 @@ public class BuyDevelopmentCardTest {
     public void chooseDevelopmentCardTest4() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
 
-        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2,0),0);
-        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2,0),1);
-        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2,0),2);
-        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1,0),0);
-        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1,0),1);
-        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1,0),2);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2, 0), 0);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2, 0), 1);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(2, 0), 2);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1, 0), 0);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1, 0), 1);
+        p.getDevelopmentSlot().addCard(g.getDevelopmentCardsDeck().removeCard(1, 0), 2);
 
         p.getStrongbox().addResource(Resource.SERVANT, 20);
         p.getStrongbox().addResource(Resource.SHIELD, 20);
@@ -456,7 +455,7 @@ public class BuyDevelopmentCardTest {
 
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
 
         assertTrue(am.chooseDevelopmentCard(p, msg));
 
@@ -474,7 +473,7 @@ public class BuyDevelopmentCardTest {
     public void chooseDevelopmentCardTest5() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
 
-        GameManager gameManager =  new GameManager(1);
+        GameManager gameManager = new GameManager(1);
         Game game = gameManager.getGame();
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
@@ -482,12 +481,12 @@ public class BuyDevelopmentCardTest {
         gameManager.addAllObserver(a);
         Player player = game.getPlayer(1);
 
-        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),0);
-        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),1);
-        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2,0),2);
-        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1,0),0);
-        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1,0),1);
-        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1,0),2);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2, 0), 0);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2, 0), 1);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(2, 0), 2);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1, 0), 0);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1, 0), 1);
+        player.getDevelopmentSlot().addCard(game.getDevelopmentCardsDeck().removeCard(1, 0), 2);
 
         player.getStrongbox().addResource(Resource.SERVANT, 20);
         player.getStrongbox().addResource(Resource.SHIELD, 20);
@@ -498,7 +497,7 @@ public class BuyDevelopmentCardTest {
 
         a.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1,1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
 
         assertTrue(actionManager.chooseDevelopmentCard(player, msg));
 

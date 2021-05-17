@@ -7,16 +7,20 @@ public class MSG_ACTION_ACTIVATE_LEADERCARD extends Message implements Serializa
     private final int cardNumber;
 
     //cardNumber must be 0 or 1
-    public MSG_ACTION_ACTIVATE_LEADERCARD(int cardNumber)
-    {
+    public MSG_ACTION_ACTIVATE_LEADERCARD(int cardNumber) {
         super(MessageType.MSG_ACTION_ACTIVATE_LEADERCARD);
 
-        if(cardNumber!=0 && cardNumber!=1) throw new IllegalArgumentException();
+        if (cardNumber != 0 && cardNumber != 1)
+            throw new IllegalArgumentException();
 
-        this.cardNumber=cardNumber;
+        this.cardNumber = cardNumber;
     }
 
-    public int getCardNumber() { return cardNumber;}
+    public int getCardNumber() {
+        return cardNumber;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

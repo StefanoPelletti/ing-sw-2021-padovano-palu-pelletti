@@ -23,30 +23,26 @@ public class Catcher implements ModelObserver {
 
     public void update(Message message) {
         messages.add(message);
-        System.out.print("\n Received "+message.getMessageType()+ " ");
-        if(message.getMessageType()== MessageType.MSG_ERROR)
-            System.out.print( ((MSG_ERROR) message).getErrorMessage() );
-        if(message.getMessageType()==MessageType.MSG_NOTIFICATION)
-            System.out.print( ((MSG_NOTIFICATION) message).getMessage());
+        System.out.print("\n Received " + message.getMessageType() + " ");
+        if (message.getMessageType() == MessageType.MSG_ERROR)
+            System.out.print(((MSG_ERROR) message).getErrorMessage());
+        else if (message.getMessageType() == MessageType.MSG_NOTIFICATION)
+            System.out.print(((MSG_NOTIFICATION) message).getMessage());
     }
 
-    public void printQueueHeaders()
-    {
-        if(messages.size()>0) {
+    public void printQueueHeaders() {
+        if (messages.size() > 0) {
             for (int i = 0; i < messages.size(); i++) {
-                System.out.print(" \nReceived [" + i + "] : " + messages.get(i).getMessageType()+ " ");
-                if(messages.get(i).getMessageType()== MessageType.MSG_ERROR)
-                    System.out.print( ((MSG_ERROR) messages.get(i)).getErrorMessage() );
+                System.out.print(" \nReceived [" + i + "] : " + messages.get(i).getMessageType() + " ");
+                if (messages.get(i).getMessageType() == MessageType.MSG_ERROR)
+                    System.out.print(((MSG_ERROR) messages.get(i)).getErrorMessage());
             }
-        }
-        else
+        } else
             System.out.println(" empty queue \n");
     }
 
-    public void emptyQueue()
-    {
+    public void emptyQueue() {
         this.messages = new ArrayList<>();
         System.out.println(" \nQueue reset \n");
     }
-
 }

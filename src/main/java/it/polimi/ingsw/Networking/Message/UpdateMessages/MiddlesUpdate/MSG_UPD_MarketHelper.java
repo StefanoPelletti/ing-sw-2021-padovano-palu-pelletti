@@ -17,35 +17,49 @@ public class MSG_UPD_MarketHelper extends Message implements Serializable {
 
     public MSG_UPD_MarketHelper(boolean enabled, ArrayList<Resource> resources,
                                 int currentResource, boolean[] choices,
-                                Resource[] extraResourceChoices)
-    {
+                                Resource[] extraResourceChoices) {
         super(MessageType.MSG_UPD_MarketHelper);
 
-        this.enabled=enabled;
+        this.enabled = enabled;
         this.resources = new ArrayList<>(resources);
-        this.currentResource=currentResource;
+        this.currentResource = currentResource;
 
-        if(choices == null)
+        if (choices == null)
             this.choices = null;
         else {
             this.choices = new boolean[8];
             System.arraycopy(choices, 0, this.choices, 0, choices.length);
         }
 
-        if(extraResourceChoices == null)
+        if (extraResourceChoices == null)
             this.extraResourceChoices = null;
-        else
-        {
+        else {
             this.extraResourceChoices = new Resource[extraResourceChoices.length];
-            System.arraycopy(extraResourceChoices,0,this.extraResourceChoices,0,extraResourceChoices.length);
+            System.arraycopy(extraResourceChoices, 0, this.extraResourceChoices, 0, extraResourceChoices.length);
         }
     }
 
-    public boolean getEnabled() { return this.enabled;}
-    public ArrayList<Resource> getResources() { return this.resources;}
-    public int getCurrentResource() { return this.currentResource;}
-    public boolean[] getChoices() { return this.choices;}
-    public Resource[] getExtraResourceChoices() { return this.extraResourceChoices;}
+    public boolean getEnabled() {
+        return this.enabled;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public ArrayList<Resource> getResources() {
+        return this.resources;
+    }
+
+    public int getCurrentResource() {
+        return this.currentResource;
+    }
+
+    public boolean[] getChoices() {
+        return this.choices;
+    }
+
+    public Resource[] getExtraResourceChoices() {
+        return this.extraResourceChoices;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

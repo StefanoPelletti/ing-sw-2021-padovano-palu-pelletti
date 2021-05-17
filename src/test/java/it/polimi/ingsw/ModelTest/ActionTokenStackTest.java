@@ -43,6 +43,5 @@ public class ActionTokenStackTest {
         assertEquals(4, r);
         assertEquals(1, ff);
         assertEquals(1, fs);
-
     }
 }

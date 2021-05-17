@@ -7,23 +7,27 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Seria
     private final int cardNumber;
     private final int slotNumber;
 
-    public MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(int cardNumber, int slotNumber)
-    {
+    public MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(int cardNumber, int slotNumber) {
         super(MessageType.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD);
 
-        if(cardNumber<0) throw new IllegalArgumentException();
-        if(slotNumber!=0 && slotNumber!=1&&slotNumber!=2) throw new IllegalArgumentException();
+        if (cardNumber < 0)
+            throw new IllegalArgumentException();
+        if (slotNumber != 0 && slotNumber != 1 && slotNumber != 2)
+            throw new IllegalArgumentException();
 
         this.cardNumber = cardNumber;
-        this.slotNumber= slotNumber;
+        this.slotNumber = slotNumber;
     }
 
     public int getCardNumber() {
         return cardNumber;
     }
+
     public int getSlotNumber() {
         return slotNumber;
     }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

@@ -949,14 +949,13 @@ class GamePhase {
                                             case 3:
                                                 //production //all the system out must be reviewed by a standard that only stefano knows
                                                 boolean basic = false;
-                                                boolean[] leader = {false, false};
-                                                boolean std = false;
-                                                boolean[] standard = {false, false, false};
                                                 ArrayList<Resource> basicInput = new ArrayList<>();
                                                 Resource basicOutput = null;
-                                                boolean ldr = false;
+                                                boolean[] leader = {false, false};
                                                 Resource leaderOutput1 = null;
                                                 Resource leaderOutput2 = null;
+                                                boolean std = false;
+                                                boolean[] standard = {false, false, false};
                                                 int input;
                                                 System.out.println("Here's your depot and strongbox");
                                                 System.out.println(Halo.myPlayerRef.getWarehouseDepot());

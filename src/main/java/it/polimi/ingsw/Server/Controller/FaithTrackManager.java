@@ -166,7 +166,6 @@ public class FaithTrackManager {
                 return true;
         }
 
-
         game.getActionHelper().setNewMessage(message.toString());
         return true;
     }

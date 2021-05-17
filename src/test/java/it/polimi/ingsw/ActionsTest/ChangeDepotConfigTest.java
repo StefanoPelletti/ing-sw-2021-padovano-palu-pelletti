@@ -28,8 +28,7 @@ public class ChangeDepotConfigTest {
     Catcher c;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(4);
         am = gm.getActionManager();
         g = gm.getGame();
@@ -38,7 +37,7 @@ public class ChangeDepotConfigTest {
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
-        g.addPlayer("Quarto",4);
+        g.addPlayer("Quarto", 4);
         gm.addAllObserver(c);
         c.emptyQueue();
         p = g.getPlayer(1);
@@ -49,17 +48,16 @@ public class ChangeDepotConfigTest {
     //shelf 3       : servant servant servant
     //extradepot 1  : 1 coin
     //extradepot 2  : 2 shield
-     //IN
+    //IN
     //shelf 1       : none
     //shelf 2       : shield shield
     //shelf 3       : servant servant servant
     //extradepot 1  : 2 coin
     //extradepot 2  : 0 shield
     @Test
-    public void validConfig1()
-    {
+    public void validConfig1() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -73,8 +71,8 @@ public class ChangeDepotConfigTest {
         Resource r0 = Resource.COIN;
         Resource[] r1 = new Resource[]{Resource.NONE, Resource.NONE};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.SERVANT};
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(1);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(1);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
         c.emptyQueue();
 
@@ -122,10 +120,9 @@ public class ChangeDepotConfigTest {
     //extradepot 1  : 2 coin
     //extradepot 2  : 2 shield
     @Test
-    public void validConfig2()
-    {
+    public void validConfig2() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -139,8 +136,8 @@ public class ChangeDepotConfigTest {
         Resource r0 = Resource.SHIELD;
         Resource[] r1 = new Resource[]{Resource.COIN, Resource.COIN};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.NONE, Resource.SERVANT};
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(1);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(1);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
         c.emptyQueue();
 //build new config
@@ -180,10 +177,9 @@ public class ChangeDepotConfigTest {
     //extradepot 1  : X
     //extradepot 2  : 0 shield
     @Test
-    public void validConfig3()
-    {
+    public void validConfig3() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -197,7 +193,7 @@ public class ChangeDepotConfigTest {
         Resource r0 = Resource.NONE;
         Resource[] r1 = new Resource[]{Resource.SERVANT, Resource.SERVANT};
         Resource[] r2 = new Resource[]{Resource.NONE, Resource.NONE, Resource.COIN};
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(2);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
         c.emptyQueue();
 //build new config
@@ -237,10 +233,9 @@ public class ChangeDepotConfigTest {
     //extradepot 1  : 0 coin
     //extradepot 2  : 2 shield
     @Test
-    public void validConfig4()
-    {
+    public void validConfig4() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -254,8 +249,8 @@ public class ChangeDepotConfigTest {
         Resource r0 = Resource.COIN;
         Resource[] r1 = new Resource[]{Resource.SHIELD, Resource.SHIELD};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.NONE};
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
         c.emptyQueue();
 //build new config
@@ -297,10 +292,9 @@ public class ChangeDepotConfigTest {
     //extradepot 1  : 2 coin
     //extradepot 2  : 2 shield
     @Test
-    public void validConfig5()
-    {
+    public void validConfig5() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -314,8 +308,8 @@ public class ChangeDepotConfigTest {
         Resource r0 = Resource.NONE;
         Resource[] r1 = new Resource[]{Resource.SHIELD, Resource.SHIELD};
         Resource[] r2 = new Resource[]{Resource.COIN, Resource.COIN, Resource.NONE};
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
         c.emptyQueue();
 //build new config
@@ -355,10 +349,9 @@ public class ChangeDepotConfigTest {
     //extradepot 1  : 2 coin
     //extradepot 2  : 0 shield
     @Test
-    public void validConfig6()
-    {
+    public void validConfig6() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -372,8 +365,8 @@ public class ChangeDepotConfigTest {
         Resource r0 = Resource.NONE;
         Resource[] r1 = new Resource[]{Resource.SHIELD, Resource.SHIELD};
         Resource[] r2 = new Resource[]{Resource.COIN, Resource.COIN, Resource.COIN};
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
         p.getWarehouseDepot().setConfig(r0, r1, r2);
         c.emptyQueue();
 //build new config
@@ -413,14 +406,13 @@ public class ChangeDepotConfigTest {
     //extradepot 1  : X
     //extradepot 2  : X
     @Test
-    public void validConfigNoExtraDepot()
-    {
+    public void validConfigNoExtraDepot() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         p.getLeaderCards()[0].setEnable(true);
@@ -463,14 +455,13 @@ public class ChangeDepotConfigTest {
     //self
 
     @Test
-    public void validConfigNoChange()
-    {
+    public void validConfigNoChange() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         Resource r0 = Resource.SHIELD;
@@ -502,8 +493,7 @@ public class ChangeDepotConfigTest {
     }
 
     @Test
-    public void InvalidDepotConfig()
-    {
+    public void InvalidDepotConfig() {
         Resource r0 = Resource.SHIELD;
         Resource[] r1 = new Resource[]{Resource.COIN, Resource.NONE};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.NONE};
@@ -530,10 +520,9 @@ public class ChangeDepotConfigTest {
     }
 
     @Test
-    public void InvalidExtraDepotConfig1()
-    {
+    public void InvalidExtraDepotConfig1() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        cards.add( new LeaderCard(3,
+        cards.add(new LeaderCard(3,
                 new ResourceRequirements(Map.of(Resource.SHIELD, 5)),
                 new ExtraDepot(Resource.COIN)));
         cards.add(new LeaderCard(3,
@@ -544,8 +533,8 @@ public class ChangeDepotConfigTest {
         p.getLeaderCards()[1].setEnable(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
-        ((ExtraDepot)p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
-        ((ExtraDepot)p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
+        ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).setResource(0);
         Resource r0 = Resource.SHIELD;
         Resource[] r1 = new Resource[]{Resource.COIN, Resource.NONE};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.SERVANT};
@@ -574,14 +563,13 @@ public class ChangeDepotConfigTest {
     }
 
     @Test
-    public void InvalidLeaderCard()
-    {
+    public void InvalidLeaderCard() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         p.getLeaderCards()[0].setEnable(true);
@@ -613,7 +601,7 @@ public class ChangeDepotConfigTest {
         assertEquals(1, c.messages.size());
         c.emptyQueue();
 
-        msg=  new MSG_ACTION_CHANGE_DEPOT_CONFIG(r3, r4, r5, -1, 2);
+        msg = new MSG_ACTION_CHANGE_DEPOT_CONFIG(r3, r4, r5, -1, 2);
         assertFalse(am.changeDepotConfig(p, msg));
 
 //assert config has not changed

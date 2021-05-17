@@ -14,14 +14,22 @@ public class MSG_UPD_LeaderBoard extends Message implements Serializable {
 
     public MSG_UPD_LeaderBoard(boolean enabled, Map<String, Integer> leaderboard) {
         super(MessageType.MSG_UPD_LeaderBoard);
-        this.enabled=enabled;
+
+        this.enabled = enabled;
         this.leaderboard = new TreeMap<>(leaderboard);
     }
 
-    public boolean getEnabled() { return this.enabled; }
-    public Map<String, Integer> getLeaderboard() { return this.leaderboard;}
+    public boolean getEnabled() {
+        return this.enabled;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public Map<String, Integer> getLeaderboard() {
+        return this.leaderboard;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 
     //in SOLO mode there are ALWAYS 2 keys in the Map.
     // the player, and Lorenzo. IF Lorenzo's value is 1, he's the LOSER

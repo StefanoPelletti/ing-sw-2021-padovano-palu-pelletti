@@ -13,39 +13,35 @@ public class LeaderCardsDeckTest {
     LeaderCardsDeck deck;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         deck = new LeaderCardsDeck();
     }
 
     @Test
-    public void deckCorrectnessTest()
-    {
+    public void deckCorrectnessTest() {
         ArrayList<LeaderCard> l = deck.pickFourCards();
 
-        assertSame ( l.size(), 4 );
+        assertSame(l.size(), 4);
 
         //check if cards are different
         Set<LeaderCard> s = new HashSet<>(l);
-        assertSame (s.size(), l.size());
+        assertSame(s.size(), l.size());
     }
 
     @Test
-    public void cycleLength()
-    {
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
-        assertSame (deck.pickFourCards().size(),4);
+    public void cycleLength() {
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
+        assertSame(deck.pickFourCards().size(), 4);
     }
 
     @Test
-    public void cycleDifferent()
-    {
+    public void cycleDifferent() {
         Set<LeaderCard> s;
 
         ArrayList<LeaderCard> l1 = deck.pickFourCards();
@@ -57,30 +53,30 @@ public class LeaderCardsDeckTest {
 
         s = new HashSet<>(l1);
         s.addAll(l2);
-        assertSame(s.size() , l1.size() + l2.size());
+        assertSame(s.size(), l1.size() + l2.size());
 
         s = new HashSet<>(l1);
         s.addAll(l3);
-        assertSame(s.size() , l1.size() + l3.size());
+        assertSame(s.size(), l1.size() + l3.size());
 
         s = new HashSet<>(l1);
         s.addAll(l4);
-        assertSame(s.size() , l1.size() + l4.size());
+        assertSame(s.size(), l1.size() + l4.size());
 
         s = new HashSet<>(l2);
         s.addAll(l3);
-        assertSame(s.size() , l2.size() + l3.size());
+        assertSame(s.size(), l2.size() + l3.size());
 
         s = new HashSet<>(l2);
         s.addAll(l4);
-        assertSame(s.size() , l2.size() + l4.size());
+        assertSame(s.size(), l2.size() + l4.size());
 
         s = new HashSet<>(l3);
         s.addAll(l4);
-        assertSame(s.size() , l3.size() + l4.size());
+        assertSame(s.size(), l3.size() + l4.size());
 
         s = new HashSet<>(l1);
         s.addAll(lloop);
-        assertSame(s.size() , 4);
+        assertSame(s.size(), 4);
     }
 }

@@ -30,8 +30,7 @@ public class MarketActionTest {
     Catcher c;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(4);
         am = gm.getActionManager();
         g = gm.getGame();
@@ -40,32 +39,31 @@ public class MarketActionTest {
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
-        g.addPlayer("Quarto",4);
+        g.addPlayer("Quarto", 4);
         gm.addAllObserver(c);
         c.emptyQueue();
         p = g.getPlayer(1);
     }
 
 
-//----------- testing the first part of the getMarket action
+    //----------- testing the first part of the getMarket action
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
     //market resource: SHIELD FAITH
     @Test
-    public void getMarketResourceBWRW()
-    {
+    public void getMarketResourceBWRW() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(),new WhiteMarble(),new RedMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new WhiteMarble(), new RedMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
         //in this case the action should: modify the Market, activate the MarketHelper, modify the Player  and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -85,21 +83,20 @@ public class MarketActionTest {
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
     //market resource: SHIELD SHIELD STONE
     @Test
-    public void getMarketResourceBWBG()
-    {
+    public void getMarketResourceBWBG() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(),new WhiteMarble(),new BlueMarble(),new GreyMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new WhiteMarble(), new BlueMarble(), new GreyMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
         //in this case the action should: modify the Market, activate the MarketHelper, NOT modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -117,21 +114,20 @@ public class MarketActionTest {
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
     @Test
-    public void getMarketResourceWWWR()
-    {
+    public void getMarketResourceWWWR() {
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new RedMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new RedMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
 
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
         //in this case the action should: modify the Market, NOT activate the MarketHelper, modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertFalse(g.getMarketHelper().isEnabled());
@@ -146,21 +142,20 @@ public class MarketActionTest {
 
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
     @Test
-    public void getMarketResourceWWWW()
-    {
+    public void getMarketResourceWWWW() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
         //in this case the action should: modify the Market, NOT activate the MarketHelper, NOT modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertFalse(g.getMarketHelper().isEnabled());
@@ -175,21 +170,20 @@ public class MarketActionTest {
     //players have NO leaderCards with Market special ability, so WhiteMarbles get destroyed
     //Market Resources:
     @Test
-    public void getMarketResourceBGYP()
-    {
+    public void getMarketResourceBGYP() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(),new GreyMarble(),new YellowMarble(),new PurpleMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new GreyMarble(), new YellowMarble(), new PurpleMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
         //in this case the action should: modify the Market, NOT activate the MarketHelper, NOT modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -208,15 +202,14 @@ public class MarketActionTest {
     }
 
     @Test
-    public void getMarketResourceWWGG()
-    {
+    public void getMarketResourceWWGG() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new WhiteMarble(),new WhiteMarble(),new GreyMarble(),new GreyMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new WhiteMarble(), new WhiteMarble(), new GreyMarble(), new GreyMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
@@ -224,11 +217,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -237,7 +230,7 @@ public class MarketActionTest {
         c.emptyQueue();
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with exchanged resources, NOT modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -254,15 +247,14 @@ public class MarketActionTest {
     }
 
     @Test
-    public void getMarketResourceGRWW()
-    {
+    public void getMarketResourceGRWW() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new GreyMarble(),new RedMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new GreyMarble(), new RedMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
 
         Market market = g.getMarket();
@@ -271,11 +263,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -284,7 +276,7 @@ public class MarketActionTest {
         c.emptyQueue();
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -302,15 +294,14 @@ public class MarketActionTest {
     }
 
     @Test
-    public void getMarketResourceRWWG()
-    {
+    public void getMarketResourceRWWG() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new RedMarble(),new WhiteMarble(),new WhiteMarble(),new GreyMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new RedMarble(), new WhiteMarble(), new WhiteMarble(), new GreyMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
 
         Market market = g.getMarket();
@@ -319,11 +310,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -333,7 +324,7 @@ public class MarketActionTest {
         c.emptyQueue();
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -352,21 +343,20 @@ public class MarketActionTest {
 
     //the error is generated only if the marketHelper is enabled, and the getMarketResource gets (again) somehow invoked
     @Test
-    public void getMarketResourcesError()
-    {
+    public void getMarketResourcesError() {
         //can only occur if: message contains impossible data, or the corresponding market helper is enabled
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(), new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         //saving or asserting (in a simplified way) the starting condition
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
@@ -389,20 +379,19 @@ public class MarketActionTest {
 //------------- testing the second part of the MarketAction : chooseResource
 
 
-//Resources from the market: SHIELD SHIELD STONE
+    //Resources from the market: SHIELD SHIELD STONE
 //Actions performed on controller: 0 : save in Depot (check)
 //                                 0 : save in Depot (check error, impossible choice)
 //                                 0 : save in Depot (check same error)
     @Test
-    public void chooseResource1()
-    {
+    public void chooseResource1() {
         //setting the model starting condition
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(),new BlueMarble(),new WhiteMarble(),new GreyMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new BlueMarble(), new WhiteMarble(), new GreyMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
@@ -410,11 +399,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -422,7 +411,7 @@ public class MarketActionTest {
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
         //saving or asserting (in a simplified way) the starting condition
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
         assertTrue(g.getMarketHelper().isEnabled());
         ArrayList<Resource> resources = g.getMarketHelper().getResources();
         assertEquals(2, resources.stream().filter(x -> x == Resource.SHIELD).count());
@@ -432,7 +421,7 @@ public class MarketActionTest {
 
         //action 1: save. the action should return true
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(0);
-        assertTrue( am.newChoiceMarket(p, message));
+        assertTrue(am.newChoiceMarket(p, message));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -449,7 +438,7 @@ public class MarketActionTest {
         c.emptyQueue();
 
         //action 2: save. the action should return false
-        assertFalse( am.newChoiceMarket(p, message));
+        assertFalse(am.newChoiceMarket(p, message));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -465,7 +454,7 @@ public class MarketActionTest {
         c.emptyQueue();
 
         //action 3: save. the action should return false
-        assertFalse( am.newChoiceMarket(p, message));
+        assertFalse(am.newChoiceMarket(p, message));
 
         //asserting the model is modified correctly
         assertTrue(g.getMarketHelper().isEnabled());
@@ -484,14 +473,13 @@ public class MarketActionTest {
 //                                -> MarketHelper deactivates (check)
 //                                 0 : save in Depot (gives Error because MarketHelper is not active) (check)
     @Test
-    public void chooseResource2()
-    {
+    public void chooseResource2() {
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(),new BlueMarble(),new WhiteMarble(),new GreyMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new BlueMarble(), new WhiteMarble(), new GreyMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
 
         Market market = g.getMarket();
@@ -517,11 +505,11 @@ public class MarketActionTest {
         ArrayList<Resource> resources;
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(0);
 
-        assertTrue( am.newChoiceMarket(p, message));
+        assertTrue(am.newChoiceMarket(p, message));
         assertTrue(g.getMarketHelper().isEnabled());
 
         resources = g.getMarketHelper().getResources();
@@ -531,7 +519,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(1);
 
-        assertTrue( am.newChoiceMarket(p, message));
+        assertTrue(am.newChoiceMarket(p, message));
         assertTrue(g.getMarketHelper().isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
@@ -549,7 +537,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(1);
 
-        assertTrue( am.newChoiceMarket(p, message));
+        assertTrue(am.newChoiceMarket(p, message));
         assertFalse(g.getMarketHelper().isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
@@ -564,9 +552,9 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(1);
 
-        assertFalse( am.newChoiceMarket(p, message));
+        assertFalse(am.newChoiceMarket(p, message));
         assertFalse(g.getMarketHelper().isEnabled());
-        assertTrue( g.getErrorObject().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
@@ -581,14 +569,13 @@ public class MarketActionTest {
 //                                 0 : put Stone in depot first row (check)
 //                                 0 : put Shield in depot (second row) (check)
     @Test
-    public void chooseResource3()
-    {
+    public void chooseResource3() {
         MSG_ACTION_GET_MARKET_RESOURCES msg;
         msg = new MSG_ACTION_GET_MARKET_RESOURCES(false, 0);
 
-        MarketMarble[][] re = { {new BlueMarble(),new BlueMarble(),new BlueMarble(),new PurpleMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
-                {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()}};
+        MarketMarble[][] re = {{new BlueMarble(), new BlueMarble(), new BlueMarble(), new PurpleMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
+                {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
 
 
         Market market = g.getMarket();
@@ -612,11 +599,11 @@ public class MarketActionTest {
         ArrayList<Resource> resources;
 
         //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
-        assertTrue( am.getMarketResources(p, msg));
+        assertTrue(am.getMarketResources(p, msg));
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(1);
 
-        assertTrue( am.newChoiceMarket(p, message));
+        assertTrue(am.newChoiceMarket(p, message));
 
         resources = g.getMarketHelper().getResources();
         assertEquals(3, resources.size());
@@ -625,7 +612,7 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(1);
 
-        assertTrue( am.newChoiceMarket(p, message));
+        assertTrue(am.newChoiceMarket(p, message));
         assertTrue(g.getMarketHelper().isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
@@ -643,9 +630,9 @@ public class MarketActionTest {
 
         message = new MSG_ACTION_MARKET_CHOICE(1); //give error
 
-        assertFalse( am.newChoiceMarket(p, message));
-        assertTrue( g.getMarketHelper().isEnabled());
-        assertTrue( g.getErrorObject().isEnabled());
+        assertFalse(am.newChoiceMarket(p, message));
+        assertTrue(g.getMarketHelper().isEnabled());
+        assertTrue(g.getErrorObject().isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
@@ -777,11 +764,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -889,11 +876,11 @@ public class MarketActionTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {2,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT)));
 
         lc.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -1036,8 +1023,7 @@ public class MarketActionTest {
 //                                 2 : discard
 //                                 2 : discard
     @Test
-    public void lastTurn()
-    {
+    public void lastTurn() {
         MarketMarble[][] re = {{new RedMarble(), new GreyMarble(), new GreyMarble(), new GreyMarble()},
                 {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
                 {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
@@ -1050,8 +1036,8 @@ public class MarketActionTest {
         g.getPlayer(2).setPosition(22);
         g.getPlayer(3).setPosition(22);
         g.getPlayer(4).setPosition(22);
-        g.getFaithTrack().setZones(0,true);
-        g.getFaithTrack().setZones(1,true);
+        g.getFaithTrack().setZones(0, true);
+        g.getFaithTrack().setZones(1, true);
         c.emptyQueue();
 
         assertTrue(am.getMarketResources(p, new MSG_ACTION_GET_MARKET_RESOURCES(false, 0)));
@@ -1114,8 +1100,7 @@ public class MarketActionTest {
 //                                 6 : go forward (error)
 //                                 7 : go backwards (error)
     @Test
-    public void chooseResource8()
-    {
+    public void chooseResource8() {
         MarketMarble[][] re = {{new PurpleMarble(), new WhiteMarble(), new WhiteMarble(), new PurpleMarble()},
                 {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
                 {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
@@ -1239,10 +1224,9 @@ public class MarketActionTest {
     }
 
 
-//covers the 3 unswappable events (should be impossible to create a message, then)
+    //covers the 3 unswappable events (should be impossible to create a message, then)
     @Test
-    public void chooseResource9()
-    {
+    public void chooseResource9() {
         MarketMarble[][] re = {{new PurpleMarble(), new WhiteMarble(), new WhiteMarble(), new PurpleMarble()},
                 {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
                 {new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()}};
@@ -1312,9 +1296,8 @@ public class MarketActionTest {
     }
 
     @Test
-    public void soloTest()
-    {
-        GameManager gameManager =  new GameManager(1);
+    public void soloTest() {
+        GameManager gameManager = new GameManager(1);
         Game game = gameManager.getGame();
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
@@ -1355,7 +1338,7 @@ public class MarketActionTest {
         a.emptyQueue();
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
-        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertTrue(actionManager.newChoiceMarket(player, message));
         assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
@@ -1365,7 +1348,7 @@ public class MarketActionTest {
         a.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(2); //discards
-        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertTrue(actionManager.newChoiceMarket(player, message));
         assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
@@ -1375,7 +1358,7 @@ public class MarketActionTest {
         a.emptyQueue();
 
         //which is basically endTurnGameOverPlayerWins test in endTurnTest.
-        assertFalse(actionManager.endTurn(player,true));
+        assertFalse(actionManager.endTurn(player, true));
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_Stop).count());
@@ -1383,9 +1366,8 @@ public class MarketActionTest {
     }
 
     @Test
-    public void soloTest2()
-    {
-        GameManager gameManager =  new GameManager(1);
+    public void soloTest2() {
+        GameManager gameManager = new GameManager(1);
         Game game = gameManager.getGame();
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
@@ -1422,7 +1404,7 @@ public class MarketActionTest {
         a.emptyQueue();
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
-        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertTrue(actionManager.newChoiceMarket(player, message));
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count()); //gets points
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count()); //third zones activates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
@@ -1435,7 +1417,7 @@ public class MarketActionTest {
 
 
         //which is basically endTurnGameOverPlayerWins test in endTurnTest.
-        assertFalse(actionManager.endTurn(player,true));
+        assertFalse(actionManager.endTurn(player, true));
 
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
@@ -1445,9 +1427,8 @@ public class MarketActionTest {
 
     //checks if Lorenzo advances normally
     @Test
-    public void soloTest3()
-    {
-        GameManager gameManager =  new GameManager(1);
+    public void soloTest3() {
+        GameManager gameManager = new GameManager(1);
         Game game = gameManager.getGame();
         ActionManager actionManager = gameManager.getActionManager();
         Catcher a = new Catcher();
@@ -1480,7 +1461,7 @@ public class MarketActionTest {
         a.emptyQueue();
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
-        assertTrue(actionManager.newChoiceMarket(player,message));
+        assertTrue(actionManager.newChoiceMarket(player, message));
         assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes

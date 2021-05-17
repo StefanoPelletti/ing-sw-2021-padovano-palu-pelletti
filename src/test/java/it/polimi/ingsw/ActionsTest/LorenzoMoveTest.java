@@ -23,8 +23,7 @@ public class LorenzoMoveTest {
     Catcher c;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(1);
         am = gm.getActionManager();
         g = gm.getGame();
@@ -39,46 +38,44 @@ public class LorenzoMoveTest {
     //given the randomness of the actionTokenTest sorting,
     // this test cycles on the possible things that could happen.
     @Test
-    public void allTest()
-    {
+    public void allTest() {
 
         boolean r = false;
         boolean ff = false;
         boolean f2 = false;
 
         assertEquals(1, g.getBlackCrossPosition());
-        for( int i=0; i<3; i++) {
-            for(int j=0; j<4; j++) {
-                for(DevelopmentCard d : g.getDevelopmentCardsDeck().getStack(i,j))
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (DevelopmentCard d : g.getDevelopmentCardsDeck().getStack(i, j))
                     assertNotNull(d);
             }
         }
 
-        while(!r || !ff || !f2)
-        {
+        while (!r || !ff || !f2) {
             reset();
 
             assertTrue(am.endTurn(p, true)); //at the beginning of the game this should always return true.
             String msg = "";
             Optional<String> m = c.messages.stream()
-                    .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
+                    .filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION)
                     .map(x -> (MSG_NOTIFICATION) x)
                     .map(MSG_NOTIFICATION::getMessage)
                     .filter(message -> message.startsWith("Lorenzo"))
                     .findFirst();
-            if(m.isPresent()) msg = m.get();
-            if(msg.startsWith("Lorenzo gained two")) //Forward2Case
+            if (m.isPresent()) msg = m.get();
+            if (msg.startsWith("Lorenzo gained two")) //Forward2Case
             {
-                ff=true;
+                ff = true;
                 assertEquals(3, g.getBlackCrossPosition());
                 //one turn update, two blackCrossPosition update. One notification
                 assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
                 assertEquals(4, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
                 assertEquals(7, c.messages.size());
             }
-            if(msg.startsWith("Lorenzo gained one")) //ForwardAndShuffle
+            if (msg.startsWith("Lorenzo gained one")) //ForwardAndShuffle
             {
-                f2=true;
+                f2 = true;
                 assertEquals(2, g.getBlackCrossPosition());
                 //one turn update, one blackCrossPosition update.
                 assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
@@ -86,9 +83,9 @@ public class LorenzoMoveTest {
                 assertEquals(5, c.messages.size());
                 assertTrue(true); //I solemnly trust Collections.Shuffle().
             }
-            if(msg.startsWith("Lorenzo destroyed two"))  //remover
+            if (msg.startsWith("Lorenzo destroyed two"))  //remover
             {
-                r=true;
+                r = true;
                 assertEquals(1, g.getBlackCrossPosition());
                 //we get ONE updates from DevDeck. The remove method is already tested, so that should be enough.
                 //one turn update, one ^, one notification
@@ -102,8 +99,7 @@ public class LorenzoMoveTest {
     }
 
     @Test
-    public void LorenzoActivatesTheFirstZone()
-    {
+    public void LorenzoActivatesTheFirstZone() {
         boolean stop = false;
         do {
             g.setBlackCrossPosition(7);
@@ -111,17 +107,17 @@ public class LorenzoMoveTest {
             assertTrue(am.endTurn(p, true)); //at the beginning of the game this should always return true.
             String msg = "";
             Optional<String> m = c.messages.stream()
-                    .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
+                    .filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION)
                     .map(x -> (MSG_NOTIFICATION) x)
                     .map(MSG_NOTIFICATION::getMessage)
                     .filter(message -> message.startsWith("Lorenzo"))
                     .findFirst();
-            if(m.isPresent()) msg = m.get();
-            if(msg.startsWith("Lorenzo gained two"))
+            if (m.isPresent()) msg = m.get();
+            if (msg.startsWith("Lorenzo gained two"))
                 stop = true;
             else
                 reset();
-        } while(!stop);
+        } while (!stop);
 
         assertEquals(9, g.getBlackCrossPosition());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
@@ -131,8 +127,7 @@ public class LorenzoMoveTest {
     }
 
     @Test
-    public void LorenzoEndsTheGameWithTheFaithTrack()
-    {
+    public void LorenzoEndsTheGameWithTheFaithTrack() {
         boolean stop = false;
         do {
             g.setBlackCrossPosition(23);
@@ -140,17 +135,17 @@ public class LorenzoMoveTest {
             am.endTurn(p, true);
             String msg = "";
             Optional<String> m = c.messages.stream()
-                    .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
+                    .filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION)
                     .map(x -> (MSG_NOTIFICATION) x)
                     .map(MSG_NOTIFICATION::getMessage)
                     .filter(message -> message.startsWith("Lorenzo"))
                     .findFirst();
-            if(m.isPresent()) msg = m.get();
-            if(msg.startsWith("Lorenzo gained two"))
+            if (m.isPresent()) msg = m.get();
+            if (msg.startsWith("Lorenzo gained two"))
                 stop = true;
             else
                 reset();
-        } while(!stop);
+        } while (!stop);
 
         assertEquals(24, g.getBlackCrossPosition());
         //one from the BlackCross, one notification, one faithTrack, and the leaderboard
@@ -160,13 +155,13 @@ public class LorenzoMoveTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(8, c.messages.size());
     }
+
     @Test
-    public void LorenzoEndsTheGameByRemovingCards()
-    {
+    public void LorenzoEndsTheGameByRemovingCards() {
         boolean stop = false;
         do {
-            for(int c=0; c<4; c++) {
-                for(int n=0; n<5; n++) {
+            for (int c = 0; c < 4; c++) {
+                for (int n = 0; n < 5; n++) {
                     g.getDevelopmentCardsDeck().removeCard(c); //leaves 2 cards in all columns
                 }
             }
@@ -175,17 +170,17 @@ public class LorenzoMoveTest {
             am.endTurn(p, true);
             String msg = "";
             Optional<String> m = c.messages.stream()
-                    .filter(x -> x.getMessageType()== MessageType.MSG_NOTIFICATION)
+                    .filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION)
                     .map(x -> (MSG_NOTIFICATION) x)
                     .map(MSG_NOTIFICATION::getMessage)
                     .filter(message -> message.startsWith("Lorenzo"))
                     .findFirst();
-            if(m.isPresent()) msg = m.get();
-            if(msg.startsWith("Lorenzo d"))
+            if (m.isPresent()) msg = m.get();
+            if (msg.startsWith("Lorenzo d"))
                 stop = true;
             else
                 reset();
-        } while(!stop);
+        } while (!stop);
 
         assertTrue(g.getDevelopmentCardsDeck().isOneColumnDestroyed());
         //one from the devDeck, one notification, and the leaderboard

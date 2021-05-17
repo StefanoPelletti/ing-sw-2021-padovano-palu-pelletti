@@ -11,13 +11,20 @@ public class GreyMarble implements MarketMarble, Serializable {
     public static final String ANSI_RESET = "\u001B[0m";
 
 
-    public GreyMarble() { color = Color.GREY; }
+    public GreyMarble() {
+        color = Color.GREY;
+    }
 
     public void addResource(ArrayList<Resource> ResourceList) {
         ResourceList.add(Resource.STONE);
     }
 
     @Override
-    public String toString() { return " " + color + " Marble  "; }
-    public String toAbbreviation() { return ""+color.toAbbreviation(); }
+    public String toString() {
+        return " " + color + " Marble  ";
+    }
+
+    public String toAbbreviation() {
+        return "" + color.toAbbreviation();
+    }
 }

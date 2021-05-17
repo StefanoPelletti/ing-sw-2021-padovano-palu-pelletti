@@ -11,14 +11,17 @@ public class MSG_UPD_Strongbox extends Message implements Serializable {
 
     private final Map<Resource, Integer> resources;
 
-    public MSG_UPD_Strongbox(Map<Resource, Integer> resources)
-    {
+    public MSG_UPD_Strongbox(Map<Resource, Integer> resources) {
         super(MessageType.MSG_UPD_Strongbox);
 
-        this.resources = new HashMap<Resource, Integer> (resources);
+        this.resources = new HashMap<>(resources);
     }
 
-    public Map<Resource, Integer> getResources() { return this.resources;}
+    public Map<Resource, Integer> getResources() {
+        return this.resources;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

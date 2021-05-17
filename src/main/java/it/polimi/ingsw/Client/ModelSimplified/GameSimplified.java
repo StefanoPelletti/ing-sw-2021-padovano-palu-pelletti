@@ -8,7 +8,6 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_De
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
-import it.polimi.ingsw.Server.Model.LeaderCard;
 
 import java.util.*;
 
@@ -28,8 +27,7 @@ public class GameSimplified {
     ResourceObject resourceObject;
     LeaderBoard leaderBoard;
 
-    public GameSimplified()
-    {
+    public GameSimplified() {
         this.turn = -1;
         this.currentPlayer = -1;
 
@@ -38,35 +36,30 @@ public class GameSimplified {
         faithTrack = new FaithTrackSimplified(this);
         playerSimplifiedList = new ArrayList<>();
 
-        developmentCardsVendor= new DevelopmentCardsVendor();
-        leaderCardsObject= new LeaderCardsObject();
+        developmentCardsVendor = new DevelopmentCardsVendor();
+        leaderCardsObject = new LeaderCardsObject();
         marketHelper = new MarketHelper();
-        resourceObject =  new ResourceObject();
+        resourceObject = new ResourceObject();
         leaderBoard = new LeaderBoard();
     }
 
-    public boolean isDevelopmentCardsVendorEnabled()
-    {
+    public boolean isDevelopmentCardsVendorEnabled() {
         return this.developmentCardsVendor.isEnabled();
     }
 
-    public boolean isLeaderCardsObjectEnabled()
-    {
+    public boolean isLeaderCardsObjectEnabled() {
         return this.leaderCardsObject.isEnabled();
     }
 
-    public boolean isMarketHelperEnabled()
-    {
+    public boolean isMarketHelperEnabled() {
         return this.marketHelper.isEnabled();
     }
 
-    public boolean isResourceObjectEnabled()
-    {
+    public boolean isResourceObjectEnabled() {
         return this.resourceObject.isEnabled();
     }
 
-    public void updateGame(MSG_UPD_Game message)
-    {
+    public void updateGame(MSG_UPD_Game message) {
         int newTurn = message.getTurn();
         int newCurrentPlayer = message.getCurrentPlayer();
         int newBlackCrossPosition = message.getBlackCrossPosition();
@@ -76,43 +69,40 @@ public class GameSimplified {
         this.blackCrossPosition = newBlackCrossPosition;
     }
 
-    public void updateMarket(MSG_UPD_Market message)
-    {
+    public void updateMarket(MSG_UPD_Market message) {
         this.market.update(message);
     }
 
-    public void updateDevelopmentCardsDeck(MSG_UPD_DevDeck message)
-    {
+    public void updateDevelopmentCardsDeck(MSG_UPD_DevDeck message) {
         this.devDeck.update(message);
     }
 
-    public void updateFaithTrack(MSG_UPD_FaithTrack message)
-    {
+    public void updateFaithTrack(MSG_UPD_FaithTrack message) {
         this.faithTrack.update(message);
     }
 
-    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) { this.developmentCardsVendor.update(message); }
+    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) {
+        this.developmentCardsVendor.update(message);
+    }
 
-    public void updateLeaderCardsObject(MSG_UPD_LeaderCardsObject message)
-    {
+    public void updateLeaderCardsObject(MSG_UPD_LeaderCardsObject message) {
         this.leaderCardsObject.update(message);
     }
 
-    public void updateMarketHelper(MSG_UPD_MarketHelper message)
-    {
+    public void updateMarketHelper(MSG_UPD_MarketHelper message) {
         this.marketHelper.update(message);
     }
 
-    public void updateResourceObject(MSG_UPD_ResourceObject message)
-    {
+    public void updateResourceObject(MSG_UPD_ResourceObject message) {
         this.resourceObject.update(message);
     }
 
-    public void updateLeaderBoard(MSG_UPD_LeaderBoard message) { this.leaderBoard.update(message);}
+    public void updateLeaderBoard(MSG_UPD_LeaderBoard message) {
+        this.leaderBoard.update(message);
+    }
 
     // absolutely needs testing
-    public void updateAll(MSG_UPD_Full message)
-    {
+    public void updateAll(MSG_UPD_Full message) {
         this.updateGame(message.getGame());
 
         this.developmentCardsVendor.update(message.getDevCardsVendor());
@@ -130,15 +120,12 @@ public class GameSimplified {
         playerSimplifiedList = new ArrayList<>();
         PlayerSimplified player;
 
-        for ( int i=1 ; i<=map.size(); i++)
-        {
+        for (int i = 1; i <= map.size(); i++) {
             list = map.get(i);
-            if(list == null) break;
+            if (list == null) break;
             player = new PlayerSimplified(i);
-            for( Message m : list)
-            {
-                switch(m.getMessageType())
-                {
+            for (Message m : list) {
+                switch (m.getMessageType()) {
                     case MSG_UPD_Player:
                         player.update((MSG_UPD_Player) m);
                         break;
@@ -162,8 +149,7 @@ public class GameSimplified {
 
     //?? 100% would not work for some reason.
     public void updateCurrentPlayer(Message message) {
-        switch(message.getMessageType())
-        {
+        switch (message.getMessageType()) {
             case MSG_UPD_Player:
                 getCurrentPlayerRef().update((MSG_UPD_Player) message);
                 break;
@@ -183,43 +169,78 @@ public class GameSimplified {
     }
 
 
+    public DevelopmentCardsVendor getDevelopmentCardsVendor() {
+        return this.developmentCardsVendor;
+    }
 
-    public DevelopmentCardsVendor getDevelopmentCardsVendor() { return this.developmentCardsVendor;}
-    public LeaderCardsObject getLeaderCardsObject() { return this.leaderCardsObject;}
-    public MarketHelper getMarketHelper() { return this.marketHelper;}
-    public ResourceObject getResourceObject() { return this.resourceObject;}
+    public LeaderCardsObject getLeaderCardsObject() {
+        return this.leaderCardsObject;
+    }
 
-    public int getBlackCrossPosition() { return blackCrossPosition; }
-    public MarketSimplified getMarket() { return market; }
-    public DevelopmentCardsDeckSimplified getDevDeck() { return devDeck; }
-    public FaithTrackSimplified getFaithTrack() { return faithTrack; }
-    public List<PlayerSimplified> getPlayerSimplifiedList() { return playerSimplifiedList; }
-    public LeaderBoard getLeaderBoard() { return leaderBoard; }
+    public MarketHelper getMarketHelper() {
+        return this.marketHelper;
+    }
 
-    public List<PlayerSimplified> getPlayerList() { return this.playerSimplifiedList; }
-    public int getCurrentPlayer() { return this.currentPlayer;}
-    public int getTurn() { return this.turn;}
+    public ResourceObject getResourceObject() {
+        return this.resourceObject;
+    }
+
+    public int getBlackCrossPosition() {
+        return blackCrossPosition;
+    }
+
+    public MarketSimplified getMarket() {
+        return market;
+    }
+
+    public DevelopmentCardsDeckSimplified getDevDeck() {
+        return devDeck;
+    }
+
+    public FaithTrackSimplified getFaithTrack() {
+        return faithTrack;
+    }
+
+    public List<PlayerSimplified> getPlayerSimplifiedList() {
+        return playerSimplifiedList;
+    }
+
+    public LeaderBoard getLeaderBoard() {
+        return leaderBoard;
+    }
+
+    public List<PlayerSimplified> getPlayerList() {
+        return this.playerSimplifiedList;
+    }
+
+    public int getCurrentPlayer() {
+        return this.currentPlayer;
+    }
+
+    public int getTurn() {
+        return this.turn;
+    }
+
     public PlayerSimplified getCurrentPlayerRef() {
-        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p->p.getPlayerNumber()==currentPlayer).findFirst();
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p -> p.getPlayerNumber() == currentPlayer).findFirst();
         return result.orElse(null);
     }
 
 
     public int getMyPlayerNumber(String Nickname) {
-        for ( PlayerSimplified p : playerSimplifiedList ) {
-            if ( p.getNickname().equals(Nickname) ) return p.getPlayerNumber();
+        for (PlayerSimplified p : playerSimplifiedList) {
+            if (p.getNickname().equals(Nickname)) return p.getPlayerNumber();
         }
         return 0;
     }
 
     public PlayerSimplified getPlayerRef(int playerNumber) {
-        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==playerNumber ).findFirst();
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();
         return result.orElse(null);
     }
 
-    public PlayerSimplified getPlayerRef(String nickname)
-    {
-        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
+    public PlayerSimplified getPlayerRef(String nickname) {
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p -> p.getNickname().equals(nickname)).findFirst();
         return result.orElse(null);
     }
 
@@ -231,15 +252,14 @@ public class GameSimplified {
         MSG_UPD_Player msg = (MSG_UPD_Player) message;
         int playerNumber = msg.getPlayerNumber();
 
-        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getPlayerNumber()==playerNumber ).findFirst();
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();
         //Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter( p -> p.getNickname().equals(nickname) ).findFirst();
-        PlayerSimplified player = result.get();
 
-        player.update( msg );
+        result.ifPresentOrElse(player -> player.update(msg), () -> System.out.println(" Game Simplified R259 Player not found. ???????"));
     }
 
     public boolean isMiddleActive() {
-        return isLeaderCardsObjectEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled()|| isResourceObjectEnabled();
+        return isLeaderCardsObjectEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled() || isResourceObjectEnabled();
     }
 
     public boolean isLeaderBoardEnabled() {

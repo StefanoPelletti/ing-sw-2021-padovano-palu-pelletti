@@ -11,9 +11,9 @@ public class MSG_UPD_Game extends Message implements Serializable {
     private final int currentPlayer;
     private final int blackCrossPosition;
 
-    public MSG_UPD_Game(int turn, int currentPlayer, int blackCrossPosition)
-    {
+    public MSG_UPD_Game(int turn, int currentPlayer, int blackCrossPosition) {
         super(MessageType.MSG_UPD_Game);
+
         this.turn = turn;
         this.blackCrossPosition = blackCrossPosition;
         this.currentPlayer = currentPlayer;
@@ -22,12 +22,16 @@ public class MSG_UPD_Game extends Message implements Serializable {
     public int getTurn() {
         return turn;
     }
+
     public int getCurrentPlayer() {
         return currentPlayer;
     }
+
     public int getBlackCrossPosition() {
         return blackCrossPosition;
     }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

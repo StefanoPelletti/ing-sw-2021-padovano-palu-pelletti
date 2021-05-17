@@ -12,8 +12,7 @@ public class MSG_UPD_WarehouseDepot extends Message implements Serializable {
     private final Resource[] shelf2;
     private final Resource[] shelf3;
 
-    public MSG_UPD_WarehouseDepot(Resource shelf1, Resource[] shelf2, Resource[] shelf3)
-    {
+    public MSG_UPD_WarehouseDepot(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
         super(MessageType.MSG_UPD_WarehouseDepot);
 
         this.shelf1 = shelf1;
@@ -26,9 +25,19 @@ public class MSG_UPD_WarehouseDepot extends Message implements Serializable {
         this.shelf3[2] = shelf3[2];
     }
 
-    public Resource getShelf1() { return shelf1; }
-    public Resource[] getShelf2() { return shelf2; }
-    public Resource[] getShelf3() { return shelf3; }
+    public Resource getShelf1() {
+        return shelf1;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public Resource[] getShelf2() {
+        return shelf2;
+    }
+
+    public Resource[] getShelf3() {
+        return shelf3;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

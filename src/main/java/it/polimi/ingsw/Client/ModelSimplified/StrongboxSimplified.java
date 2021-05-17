@@ -8,17 +8,16 @@ public class StrongboxSimplified {
 
     private Map<Resource, Integer> resources;
 
-    public void update (MSG_UPD_Strongbox message)
-    {
+    public void update(MSG_UPD_Strongbox message) {
         Map<Resource, Integer> map = message.getResources();
         this.resources = new HashMap<>(map);
     }
 
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder result = new StringBuilder();
-        if(resources.isEmpty()) {
+        if (resources.isEmpty()) {
             result.append(" The Strongbox is empty. ").append("\n");
         } else {
             result.append(" The Strongbox contains: ").append("\n");

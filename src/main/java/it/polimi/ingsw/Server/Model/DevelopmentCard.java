@@ -46,33 +46,30 @@ public class DevelopmentCard implements Serializable {
         return power.getOutput();
     }
 
-    public boolean internalCheck()
-    {
-        if(level<1 || level>3) return false;
-        if(color!=Color.BLUE && color!=Color.GREEN && color!=Color.YELLOW && color!=Color.PURPLE) return false;
-        if(VP<1 || VP>12) return false;
-        if(cost.isEmpty()) return false;
-        if(power.getInput() == null ) return false;
+    public boolean internalCheck() {
+        if (level < 1 || level > 3) return false;
+        if (color != Color.BLUE && color != Color.GREEN && color != Color.YELLOW && color != Color.PURPLE) return false;
+        if (VP < 1 || VP > 12) return false;
+        if (cost.isEmpty()) return false;
+        if (power.getInput() == null) return false;
         return power.getOutput() != null;
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof DevelopmentCard)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof DevelopmentCard)) return false;
         DevelopmentCard o = (DevelopmentCard) obj;
-        return(this.level == o.level &&
+        return (this.level == o.level &&
                 this.color.equals(o.color) &&
                 this.cost.equals(o.cost) &&
-                this.VP==o.VP &&
+                this.VP == o.VP &&
                 this.power.equals(o.power));
 
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("   DEVELOPMENT CARD!   ").append("\n");
         result.append("    level : ").append(this.level).append("\n");

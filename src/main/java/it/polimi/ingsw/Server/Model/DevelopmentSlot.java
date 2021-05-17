@@ -17,11 +17,9 @@ public class DevelopmentSlot extends ModelObservable {
         onTop = new DevelopmentCard[3];
         numOfCards = 0;
 
-        for( int n = 0; n < 3; n++ )
-        {
+        for (int n = 0; n < 3; n++) {
             onTop[n] = null;
-            for ( int h = 0; h < 3; h++ )
-            {
+            for (int h = 0; h < 3; h++) {
                 cards[n][h] = null;
             }
         }
@@ -31,22 +29,19 @@ public class DevelopmentSlot extends ModelObservable {
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
-        if ( onTop[selectedDeck] == null )
+        if (onTop[selectedDeck] == null)
             cardLevel = 0;
         else
             cardLevel = onTop[selectedDeck].getLevel();
 
-        if( cardLevel == 3 ) //then this stack is full
+        if (cardLevel == 3) //then this stack is full
         {
             return false;
-        }
-        else
-        {
-            if ( newCardLevel != cardLevel +1 ) //then level is not ok!
+        } else {
+            if (newCardLevel != cardLevel + 1) //then level is not ok!
             {
                 return false;
-            }
-            else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
+            } else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
             {
                 cards[selectedDeck][cardLevel] = newCard;
                 onTop[selectedDeck] = newCard;
@@ -58,31 +53,28 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     public boolean validateNewCard(DevelopmentCard newCard, int selectedDeck) {
-        if(newCard == null) {
+        if (newCard == null) {
             return false;
         }
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
 
-        if ( onTop[selectedDeck] == null )
+        if (onTop[selectedDeck] == null)
             cardLevel = 0;
         else
             cardLevel = onTop[selectedDeck].getLevel();
 
-        if( cardLevel == 3 ) //then this stack is full
+        if (cardLevel == 3) //then this stack is full
         {
             //System.out.println("Nope, this stack is full!");
             return false;
-        }
-        else
-        {
-            if ( newCardLevel != cardLevel +1 ) //then level is not ok!
+        } else {
+            if (newCardLevel != cardLevel + 1) //then level is not ok!
             {
                 //System.out.println("Nope, you cannot add a card on this deck, levels are different!");
                 return false;
-            }
-            else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
+            } else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
             {
                 //System.out.println("Yes, adding in this position is possible!");
                 return true;
@@ -93,23 +85,17 @@ public class DevelopmentSlot extends ModelObservable {
     public DevelopmentCard[][] getAllCards() {
         DevelopmentCard[][] tempDeck = new DevelopmentCard[3][3];
 
-        for( int n = 0; n < 3; n++ )
-        {
-            for ( int h = 0; h < 3; h++ )
-            {
-                tempDeck[n][h] = cards[n][h];
-            }
+        for (int n = 0; n < 3; n++) {
+            System.arraycopy(cards[n], 0, tempDeck[n], 0, 3);
         }
         return tempDeck;
     }
 
-    public ArrayList<DevelopmentCard> getCards(){
-        ArrayList<DevelopmentCard> result= new ArrayList<>();
-        for( int n = 0; n < 3; n++ )
-        {
-            for ( int h = 0; h < 3; h++ )
-            {
-                if(cards[n][h]!=null) result.add(cards[n][h]);
+    public ArrayList<DevelopmentCard> getCards() {
+        ArrayList<DevelopmentCard> result = new ArrayList<>();
+        for (int n = 0; n < 3; n++) {
+            for (int h = 0; h < 3; h++) {
+                if (cards[n][h] != null) result.add(cards[n][h]);
             }
         }
         return result;
@@ -117,17 +103,15 @@ public class DevelopmentSlot extends ModelObservable {
 
     public ArrayList<DevelopmentCard> getTopCards() {
         ArrayList<DevelopmentCard> List = new ArrayList<>();
-        for ( int i = 0; i < 3; i++ )
-        {
-            if (onTop[i] != null)
-            {
-                List.add( onTop[i] );
+        for (int i = 0; i < 3; i++) {
+            if (onTop[i] != null) {
+                List.add(onTop[i]);
             }
         }
         return List;
     }
 
-    public DevelopmentCard[] getOnTop(){
+    public DevelopmentCard[] getOnTop() {
         return onTop.clone();
     }
 
@@ -136,10 +120,9 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof DevelopmentSlot)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof DevelopmentSlot)) return false;
         DevelopmentSlot o = (DevelopmentSlot) obj;
         return (Arrays.deepEquals(this.cards, (o).cards));
     }
@@ -151,14 +134,14 @@ public class DevelopmentSlot extends ModelObservable {
         result.append("------ DevelopmentSlot ------ \n");
 
         result.append("Slot 1: \n");
-        if(onTop[0] != null) {
-            result.append(onTop[0].toString());
+        if (onTop[0] != null) {
+            result.append(onTop[0]);
         } else {
             result.append(" No card in slot number 1. \n");
         }
-        for(int i = 0; i < 3; i++) {
-            if(cards[0][i] != onTop[0]) {
-                result.append("VP of underneath cards: " + cards[0][i].getVP() + "\n");
+        for (int i = 0; i < 3; i++) {
+            if (cards[0][i] != onTop[0]) {
+                result.append("VP of underneath cards: ").append(cards[0][i].getVP()).append("\n");
             } else {
                 break;
             }
@@ -166,14 +149,14 @@ public class DevelopmentSlot extends ModelObservable {
 
         result.append("\n");
         result.append("Slot 2: \n");
-        if(onTop[1] != null) {
-            result.append(onTop[1].toString());
+        if (onTop[1] != null) {
+            result.append(onTop[1]);
         } else {
             result.append(" No card in slot number 2. \n");
         }
-        for(int i = 0; i < 3; i++) {
-            if(cards[1][i] != onTop[1]) {
-                result.append("VP of underneath cards: " + cards[1][i].getVP() + "\n");
+        for (int i = 0; i < 3; i++) {
+            if (cards[1][i] != onTop[1]) {
+                result.append("VP of underneath cards: ").append(cards[1][i].getVP()).append("\n");
             } else {
                 break;
             }
@@ -181,14 +164,14 @@ public class DevelopmentSlot extends ModelObservable {
 
         result.append("\n");
         result.append("Slot 3: \n");
-        if(onTop[2] != null) {
-            result.append(onTop[2].toString());
+        if (onTop[2] != null) {
+            result.append(onTop[2]);
         } else {
             result.append(" No card in slot number 3. \n");
         }
-        for(int i = 0; i < 3; i++) {
-            if(cards[2][i] != onTop[2]) {
-                result.append("VP of underneath cards: " + cards[2][i].getVP() + "\n");
+        for (int i = 0; i < 3; i++) {
+            if (cards[2][i] != onTop[2]) {
+                result.append("VP of underneath cards: ").append(cards[2][i].getVP()).append("\n");
             } else {
                 break;
             }
@@ -197,7 +180,7 @@ public class DevelopmentSlot extends ModelObservable {
         return result.toString();
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 

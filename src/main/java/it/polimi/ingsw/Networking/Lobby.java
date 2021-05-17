@@ -56,13 +56,6 @@ public class Lobby {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
 
-        /*
-        for(ClientHandler clientHandler : threadsList){
-            game.addAllObservers(clientHandler);
-            gameManager.getFaithTrackManager().addObserver(clientHandler);
-        }
-        */
-
         if (lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
         else gameManager.setStatus(Status.INIT);
 
@@ -122,9 +115,7 @@ public class Lobby {
 
     public synchronized ClientHandler findPendingClientHandler(String nickname) {
         Optional<ClientHandler> result = this.clientHandlers.stream().filter(ClientHandler::isPendingConnection).sorted(
-                (a, b) -> {
-                    return Integer.compare(b.getNickname().length(), a.getNickname().length());
-                }).filter(x -> x.getNickname().startsWith(nickname)).findFirst();
+                (a, b) -> Integer.compare(b.getNickname().length(), a.getNickname().length())).filter(x -> x.getNickname().startsWith(nickname)).findFirst();
         return result.orElse(null);
     }
 
@@ -225,4 +216,3 @@ public class Lobby {
         return gameManager.areAllPlayersIdle();
     }
 }
-

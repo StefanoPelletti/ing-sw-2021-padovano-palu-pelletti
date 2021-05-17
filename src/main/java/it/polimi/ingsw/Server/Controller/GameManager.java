@@ -39,11 +39,10 @@ public class GameManager {
     public boolean endTurn() {
         setNextPlayer();
 
-        int firstAvailablePlayer=1;
-        for(int i=1; i<=lobbyMaxPlayers; i++)
-        {
-            if(idlePlayers.contains(i))
-                firstAvailablePlayer=i+1;
+        int firstAvailablePlayer = 1;
+        for (int i = 1; i <= lobbyMaxPlayers; i++) {
+            if (idlePlayers.contains(i))
+                firstAvailablePlayer = i + 1;
             else
                 break;
         }
@@ -84,7 +83,9 @@ public class GameManager {
         this.idlePlayers.remove(playerNumber);
     }
 
-    public boolean areAllPlayersIdle() { return (lobbyMaxPlayers == idlePlayers.size()); }
+    public boolean areAllPlayersIdle() {
+        return (lobbyMaxPlayers == idlePlayers.size());
+    }
 
     public void setStatus(Status status) {
         game.changeStatus(status);
@@ -222,7 +223,6 @@ public class GameManager {
     public void addAllObserver(ModelObserver observer) {
         game.addAllObservers(observer);
     }
-
 
     public boolean isGameOver() {
         return (getStatus() == Status.GAME_OVER);

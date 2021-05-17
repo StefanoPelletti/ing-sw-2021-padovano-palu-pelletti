@@ -18,20 +18,23 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
                                           ArrayList<Resource> basicInput,
                                           Resource basicOutput,
                                           Resource leaderOutput1,
-                                          Resource leaderOutput2)
-    {
+                                          Resource leaderOutput2) {
         super(MessageType.MSG_ACTION_ACTIVATE_PRODUCTION);
 
-        if( standardProduction==null || leaderProduction==null ) throw new IllegalArgumentException();
-        if( basicProduction && (basicInput==null || basicInput.size()!=2)) throw new IllegalArgumentException();
-        if( leaderProduction[0] && leaderOutput1==null ) throw new IllegalArgumentException();
-        if( leaderProduction[1] && leaderOutput2==null ) throw new IllegalArgumentException();
+        if (standardProduction == null || leaderProduction == null)
+            throw new IllegalArgumentException();
+        if (basicProduction && (basicInput == null || basicInput.size() != 2))
+            throw new IllegalArgumentException();
+        if (leaderProduction[0] && leaderOutput1 == null)
+            throw new IllegalArgumentException();
+        if (leaderProduction[1] && leaderOutput2 == null)
+            throw new IllegalArgumentException();
 
         this.standardProduction = standardProduction.clone();
         this.basicProduction = basicProduction;
         this.leaderProduction = leaderProduction.clone();
 
-        this.basicInput = basicInput!=null? new ArrayList<>(basicInput) : null;
+        this.basicInput = basicInput != null ? new ArrayList<>(basicInput) : null;
         this.basicOutput = basicOutput;
         this.leaderOutput1 = leaderOutput1;
         this.leaderOutput2 = leaderOutput2;
@@ -49,22 +52,24 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
         return leaderProduction;
     }
 
-    public ArrayList<Resource> getBasicInput(){
+    public ArrayList<Resource> getBasicInput() {
         return this.basicInput;
     }
 
-    public Resource getBasicOutput(){
+    public Resource getBasicOutput() {
         return this.basicOutput;
     }
 
-    public Resource getLeaderOutput1(){
+    public Resource getLeaderOutput1() {
         return this.leaderOutput1;
     }
 
-    public Resource getLeaderOutput2(){
+    public Resource getLeaderOutput2() {
         return this.leaderOutput2;
     }
 
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

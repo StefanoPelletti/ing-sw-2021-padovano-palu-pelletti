@@ -26,8 +26,7 @@ public class Player extends ModelObservable {
     private boolean disconnectedBeforeResource;
     private boolean disconnectedAfterResource;
 
-    public Player( String nickname, int playerNumber )
-    {
+    public Player(String nickname, int playerNumber) {
         this.nickname = nickname;
         this.VP = 0;
         this.position = 0;
@@ -39,60 +38,75 @@ public class Player extends ModelObservable {
         this.permittedAction = false;
     }
 
-    public String getNickname() { return nickname; }
-    public int getVP() { return VP; }
+    public String getNickname() {
+        return nickname;
+    }
+
+    public int getVP() {
+        return VP;
+    }
 
     public boolean setVP(int VP) {
-        if(VP<0) return false;
+        if (VP < 0) return false;
         this.VP = VP;
         notifyObservers();
         return true;
     }
 
     public boolean addVP(int VP) {
-        if(VP<0) return false;
+        if (VP < 0) return false;
         this.VP = this.VP + VP;
         notifyObservers();
         return true;
     }
 
-    public void setAction(){
-        this.permittedAction= true;
+    public void setAction() {
+        this.permittedAction = true;
     }
 
-    public void resetPermittedAction(){
+    public void resetPermittedAction() {
         this.permittedAction = false;
     }
 
-    public boolean getAction(){
+    public boolean getAction() {
         return this.permittedAction;
     }
 
-    public int getPosition() { return position; }
+    public int getPosition() {
+        return position;
+    }
+
     public boolean setPosition(int position) {
-        if(position<0) return false;
+        if (position < 0) return false;
         this.position = position;
         notifyObservers();
         notifyMovement();
         return true;
     }
 
-    public int getPlayerNumber() { return playerNumber; }
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
 
-    public void setPlayerNumber(int playerNumber) { this.playerNumber = playerNumber; }
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
+    }
 
-    public void setLeaderCards(int cardNumber, boolean enable)
-    {
-        if(enable)
+    public void setLeaderCards(int cardNumber, boolean enable) {
+        if (enable)
             leaderCards[cardNumber].setEnable(true);
         else
             leaderCards[cardNumber] = null;
         notifyObservers();
     }
 
-    public Strongbox getStrongbox() { return this.strongbox; }
+    public Strongbox getStrongbox() {
+        return this.strongbox;
+    }
 
-    public WarehouseDepot getWarehouseDepot() { return this.warehouseDepot; }
+    public WarehouseDepot getWarehouseDepot() {
+        return this.warehouseDepot;
+    }
 
     public LeaderCard[] getLeaderCards() {
         LeaderCard[] result = new LeaderCard[2];
@@ -100,19 +114,21 @@ public class Player extends ModelObservable {
         result[1] = leaderCards[1];
         return result;
     }
-    public DevelopmentSlot getDevelopmentSlot() { return this.developmentSlot; }
 
-    public void associateLeaderCards(ArrayList<LeaderCard> cards)
-    {
+    public DevelopmentSlot getDevelopmentSlot() {
+        return this.developmentSlot;
+    }
+
+    public void associateLeaderCards(ArrayList<LeaderCard> cards) {
         leaderCards[0] = cards.get(0);
         leaderCards[1] = cards.get(1);
         notifyObservers();
     }
 
-    public int getTotal(){
+    public int getTotal() {
         int result = warehouseDepot.getTotal();
         result += strongbox.getTotal();
-        for(LeaderCard l : getCardsWithExtraDepotAbility()){
+        for (LeaderCard l : getCardsWithExtraDepotAbility()) {
             ExtraDepot extraDepot = (ExtraDepot) l.getSpecialAbility();
             result += extraDepot.getNumber();
         }
@@ -120,15 +136,15 @@ public class Player extends ModelObservable {
     }
 
 
-    public Map<Resource, Integer> getResources(){
-        Map<Resource, Integer> resources= this.warehouseDepot.getResources();
+    public Map<Resource, Integer> getResources() {
+        Map<Resource, Integer> resources = this.warehouseDepot.getResources();
         Set<Resource> possibleResources = resources.keySet();
-        for(Resource resource: possibleResources){
-            if(this.strongbox.getQuantity(resource)!=null) {
+        for (Resource resource : possibleResources) {
+            if (this.strongbox.getQuantity(resource) != null) {
                 resources.merge(resource, this.strongbox.getQuantity(resource), Integer::sum);
             }
         }
-        for(LeaderCard l: this.getCardsWithExtraDepotAbility()){
+        for (LeaderCard l : this.getCardsWithExtraDepotAbility()) {
             ExtraDepot depotAbility = (ExtraDepot) l.getSpecialAbility();
             Resource extraResource = depotAbility.getResourceType();
             resources.merge(extraResource, depotAbility.getNumber(), Integer::sum);
@@ -136,11 +152,11 @@ public class Player extends ModelObservable {
         return resources;
     }
 
-    public Map<Resource, Integer> getDepotAndExtraDepotResources(){
+    public Map<Resource, Integer> getDepotAndExtraDepotResources() {
         Map<Resource, Integer> result;
-        result=this.warehouseDepot.getResources();
+        result = this.warehouseDepot.getResources();
         ArrayList<LeaderCard> playerLeaderCards = this.getCardsWithExtraDepotAbility();
-        for(LeaderCard l: playerLeaderCards){
+        for (LeaderCard l : playerLeaderCards) {
             ExtraDepot ability = (ExtraDepot) l.getSpecialAbility();
             Resource resource = ability.getResourceType();
             result.merge(resource, ability.getNumber(), Integer::sum);
@@ -148,8 +164,7 @@ public class Player extends ModelObservable {
         return result;
     }
 
-    public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility()
-    {
+    public ArrayList<LeaderCard> getCardsWithDiscountResourceAbility() {
         ArrayList<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isDiscountResource() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
@@ -158,8 +173,7 @@ public class Player extends ModelObservable {
         return result;
     }
 
-    public ArrayList<LeaderCard> getCardsWithExtraDepotAbility()
-    {
+    public ArrayList<LeaderCard> getCardsWithExtraDepotAbility() {
         ArrayList<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isExtraDepot() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
@@ -167,8 +181,8 @@ public class Player extends ModelObservable {
             result.add(leaderCards[1]);
         return result;
     }
-    public ArrayList<LeaderCard> getCardsWithProductionAbility()
-    {
+
+    public ArrayList<LeaderCard> getCardsWithProductionAbility() {
         ArrayList<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isProduction() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
@@ -176,41 +190,62 @@ public class Player extends ModelObservable {
             result.add(leaderCards[1]);
         return result;
     }
-    public ArrayList<LeaderCard> getCardsWithMarketResourceAbility()
-    {
+
+    public ArrayList<LeaderCard> getCardsWithMarketResourceAbility() {
         ArrayList<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isMarketResource() && leaderCards[0].getEnable())
             result.add(leaderCards[0]);
-        if (leaderCards[1] != null &&leaderCards[1].getSpecialAbility().isMarketResource() && leaderCards[1].getEnable())
+        if (leaderCards[1] != null && leaderCards[1].getSpecialAbility().isMarketResource() && leaderCards[1].getEnable())
             result.add(leaderCards[1]);
         return result;
     }
 
-    public boolean isDisconnectedBeforeLeaderCard() { return disconnectedBeforeLeaderCard; }
-    public void setDisconnectedBeforeLeaderCard(boolean disconnectedBeforeLeaderCard) { this.disconnectedBeforeLeaderCard = disconnectedBeforeLeaderCard; }
-    public boolean isDisconnectedAfterLeaderCard() { return disconnectedAfterLeaderCard; }
-    public void setDisconnectedAfterLeaderCard(boolean disconnectedAfterLeaderCard) { this.disconnectedAfterLeaderCard = disconnectedAfterLeaderCard; }
-    public boolean isDisconnectedBeforeResource() { return disconnectedBeforeResource; }
-    public void setDisconnectedBeforeResource(boolean disconnectedBeforeResource) { this.disconnectedBeforeResource = disconnectedBeforeResource; }
-    public boolean isDisconnectedAfterResource() { return disconnectedAfterResource; }
-    public void setDisconnectedAfterResource(boolean disconnectedAfterResource) { this.disconnectedAfterResource = disconnectedAfterResource; }
+    public boolean isDisconnectedBeforeLeaderCard() {
+        return disconnectedBeforeLeaderCard;
+    }
+
+    public void setDisconnectedBeforeLeaderCard(boolean disconnectedBeforeLeaderCard) {
+        this.disconnectedBeforeLeaderCard = disconnectedBeforeLeaderCard;
+    }
+
+    public boolean isDisconnectedAfterLeaderCard() {
+        return disconnectedAfterLeaderCard;
+    }
+
+    public void setDisconnectedAfterLeaderCard(boolean disconnectedAfterLeaderCard) {
+        this.disconnectedAfterLeaderCard = disconnectedAfterLeaderCard;
+    }
+
+    public boolean isDisconnectedBeforeResource() {
+        return disconnectedBeforeResource;
+    }
+
+    public void setDisconnectedBeforeResource(boolean disconnectedBeforeResource) {
+        this.disconnectedBeforeResource = disconnectedBeforeResource;
+    }
+
+    public boolean isDisconnectedAfterResource() {
+        return disconnectedAfterResource;
+    }
+
+    public void setDisconnectedAfterResource(boolean disconnectedAfterResource) {
+        this.disconnectedAfterResource = disconnectedAfterResource;
+    }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof Player)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Player)) return false;
         Player o = (Player) obj;
         return (this.nickname.equals(o.nickname));
     }
 
 
-    public boolean deepEquals( Object obj )
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof Player)) return false;
+    public boolean deepEquals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Player)) return false;
         Player o = (Player) obj;
-        return ( this.nickname.equals(o.nickname) &&
+        return (this.nickname.equals(o.nickname) &&
                 this.VP == o.VP &&
                 this.position == o.position &&
                 this.playerNumber == o.playerNumber &&
@@ -221,15 +256,14 @@ public class Player extends ModelObservable {
     }
 
     private void notifyMovement() {
-        this.notifyObservers(new MSG_NOTIFICATION(this.nickname + " has advanced on the Faith Track! Now at position: "+this.position));
+        this.notifyObservers(new MSG_NOTIFICATION(this.nickname + " has advanced on the Faith Track! Now at position: " + this.position));
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_Player generateMessage()
-    {
+    public MSG_UPD_Player generateMessage() {
         return new MSG_UPD_Player(
                 VP,
                 playerNumber,

@@ -11,13 +11,20 @@ public class RedMarble implements MarketMarble, Serializable {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";
 
-    public RedMarble() { color = Color.RED; }
+    public RedMarble() {
+        color = Color.RED;
+    }
 
-    public void addResource(ArrayList<Resource> ResourceList)  {
+    public void addResource(ArrayList<Resource> ResourceList) {
         throw new RedMarbleException("Red Marble detected!");
     }
 
     @Override
-    public String toString() { return " " + ANSI_RED + color + ANSI_RESET + " Marble  "; }
-    public String toAbbreviation() { return ANSI_RED + color.toAbbreviation() + ANSI_RESET; }
+    public String toString() {
+        return " " + ANSI_RED + color + ANSI_RESET + " Marble  ";
+    }
+
+    public String toAbbreviation() {
+        return ANSI_RED + color.toAbbreviation() + ANSI_RESET;
+    }
 }

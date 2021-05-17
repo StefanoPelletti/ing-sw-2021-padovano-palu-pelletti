@@ -7,10 +7,11 @@ import java.io.Serializable;
 
 public class MSG_UPD_End extends Message implements Serializable {
 
-    public MSG_UPD_End()
-    {
+    public MSG_UPD_End() {
         super(MessageType.MSG_UPD_End);
     }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

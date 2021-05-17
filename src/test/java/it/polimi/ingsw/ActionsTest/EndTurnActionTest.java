@@ -24,7 +24,7 @@ public class EndTurnActionTest {
     Catcher c;
     Catcher c2;
 
-// how does the endTurn work ( for T )
+    // how does the endTurn work ( for T )
 // NON-SOLO mode:
 //     IF NOT LAST PLAYER => the currentPlayer advance, the call returns TRUE (1 MSG_UPD_Game)
 //     IF LAST PLAYER => the currentPlayer advances, the turn advances (2 MSG_UPD_Game)
@@ -36,8 +36,7 @@ public class EndTurnActionTest {
 //         After the action, the status could be GAME OVER. in THIS case, load the LeaderBoard ( 1 MSG_UPD_LeaderBoard)
 //             IF status is not GAME OVER, that's it. Continue the game as always.
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(4);
         am = gm.getActionManager();
         g = gm.getGame();
@@ -45,7 +44,7 @@ public class EndTurnActionTest {
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
-        g.addPlayer("Quarto",4);
+        g.addPlayer("Quarto", 4);
         gm.addAllObserver(c);
         p = g.getPlayer(1);
         c.emptyQueue();
@@ -154,7 +153,7 @@ public class EndTurnActionTest {
         //assert correct messages are generated
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertSame(c2.messages.get(c2.messages.size()-1).getMessageType(),MessageType.MSG_UPD_LeaderBoard); //<- the LAST message must be MSG_UPD_LeaderBoard
+        assertSame(c2.messages.get(c2.messages.size() - 1).getMessageType(), MessageType.MSG_UPD_LeaderBoard); //<- the LAST message must be MSG_UPD_LeaderBoard
         //assertEquals(1, c2.messages.size()); <- this may change: LorenzoMove() modifies the model.
     }
 
@@ -170,5 +169,4 @@ public class EndTurnActionTest {
         //assert Model changes
         assertEquals(g2.getTurn(), turn + 1);
     }
-
 }

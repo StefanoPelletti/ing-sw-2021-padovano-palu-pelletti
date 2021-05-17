@@ -6,14 +6,17 @@ public class MSG_OK_REJOIN extends Message implements Serializable {
 
     private final String nickname;
 
-    public MSG_OK_REJOIN(String nickname)
-    {
+    public MSG_OK_REJOIN(String nickname) {
         super(MessageType.MSG_OK_REJOIN);
 
-        this.nickname=nickname;
+        this.nickname = nickname;
     }
 
-    public String getNickname() { return this.nickname; }
+    public String getNickname() {
+        return this.nickname;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

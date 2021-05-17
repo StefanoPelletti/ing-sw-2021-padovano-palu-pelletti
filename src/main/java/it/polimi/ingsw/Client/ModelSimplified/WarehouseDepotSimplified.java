@@ -9,15 +9,13 @@ public class WarehouseDepotSimplified {
     private Resource[] shelf2;
     private Resource[] shelf3;
 
-    public WarehouseDepotSimplified()
-    {
+    public WarehouseDepotSimplified() {
         this.shelf1 = Resource.NONE;
         this.shelf2 = null;
         this.shelf3 = null;
     }
 
-    public void update(MSG_UPD_WarehouseDepot message)
-    {
+    public void update(MSG_UPD_WarehouseDepot message) {
         Resource newShelf1 = message.getShelf1();
         Resource[] newShelf2 = new Resource[2];
         System.arraycopy(message.getShelf2(), 0, newShelf2, 0, 2);

@@ -13,20 +13,26 @@ public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
     private final boolean enabled;
     private final Map<DevelopmentCard, boolean[]> cards;
 
-    public MSG_UPD_DevCardsVendor(boolean enabled, Map<DevelopmentCard, boolean[]> map)
-    {
+    public MSG_UPD_DevCardsVendor(boolean enabled, Map<DevelopmentCard, boolean[]> map) {
         super(MessageType.MSG_UPD_DevCardsVendor);
 
-        if(map == null) {
+        if (map == null) {
             cards = null;
         } else {
-            cards = new HashMap<DevelopmentCard, boolean[]>(map);
+            cards = new HashMap<>(map);
         }
         this.enabled = enabled;
     }
 
-    public boolean getEnabled() { return this.enabled;}
-    public Map<DevelopmentCard, boolean[]> getCards() { return this.cards; }
+    public boolean getEnabled() {
+        return this.enabled;
+    }
 
-    public MessageType getMessageType() { return super.getMessageType();}
+    public Map<DevelopmentCard, boolean[]> getCards() {
+        return this.cards;
+    }
+
+    public MessageType getMessageType() {
+        return super.getMessageType();
+    }
 }

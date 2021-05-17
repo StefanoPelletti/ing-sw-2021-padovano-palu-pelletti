@@ -32,8 +32,7 @@ public class ActivateLeaderCardTest {
     LeaderCard l2;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(4);
         am = gm.getActionManager();
         g = gm.getGame();
@@ -44,7 +43,7 @@ public class ActivateLeaderCardTest {
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
-        g.addPlayer("Quarto",4);
+        g.addPlayer("Quarto", 4);
 
 
         l1 = new LeaderCard(3,
@@ -52,7 +51,7 @@ public class ActivateLeaderCardTest {
                 new ExtraDepot(Resource.COIN));
 
         l2 = new LeaderCard(2,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,-1}, Color.GREEN, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN, new Integer[]{1, -1})),
                 new DiscountResource(Resource.SERVANT));
 
         gm.addAllObserver(c);
@@ -103,7 +102,7 @@ public class ActivateLeaderCardTest {
 
     //Verifies that if the player has the required resources, the leaderCard is activated
     @Test
-    public void ResourceRequirement(){
+    public void ResourceRequirement() {
         MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(0);
         p.getStrongbox().addResource(Resource.SHIELD, 4);
         p.getWarehouseDepot().add(Resource.COIN);
@@ -122,7 +121,7 @@ public class ActivateLeaderCardTest {
     //Verifies that if the player has the required cards, the leaderCard is activated
     //First type of Card Requirement: Cards of specified colors
     @Test
-    public void CardRequirement1(){
+    public void CardRequirement1() {
         MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(1);
         DevelopmentCard card1 = new DevelopmentCard(1, Color.YELLOW, 0, null, null);
         DevelopmentCard card2 = new DevelopmentCard(2, Color.GREEN, 0, null, null);
@@ -143,11 +142,11 @@ public class ActivateLeaderCardTest {
     //Verifies that if the player has the required cards, the leaderCard is activated
     //Second type of Card Requirement: Cards of specified levels
     @Test
-    public void CardRequirement2(){
+    public void CardRequirement2() {
         MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(1);
 
         LeaderCard l3 = new LeaderCard(4,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,2})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, 2})),
                 new Production(Resource.SHIELD));
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(l1);

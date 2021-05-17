@@ -6,13 +6,12 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.ArrayList;
 
-public class LeaderCardsObject extends ModelObservable  {
+public class LeaderCardsObject extends ModelObservable {
     boolean enabled;
     ArrayList<LeaderCard> cards;
 
-    public LeaderCardsObject()
-    {
-        this.enabled=false;
+    public LeaderCardsObject() {
+        this.enabled = false;
         this.cards = null;
     }
 
@@ -21,24 +20,26 @@ public class LeaderCardsObject extends ModelObservable  {
         notifyObservers();
     }
 
-    public boolean isEnabled() { return this.enabled; }
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 
-    public void setCards(ArrayList<LeaderCard> newCards)
-    {
+    public void setCards(ArrayList<LeaderCard> newCards) {
         cards = new ArrayList<>(newCards);
-        if(enabled) {
+        if (enabled) {
             notifyObservers();
         }
     }
 
-    public ArrayList<LeaderCard> getCards() { return new ArrayList<>(this.cards); }
+    public ArrayList<LeaderCard> getCards() {
+        return new ArrayList<>(this.cards);
+    }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_LeaderCardsObject generateMessage()
-    {
+    public MSG_UPD_LeaderCardsObject generateMessage() {
         return new MSG_UPD_LeaderCardsObject(
                 this.enabled,
                 this.cards

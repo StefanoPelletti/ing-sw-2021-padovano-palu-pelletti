@@ -22,19 +22,19 @@ public class LeaderCardsDeck {
         deck = new ArrayList<>();
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN,  new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN, new Integer[]{1, -1})),
                 new DiscountResource(Resource.SERVANT)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.SHIELD)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,-1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.STONE)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new DiscountResource(Resource.COIN))
         );
 
@@ -59,42 +59,42 @@ public class LeaderCardsDeck {
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {2,-1}, Color.PURPLE, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
                 new MarketResources(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[] {2,-1}, Color.YELLOW, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[]{2, -1}, Color.YELLOW, new Integer[]{1, -1})),
                 new MarketResources(Resource.STONE))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.PURPLE, new Integer[] {2,-1}, Color.GREEN, new Integer[] {1,-1})),
+                new CardRequirements(Map.of(Color.PURPLE, new Integer[]{2, -1}, Color.GREEN, new Integer[]{1, -1})),
                 new MarketResources(Resource.COIN))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[] {1,2})),
+                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, 2})),
                 new Production(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[] {1,2})),
+                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, 2})),
                 new Production(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.PURPLE, new Integer[] {1,2})),
+                new CardRequirements(Map.of(Color.PURPLE, new Integer[]{1, 2})),
                 new Production(Resource.STONE))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[] {1,2})),
+                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, 2})),
                 new Production(Resource.COIN))
         );
 
@@ -106,16 +106,15 @@ public class LeaderCardsDeck {
         t_pos = 0;
     }
 
-    public ArrayList<LeaderCard> getCards()
-    {
+    public ArrayList<LeaderCard> getCards() {
         return new ArrayList<>(deck);
     }
 
-// pickFourCards extracts the next 4 cards from a fixed stack.
+    // pickFourCards extracts the next 4 cards from a fixed stack.
 // becomes cyclical if called more than 4 times without shuffling
     public synchronized ArrayList<LeaderCard> pickFourCards() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             if (t_pos == 16) t_pos = 0;
             cards.add(deck.get(t_pos));
             t_pos++;

@@ -23,8 +23,7 @@ public class FaithManagerTest {
     Catcher c;
 
     @BeforeEach
-    public void reset()
-    {
+    public void reset() {
         gm = new GameManager(4);
         am = gm.getActionManager();
         ftm = gm.getFaithTrackManager();
@@ -35,7 +34,7 @@ public class FaithManagerTest {
         g.addPlayer("Primo", 1);
         g.addPlayer("Secondo", 2);
         g.addPlayer("Terzo", 3);
-        g.addPlayer("Quarto",4);
+        g.addPlayer("Quarto", 4);
         gm.addAllObserver(c);
         p = g.getPlayer(1);
         p2 = g.getPlayer(2);
@@ -129,7 +128,7 @@ public class FaithManagerTest {
     @Test
     //case 3 test SOLO
     public void FaithTrackManagerTest5() {
-        GameManager gameManager =  new GameManager(1);
+        GameManager gameManager = new GameManager(1);
         Game game = gameManager.getGame();
         Catcher a = new Catcher();
         game.addPlayer("Primo", 1);

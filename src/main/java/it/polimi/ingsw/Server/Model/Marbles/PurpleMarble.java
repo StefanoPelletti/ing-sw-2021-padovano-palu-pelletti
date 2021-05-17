@@ -11,13 +11,20 @@ public class PurpleMarble implements MarketMarble, Serializable {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_PURPLE = "\u001B[35m";
 
-    public PurpleMarble() { color = Color.PURPLE; }
+    public PurpleMarble() {
+        color = Color.PURPLE;
+    }
 
     public void addResource(ArrayList<Resource> ResourceList) {
         ResourceList.add(Resource.SERVANT);
     }
 
     @Override
-    public String toString() { return " " + ANSI_PURPLE + color + ANSI_RESET + " Marble  "; }
-    public String toAbbreviation() { return ANSI_PURPLE + color.toAbbreviation() + ANSI_RESET; }
+    public String toString() {
+        return " " + ANSI_PURPLE + color + ANSI_RESET + " Marble  ";
+    }
+
+    public String toAbbreviation() {
+        return ANSI_PURPLE + color.toAbbreviation() + ANSI_RESET;
+    }
 }

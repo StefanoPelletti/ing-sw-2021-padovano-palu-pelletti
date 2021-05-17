@@ -253,7 +253,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     private void closeStreams() {
         try {
-            if(!this.clientSocket.isClosed())
+            if (!this.clientSocket.isClosed())
                 this.clientSocket.close();
             this.inputStream.close();
             this.objectInputStream.close();
@@ -291,7 +291,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
         this.pendingConnection = true;
         lobby.addIdlePlayer(this.playerNumber);
-        if(lobby.areAllPlayersIdle())
+        if (lobby.areAllPlayersIdle())
             new Thread(new allDisconnectedThread(this.lobby)).start();
         else
             lobby.disconnectPlayer(this.nickname);
@@ -365,11 +365,10 @@ public class ClientHandler implements Runnable, ModelObserver {
     //@experimental
     public void update(Message message) {
         try {
-            if(message.getMessageType()==MessageType.MSG_Stop) {
+            if (message.getMessageType() == MessageType.MSG_Stop) {
                 closeStreams();
-                System.out.println(" detected MSG_Stop: closing Thread of "+this.nickname+" streams");
-            }
-            else
+                System.out.println(" detected MSG_Stop: closing Thread of " + this.nickname + " streams");
+            } else
                 send(message);
         } catch (IOException e) {
             System.out.println(this.nickname + " failed to send message: " + message.getMessageType());

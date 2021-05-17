@@ -18,75 +18,74 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
     public Resource getResourceType() {
         return resource;
     }
-    public int getNumber() { return number; }
+
+    public int getNumber() {
+        return number;
+    }
 
     public boolean addResource(int numAdd) {
-        if ( numAdd > 2 || numAdd <= 0 ) return false;
-        if ( numAdd == 2 && number != 0 ) return false;
-        if ( numAdd == 1 && number == 2 ) return false;
-        number = number+numAdd;
+        if (numAdd > 2 || numAdd <= 0) return false;
+        if (numAdd == 2 && number != 0) return false;
+        if (numAdd == 1 && number == 2) return false;
+        number = number + numAdd;
         notifyObservers();
         return true;
     }
 
-    public boolean setResource(int num){
-        if ( num > 2 || num < 0 ) return false;
-        number=num;
+    public boolean setResource(int num) {
+        if (num > 2 || num < 0) return false;
+        number = num;
         notifyObservers();
         return true;
     }
 
     public boolean removeResource(int numRem) {
-        if ( number == 0 ) return false;
-        if ( numRem <= 0 || numRem > 2 ) return false;
-        if ( numRem == 2 && number == 1 ) return false;
+        if (number == 0) return false;
+        if (numRem <= 0 || numRem > 2) return false;
+        if (numRem == 2 && number == 1) return false;
         number = number - numRem;
         notifyObservers();
         return true;
     }
 
-    public boolean isProduction()
-    {
+    public boolean isProduction() {
         return false;
     }
-    public boolean isMarketResource()
-    {
+
+    public boolean isMarketResource() {
         return false;
     }
-    public boolean isExtraDepot()
-    {
+
+    public boolean isExtraDepot() {
         return true;
     }
-    public boolean isDiscountResource()
-    {
+
+    public boolean isDiscountResource() {
         return false;
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if(obj == this) return true;
-        if(!(obj instanceof ExtraDepot)) return false;
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof ExtraDepot)) return false;
         ExtraDepot o = (ExtraDepot) obj;
-        return (this.resource.equals(o.resource) && this.number==o.number);
+        return (this.resource.equals(o.resource) && this.number == o.number);
     }
 
     @Override
-    public String toString()
-    {
-        StringBuilder result= new StringBuilder();
+    public String toString() {
+        StringBuilder result = new StringBuilder();
         result.append("\u001B[31m" + "   SPECIAL ABILITY: " + "\u001B[0m").append("\n");
         result.append("    You have 2 more slots for ").append(resource).append("\n");
-        if( number>0) result.append("    There is/are").append(number).append("!").append("\n");
+        if (number > 0) result.append("    There is/are").append(number).append("!").append("\n");
         return result.toString();
     }
 
-    private void notifyObservers(){
+    private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_Extradepot generateMessage()
-    {
+    public MSG_UPD_Extradepot generateMessage() {
         return new MSG_UPD_Extradepot(
                 this.resource,
                 this.number

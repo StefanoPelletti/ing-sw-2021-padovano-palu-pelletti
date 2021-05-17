@@ -5,8 +5,7 @@ import it.polimi.ingsw.Server.Model.LeaderCard;
 
 import java.util.ArrayList;
 
-public class LeaderCardsObject
-{
+public class LeaderCardsObject {
     private boolean enabled;
     ArrayList<LeaderCard> cards;
 
@@ -14,35 +13,31 @@ public class LeaderCardsObject
         return enabled;
     }
 
-    public void update(MSG_UPD_LeaderCardsObject message)
-    {
+    public void update(MSG_UPD_LeaderCardsObject message) {
         boolean newEnabled = message.getEnabled();
         ArrayList<LeaderCard> newCards = message.getCards();
 
-        this.enabled=newEnabled;
+        this.enabled = newEnabled;
         this.cards = new ArrayList<>(newCards);
     }
 
-    public LeaderCard getCard(int position)
-    {
+    public LeaderCard getCard(int position) {
         if (cards == null) return null;
         return cards.get(position);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("\n");
         result.append("\u001B[36m" + " LEADERCARD PICKER IS HERE TO HELP! " + "\u001B[0m").append("\n");
-        if(enabled) {
+        if (enabled) {
             result.append(" These are the cards: ").append("\n");
             for (int i = 0; i < cards.size(); i++) {
-                result.append("\n\n").append(" Card number #").append(i+1).append("\n");
+                result.append("\n\n").append(" Card number #").append(i + 1).append("\n");
                 result.append(cards.get(i).toString());
             }
-        }
-        else
+        } else
             result.append("  LeaderCardsObject is not enabled.");
         return result.toString();
     }

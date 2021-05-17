@@ -11,8 +11,10 @@ public class MSG_ACTION_GET_MARKET_RESOURCES extends Message implements Serializ
     {
         super(MessageType.MSG_ACTION_GET_MARKET_RESOURCES);
 
-        if(column && (number <0 || number > 3 )) throw new IllegalArgumentException();
-        if(!column && (number <0 || number > 2)) throw new IllegalArgumentException();
+        if(column && (number <0 || number > 3 ))
+            throw new IllegalArgumentException();
+        if(!column && (number <0 || number > 2))
+            throw new IllegalArgumentException();
 
         this.column = column;
         this.number = number;
