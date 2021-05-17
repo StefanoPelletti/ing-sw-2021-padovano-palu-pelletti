@@ -38,7 +38,15 @@ public class GameManager {
 
     public boolean endTurn() {
         setNextPlayer();
-        if (!solo && game.getStatus() == Status.LAST_TURN && game.getCurrentPlayerInt() == 1) {
+
+        int firstAvailablePlayer=1;
+        for(int i=1; i<=lobbyMaxPlayers; i++)
+        {
+            if(idlePlayers.contains(i))
+                firstAvailablePlayer=i+1;
+        }
+
+        if (!solo && game.getStatus() == Status.LAST_TURN && game.getCurrentPlayerInt() == firstAvailablePlayer) {
             setStatus(Status.GAME_OVER);
             return endgame(); //which is return FALSE
         }
