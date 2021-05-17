@@ -112,7 +112,8 @@ public class EndTurnActionTest {
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_Stop).count());
+        assertEquals(5, c.messages.size());
     }
 
     // in the SOLO mode, there is no LAST TURN.
@@ -133,7 +134,8 @@ public class EndTurnActionTest {
         //assert correct messages are generated
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
         assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(2, c2.messages.size());
+        assertEquals(1, c2.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_Stop).count());
+        assertEquals(3, c2.messages.size());
     }
 
     // this test should basically not exist.

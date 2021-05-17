@@ -1356,20 +1356,20 @@ public class MarketActionTest {
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
         assertTrue(actionManager.newChoiceMarket(player,message));
-        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
-        assertEquals(3, a.messages.size());
+        assertEquals(4, a.messages.size());
         assertEquals(23, game.getBlackCrossPosition());
         assertTrue(gameManager.getSoloWinner());
         a.emptyQueue();
 
         message = new MSG_ACTION_MARKET_CHOICE(2); //discards
         assertTrue(actionManager.newChoiceMarket(player,message));
-        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
-        assertEquals(3, a.messages.size());
+        assertEquals(4, a.messages.size());
         assertEquals(24, game.getBlackCrossPosition());
         assertTrue(gameManager.getSoloWinner());
         a.emptyQueue();
@@ -1378,7 +1378,8 @@ public class MarketActionTest {
         assertFalse(actionManager.endTurn(player,true));
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(2, a.messages.size());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_Stop).count());
+        assertEquals(3, a.messages.size());
     }
 
     @Test
@@ -1426,8 +1427,8 @@ public class MarketActionTest {
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count()); //third zones activates
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper deactivates
-        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
-        assertEquals(6, a.messages.size());
+        assertEquals(3, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count()); // for third zone activation
+        assertEquals(7, a.messages.size());
         assertEquals(24, game.getBlackCrossPosition());
         assertFalse(gameManager.getSoloWinner());
         a.emptyQueue();
@@ -1438,7 +1439,8 @@ public class MarketActionTest {
 
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(2, a.messages.size());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_Stop).count());
+        assertEquals(3, a.messages.size());
     }
 
     //checks if Lorenzo advances normally
@@ -1479,10 +1481,10 @@ public class MarketActionTest {
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(2); //discards
         assertTrue(actionManager.newChoiceMarket(player,message));
-        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //Lorenzo advances
         assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count()); //marketHelper changes
-        assertEquals(3, a.messages.size());
+        assertEquals(4, a.messages.size());
         assertEquals(3, game.getBlackCrossPosition());
         assertNull(gameManager.getSoloWinner());
     }

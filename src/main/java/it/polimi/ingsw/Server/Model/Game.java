@@ -101,6 +101,7 @@ public class Game extends ModelObservable {
     }
     public void setBlackCrossPosition(int blackCrossPosition) {
         this.blackCrossPosition = blackCrossPosition;
+        notifyLorenzoMovement();
         notifyObservers();
     }
     public void setCurrentPlayer(int currentPlayer) {
@@ -171,5 +172,9 @@ public class Game extends ModelObservable {
                 this.currentPlayer,
                 this.blackCrossPosition
         );
+    }
+
+    private void notifyLorenzoMovement() {
+        this.notifyObservers(new MSG_NOTIFICATION("Lorenzo has advanced on the Faith Track! Now at position: "+this.blackCrossPosition));
     }
 }

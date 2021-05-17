@@ -73,8 +73,8 @@ public class LorenzoMoveTest {
                 assertEquals(3, g.getBlackCrossPosition());
                 //one turn update, two blackCrossPosition update. One notification
                 assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
-                assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-                assertEquals(5, c.messages.size());
+                assertEquals(4, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+                assertEquals(7, c.messages.size());
             }
             if(msg.startsWith("Lorenzo gained one")) //ForwardAndShuffle
             {
@@ -82,8 +82,8 @@ public class LorenzoMoveTest {
                 assertEquals(2, g.getBlackCrossPosition());
                 //one turn update, one blackCrossPosition update.
                 assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
-                assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-                assertEquals(4, c.messages.size());
+                assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+                assertEquals(5, c.messages.size());
                 assertTrue(true); //I solemnly trust Collections.Shuffle().
             }
             if(msg.startsWith("Lorenzo destroyed two"))  //remover
@@ -125,9 +125,9 @@ public class LorenzoMoveTest {
 
         assertEquals(9, g.getBlackCrossPosition());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
-        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(5, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
-        assertEquals(7, c.messages.size());
+        assertEquals(9, c.messages.size());
     }
 
     @Test
@@ -155,10 +155,10 @@ public class LorenzoMoveTest {
         assertEquals(24, g.getBlackCrossPosition());
         //one from the BlackCross, one notification, one faithTrack, and the leaderboard
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
-        assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(6, c.messages.size());
+        assertEquals(8, c.messages.size());
     }
     @Test
     public void LorenzoEndsTheGameByRemovingCards()
@@ -192,6 +192,7 @@ public class LorenzoMoveTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevDeck).count());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderBoard).count());
-        assertEquals(4, c.messages.size());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_Stop).count());
+        assertEquals(5, c.messages.size());
     }
 }

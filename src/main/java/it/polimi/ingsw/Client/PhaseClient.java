@@ -1526,8 +1526,8 @@ class GamePhase {
         }
         try {
             int number = Integer.parseInt(textList.get(0));
-            if (number < 1 || number > 8) {
-                System.out.println(Halo.ANSI_RED + " > Please pick a number between 1 and 7" + Halo.ANSI_RESET);
+            if (number < 0 || number > 8) {
+                System.out.println(Halo.ANSI_RED + " > Please pick a number between 0 and 7" + Halo.ANSI_RESET);
                 return false;
             }
 //check very powerful action    already playedE
