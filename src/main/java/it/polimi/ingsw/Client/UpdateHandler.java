@@ -118,20 +118,24 @@ public class UpdateHandler implements Runnable{
                         synchronized (Halo.game){
                             Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);
                             System.out.println(" <> Game over : "+Halo.game.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
-                            System.out.println(" > press any key to go back to the main menu");
+                            System.out.println(" > Please write quit to go back to the main menu");
                         }
                         return;
 //Notification
                     case MSG_NOTIFICATION:
-                        System.out.println(" <> " + ( (MSG_NOTIFICATION) message).getMessage());
-                        break;
+                        synchronized (Halo.game) {
+                            System.out.println(" <> " + ((MSG_NOTIFICATION) message).getMessage());
+                            break;
+                        }
 
                     case MSG_ERROR:
-                        if(Halo.yourTurn)
-                            System.out.println(Halo.ANSI_RED+" <> You got an error: "+Halo.ANSI_RESET);
-                        else
-                            System.out.println(Halo.ANSI_RED+" <> player "+ Halo.game.getCurrentPlayerRef().getNickname()+" got an error: "+Halo.ANSI_RESET);
-                        System.out.println(Halo.ANSI_RED+" <> "+((MSG_ERROR) message).getErrorMessage()+Halo.ANSI_RESET);
+                        synchronized (Halo.game) {
+                            if (Halo.yourTurn)
+                                System.out.println(Halo.ANSI_RED + " <> You got an error: " + Halo.ANSI_RESET);
+                            else
+                                System.out.println(Halo.ANSI_RED + " <> player " + Halo.game.getCurrentPlayerRef().getNickname() + " got an error: " + Halo.ANSI_RESET);
+                            System.out.println(Halo.ANSI_RED + " <> " + ((MSG_ERROR) message).getErrorMessage() + Halo.ANSI_RESET);
+                        }
                         break;
                 }
             }

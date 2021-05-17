@@ -956,12 +956,12 @@ class GamePhase {
                                                 System.out.println("Here's your depot and strongbox");
                                                 System.out.println(Halo.myPlayerRef.getWarehouseDepot());
                                                 System.out.println(Halo.myPlayerRef.getStrongbox());
-                                                if(Halo.myPlayerRef.getLeaderCards()[0] != null) {
+                                                if(Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
                                                         System.out.println("Extra depot of Card Number 1: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
                                                     }
                                                 }
-                                                if(Halo.myPlayerRef.getLeaderCards()[1] != null) {
+                                                if(Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
                                                     if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
                                                         System.out.println("Extra depot of Card Number 2: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
                                                     }
