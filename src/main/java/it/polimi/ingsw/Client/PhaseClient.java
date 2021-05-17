@@ -921,7 +921,7 @@ class GamePhase {
                                                         textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
                                                         if (checkLeaderCardsNumber(textList)) {
-                                                            cardToDiscard = Integer.parseInt(textList.get(0)) - 1;
+                                                            cardToDiscard = Integer.parseInt(textList.get(0));
                                                             if(cardToDiscard==0)
                                                             {
                                                                 System.out.println(" > Going back to main menu");
@@ -932,7 +932,7 @@ class GamePhase {
                                                     }
                                                     try
                                                     {
-                                                        MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
+                                                        MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard-1);
                                                         Halo.objectOutputStream.writeObject(msgToSend2);
                                                     } catch (IllegalArgumentException e)
                                                     {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Model.Middles;
 
+import it.polimi.ingsw.Networking.Message.MSG_Stop;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderBoard;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
@@ -24,6 +25,7 @@ public class LeaderBoard extends ModelObservable  {
         if(!enabled)
             leaderboard = null;
         notifyObservers();
+         notifyObservers(new MSG_Stop());
     }
 
     public Map<String, Integer> getLeaderboard() {

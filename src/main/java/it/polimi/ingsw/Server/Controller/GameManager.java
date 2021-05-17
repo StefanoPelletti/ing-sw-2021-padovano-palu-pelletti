@@ -74,6 +74,8 @@ public class GameManager {
         this.idlePlayers.remove(playerNumber);
     }
 
+    public boolean areAllPlayersIdle() { return (lobbyMaxPlayers == idlePlayers.size()); }
+
     public void setStatus(Status status) {
         game.changeStatus(status);
     }

@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Networking;
 
 public class CountDownThread implements Runnable {
-
     private final Lobby lobby;
     private final int time;
+
     public CountDownThread(Lobby lobby, int time)
     {
         this.lobby = lobby;
@@ -20,7 +20,6 @@ public class CountDownThread implements Runnable {
             synchronized (lobby) {
                 if (lobby.isStarted()) {
                     System.out.println("[CountDown "+Thread.currentThread().getName()+"] : lobby "+lobby.getLobbyNumber()+" NOT deleted for timeout");
-                    return;
                 }
                 else {
                     lobby.setDeleted(true);

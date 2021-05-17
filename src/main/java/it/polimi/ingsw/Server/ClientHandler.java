@@ -2,15 +2,15 @@ package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.Networking.*;
 import it.polimi.ingsw.Networking.Message.*;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_End;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
+import jdk.jfr.Experimental;
 
 import java.util.*;
 
 import java.net.*;
 import java.io.*;
 
-enum Phase { GiveModel, Disconnected, GameOver, Reconnect, TimeOut, ListenClient}
+enum Phase { GiveModel, Disconnected, GameOver, TimeOut, ListenClient}
 
 public class ClientHandler implements Runnable, ModelObserver {
 
@@ -190,12 +190,14 @@ public class ClientHandler implements Runnable, ModelObserver {
                     break;
                 case ListenClient:
                     phase = listenClient();
+                    break;
                 case Disconnected: //gets in this phase if some exception was thrown by the streams
                     phase = disconnect();
                     break;
                 case GameOver: //basically kills the thread
                     closeStreams();
                     lobby.setDeleted(true);
+                    lobby.wakeUpAllPendingClientHandlers();
                     Lobby.removeLobby(this.lobby);
                     return;
                 case TimeOut:
@@ -287,6 +289,8 @@ public class ClientHandler implements Runnable, ModelObserver {
 
         this.pendingConnection = true;
         lobby.addIdlePlayer(this.playerNumber);
+        if(lobby.areAllPlayersIdle())
+            new Thread(new allDisconnectedThread(this.lobby)).start();
         lobby.disconnectPlayer(this.nickname);
         try {
             synchronized (this.pendingLock) {
@@ -344,10 +348,26 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
-    @Override
-    public void update(Message message) {
+
+    public void updateX(Message message) {
         try {
             send(message);
+        } catch (IOException e) {
+            System.out.println(this.nickname + " failed to send message: " + message.getMessageType());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    //@experimental
+    public void update(Message message) {
+        try {
+            if(message.getMessageType()==MessageType.MSG_Stop) {
+                closeStreams();
+                System.out.println(" detected MSG_Stop: closing Thread of "+this.nickname+" streams");
+            }
+            else
+                send(message);
         } catch (IOException e) {
             System.out.println(this.nickname + " failed to send message: " + message.getMessageType());
             e.printStackTrace();

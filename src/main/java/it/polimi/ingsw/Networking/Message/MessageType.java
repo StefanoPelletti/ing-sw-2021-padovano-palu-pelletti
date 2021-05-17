@@ -44,6 +44,6 @@ public enum MessageType implements Serializable {
     MSG_UPD_Full,
     MSG_NOTIFICATION,
 
-    Ping
+    Ping, MSG_Stop
 
 }

@@ -121,10 +121,11 @@ public class Lobby {
 
 
     public synchronized ClientHandler findPendingClientHandler(String nickname) {
-        return this.clientHandlers.stream().filter(ClientHandler::isPendingConnection).sorted(
+        Optional<ClientHandler> result = this.clientHandlers.stream().filter(ClientHandler::isPendingConnection).sorted(
                 (a, b) -> {
                     return Integer.compare(b.getNickname().length(), a.getNickname().length());
-                }).filter(x -> x.getNickname().startsWith(nickname)).findFirst().get();
+                }).filter(x -> x.getNickname().startsWith(nickname)).findFirst();
+        return result.orElse(null);
     }
 
     public int getLobbyMaxPlayers() {
@@ -208,6 +209,7 @@ public class Lobby {
             if (c.isPendingConnection()) {
                 c.wakeUp();
             }
+            clientHandlers.remove(c); //not sure if it is safe to use like that, should check
         }
     }
 
@@ -217,6 +219,10 @@ public class Lobby {
 
     public void notifyReconnection(String nickname) {
         actionManager.notifyReconnection(nickname);
+    }
+
+    public boolean areAllPlayersIdle() {
+        return gameManager.areAllPlayersIdle();
     }
 }
 
