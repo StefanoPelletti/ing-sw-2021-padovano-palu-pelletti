@@ -31,11 +31,9 @@ public class DevelopmentSlotSimplified {
 
         DevelopmentCard[] onTop = new DevelopmentCard[3];
         for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                if(cards[i][j]!=null)
+            for(int j = 2; j >= 0; j--) {
+                if (cards[i][j] != null) {
                     onTop[i] = cards[i][j];
-                else {
-                    onTop[i] = null;
                     break;
                 }
             }

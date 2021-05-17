@@ -674,7 +674,7 @@ class GamePhase {
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                 }
                             }
-                            MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum);
+                            MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum-1);
                             Halo.objectOutputStream.writeObject(msgToSend);
                         } else if (Halo.game.isLeaderBoardEnabled()) {
                             Halo.closeStreams();
@@ -1612,6 +1612,7 @@ class GamePhase {
             }
         } else {
             System.out.println(Halo.ANSI_RED + " > The number of parameters is different then expected." + Halo.ANSI_RESET);
+            return false;
         }
         return true;
     }
