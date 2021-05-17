@@ -252,7 +252,8 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     private void closeStreams() {
         try {
-            this.clientSocket.close();
+            if(!this.clientSocket.isClosed())
+                this.clientSocket.close();
             this.inputStream.close();
             this.objectInputStream.close();
             this.outputStream.close();

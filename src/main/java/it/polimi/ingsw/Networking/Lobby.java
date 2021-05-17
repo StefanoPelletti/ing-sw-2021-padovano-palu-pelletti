@@ -209,8 +209,8 @@ public class Lobby {
             if (c.isPendingConnection()) {
                 c.wakeUp();
             }
-            clientHandlers.remove(c); //not sure if it is safe to use like that, should check
         }
+        clientHandlers.clear(); //not sure if it is safe to use like that, should check
     }
 
     public boolean isGameOver() {
