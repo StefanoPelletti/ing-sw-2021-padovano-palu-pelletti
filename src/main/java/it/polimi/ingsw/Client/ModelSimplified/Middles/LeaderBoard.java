@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.ModelSimplified.Middles;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderBoard;
+import it.polimi.ingsw.Server.Utils.A;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,6 +36,8 @@ public class LeaderBoard {
         StringBuilder result = new StringBuilder();
         if (this.leaderboard == null) return result.append("Empty LeaderBoard.").toString();
 
+        result.append(A.CYAN + "      LEADERBOARD" + A.RESET).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         boolean tie = false;
         Integer maxValue = 0;
         for (String nickname : leaderboard.keySet()) {
@@ -69,7 +72,7 @@ public class LeaderBoard {
             } else
                 result.append(" I mean, you lost. GG").append("\n");
 
-            result.append("\n ----------------").append("\n");
+            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
             for (String nickname : leaderboard.keySet()) {
                 result.append("\n").append(nickname);
                 result.append("\t").append(leaderboard.get(nickname));

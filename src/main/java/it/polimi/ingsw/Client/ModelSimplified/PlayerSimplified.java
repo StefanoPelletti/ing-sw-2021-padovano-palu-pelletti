@@ -73,19 +73,6 @@ public class PlayerSimplified {
         this.developmentSlot.update(message);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("Warehouse Depot: \n");
-        result.append(warehouseDepot);
-        result.append("----------------");
-        result.append(" Strongbox: \n");
-        result.append(strongbox);
-        result.append("DevelopmentSlot : \n");
-        result.append(developmentSlot);
-        return result.toString();
-    }
-
     public String getNickname() {
         return this.nickname;
     }

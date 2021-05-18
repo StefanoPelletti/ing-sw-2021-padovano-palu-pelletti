@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified.Middles;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_MarketHelper;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.A;
 
 import java.util.ArrayList;
 
@@ -60,11 +61,12 @@ public class MarketHelper {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("\n");
-        result.append("\u001B[36m" + " MARKETHELPER IS HERE TO HELP! " + "\u001B[0m").append("\n");
+        result.append(A.CYAN + " MARKETHELPER IS HERE TO HELP! " + A.RESET).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         result.append(" The Resources you gathered from the market are: ").append("\n");
         result.append(" ").append(resources).append("\n");
         result.append(" Currently selected resource is a ").append(getCurrentResource()).append(". What do you want to do with it?").append("\n");
-        //result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         result.append(" Available options: ").append("\n");
         if (getCurrentResource() != Resource.EXTRA) {
             if (choices[0]) result.append("  0 : put in depot! ").append("\n");

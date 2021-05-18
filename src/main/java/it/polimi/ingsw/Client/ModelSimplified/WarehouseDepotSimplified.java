@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
+import it.polimi.ingsw.Server.Utils.A;
 
 public class WarehouseDepotSimplified {
 
@@ -35,12 +36,12 @@ public class WarehouseDepotSimplified {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         result.append("               WAREHOUSE DEPOT:").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         result.append("\u001B[36m" + "  Shelf 1:  " + "\u001B[0m").append(this.shelf1).append("\n");
         result.append("\u001B[36m" + "  Shelf 2:  " + "\u001B[0m").append(this.shelf2[0]).append(" - ").append(this.shelf2[1]).append("\n");
         result.append("\u001B[36m" + "  Shelf 3:  " + "\u001B[0m").append(this.shelf3[0]).append(" - ").append(this.shelf3[1]).append(" - ").append(this.shelf3[2]).append("\n");
-        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         return result.toString();
     }
 }

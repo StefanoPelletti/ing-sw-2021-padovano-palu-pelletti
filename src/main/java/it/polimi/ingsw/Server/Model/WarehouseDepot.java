@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.A;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
@@ -298,9 +299,12 @@ public class WarehouseDepot extends ModelObservable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("Shelf 1: ").append(this.shelf1.toString());
-        result.append("Shelf 2: ").append(this.shelf2[0].toString()).append(", ").append(this.shelf2[1].toString());
-        result.append("Shelf 3: ").append(this.shelf3[0].toString()).append(", ").append(this.shelf3[1].toString()).append(", ").append(this.shelf3[2].toString());
+        result.append("               WAREHOUSE DEPOT:").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append("\u001B[36m" + "  Shelf 1:  " + "\u001B[0m").append(this.shelf1).append("\n");
+        result.append("\u001B[36m" + "  Shelf 2:  " + "\u001B[0m").append(this.shelf2[0]).append(" - ").append(this.shelf2[1]).append("\n");
+        result.append("\u001B[36m" + "  Shelf 3:  " + "\u001B[0m").append(this.shelf3[0]).append(" - ").append(this.shelf3[1]).append(" - ").append(this.shelf3[2]).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         return result.toString();
     }
 

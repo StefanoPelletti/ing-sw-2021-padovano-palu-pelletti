@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
+import it.polimi.ingsw.Server.Utils.A;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.ArrayList;
@@ -131,9 +132,20 @@ public class DevelopmentSlot extends ModelObservable {
     public String toString() {
         StringBuilder result = new StringBuilder();
 
-        result.append("------ DevelopmentSlot ------ \n");
+        DevelopmentCard[] onTop = new DevelopmentCard[3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 2; j >= 0; j--) {
+                if (cards[i][j] != null) {
+                    onTop[i] = cards[i][j];
+                    break;
+                }
+            }
+        }
 
-        result.append("Slot 1: \n");
+
+        result.append("                  DEVELOPMENT SLOT:    \n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "Slot 1: \n" + A.RESET);
         if (onTop[0] != null) {
             result.append(onTop[0]);
         } else {
@@ -141,14 +153,16 @@ public class DevelopmentSlot extends ModelObservable {
         }
         for (int i = 0; i < 3; i++) {
             if (cards[0][i] != onTop[0]) {
+                //FIXME check comment below
+                assert cards[0][i] != null; //getVP was signaling possible nullPointerException, please check
                 result.append("VP of underneath cards: ").append(cards[0][i].getVP()).append("\n");
             } else {
                 break;
             }
         }
 
-        result.append("\n");
-        result.append("Slot 2: \n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "Slot 2: \n" + A.RESET);
         if (onTop[1] != null) {
             result.append(onTop[1]);
         } else {
@@ -162,8 +176,8 @@ public class DevelopmentSlot extends ModelObservable {
             }
         }
 
-        result.append("\n");
-        result.append("Slot 3: \n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "Slot 3: \n" + A.RESET);
         if (onTop[2] != null) {
             result.append(onTop[2]);
         } else {
@@ -176,6 +190,7 @@ public class DevelopmentSlot extends ModelObservable {
                 break;
             }
         }
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
 
         return result.toString();
     }

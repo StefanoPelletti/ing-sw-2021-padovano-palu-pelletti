@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
+import it.polimi.ingsw.Server.Utils.A;
 
 public class DevelopmentSlotSimplified {
     private DevelopmentCard[][] cards;
@@ -33,10 +34,10 @@ public class DevelopmentSlotSimplified {
             }
         }
 
-        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
-        result.append("                  DEVELOPMENT SLOT:    \n");
 
-        result.append("\u001B[36m" + "Slot 1: \n" + "\u001B[0m");
+        result.append("                  DEVELOPMENT SLOT:    \n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "Slot 1: \n" + A.RESET);
         if (onTop[0] != null) {
             result.append(onTop[0]);
         } else {
@@ -44,6 +45,7 @@ public class DevelopmentSlotSimplified {
         }
         for (int i = 0; i < 3; i++) {
             if (cards[0][i] != onTop[0]) {
+                //FIXME check comment below
                 assert cards[0][i] != null; //getVP was signaling possible nullPointerException, please check
                 result.append("VP of underneath cards: ").append(cards[0][i].getVP()).append("\n");
             } else {
@@ -51,8 +53,8 @@ public class DevelopmentSlotSimplified {
             }
         }
 
-        result.append("\n");
-        result.append("\u001B[36m" + "Slot 2: \n" + "\u001B[0m");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "Slot 2: \n" + A.RESET);
         if (onTop[1] != null) {
             result.append(onTop[1]);
         } else {
@@ -66,8 +68,8 @@ public class DevelopmentSlotSimplified {
             }
         }
 
-        result.append("\n");
-        result.append("\u001B[36m" + "Slot 3: \n" + "\u001B[0m");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "Slot 3: \n" + A.RESET);
         if (onTop[2] != null) {
             result.append(onTop[2]);
         } else {
@@ -80,7 +82,7 @@ public class DevelopmentSlotSimplified {
                 break;
             }
         }
-        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
 
         return result.toString();
     }

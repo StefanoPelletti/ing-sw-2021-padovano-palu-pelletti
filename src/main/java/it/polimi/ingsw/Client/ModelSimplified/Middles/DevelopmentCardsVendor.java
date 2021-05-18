@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified.Middles;
 
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
+import it.polimi.ingsw.Server.Utils.A;
 
 import java.util.*;
 
@@ -33,9 +34,10 @@ public class DevelopmentCardsVendor {
     public String toString() {
         StringBuilder result = new StringBuilder();
         int i = 1;
-        result.append("\u001B[36m" + " THE VENDOR IS HERE TO HELP! " + "\u001B[0m").append("\n");
+        result.append(A.CYAN + " THE VENDOR IS HERE TO HELP! " + A.RESET).append("\n").append("\n");
         if (cards != null) {
             for (DevelopmentCard dc : cards.keySet()) {
+                result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
                 result.append("  The card number: ").append(i).append("\n");
                 result.append(dc).append("\n");
                 int k = 1;

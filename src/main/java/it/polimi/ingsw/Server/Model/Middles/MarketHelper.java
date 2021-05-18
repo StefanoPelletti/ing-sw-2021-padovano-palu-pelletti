@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Model.Middles;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_MarketHelper;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Utils.A;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
@@ -92,6 +93,35 @@ public class MarketHelper extends ModelObservable {
 
     public boolean[] getChoices() {
         return this.choices;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("\n");
+        result.append(A.CYAN + " MARKETHELPER IS HERE TO HELP! " + A.RESET).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(" The Resources you gathered from the market are: ").append("\n");
+        result.append(" ").append(resources).append("\n");
+        result.append(" Currently selected resource is a ").append(getCurrentResource()).append(". What do you want to do with it?").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(" Available options: ").append("\n");
+        if (getCurrentResource() != Resource.EXTRA) {
+            if (choices[0]) result.append("  0 : put in depot! ").append("\n");
+            if (choices[1]) result.append("  1 : put in Extra depot!").append("\n");
+        } else {
+            if (choices[0]) result.append("  0 : convert in ").append(extraResourceChoices[0]).append("\n");
+            if (choices[1]) result.append("  1 : convert in ").append(extraResourceChoices[1]).append("\n");
+        }
+
+        if (choices[2]) result.append("  2 : discard that resource! ").append("\n");
+        if (choices[3]) result.append("  3 : swap the 1st and 2nd rows of your depot! ").append("\n");
+        if (choices[4]) result.append("  4 : swap the 1st and 3rd rows of your depot! ").append("\n");
+        if (choices[5]) result.append("  5 : swap the 2nd and 3rd rows of your depot! ").append("\n");
+        if (choices[6]) result.append("  6 : hop to the next available resource! ").append("\n");
+        if (choices[7]) result.append("  7 : hop back to the previous resource! ").append("\n");
+
+        return result.toString();
     }
 
     private void notifyObservers() {
