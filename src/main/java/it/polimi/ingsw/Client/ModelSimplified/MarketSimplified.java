@@ -33,13 +33,13 @@ public class MarketSimplified {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(ANSI_CYAN + "_____+_____+_____+_____+_____+_____+_____+_____" + ANSI_RESET).append("\n");
+        result.append(ANSI_CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + ANSI_RESET).append("\n");
         result.append("                   MARKET!                ").append("\n");
         result.append("      Marble on the Slide: ").append(slideMarble).append("\n").append("\n");
         result.append("             [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation()).append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation()).append(" ]").append("\n");
         result.append("             [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation()).append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation()).append(" ]").append("\n");
         result.append("             [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation()).append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation()).append(" ]").append("\n");
-        result.append(ANSI_CYAN + "_____+_____+_____+_____+_____+_____+_____+_____" + ANSI_RESET).append("\n");
+        result.append(ANSI_CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + ANSI_RESET).append("\n");
         return result.toString();
     }
 }

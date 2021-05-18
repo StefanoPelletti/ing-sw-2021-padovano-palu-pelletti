@@ -20,6 +20,7 @@ public class DevelopmentCardsDeckSimplified {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder(" Development Deck: ");
+
         for (int i = 0; i < 3; i++) {
             result.append(" Row ").append(i);
             for (int j = 0; j < 4; j++) {

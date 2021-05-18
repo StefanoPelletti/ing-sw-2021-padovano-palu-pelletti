@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model.Enumerators;
 
+import it.polimi.ingsw.Server.Utils.A;
+
 import java.io.Serializable;
 
 public enum Resource implements Serializable {
@@ -8,17 +10,17 @@ public enum Resource implements Serializable {
     public String toString() {
         switch (this) {
             case SHIELD:
-                return "\u001B[34m" + "SHIELD" + "\u001B[0m";
+                return A.BLUE + "SHIELD" + A.RESET;
             case COIN:
-                return "\u001B[33m" + "COIN" + "\u001B[0m";
+                return A.YELLOW + "COIN" + A.RESET;
             case SERVANT:
-                return "\u001B[35m" + "SERVANT" + "\u001B[0m";
+                return A.PURPLE + "SERVANT" + A.RESET;
             case STONE:
-                return "STONE";
+                return A.UL + "STONE" + A.RESET;
             case EXTRA:
-                return "\u001B[37m" + "EXTRA" + "\u001B[0m";
+                return A.WHITE + "EXTRA" + A.RESET;
             case FAITH:
-                return "\u001B[31m" + "FAITH" + "\u001B[0m";
+                return A.RED + "FAITH" + A.RESET;
             default:
                 return "NONE";
         }

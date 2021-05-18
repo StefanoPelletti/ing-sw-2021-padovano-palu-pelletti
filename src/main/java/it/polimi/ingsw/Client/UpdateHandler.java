@@ -6,6 +6,7 @@ import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Server.Utils.A;
 
 public class UpdateHandler implements Runnable {
 
@@ -16,7 +17,7 @@ public class UpdateHandler implements Runnable {
         Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
         if (Halo.yourTurn) { // && Halo.game.isLeaderCardsObjectEnabled()
-            System.out.println(" <> Two free Leader Cards!");
+            System.out.println(A.YELLOW+ " <> Two free Leader Cards!"+A.RESET);
             System.out.println(Halo.game.getLeaderCardsObject().toString());
             System.out.println(" > Please pick the first card:");
             System.out.print(" Card number: ");
@@ -92,36 +93,37 @@ public class UpdateHandler implements Runnable {
                             if (Halo.yourTurn) {
                                 if (Halo.game.isMiddleActive()) {
                                     if (Halo.game.isLeaderCardsObjectEnabled()) {
-                                        System.out.println(" <> Two free Leader Cards!");
+                                        System.out.println(A.YELLOW+" <> Two free Leader Cards!"+A.RESET);
                                         System.out.println(Halo.game.getLeaderCardsObject().toString());
-                                        System.out.println(" > Please pick the first card:");
+                                        System.out.println(A.UL+" > Please pick the first card"+A.RESET);
                                         System.out.print(" Card number: ");
                                     } else if (Halo.game.isResourceObjectEnabled()) {
-                                        System.out.println(" <> Free resources!");
+                                        System.out.println(A.YELLOW+" <> Free resources!"+A.RESET);
                                         System.out.println(Halo.game.getResourceObject().toString());
-                                        System.out.println(" > Please pick the resource you want:");
+                                        System.out.println(A.UL+" > Please pick the resource you want"+A.RESET);
                                         System.out.print(" Resource number: ");
                                     } else if (Halo.game.isMarketHelperEnabled()) {
                                         System.out.println(Halo.game.getMarketHelper().toString());
                                         System.out.println(Halo.game.getCurrentPlayerRef().getWarehouseDepot());
-                                        System.out.println(" > Please select an option:");
+                                        System.out.println(A.UL+" > Please select an option"+A.RESET);
                                         System.out.print(" Choice: ");
                                     } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                                         System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
-                                        System.out.println(" > Please select a card number and a slot number:");
-                                        System.out.print(" card | slot: ");
+                                        System.out.println(A.UL+" > Please select a card number and a slot number"+A.RESET);
+                                        System.out.print(" Card | Slot: ");
                                     }
                                 } else {
                                     if (!still) {
-                                        System.out.println(Halo.ANSI_GREEN + " <> Your Turn! You may use the <action> command!" + Halo.ANSI_RESET);
+                                        System.out.println(A.GREEN + " <> Your Turn! You may use the "+A.CYAN+"action"+A.GREEN+" command!" + A.RESET);
+                                        Halo.action=false;
                                         still = true;
                                     } else {
-                                        System.out.println(Halo.ANSI_GREEN + " <> Still your turn!" + Halo.ANSI_RESET);
+                                        System.out.println(A.GREEN + " <> Still your turn!" + A.RESET);
                                     }
                                 }
 
                             } else {
-                                System.out.println(Halo.ANSI_GREEN + " <> Turn of " + Halo.game.getCurrentPlayerRef().getNickname() + Halo.ANSI_RESET);
+                                System.out.println(A.GREEN + " <> Turn of " + Halo.game.getCurrentPlayerRef().getNickname() + A.RESET);
                                 still = false;
                             }
                         }
@@ -130,24 +132,25 @@ public class UpdateHandler implements Runnable {
                     case MSG_UPD_LeaderBoard: //who closes the connection?
                         synchronized (Halo.game) {
                             Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);
-                            System.out.println(" <> Game over : " + Halo.game.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
-                            System.out.println(" > Please write quit to go back to the main menu");
+                            System.out.println(A.YELLOW+" <> Game over : " +A.RESET+ Halo.game.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
+                            System.out.println(A.UL+" > Please write quit to go back to the main menu"+A.RESET);
                         }
                         return;
 //Notification
                     case MSG_NOTIFICATION:
                         synchronized (Halo.game) {
-                            System.out.println(" <> " + ((MSG_NOTIFICATION) message).getMessage());
+                            System.out.println();
+                            System.out.println(A.YELLOW+" <> " + ((MSG_NOTIFICATION) message).getMessage()+A.RESET);
                             break;
                         }
 
                     case MSG_ERROR:
                         synchronized (Halo.game) {
                             if (Halo.yourTurn)
-                                System.out.println(Halo.ANSI_RED + " <> You got an error: " + Halo.ANSI_RESET);
+                                System.out.println(A.RED + " <> You got an error: " + A.RESET);
                             else
-                                System.out.println(Halo.ANSI_RED + " <> player " + Halo.game.getCurrentPlayerRef().getNickname() + " got an error: " + Halo.ANSI_RESET);
-                            System.out.println(Halo.ANSI_RED + " <> " + ((MSG_ERROR) message).getErrorMessage() + Halo.ANSI_RESET);
+                                System.out.println(A.RED + " <> player " + Halo.game.getCurrentPlayerRef().getNickname() + " got an error: " + A.RESET);
+                            System.out.println(A.RED + " <> " + ((MSG_ERROR) message).getErrorMessage() + A.RESET);
                         }
                         break;
                 }

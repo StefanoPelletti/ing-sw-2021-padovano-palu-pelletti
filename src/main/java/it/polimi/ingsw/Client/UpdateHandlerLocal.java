@@ -1,13 +1,8 @@
 package it.polimi.ingsw.Client;
 
-import it.polimi.ingsw.Networking.Message.MSG_ERROR;
 import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.Message;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_DevDeck;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_FaithTrack;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Game;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
+import it.polimi.ingsw.Server.Utils.A;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
 
 public class UpdateHandlerLocal implements ModelObserver {
@@ -18,40 +13,37 @@ public class UpdateHandlerLocal implements ModelObserver {
         switch (message.getMessageType()) {
 //End update
             case MSG_UPD_End:
-                synchronized (Halo.gameSRV) {
-                    Halo.yourTurn = true;
-                    if (Halo.gameSRV.isMiddleActive()) {
-                        if (Halo.gameSRV.isMarketHelperEnabled()) {
-                            System.out.println(Halo.gameSRV.getMarketHelper().toString());
-                            System.out.println(Halo.gameSRV.getCurrentPlayer().getWarehouseDepot());
-                            System.out.println(" > Please select an option:");
-                            System.out.print(" Choice: ");
-                        } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
-                            System.out.println(Halo.gameSRV.getDevelopmentCardsVendor().toString());
-                            System.out.println(" > Please select a card number and a slot number:");
-                            System.out.print(" card | slot: ");
-                        }
-                    } else {
-                        System.out.println(Halo.ANSI_GREEN + " <> Still your turn!" + Halo.ANSI_RESET);
+                if (Halo.gameSRV.isMiddleActive()) {
+                    if (Halo.gameSRV.isMarketHelperEnabled()) {
+                        System.out.println(Halo.gameSRV.getMarketHelper().toString());
+                        System.out.println(Halo.gameSRV.getCurrentPlayer().getWarehouseDepot());
+                        System.out.println(A.UL+" > Please select an option"+A.RESET);
+                        System.out.print(" Choice: ");
+                    } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
+                        System.out.println(Halo.gameSRV.getDevelopmentCardsVendor().toString());
+                        System.out.println(A.UL+" > Please select a card number and a slot number"+A.RESET);
+                        System.out.print(" Card | Slot: ");
                     }
+                } else
+                {
+                    System.out.println(A.GREEN + " <> Still your turn!" + A.RESET);
                 }
                 break;
 //final update
             case MSG_UPD_LeaderBoard:
-                synchronized (Halo.gameSRV) {
-                    System.out.println(" <> Game over : " + Halo.gameSRV.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
-                    System.out.println(" > Please write quit to go back to the main menu");
-                }
+                System.out.println(A.YELLOW + " <> Game over : " + A.RESET+ Halo.gameSRV.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
+                System.out.println(A.UL+" > Please write "+A.CYAN+"quit"+A.UL+" to go back to the main menu"+A.RESET);
+                Halo.yourTurn=false;
                 return;
 //Notification
             case MSG_NOTIFICATION:
-                System.out.println(" <> " + ((MSG_NOTIFICATION) message).getMessage());
+                System.out.println(A.YELLOW + " <> " + ((MSG_NOTIFICATION) message).getMessage() +A.RESET);
                 break;
             case MSG_ERROR:
-                System.out.println(Halo.ANSI_RED + " <> You got an error: " + Halo.ANSI_RESET);
+                System.out.println(A.RED + " <> You got an error: " + A.RESET);
                 break;
             default:
-                System.out.println("DEBUG handler : received : "+message.getMessageType());
+                //System.out.println("DEBUG handler : received : "+message.getMessageType());
                 break;
         }
     }
