@@ -24,7 +24,7 @@ public class PhaseClient  {
 
     public static void main( String[] args ) {
 
-        System.out.println(" >> Welcome player.");
+        Halo.print(" >> Welcome player.");
 
         Phase phase = Phase.MainMenu;
 
@@ -91,6 +91,32 @@ class Halo
             e.printStackTrace();
         }
     }
+
+    public static void print(String string, String color)
+    {
+        System.out.print(color);
+        print(string);
+        System.out.print(ANSI_RESET);
+    }
+
+    public static void print(String string) {
+        int Slength = string.length();
+        float Tconstant = 1000;
+        float Tsleep = Tconstant/Slength;
+        long TsleepMillis = (long) Tsleep;
+        Tsleep = Tsleep - TsleepMillis;
+        int TsleepNanos = (int) (Tsleep*1000);
+
+        try {
+            for (int i = 0; i < Slength; i++) {
+                System.out.print(string.charAt(i));
+                Thread.sleep(TsleepMillis, TsleepNanos);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.print("\n");
+    }
 }
 
 class ClosingPhase
@@ -112,7 +138,11 @@ class ClosingPhase
 
 class MenuPhase {
     public Phase run() {
+        //Halo.print(" >> Main Menu. ");
         System.out.println(" >> Main Menu.");
+        //Halo.print(" >> write ");
+        //Halo.print("help", Halo.ANSI_CYAN);
+        //Halo.print(" for a list of commands.");
         System.out.println(" >> write " + Halo.ANSI_CYAN + "help" + Halo.ANSI_RESET + " for a list of commands.");
         List<String> textList = new ArrayList<>();
         String text;

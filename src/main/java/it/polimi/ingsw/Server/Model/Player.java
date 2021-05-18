@@ -22,11 +22,10 @@ public class Player extends ModelObservable {
     private boolean permittedAction;
 
     private boolean disconnectedBeforeLeaderCard;
-    private boolean disconnectedAfterLeaderCard;
     private boolean disconnectedBeforeResource;
-    private boolean disconnectedAfterResource;
 
     private ArrayList<LeaderCard> startingCards;
+    private int startingResources;
 
     public Player(String nickname, int playerNumber) {
         this.nickname = nickname;
@@ -42,6 +41,15 @@ public class Player extends ModelObservable {
 
     public ArrayList<LeaderCard> getStartingCards() { return this.startingCards; }
     public void setStartingCards(ArrayList<LeaderCard> startingCards) { this.startingCards=startingCards;}
+    public int getStartingResources() { return this.startingResources; }
+    public void setInitialStartingResources() {
+        this.startingResources=0;
+        if(this.playerNumber == 2 || this.playerNumber == 3)
+            this.startingResources=1;
+        if(this.playerNumber==4)
+            this.startingResources=2;
+    }
+    public void decrementStartingResource() { this.startingResources--;}
 
     public String getNickname() {
         return nickname;
@@ -213,28 +221,12 @@ public class Player extends ModelObservable {
         this.disconnectedBeforeLeaderCard = disconnectedBeforeLeaderCard;
     }
 
-    public boolean isDisconnectedAfterLeaderCard() {
-        return disconnectedAfterLeaderCard;
-    }
-
-    public void setDisconnectedAfterLeaderCard(boolean disconnectedAfterLeaderCard) {
-        this.disconnectedAfterLeaderCard = disconnectedAfterLeaderCard;
-    }
-
     public boolean isDisconnectedBeforeResource() {
         return disconnectedBeforeResource;
     }
 
     public void setDisconnectedBeforeResource(boolean disconnectedBeforeResource) {
         this.disconnectedBeforeResource = disconnectedBeforeResource;
-    }
-
-    public boolean isDisconnectedAfterResource() {
-        return disconnectedAfterResource;
-    }
-
-    public void setDisconnectedAfterResource(boolean disconnectedAfterResource) {
-        this.disconnectedAfterResource = disconnectedAfterResource;
     }
 
     @Override

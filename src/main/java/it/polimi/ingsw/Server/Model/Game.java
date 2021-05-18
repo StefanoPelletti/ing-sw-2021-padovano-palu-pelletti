@@ -33,7 +33,7 @@ public class Game extends ModelObservable {
     private final LeaderBoard leaderBoard;
 
     public Game() {
-        status = Status.INIT;
+        status = Status.INIT_1;
         firstPlayer = null;
         blackCrossPosition = 1;
         playerList = new ArrayList<>();
@@ -172,6 +172,7 @@ public class Game extends ModelObservable {
         if (getPlayer(nickname) != null) return false;
         Player player = new Player(nickname, playerNumber);
         player.setStartingCards(leaderCardsDeck.pickFourCards());
+        player.setInitialStartingResources();
         if (playerNumber == 1)
             firstPlayer = player;
         playerList.add(player);

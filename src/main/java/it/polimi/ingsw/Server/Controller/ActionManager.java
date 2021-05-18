@@ -31,7 +31,7 @@ public class ActionManager {
         this.messageHelper = game.getActionHelper();
     }
 
-    public void onMessage(Message message, String nickname) {
+    public void onMessage(Message message) {
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
         boolean result = false;
@@ -83,10 +83,6 @@ public class ActionManager {
         ResourceObject resourceObject = game.getResourceObject();
 
 //MESSAGE VALIDATION
-        /*
-        if ( cards.size()!=2 ) throw new IllegalArgumentException();
-        if ( cards.get(0).equals(cards.get(1))) throw new IllegalArgumentException();
-        */
         if (cards.size() != 2) {
             gameManager.setErrorObject("Error! Message not well formatted: contains != 2 cards!");
             return false;
@@ -107,35 +103,24 @@ public class ActionManager {
 
         if (gameManager.getSolo()) {
             leaderCardsObject.setEnabled(false);
-        }
-        else
+            game.changeStatus(Status.STANDARD_TURN);
+        } else //if MULTIPLAYER
         {
-            player.setDisconnectedBeforeLeaderCard(false);
-            if (game.getStatus() == Status.INIT) {
-                if (game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
-                {
-                    endTurn(game.getCurrentPlayer(), false); //notifies Game (overwrite) and update_end
-                    //leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
-                    //resourceObject.setNumOfResources(1);
-                    //resourceObject.setEnabled(true); //notifies resourceObject
-                    //game.setCurrentPlayer(2); //notifies Game
-                    return true;
-                } else {
-                    endTurn(player, false);
-                    if (leaderCardsObject.isEnabled())
-                        leaderCardsObject.setCards(game.getCurrentPlayer().getStartingCards());
-                }
-            } else //status is STANDARD TURN
+            player.setDisconnectedBeforeLeaderCard(false); //player has chosen his card.
+
+            if (game.getStatus() == Status.INIT_1) {
+                endTurn(player, false); //if STATUS is DISTRIBUTING CARDS, advance.
+            } else //if status == Status.STANDARD_TURN (can't be INIT_2), maybe the player was disconnected and has to choose the resource.
             {
-                leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
+                leaderCardsObject.setEnabled(false);
                 if (player.isDisconnectedBeforeResource()) {
-                    if (player.getPlayerNumber() == 3 || player.getPlayerNumber() == 2) {
-                        resourceObject.setNumOfResources(1);
-                    } else //playerNumber is 4
-                        resourceObject.setNumOfResources(2);
-                    resourceObject.setEnabled(true);
-                } else
-                    endTurn(game.getCurrentPlayer(), false); //notifies Game
+                    if (player.getPlayerNumber() == 1) {
+                    } else  //he has to choose even the resources, without the game going forward
+                    {
+                        resourceObject.setNumOfResources(player.getStartingResources());
+                        resourceObject.setEnabled(true);
+                    }
+                }
             }
         }
         return true;
@@ -146,7 +131,6 @@ public class ActionManager {
 
         ResourceObject resourceObject = game.getResourceObject();
 
-        //  if(resource != Resource.COIN && resource != Resource.SERVANT && resource != Resource.STONE && resource != Resource.SHIELD)
 //MESSAGE VALIDATION
         if (resource != Resource.COIN && resource != Resource.SERVANT && resource != Resource.STONE && resource != Resource.SHIELD) {
             gameManager.setErrorObject("Error! Message not well formatted: resource not a default one!");
@@ -159,36 +143,27 @@ public class ActionManager {
             return false;
         }
 
-
         this.messageHelper.setNotificationMessage(player.getNickname(), message);
         player.getWarehouseDepot().add(resource); //notifies Warehouse
-        player.setDisconnectedBeforeResource(false);
-        if (game.getStatus() == Status.INIT) {
-            if (resourceObject.getNumOfResources() == 2)
-                player.getWarehouseDepot().swapRow(1, 2);
-            resourceObject.decNumOfResources();
-            if (resourceObject.getNumOfResources() == 0) {
-                if (game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) {
-                    resourceObject.setEnabled(false);
-                    game.changeStatus(Status.STANDARD_TURN);
-                    game.setTurn(1);
-                } else {
-                    endTurn(player, false);
-                    if (game.getCurrentPlayerInt() == 4)
-                        resourceObject.setNumOfResources(2);
-                    else
-                        resourceObject.setNumOfResources(1);
-                    return true;
-                }
-                endTurn(player, false);
-            }
-        } else //status is STANDARD TURN, part of the reconnection routine
+
+
+        if (resourceObject.getNumOfResources() == 2)
+            player.getWarehouseDepot().swapRow(1, 2);
+        player.decrementStartingResource();
+        resourceObject.decNumOfResources();
+
+        if (game.getStatus() == Status.INIT_2) //so it is distribuiting the resources
         {
-            if (resourceObject.getNumOfResources() == 2)
-                player.getWarehouseDepot().swapRow(1, 2);
-            resourceObject.decNumOfResources();
-            if (resourceObject.getNumOfResources() == 0)
+            if (resourceObject.getNumOfResources() == 0) {
+                endTurn(player, false);
+                player.setDisconnectedBeforeResource(false);
+            } else return true;
+        } else //status == StandardTurn
+        {
+            if (resourceObject.getNumOfResources() == 0) {
+                player.setDisconnectedBeforeResource(false);
                 resourceObject.setEnabled(false);
+            } else return true;
         }
         return true;
     }
@@ -894,55 +869,53 @@ public class ActionManager {
             }
         }
 
-        int currentPlayer = game.getCurrentPlayerInt();
-        boolean result = gameManager.endTurn();
-        Player newPlayer = game.getCurrentPlayer();
+        int currentPlayer = game.getCurrentPlayerInt(); //the calling player
+        Status previousStatus = game.getStatus();
+        boolean result = gameManager.endTurn(); //now the game is updated to the first available player
+        Player newPlayer = game.getCurrentPlayer(); // this is the firstAvailablePlayer
 
-        if (game.getStatus() == Status.INIT) {
-            if (currentPlayer >= newPlayer.getPlayerNumber()) { //condition to go to INIT_2
-                if (game.getLeaderCardsObject().isEnabled()) {
-                    game.getLeaderCardsObject().setEnabled(false);
-                    if (newPlayer.getPlayerNumber() == 1) {
-                        gameManager.endTurn();
-                        newPlayer = game.getCurrentPlayer();
-                    }
-                    if (newPlayer.getPlayerNumber() != 1) {
-                        if (newPlayer.getPlayerNumber() == 3 || newPlayer.getPlayerNumber() == 2) {
-                            game.getResourceObject().setNumOfResources(1);
-                        } else
-                            game.getResourceObject().setNumOfResources(2);
-                        game.getResourceObject().setEnabled(true);
-                    } else
-                        gameManager.setStatus(Status.STANDARD_TURN);
-                } else if (game.getResourceObject().isEnabled()) {
-                    game.changeStatus(Status.STANDARD_TURN);
-                    game.getResourceObject().setEnabled(false);
+        if (previousStatus == Status.INIT_1 && game.getStatus() == Status.INIT_1) //so we've been called by the chooseLeadercards, and we're STILL in the distribuiting phase
+        {
+            //assert( game.getLeaderCardsObject().isEnabled())
+            game.getLeaderCardsObject().setCards(newPlayer.getStartingCards());
+        } else if (previousStatus == Status.INIT_1 && game.getStatus() == Status.INIT_2) //so we've made a circle, we are now distributing resources
+        {
+            game.getLeaderCardsObject().setEnabled(false);
+            if (newPlayer.getPlayerNumber() == 1) //we have to skip him
+            {
+                gameManager.endTurn();
+                newPlayer = game.getCurrentPlayer();
+                if (game.getStatus() == Status.STANDARD_TURN) //special case: he was the only one connected and all the others were disconnected
+                {
+                } else //we're still in INIT_2, and the player is his successor (2, 3, 4)
+                {
+                    game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
+                    game.getResourceObject().setEnabled(true);
                 }
+            } else //we have skipped to a newPlayer which is not the #1, so he has to choose resources
+            {
+                game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
+                game.getResourceObject().setEnabled(true);
             }
-            else
-                game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards());
-        }
-
-
+        } else if (previousStatus == Status.INIT_2 && game.getStatus() == Status.INIT_2) //so we've just advanced in the distribution of resources
+        {
+            game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
+        } else if (previousStatus == Status.INIT_2 && game.getStatus() == Status.STANDARD_TURN) //so we've entered in the game, we must deactivate
+        {
+            game.getResourceObject().setEnabled(false);
+        } else if (previousStatus == Status.STANDARD_TURN && game.getStatus() == Status.STANDARD_TURN) //we've advanced in a normal situation
+        {
 //reconnection part
-        if (newPlayer.isDisconnectedBeforeLeaderCard()) {
-            game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards());
-            game.getLeaderCardsObject().setEnabled(true);
-            if(game.getResourceObject().isEnabled())
-                game.getResourceObject().setEnabled(false);
-
-        } else if (newPlayer.isDisconnectedBeforeResource()) {
-            if (newPlayer.getPlayerNumber() == 1) {
-                newPlayer.setDisconnectedBeforeResource(false);
-                return result;
+            if (newPlayer.isDisconnectedBeforeLeaderCard()) { //in that case he has to choose his leadercards
+                game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards()); //setting up the object
+                game.getLeaderCardsObject().setEnabled(true); //enabling the object
+            } else if (newPlayer.isDisconnectedBeforeResource()) {
+                game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
+                game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
+                game.getResourceObject().setEnabled(true);
             }
-            if (newPlayer.getPlayerNumber() == 3 || newPlayer.getPlayerNumber() == 2) {
-                game.getResourceObject().setNumOfResources(1);
-            } else
-                game.getResourceObject().setNumOfResources(2);
-            game.getResourceObject().setEnabled(true);
-        }
 //end of reconnection
+        }
         return result;
     }
 
@@ -1062,48 +1035,31 @@ public class ActionManager {
         if (game.getLeaderCardsObject().isEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(true);
-                player.setDisconnectedAfterLeaderCard(false);
                 player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
-                player.setDisconnectedAfterResource(false);
             } else {
                 player.setDisconnectedBeforeLeaderCard(false);
-                player.setDisconnectedAfterLeaderCard(true);
-                player.setDisconnectedBeforeResource(true);
-                player.setDisconnectedAfterResource(false);
+                player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
             }
         } else if (game.getResourceObject().isEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(false);
-                player.setDisconnectedAfterLeaderCard(true);
                 player.setDisconnectedBeforeResource(true);
-                player.setDisconnectedAfterResource(false);
             } else {
                 player.setDisconnectedBeforeLeaderCard(false);
-                player.setDisconnectedAfterLeaderCard(true);
                 player.setDisconnectedBeforeResource(false);
-                player.setDisconnectedAfterResource(true);
             }
         }
+
         if (currentPlayerNumber == player.getPlayerNumber()) {
-            game.getDevelopmentCardsVendor().setEnabled(false);
-            game.getErrorObject().setEnabled(false);
-            game.getMarketHelper().setEnabled(false);
-            if (currentPlayerNumber == gameManager.getLobbyMaxPlayers()) {
-                if (game.getLeaderCardsObject().isEnabled()) {
-                    game.getLeaderCardsObject().setEnabled(false); //notifies leaderCardsObject
-                    game.getResourceObject().setNumOfResources(1);
-                    game.getResourceObject().setEnabled(true); //notifies resourceObject
-                    endTurn(game.getCurrentPlayer(), false); //notifies Game
-                    endTurn(game.getCurrentPlayer(), false); //notifies Game (overwrite) and update_end
-                } else if (game.getResourceObject().isEnabled()) {
-                    game.getResourceObject().setEnabled(false);
-                    game.changeStatus(Status.STANDARD_TURN);
-                    game.setTurn(1);
-                    endTurn(player, false);
-                }
-            } else {
-                endTurn(player, false); //or false?
+            if (game.getStatus() == Status.STANDARD_TURN) {
+                if (game.getDevelopmentCardsVendor().isEnabled())
+                    game.getDevelopmentCardsVendor().setEnabled(false);
+                if (game.getMarketHelper().isEnabled())
+                    game.getMarketHelper().setEnabled(false);
             }
+            game.getErrorObject().setEnabled(false);
+
+            endTurn(player, false);
             messageHelper.setUpdateEnd();
         }
     }

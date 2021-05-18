@@ -66,6 +66,8 @@ public class GameManager {
 
     private int getNextPlayer(int playerNumber) {
         if (playerNumber > lobbyMaxPlayers) {
+            if(game.getStatus()==Status.INIT_1) game.changeStatus(Status.INIT_2);
+            else if(game.getStatus()==Status.INIT_2) game.changeStatus(Status.STANDARD_TURN);
             game.setTurn(game.getTurn() + 1);
             return getNextPlayer(1);
         }

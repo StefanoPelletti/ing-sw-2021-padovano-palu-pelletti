@@ -57,7 +57,7 @@ public class Lobby {
         }
 
         if (lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
-        else gameManager.setStatus(Status.INIT);
+        else gameManager.setStatus(Status.INIT_1);
 
         game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards());
         game.getLeaderCardsObject().setEnabled(true);
@@ -67,9 +67,9 @@ public class Lobby {
         }
     }
 
-    public synchronized void onMessage(Message message, String nickname) {
+    public synchronized void onMessage(Message message) {
         synchronized (actionManager) {
-            actionManager.onMessage(message, nickname);
+            actionManager.onMessage(message);
         }
     }
 
