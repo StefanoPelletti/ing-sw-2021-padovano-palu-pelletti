@@ -23,7 +23,6 @@ public class FaithTrackSimplified {
 
     public String toString(boolean solo) {
         StringBuilder result = new StringBuilder();
-        int i = 1;
         List<PlayerSimplified> playerList = game.getPlayerList();
         result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
         result.append("                  FAITH TRACK: ").append("\n");

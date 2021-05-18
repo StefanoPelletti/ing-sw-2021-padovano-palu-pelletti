@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Model;
 import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Game;
+import it.polimi.ingsw.Server.Model.ActionTokens.ActionToken;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
@@ -89,7 +90,7 @@ public class Game extends ModelObservable {
         return this.marketHelper;
     }
 
-    public MessageHelper getActionHelper() {
+    public MessageHelper getMessageHelper() {
         return messageHelper;
     }
 
@@ -210,6 +211,108 @@ public class Game extends ModelObservable {
         return playerList.removeIf(x -> (x.getNickname()).equals(nickname));
     }
 
+    public void broadcastMessage(String message)
+    {
+        messageHelper.setNewMessage(message);
+    }
+
+    public ArrayList<LeaderCard> getCurrentPlayerStartingCards()
+    {
+        return this.getCurrentPlayer().getStartingCards();
+    }
+
+    public DevelopmentCard[][] getVisibleCards()
+    {
+        return developmentCardsDeck.getVisible();
+    }
+
+    public void removeCardOnDevelopmentCardsDeck(int row, int column)
+    {
+        developmentCardsDeck.removeCard(row, column);
+    }
+
+    public void removeColumnOnDevelopmentCardsDeck(int column)
+    {
+        developmentCardsDeck.removeCard(column);
+    }
+
+    public boolean isOneColumnDestroyedOnTheDevelopmentCardsDeck()
+    {
+        return developmentCardsDeck.isOneColumnDestroyed();
+    }
+
+    public ActionToken pickFirstActionToken()
+    {
+        return actionTokenStack.pickFirst();
+    }
+
+    public void shuffleActionStack()
+    {
+        actionTokenStack.shuffle();
+    }
+
+    public void setLeaderCardsObjectCards(ArrayList<LeaderCard> list )
+    {
+        leaderCardsObject.setCards(list);
+    }
+
+    public void setLeaderCardsObjectEnabled(boolean value)
+    {
+        leaderCardsObject.setEnabled(value);
+    }
+
+    public void setResourceObjectNumOfResources(int value)
+    {
+        resourceObject.setNumOfResources(value);
+    }
+
+    public void setResourceObjectEnabled(boolean value)
+    {
+        resourceObject.setEnabled(value);
+    }
+
+    public void setDevelopmentCardsVendorEnabled(boolean value)
+    {
+        developmentCardsVendor.setEnabled(value);
+    }
+
+    public void setMarketHelperEnabled(boolean value)
+    {
+        marketHelper.setEnabled(value);
+    }
+
+    public boolean isMiddleActive()
+    {
+        return( this.leaderCardsObject.isEnabled() ||
+                this.resourceObject.isEnabled() ||
+                this.marketHelper.isEnabled() ||
+                this.developmentCardsVendor.isEnabled() );
+    }
+
+    public boolean isLeaderBoardEnabled()
+    {
+        return this.leaderBoard.isEnabled();
+    }
+
+    public boolean isLeaderCardsObjectEnabled()
+    {
+        return this.leaderCardsObject.isEnabled();
+    }
+
+    public boolean isResourceObjectEnabled()
+    {
+        return this.resourceObject.isEnabled();
+    }
+
+    public boolean isMarketHelperEnabled()
+    {
+        return this.marketHelper.isEnabled();
+    }
+
+    public boolean isDevelopmentCardsVendorEnabled()
+    {
+        return this.developmentCardsVendor.isEnabled();
+    }
     //OBSERVABLE
     private void notifyObservers() {
         this.notifyObservers(generateMessage());

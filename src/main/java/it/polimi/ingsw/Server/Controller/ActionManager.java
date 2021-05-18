@@ -28,7 +28,7 @@ public class ActionManager {
         this.gameManager = gameManager;
         this.faithTrackManager = faithTrackManager;
         this.game = game;
-        this.messageHelper = game.getActionHelper();
+        this.messageHelper = game.getMessageHelper();
     }
 
     public void onMessage(Message message) {
@@ -98,7 +98,7 @@ public class ActionManager {
             return false;
         }
 
-        this.messageHelper.setNotificationMessage(player.getNickname(), message);
+        messageHelper.setNotificationMessage(player.getNickname(), message);
         player.associateLeaderCards(cards); //notifies player
 
         if (gameManager.getSolo()) {
@@ -203,12 +203,11 @@ public class ActionManager {
                     return false;
                 }
             }
-            this.messageHelper.setNotificationMessage(player.getNickname(), message);
+            messageHelper.setNotificationMessage(player.getNickname(), message);
             player.setLeaderCards(cardNumber, true);
             return true;
         }
-
-        if (requirement.isCardRequirement()) {
+        else { //if (requirement.isCardRequirement()) {
             CardRequirements cardRequirements = (CardRequirements) requirement;
             Map<Color, Integer[]> requiredCards = cardRequirements.getRequirements();
             ArrayList<DevelopmentCard> playerCards = player.getDevelopmentSlot().getCards();
@@ -228,13 +227,10 @@ public class ActionManager {
                     return false;
                 }
             }
-            this.messageHelper.setNotificationMessage(player.getNickname(), message);
+            messageHelper.setNotificationMessage(player.getNickname(), message);
             player.setLeaderCards(cardNumber, true);
             return true;
         }
-
-        //should never reach this position
-        return false;
     }
 
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message) {
@@ -399,7 +395,7 @@ public class ActionManager {
         }
 //MODEL UPDATE
         player.setAction();
-        this.messageHelper.setNotificationMessage(player.getNickname(), message);
+        messageHelper.setNotificationMessage(player.getNickname(), message);
         //now we must consume the required resources
         consumeResources(player, requiredResources);
         //now we add output resources to the player's strongbox (and the faith points)
@@ -466,8 +462,6 @@ public class ActionManager {
             return false;
         }
 
-
-//VALIDATION
         Resource[] possibleResources = new Resource[]{Resource.COIN, Resource.STONE, Resource.SHIELD, Resource.SERVANT};
         Map<Resource, Integer> newResources;
         WarehouseDepot demoDepot = new WarehouseDepot();
@@ -511,7 +505,7 @@ public class ActionManager {
             return true;
 
 //MODEL UPDATE
-        this.messageHelper.setNotificationMessage(player.getNickname(), message);
+        messageHelper.setNotificationMessage(player.getNickname(), message);
         //after all those controls, player really deserves a new depot!
         player.getWarehouseDepot().setConfig(slot1, slot2, slot3);
         if (firstExtraDepot >= 0) {
@@ -530,7 +524,7 @@ public class ActionManager {
     }
 
     public boolean buyDevelopmentCard(Player player) {
-        DevelopmentCard[][] possibleCards = game.getDevelopmentCardsDeck().getVisible();
+        DevelopmentCard[][] possibleCards = game.getVisibleCards();
         Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
         if (player.getAction()) {
@@ -597,7 +591,7 @@ public class ActionManager {
             return false;
         }
 
-        this.messageHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_BUY_DEVELOPMENT_CARD());
+        messageHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_BUY_DEVELOPMENT_CARD());
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
         developmentCardsVendor.setCards(finalCards);
         developmentCardsVendor.setEnabled(true);
@@ -631,7 +625,7 @@ public class ActionManager {
         DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber - 1);
 
         player.getDevelopmentSlot().addCard(dc, slotNumber);
-        DevelopmentCard[][] visibleCards = game.getDevelopmentCardsDeck().getVisible();
+        DevelopmentCard[][] visibleCards = game.getVisibleCards();
         int r;
         int c = 0;
         loop:
@@ -643,7 +637,7 @@ public class ActionManager {
             }
         }
 
-        game.getDevelopmentCardsDeck().removeCard(r, c);
+        game.removeCardOnDevelopmentCardsDeck(r, c);
 
 
         ArrayList<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
@@ -656,7 +650,7 @@ public class ActionManager {
             }
         }
 
-        this.messageHelper.setNotificationMessage(player.getNickname(), message);
+        messageHelper.setNotificationMessage(player.getNickname(), message);
         consumeResources(player, cost);
 
         developmentCardsVendor.setEnabled(false);
@@ -698,7 +692,7 @@ public class ActionManager {
             return false;
         }
 
-        this.messageHelper.setNotificationMessage(player.getNickname(), message);
+        messageHelper.setNotificationMessage(player.getNickname(), message);
         Market market = game.getMarket();
         ArrayList<MarketMarble> selectedMarbles;
         if (column) selectedMarbles = market.pushColumn(number);
@@ -753,7 +747,7 @@ public class ActionManager {
             gameManager.setErrorObject("Error! method newChoiceMarket was somehow invoked WITHOUT marketHelper enabled!");
             return false;
         }
-        this.messageHelper.setNotificationMessage(player.getNickname(), message);
+        messageHelper.setNotificationMessage(player.getNickname(), message);
 
         Resource currentResource = marketHelper.getCurrentResource();
         boolean isNormalChoice;
@@ -856,7 +850,7 @@ public class ActionManager {
     public boolean endTurn(Player player, boolean notify) {
         player.resetPermittedAction();
         if (notify)
-            this.messageHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());
+            messageHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());
         if (gameManager.getSolo()) {
             if (game.getStatus() == Status.GAME_OVER) {
                 return gameManager.endgame();
@@ -869,7 +863,6 @@ public class ActionManager {
             }
         }
 
-        int currentPlayer = game.getCurrentPlayerInt(); //the calling player
         Status previousStatus = game.getStatus();
         boolean result = gameManager.endTurn(); //now the game is updated to the first available player
         Player newPlayer = game.getCurrentPlayer(); // this is the firstAvailablePlayer
@@ -877,10 +870,10 @@ public class ActionManager {
         if (previousStatus == Status.INIT_1 && game.getStatus() == Status.INIT_1) //so we've been called by the chooseLeadercards, and we're STILL in the distribuiting phase
         {
             //assert( game.getLeaderCardsObject().isEnabled())
-            game.getLeaderCardsObject().setCards(newPlayer.getStartingCards());
+            game.setLeaderCardsObjectCards(newPlayer.getStartingCards());
         } else if (previousStatus == Status.INIT_1 && game.getStatus() == Status.INIT_2) //so we've made a circle, we are now distributing resources
         {
-            game.getLeaderCardsObject().setEnabled(false);
+            game.setLeaderCardsObjectEnabled(false);
             if (newPlayer.getPlayerNumber() == 1) //we have to skip him
             {
                 gameManager.endTurn();
@@ -889,30 +882,29 @@ public class ActionManager {
                 {
                 } else //we're still in INIT_2, and the player is his successor (2, 3, 4)
                 {
-                    game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
-                    game.getResourceObject().setEnabled(true);
+                    game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
+                    game.setResourceObjectEnabled(true);
                 }
             } else //we have skipped to a newPlayer which is not the #1, so he has to choose resources
             {
-                game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
-                game.getResourceObject().setEnabled(true);
+                game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
+                game.setResourceObjectEnabled(true);
             }
         } else if (previousStatus == Status.INIT_2 && game.getStatus() == Status.INIT_2) //so we've just advanced in the distribution of resources
         {
-            game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
+            game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
         } else if (previousStatus == Status.INIT_2 && game.getStatus() == Status.STANDARD_TURN) //so we've entered in the game, we must deactivate
         {
-            game.getResourceObject().setEnabled(false);
+            game.setResourceObjectEnabled(false);
         } else if (previousStatus == Status.STANDARD_TURN && game.getStatus() == Status.STANDARD_TURN) //we've advanced in a normal situation
         {
 //reconnection part
             if (newPlayer.isDisconnectedBeforeLeaderCard()) { //in that case he has to choose his leadercards
-                game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards()); //setting up the object
-                game.getLeaderCardsObject().setEnabled(true); //enabling the object
+                game.setLeaderCardsObjectCards(game.getCurrentPlayerStartingCards()); //setting up the object
+                game.setLeaderCardsObjectEnabled(true); //enabling the object
             } else if (newPlayer.isDisconnectedBeforeResource()) {
-                game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
-                game.getResourceObject().setNumOfResources(newPlayer.getStartingResources());
-                game.getResourceObject().setEnabled(true);
+                game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
+                game.setResourceObjectEnabled(true);
             }
 //end of reconnection
         }
@@ -921,17 +913,17 @@ public class ActionManager {
 
 
     private void lorenzoMove() {
-        ActionToken token = game.getActionTokenStack().pickFirst();
+        ActionToken token = game.pickFirstActionToken();
         if (token.isRemover()) {
             messageHelper.setLorenzoNotificationMessage(0);
-            game.getDevelopmentCardsDeck().removeCard(((RemoverToken) token).getColumn());
-            if (game.getDevelopmentCardsDeck().isOneColumnDestroyed()) {
+            game.removeColumnOnDevelopmentCardsDeck(((RemoverToken) token).getColumn());
+            if (game.isOneColumnDestroyedOnTheDevelopmentCardsDeck()) {
                 gameManager.setStatus(Status.GAME_OVER);
                 gameManager.setSoloWinner(false);
             }
         } else if (token.isForwardAndShuffle()) {
             messageHelper.setLorenzoNotificationMessage(1);
-            game.getActionTokenStack().shuffle();
+            game.shuffleActionStack();
             faithTrackManager.advanceLorenzo();
         } else if (token.isForward2()) {
             messageHelper.setLorenzoNotificationMessage(2);
@@ -1032,7 +1024,7 @@ public class ActionManager {
 
     public void disconnectPlayer(Player player, int currentPlayerNumber) {
         messageHelper.setNewMessage(" " + player.getNickname() + " has crashed! ");
-        if (game.getLeaderCardsObject().isEnabled()) {
+        if (game.isLeaderCardsObjectEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(true);
                 player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
@@ -1040,7 +1032,7 @@ public class ActionManager {
                 player.setDisconnectedBeforeLeaderCard(false);
                 player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
             }
-        } else if (game.getResourceObject().isEnabled()) {
+        } else if (game.isResourceObjectEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(false);
                 player.setDisconnectedBeforeResource(true);
@@ -1052,12 +1044,12 @@ public class ActionManager {
 
         if (currentPlayerNumber == player.getPlayerNumber()) {
             if (game.getStatus() == Status.STANDARD_TURN) {
-                if (game.getDevelopmentCardsVendor().isEnabled())
-                    game.getDevelopmentCardsVendor().setEnabled(false);
-                if (game.getMarketHelper().isEnabled())
-                    game.getMarketHelper().setEnabled(false);
+                if (game.isDevelopmentCardsVendorEnabled())
+                    game.setDevelopmentCardsVendorEnabled(false);
+                if (game.isMarketHelperEnabled())
+                    game.setMarketHelperEnabled(false);
             }
-            game.getErrorObject().setEnabled(false);
+            gameManager.resetErrorObject();
 
             endTurn(player, false);
             messageHelper.setUpdateEnd();

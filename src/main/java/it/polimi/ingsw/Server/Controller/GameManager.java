@@ -29,6 +29,7 @@ public class GameManager {
         this.solo = (lobbyMaxPlayers == 1);
         this.soloWinner = null;
         this.idlePlayers = new ArrayList<>();
+        this.game.changeStatus(Status.INIT_1);
     }
 
     public Player currentPlayer() {

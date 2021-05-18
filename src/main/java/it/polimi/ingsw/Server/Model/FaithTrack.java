@@ -1,8 +1,11 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Client.ModelSimplified.PlayerSimplified;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_FaithTrack;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
+
+import java.util.List;
 
 public class FaithTrack extends ModelObservable {
     private boolean[] zones;
@@ -83,5 +86,33 @@ public class FaithTrack extends ModelObservable {
 
     public MSG_UPD_FaithTrack generateMessage() {
         return new MSG_UPD_FaithTrack(zones);
+    }
+
+    public String toString(boolean solo) {
+        StringBuilder result = new StringBuilder();
+        List<Player> playerList = game.getPlayerList();
+        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append("                  FAITH TRACK: ").append("\n");
+
+        for (Player player : playerList) {
+            result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
+        }
+        if (solo)
+            result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
+        result.append("\n");
+        if (zones[2])
+            result.append("   Third and last zone has been activated!");
+        else {
+            if (zones[1])
+                result.append("   Second zone has been activated!");
+            else {
+                if (zones[0])
+                    result.append("   The First zone has been activated!");
+                else
+                    result.append("   No zone has been activated yet!");
+            }
+        }
+        result.append("\n").append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        return result.toString();
     }
 }

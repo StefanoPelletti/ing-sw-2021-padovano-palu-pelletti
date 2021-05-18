@@ -90,7 +90,7 @@ public class FaithTrackManager {
                 return true;
         }
 
-        game.getActionHelper().setNewMessage(message.toString());
+        game.broadcastMessage(message.toString());
         return true;
     }
 
@@ -166,7 +166,7 @@ public class FaithTrackManager {
                 return true;
         }
 
-        game.getActionHelper().setNewMessage(message.toString());
+        game.broadcastMessage(message.toString());
         return true;
     }
 }

@@ -28,8 +28,6 @@ public class UpdateHandler implements Runnable {
                 message = (Message) Halo.objectInputStream.readObject();
 
                 switch (message.getMessageType()) {
-// Full model
-
 // Player updates
                     case MSG_UPD_Player:
                         synchronized (Halo.game) {
