@@ -20,8 +20,8 @@ public class UpdateHandlerLocal implements ModelObserver {
             case MSG_UPD_End:
                 synchronized (Halo.gameSRV) {
                     Halo.yourTurn = true;
-                    if (Halo.game.isMiddleActive()) {
-                        if (Halo.game.isMarketHelperEnabled()) {
+                    if (Halo.gameSRV.isMiddleActive()) {
+                        if (Halo.gameSRV.isMarketHelperEnabled()) {
                             System.out.println(Halo.gameSRV.getMarketHelper().toString());
                             System.out.println(Halo.gameSRV.getCurrentPlayer().getWarehouseDepot());
                             System.out.println(" > Please select an option:");
