@@ -26,6 +26,8 @@ public class Player extends ModelObservable {
     private boolean disconnectedBeforeResource;
     private boolean disconnectedAfterResource;
 
+    private ArrayList<LeaderCard> startingCards;
+
     public Player(String nickname, int playerNumber) {
         this.nickname = nickname;
         this.VP = 0;
@@ -37,6 +39,9 @@ public class Player extends ModelObservable {
         this.developmentSlot = new DevelopmentSlot();
         this.permittedAction = false;
     }
+
+    public ArrayList<LeaderCard> getStartingCards() { return this.startingCards; }
+    public void setStartingCards(ArrayList<LeaderCard> startingCards) { this.startingCards=startingCards;}
 
     public String getNickname() {
         return nickname;

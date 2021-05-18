@@ -171,6 +171,7 @@ public class Game extends ModelObservable {
     public boolean addPlayer(String nickname, int playerNumber) {
         if (getPlayer(nickname) != null) return false;
         Player player = new Player(nickname, playerNumber);
+        player.setStartingCards(leaderCardsDeck.pickFourCards());
         if (playerNumber == 1)
             firstPlayer = player;
         playerList.add(player);

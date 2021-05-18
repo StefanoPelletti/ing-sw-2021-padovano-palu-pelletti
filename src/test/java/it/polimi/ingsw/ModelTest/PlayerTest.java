@@ -39,6 +39,7 @@ public class PlayerTest {
         assertNotNull(player.getDevelopmentSlot());
         assertNotNull(player.getWarehouseDepot());
         assertNotNull(player.getStrongbox());
+        assertNull(player.getStartingCards());
         assertEquals(player.getVP(), 0);
         assertEquals(player.getPosition(), 0);
     }

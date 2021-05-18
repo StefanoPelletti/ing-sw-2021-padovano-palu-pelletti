@@ -35,45 +35,45 @@ public class ActionManager {
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
         boolean result = false;
-        if (player.getNickname().equals(nickname) && gameManager.getStatus() != Status.GAME_OVER) {
-            switch (message.getMessageType()) {
-                case MSG_INIT_CHOOSE_LEADERCARDS:
-                    result = this.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
-                    break;
-                case MSG_INIT_CHOOSE_RESOURCE:
-                    result = this.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
-                    break;
-                case MSG_ACTION_ACTIVATE_LEADERCARD:
-                    result = this.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
-                    break;
-                case MSG_ACTION_DISCARD_LEADERCARD:
-                    result = this.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
-                    break;
-                case MSG_ACTION_CHANGE_DEPOT_CONFIG:
-                    result = this.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
-                    break;
-                case MSG_ACTION_ACTIVATE_PRODUCTION:
-                    result = this.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
-                    break;
-                case MSG_ACTION_GET_MARKET_RESOURCES:
-                    result = this.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
-                    break;
-                case MSG_ACTION_MARKET_CHOICE:
-                    result = this.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
-                    break;
-                case MSG_ACTION_BUY_DEVELOPMENT_CARD:
-                    result = this.buyDevelopmentCard(player);
-                    break;
-                case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
-                    result = this.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
-                    break;
-                case MSG_ACTION_ENDTURN:
-                    result = this.endTurn(player, true);
-                    break;
-                default:
-                    System.out.println(" SRV: help I don't know what they sent me.");
-            }
+
+        switch (message.getMessageType()) {
+            case MSG_INIT_CHOOSE_LEADERCARDS:
+                result = this.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
+                break;
+            case MSG_INIT_CHOOSE_RESOURCE:
+                result = this.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
+                break;
+            case MSG_ACTION_ACTIVATE_LEADERCARD:
+                result = this.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
+                break;
+            case MSG_ACTION_DISCARD_LEADERCARD:
+                result = this.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
+                break;
+            case MSG_ACTION_CHANGE_DEPOT_CONFIG:
+                result = this.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
+                break;
+            case MSG_ACTION_ACTIVATE_PRODUCTION:
+                result = this.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
+                break;
+            case MSG_ACTION_GET_MARKET_RESOURCES:
+                result = this.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
+                break;
+            case MSG_ACTION_MARKET_CHOICE:
+                result = this.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
+                break;
+            case MSG_ACTION_BUY_DEVELOPMENT_CARD:
+                result = this.buyDevelopmentCard(player);
+                break;
+            case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
+                result = this.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
+                break;
+            case MSG_ACTION_ENDTURN:
+                result = this.endTurn(player, true);
+                break;
+            default:
+                System.out.println(" SRV: help I don't know what they sent me.");
         }
+
         if (result) messageHelper.setUpdateEnd();
     }
 
@@ -102,36 +102,38 @@ public class ActionManager {
             return false;
         }
 
-
         this.messageHelper.setNotificationMessage(player.getNickname(), message);
         player.associateLeaderCards(cards); //notifies player
+
         if (gameManager.getSolo()) {
             leaderCardsObject.setEnabled(false);
-        } else {
+        }
+        else
+        {
+            player.setDisconnectedBeforeLeaderCard(false);
             if (game.getStatus() == Status.INIT) {
                 if (game.getCurrentPlayerInt() == gameManager.getLobbyMaxPlayers()) // then all the players have already chosen their cards
                 {
                     endTurn(game.getCurrentPlayer(), false); //notifies Game (overwrite) and update_end
-                    leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
-                    resourceObject.setNumOfResources(1);
-                    resourceObject.setEnabled(true); //notifies resourceObject
+                    //leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
+                    //resourceObject.setNumOfResources(1);
+                    //resourceObject.setEnabled(true); //notifies resourceObject
                     //game.setCurrentPlayer(2); //notifies Game
                     return true;
                 } else {
                     endTurn(player, false);
                     if (leaderCardsObject.isEnabled())
-                        leaderCardsObject.setCards(game.getLeaderCardsDeck().pickFourCards());
+                        leaderCardsObject.setCards(game.getCurrentPlayer().getStartingCards());
                 }
             } else //status is STANDARD TURN
             {
                 leaderCardsObject.setEnabled(false); //notifies leaderCardsObject
-                player.setDisconnectedBeforeLeaderCard(false);
                 if (player.isDisconnectedBeforeResource()) {
                     if (player.getPlayerNumber() == 3 || player.getPlayerNumber() == 2) {
-                        game.getResourceObject().setNumOfResources(1);
+                        resourceObject.setNumOfResources(1);
                     } else //playerNumber is 4
-                        game.getResourceObject().setNumOfResources(2);
-                    game.getResourceObject().setEnabled(true);
+                        resourceObject.setNumOfResources(2);
+                    resourceObject.setEnabled(true);
                 } else
                     endTurn(game.getCurrentPlayer(), false); //notifies Game
             }
@@ -160,6 +162,7 @@ public class ActionManager {
 
         this.messageHelper.setNotificationMessage(player.getNickname(), message);
         player.getWarehouseDepot().add(resource); //notifies Warehouse
+        player.setDisconnectedBeforeResource(false);
         if (game.getStatus() == Status.INIT) {
             if (resourceObject.getNumOfResources() == 2)
                 player.getWarehouseDepot().swapRow(1, 2);
@@ -181,7 +184,6 @@ public class ActionManager {
             }
         } else //status is STANDARD TURN, part of the reconnection routine
         {
-            player.setDisconnectedBeforeResource(false);
             if (resourceObject.getNumOfResources() == 2)
                 player.getWarehouseDepot().swapRow(1, 2);
             resourceObject.decNumOfResources();
@@ -891,12 +893,13 @@ public class ActionManager {
                     return gameManager.endgame();
             }
         }
+
         int currentPlayer = game.getCurrentPlayerInt();
         boolean result = gameManager.endTurn();
         Player newPlayer = game.getCurrentPlayer();
 
         if (game.getStatus() == Status.INIT) {
-            if (currentPlayer >= newPlayer.getPlayerNumber()) {
+            if (currentPlayer >= newPlayer.getPlayerNumber()) { //condition to go to INIT_2
                 if (game.getLeaderCardsObject().isEnabled()) {
                     game.getLeaderCardsObject().setEnabled(false);
                     if (newPlayer.getPlayerNumber() == 1) {
@@ -916,13 +919,18 @@ public class ActionManager {
                     game.getResourceObject().setEnabled(false);
                 }
             }
+            else
+                game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards());
         }
 
 
 //reconnection part
         if (newPlayer.isDisconnectedBeforeLeaderCard()) {
-            game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
+            game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards());
             game.getLeaderCardsObject().setEnabled(true);
+            if(game.getResourceObject().isEnabled())
+                game.getResourceObject().setEnabled(false);
+
         } else if (newPlayer.isDisconnectedBeforeResource()) {
             if (newPlayer.getPlayerNumber() == 1) {
                 newPlayer.setDisconnectedBeforeResource(false);
@@ -1020,7 +1028,6 @@ public class ActionManager {
             marketHelper.setEnabled(true);
     }
 
-
     public void consumeResources(Player player, Map<Resource, Integer> cost) {
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
         ArrayList<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
@@ -1050,14 +1057,13 @@ public class ActionManager {
         }
     }
 
-
     public void disconnectPlayer(Player player, int currentPlayerNumber) {
         messageHelper.setNewMessage(" " + player.getNickname() + " has crashed! ");
         if (game.getLeaderCardsObject().isEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(true);
                 player.setDisconnectedAfterLeaderCard(false);
-                player.setDisconnectedBeforeResource(true);
+                player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
                 player.setDisconnectedAfterResource(false);
             } else {
                 player.setDisconnectedBeforeLeaderCard(false);

@@ -59,7 +59,7 @@ public class Lobby {
         if (lobbyMaxPlayers == 1) gameManager.setStatus(Status.SOLO);
         else gameManager.setStatus(Status.INIT);
 
-        game.getLeaderCardsObject().setCards(game.getLeaderCardsDeck().pickFourCards());
+        game.getLeaderCardsObject().setCards(game.getCurrentPlayer().getStartingCards());
         game.getLeaderCardsObject().setEnabled(true);
 
         for (ClientHandler c : clientHandlers) {
