@@ -816,22 +816,34 @@ class GamePhase {
                         }
 //VENDOR ROUTINE
                         else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
-                            int cardNum;
-                            int slotNum;
+                            boolean quit = false;
+                            int cardNum=-1;
+                            int slotNum=-1;
                             while (true) {
                                 if (checkNumberDevSlot(textList)) {
-                                    cardNum = Integer.parseInt(textList.get(0));
-                                    slotNum = Integer.parseInt(textList.get(1));
+                                    if(textList.size()==1) quit = true;
+                                    else{
+                                        cardNum = Integer.parseInt(textList.get(0));
+                                        slotNum = Integer.parseInt(textList.get(1));
+                                    }
                                     break;
                                 } else {
-                                    System.out.print(" Card | slot: ");
+                                    System.out.print(" Card | slot: (0 to quit the action) ");
                                     text = Halo.input.nextLine();
                                     textList.clear();
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                                 }
                             }
                             try {
-                                MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
+                                MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend;
+                                if(quit){
+                                    Halo.triedAction= false;
+                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
+                                }else
+                                {
+                                    Halo.triedAction = true;
+                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
+                                }
                                 Halo.objectOutputStream.writeObject(msgToSend);
                             } catch (IllegalArgumentException e) {
                                 System.out.println(A.RED + " We could not build that message" + A.RESET);
@@ -1412,7 +1424,6 @@ class GamePhase {
                                             }
 //ACTION BUY CARD
                                             case 5: {
-                                                Halo.triedAction = true;
                                                 System.out.println(" > Asking the Vendor which cards we can buy...");
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
@@ -1657,6 +1668,19 @@ class GamePhase {
                 System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
                 return false;
             }
+        }else if(textList.size()==1){
+            try{
+                int quit = Integer.parseInt(textList.get(0));
+                if(quit!=0){
+                    System.out.println("Invalid input, try again");
+                    return false;
+                }
+                return true;
+            }
+            catch (NumberFormatException e) {
+                System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
+                return false;
+            }
         } else {
             System.out.println(A.RED + " > The number of parameters is different then expected." + A.RESET);
             return false;
@@ -1870,12 +1894,16 @@ class LocalPhase {
                     }
 
                 } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
-                    int cardNum;
-                    int slotNum;
+                    boolean quit = false;
+                    int cardNum=-1;
+                    int slotNum=-1;
                     while (true) {
                         if (checkNumberDevSlot(textList)) {
-                            cardNum = Integer.parseInt(textList.get(0));
-                            slotNum = Integer.parseInt(textList.get(1));
+                            if(textList.size()==1) quit = true;
+                            else{
+                                cardNum = Integer.parseInt(textList.get(0));
+                                slotNum = Integer.parseInt(textList.get(1));
+                            }
                             break;
                         } else {
                             System.out.print(" Card | slot: ");
@@ -1885,7 +1913,14 @@ class LocalPhase {
                         }
                     }
                     try {
-                        message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
+                        if(quit){
+                            Halo.triedAction= false;
+                            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
+                        }else
+                        {
+                            Halo.triedAction = true;
+                            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
+                        }
                         Halo.actionManager.onMessage(message);
                     } catch (IllegalArgumentException e) {
                         System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);

@@ -22,7 +22,7 @@ public class UpdateHandlerLocal implements ModelObserver {
                     } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
                         System.out.println(Halo.gameSRV.getDevelopmentCardsVendor().toString());
                         System.out.println(A.UL+" > Please select a card number and a slot number"+A.RESET);
-                        System.out.print(" Card | Slot: ");
+                        System.out.print(" Card | Slot: (0 to quit the action)");
                     }
                 } else
                 {

@@ -110,7 +110,7 @@ public class UpdateHandler implements Runnable {
                                         System.out.print(" Choice: ");
                                     } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                                         System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
-                                        System.out.println(A.UL+" > Please select a card number and a slot number"+A.RESET);
+                                        System.out.println(A.UL+" > Please select a card number and a slot number (0 to quit the action)"+A.RESET);
                                         System.out.print(" Card | Slot: ");
                                     }
                                 } else {

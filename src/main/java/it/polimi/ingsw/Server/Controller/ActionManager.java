@@ -595,7 +595,6 @@ public class ActionManager {
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
         developmentCardsVendor.setCards(finalCards);
         developmentCardsVendor.setEnabled(true);
-        player.setAction();
         return true;
     }
 
@@ -605,6 +604,11 @@ public class ActionManager {
 
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
 
+        if(cardNumber == -1 && slotNumber == -1){
+            game.setDevelopmentCardsVendorEnabled(false);
+            game.getMessageHelper().setNewMessage(player.getNickname() + " did not buy any card");
+            return false;
+        }
 //MESSAGE VALIDATION
         if (cardNumber < 0) {
             gameManager.setErrorObject("Error! Message not well formatted: cardNumber < 0!");
@@ -662,6 +666,7 @@ public class ActionManager {
             } else
                 gameManager.setStatus(Status.LAST_TURN);
         }
+        player.setAction();
         return true;
     }
 
