@@ -82,6 +82,7 @@ class Halo
     //TODO action
     static boolean action = false;
 
+    static boolean triedAction = false;
     static GameManager gameManager;
     static ActionManager actionManager;
     static Player myPlayerRefSRV;
@@ -1021,6 +1022,7 @@ class GamePhase {
                                         switch (choice) {
 //ACTION ACTIVATE LEADERCARD
                                             case 1: {
+                                                Halo.triedAction = false;
                                                 int cardToActivate;
                                                 LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
@@ -1059,6 +1061,7 @@ class GamePhase {
                                             }
 //ACTION DISCARD LEADERCARD
                                             case 2: {
+                                                Halo.triedAction = false;
                                                 int cardToDiscard;
                                                 LeaderCard l1d = Halo.myPlayerRef.getLeaderCards()[0];
                                                 LeaderCard l2d = Halo.myPlayerRef.getLeaderCards()[1];
@@ -1097,6 +1100,7 @@ class GamePhase {
                                             }
 //ACTION ACTIVATE PRODUCTION
                                             case 3: {
+                                                Halo.triedAction = true;
                                                 //production //all the system out must be reviewed by a standard that only stefano knows
                                                 boolean basic = false;
                                                 ArrayList<Resource> basicInput = new ArrayList<>();
@@ -1110,10 +1114,6 @@ class GamePhase {
 
                                                 //FIXME
                                                 // action. The action! Gotta implement the action!
-                                                if (Halo.action) {
-                                                    System.out.println(A.RED + " > You already did a powerful move. End your Turn or do something else" + A.RESET);
-                                                    break actionLoop;
-                                                }
 
                                                 System.out.println(" Here's your depot and strongbox");
                                                 System.out.println(Halo.myPlayerRef.getWarehouseDepot());
@@ -1290,6 +1290,7 @@ class GamePhase {
                                             }
 //ACTION CHANGE DEPOT CONFIG
                                             case 4: {
+                                                Halo.triedAction = false;
                                                 //change depot
                                                 System.out.println(A.UL + " >> Please insert the new configuration for your Warehouse Depot. Write'm as: stone none shield" + A.RESET);
                                                 System.out.println(" Your actual depot: ");
@@ -1411,6 +1412,7 @@ class GamePhase {
                                             }
 //ACTION BUY CARD
                                             case 5: {
+                                                Halo.triedAction = true;
                                                 System.out.println(" > Asking the Vendor which cards we can buy...");
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
@@ -1418,6 +1420,7 @@ class GamePhase {
                                             }
 //ACTION GET MARKET RESOURCES
                                             case 6: {
+                                                Halo.triedAction = true;
                                                 int num;
                                                 boolean column;
                                                 System.out.println(" Here's the market, if this is not qol I don't know what could be then:");

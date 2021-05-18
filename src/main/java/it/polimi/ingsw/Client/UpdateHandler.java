@@ -68,6 +68,7 @@ public class UpdateHandler implements Runnable {
 // Shared objects update
                     case MSG_UPD_Game:
                         synchronized (Halo.game) {
+                            if(Halo.solo) Halo.action = false;
                             Halo.game.updateGame((MSG_UPD_Game) message);
                         }
                         break;
@@ -118,6 +119,10 @@ public class UpdateHandler implements Runnable {
                                         Halo.action=false;
                                         still = true;
                                     } else {
+                                        if(Halo.triedAction) {
+                                            Halo.action = true;
+                                            Halo.triedAction = false;
+                                        }
                                         System.out.println(A.GREEN + " <> Still your turn!" + A.RESET);
                                     }
                                 }
