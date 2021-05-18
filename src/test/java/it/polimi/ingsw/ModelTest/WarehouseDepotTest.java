@@ -636,4 +636,10 @@ public class WarehouseDepotTest {
 
         assertEquals(warehouseDepot, startingDepot);
     }
+
+    @Test
+    public void toStringFormat()
+    {
+        System.out.println(warehouseDepot.toString());
+    }
 }

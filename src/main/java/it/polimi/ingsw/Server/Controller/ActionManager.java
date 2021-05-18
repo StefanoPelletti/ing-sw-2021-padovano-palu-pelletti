@@ -606,7 +606,7 @@ public class ActionManager {
 
         if(cardNumber == -1 && slotNumber == -1){
             game.setDevelopmentCardsVendorEnabled(false);
-            game.getMessageHelper().setNewMessage(player.getNickname() + " did not buy any card");
+            game.broadcastMessage(player.getNickname() + " did not buy any card");
             return false;
         }
 //MESSAGE VALIDATION

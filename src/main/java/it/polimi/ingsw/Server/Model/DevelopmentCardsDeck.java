@@ -410,6 +410,8 @@ public class DevelopmentCardsDeck extends ModelObservable {
     public String toString() {
         StringBuilder result = new StringBuilder(" DEVELOPMENT DECK, ALL THE VISIBLE CARDS: ");
 
+        DevelopmentCard[][] visible = this.getVisible();
+
         for (int i = 0; i < 3; i++) {
             result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
             result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
@@ -417,10 +419,10 @@ public class DevelopmentCardsDeck extends ModelObservable {
             result.append("\n").append(" Row ").append(i);
             for (int j = 0; j < 4; j++) {
                 result.append("\n").append("  Column ").append(j);
-                if (this.cards[i][j] == null)
+                if (visible[i][j] == null)
                     result.append("\n").append(" X=====X Empty! X=====X");
                 else
-                    result.append("\n").append(cards[i][j].toString());
+                    result.append("\n").append(visible[i][j].toString());
             }
         }
         result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);

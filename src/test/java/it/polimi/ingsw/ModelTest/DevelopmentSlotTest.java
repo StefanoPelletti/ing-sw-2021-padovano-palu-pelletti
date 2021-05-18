@@ -165,4 +165,20 @@ public class DevelopmentSlotTest {
             i++;
         }
     }
+
+    @Test
+    public void toStringFormat()
+    {
+        DevelopmentCard[] ldc = new DevelopmentCard[3];
+        ldc[0] = dcd.removeCard(2, 0);
+        ds.addCard(ldc[0], 0);
+        ds.addCard(dcd.removeCard(2, 1), 1);
+        ldc[1] = dcd.removeCard(1, 0);
+        ds.addCard(ldc[1], 1);
+        ldc[2] = dcd.removeCard(2, 2);
+        ds.addCard(ldc[2], 2);
+
+        System.out.println(ds.toString());
+        assertTrue(true);
+    }
 }

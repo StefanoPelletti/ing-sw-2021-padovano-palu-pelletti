@@ -46,6 +46,7 @@ public class DevelopmentCard implements Serializable {
         return power.getOutput();
     }
 
+    @Deprecated
     public boolean internalCheck() {
         if (level < 1 || level > 3) return false;
         if (color != Color.BLUE && color != Color.GREEN && color != Color.YELLOW && color != Color.PURPLE) return false;
@@ -74,7 +75,7 @@ public class DevelopmentCard implements Serializable {
         result.append("   DEVELOPMENT CARD!   ").append("\n");
         result.append("    level : ").append(this.level).append("\n");
         result.append("    color : ").append(this.color).append("\n");
-        result.append("    VP    : ").append(this.color).append("\n");
+        result.append("    VP    : ").append(this.VP).append("\n");
         result.append("    cost  : ").append(this.cost).append("\n");
         result.append(this.power).append("\n");
         return result.toString();

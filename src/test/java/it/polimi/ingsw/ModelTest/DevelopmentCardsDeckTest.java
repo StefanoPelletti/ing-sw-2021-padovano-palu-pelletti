@@ -207,4 +207,18 @@ public class DevelopmentCardsDeckTest {
         assertNotNull(d.getStack(0, 0));
         assertNull(d.getStack(0, 0)[0]);
     }
+
+    @Test
+    public void toStringFormat()
+    {
+        System.out.println(d.toString());
+        assertTrue(true);
+    }
+
+    @Test
+    public void toStringCardFormat()
+    {
+        DevelopmentCard c = d.removeCard(2,2);
+        System.out.println(c);
+    }
 }

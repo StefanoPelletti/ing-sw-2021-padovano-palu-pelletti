@@ -118,7 +118,6 @@ public class MarketTest {
         assertArrayEquals(priorMarbles.toArray(), postMarbles.toArray());
     }
 
-    // what does this test.. test?
     @Test
     public void testSet() {
         MarketMarble[][] re = {{new WhiteMarble(), new WhiteMarble(), new WhiteMarble(), new WhiteMarble()},
@@ -132,5 +131,12 @@ public class MarketTest {
                 assertTrue(market.getGrid()[r][c] instanceof WhiteMarble);
             }
         }
+    }
+
+    @Test
+    public void toStringFormat()
+    {
+        System.out.println(market.toString());
+        assertTrue(true);
     }
 }
