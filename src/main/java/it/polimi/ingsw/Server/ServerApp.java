@@ -1,6 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.Server;
 
-import it.polimi.ingsw.Server.ClientHandler;
+import it.polimi.ingsw.Networking.ClientHandler;
 import java.net.*;
 import java.io.*;
 
