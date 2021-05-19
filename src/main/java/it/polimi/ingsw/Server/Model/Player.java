@@ -148,7 +148,6 @@ public class Player extends ModelObservable {
         return result;
     }
 
-
     public Map<Resource, Integer> getResources() {
         Map<Resource, Integer> resources = this.warehouseDepot.getResources();
         Set<Resource> possibleResources = resources.keySet();

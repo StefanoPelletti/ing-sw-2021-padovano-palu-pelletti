@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Requirements.Requirement;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
+import it.polimi.ingsw.Server.Utils.A;
 
 import java.io.Serializable;
 
@@ -43,16 +44,16 @@ public class LeaderCard implements Serializable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         result.append("                 LEADER CARD! ");
         if (enabled)
             result.append(" The card is ENABLED");
 
-        result.append("\n").append("\u001B[33m" + "   VP: " + "\u001B[0m").append(this.VP).append("\n");
+        result.append("\n").append(A.YELLOW + "   VP: " + A.RESET).append(this.VP).append("\n");
 
         result.append(this.requirement);
         result.append(this.specialAbility);
-        result.append("\u001B[36m" + "_____+_____+_____+_____+_____+_____+_____+_____" + "\u001B[0m").append("\n");
+        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
         return result.toString();
     }
 

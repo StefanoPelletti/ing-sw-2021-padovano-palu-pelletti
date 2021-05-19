@@ -139,6 +139,7 @@ public class UpdateHandler implements Runnable {
                     case MSG_UPD_LeaderBoard: //who closes the connection?
                         synchronized (Halo.game) {
                             Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);
+                            Halo.yourTurn=false;
                             System.out.println(A.YELLOW+" <> Game over : " +A.RESET+ Halo.game.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
                             System.out.println(A.UL+" > Please write quit to go back to the main menu"+A.RESET);
                         }

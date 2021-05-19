@@ -604,12 +604,12 @@ public class ActionManager {
 
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
 
+//MESSAGE VALIDATION
         if(cardNumber == -1 && slotNumber == -1){
             game.setDevelopmentCardsVendorEnabled(false);
             game.broadcastMessage(player.getNickname() + " did not buy any card");
             return false;
         }
-//MESSAGE VALIDATION
         if (cardNumber < 0) {
             gameManager.setErrorObject("Error! Message not well formatted: cardNumber < 0!");
             return false;

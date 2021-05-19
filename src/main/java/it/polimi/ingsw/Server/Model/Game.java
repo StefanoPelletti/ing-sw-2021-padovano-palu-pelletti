@@ -36,7 +36,7 @@ public class Game extends ModelObservable {
     public Game() {
         status = Status.INIT_1;
         firstPlayer = null;
-        blackCrossPosition = 1;
+        blackCrossPosition = 0;
         playerList = new ArrayList<>();
         leaderCardsDeck = new LeaderCardsDeck();
         market = new Market();

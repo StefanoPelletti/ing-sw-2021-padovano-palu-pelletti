@@ -44,7 +44,7 @@ public class LorenzoMoveTest {
         boolean ff = false;
         boolean f2 = false;
 
-        assertEquals(1, g.getBlackCrossPosition());
+        assertEquals(0, g.getBlackCrossPosition());
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
                 for (DevelopmentCard d : g.getDevelopmentCardsDeck().getStack(i, j))
@@ -67,7 +67,7 @@ public class LorenzoMoveTest {
             if (msg.startsWith("Lorenzo gained two")) //Forward2Case
             {
                 ff = true;
-                assertEquals(3, g.getBlackCrossPosition());
+                assertEquals(2, g.getBlackCrossPosition());
                 //one turn update, two blackCrossPosition update. One notification
                 assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
                 assertEquals(4, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
@@ -76,7 +76,7 @@ public class LorenzoMoveTest {
             if (msg.startsWith("Lorenzo gained one")) //ForwardAndShuffle
             {
                 f2 = true;
-                assertEquals(2, g.getBlackCrossPosition());
+                assertEquals(1, g.getBlackCrossPosition());
                 //one turn update, one blackCrossPosition update.
                 assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
                 assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
@@ -86,7 +86,7 @@ public class LorenzoMoveTest {
             if (msg.startsWith("Lorenzo destroyed two"))  //remover
             {
                 r = true;
-                assertEquals(1, g.getBlackCrossPosition());
+                assertEquals(0, g.getBlackCrossPosition());
                 //we get ONE updates from DevDeck. The remove method is already tested, so that should be enough.
                 //one turn update, one ^, one notification
                 assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());

@@ -70,7 +70,6 @@ public class Strongbox extends ModelObservable {
         if (resources.isEmpty()) {
             result.append(" The Strongbox is empty. ").append("\n");
         } else {
-            result.append(" The Strongbox contains: ").append("\n");
             for (Resource r : resources.keySet()) {
                 result.append(resources.get(r)).append(" of ").append(r.toString());
                 result.append("\n");

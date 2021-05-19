@@ -298,6 +298,7 @@ class MenuPhase {
                         try {
                             MSG_CREATE_LOBBY m = new MSG_CREATE_LOBBY(numberOfPlayers, nickname);
                             Halo.objectOutputStream.writeObject(m);
+                            Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
                             System.out.println(A.RED+" > The parameters for the creation are not correct!"+A.RESET);
                             return Phase.MainMenu;
@@ -337,6 +338,7 @@ class MenuPhase {
                         try {
                             MSG_JOIN_LOBBY m = new MSG_JOIN_LOBBY(nickname, lobbyNumber);
                             Halo.objectOutputStream.writeObject(m);
+                            Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
                             System.out.println(A.RED+" > The parameters for the join are not correct!"+A.RESET);
                             return Phase.MainMenu;
@@ -372,6 +374,7 @@ class MenuPhase {
                         try {
                             MSG_REJOIN_LOBBY m = new MSG_REJOIN_LOBBY(nickname, lobbyNumber);
                             Halo.objectOutputStream.writeObject(m);
+                            Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
                             System.out.println(A.RED+" > The parameters for the rejoin are not correct!"+A.RESET);
                             return Phase.MainMenu;
@@ -433,6 +436,7 @@ class MenuPhase {
                         try {
                             MSG_CREATE_LOBBY m = new MSG_CREATE_LOBBY(numberOfPlayers, nickname);
                             Halo.objectOutputStream.writeObject(m);
+                            Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
                             System.out.println(A.RED+ " > The parameters for the creation are not correct!"+A.RESET);
                             return Phase.MainMenu;
@@ -475,6 +479,7 @@ class MenuPhase {
                         try {
                             MSG_JOIN_LOBBY m = new MSG_JOIN_LOBBY(nickname, lobbyNumber);
                             Halo.objectOutputStream.writeObject(m);
+                            Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
                             System.out.println(A.RED + " > The parameters for the join are not correct!");
                             return Phase.MainMenu;
@@ -511,6 +516,7 @@ class MenuPhase {
                         MSG_REJOIN_LOBBY m = new MSG_REJOIN_LOBBY(nickname, lobbyNumber);
 
                         Halo.objectOutputStream.writeObject(m);
+                        Halo.objectOutputStream.flush();
 
                         message = (Message) Halo.objectInputStream.readObject();
                         if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
@@ -696,11 +702,6 @@ class GamePhase {
 
             while (true) {
                 execute = true;
-
-                if (Halo.game.isLeaderBoardEnabled()) {
-                    Halo.closeStreams();
-                    Halo.yourTurn = false;
-                }
 //phase 1: not found
 //phase 2: gets input
                 text = Halo.input.nextLine();
@@ -750,6 +751,7 @@ class GamePhase {
                             try {
                                 MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
                                 Halo.objectOutputStream.writeObject(msgToSend);
+                                Halo.objectOutputStream.flush();
                             } catch (IllegalArgumentException e) {
                                 System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                             }
@@ -787,6 +789,7 @@ class GamePhase {
                             try {
                                 MSG_INIT_CHOOSE_RESOURCE msgToSend = new MSG_INIT_CHOOSE_RESOURCE(resource);
                                 Halo.objectOutputStream.writeObject(msgToSend);
+                                Halo.objectOutputStream.flush();
                             } catch (IllegalArgumentException e) {
                                 System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                             }
@@ -809,6 +812,7 @@ class GamePhase {
                             try {
                                 MSG_ACTION_MARKET_CHOICE msgToSend = new MSG_ACTION_MARKET_CHOICE(choice);
                                 Halo.objectOutputStream.writeObject(msgToSend);
+                                Halo.objectOutputStream.flush();
                             } catch (IllegalArgumentException e) {
                                 System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                             }
@@ -845,6 +849,7 @@ class GamePhase {
                                     msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
                                 }
                                 Halo.objectOutputStream.writeObject(msgToSend);
+                                Halo.objectOutputStream.flush();
                             } catch (IllegalArgumentException e) {
                                 System.out.println(A.RED + " We could not build that message" + A.RESET);
                             }
@@ -1065,6 +1070,7 @@ class GamePhase {
                                                     try {
                                                         MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
                                                         Halo.objectOutputStream.writeObject(msgToSend1);
+                                                        Halo.objectOutputStream.flush();
                                                     } catch (IllegalArgumentException e) {
                                                         System.out.println(A.RED + " > Somehow we could not build that message" + A.RESET);
                                                     }
@@ -1104,6 +1110,7 @@ class GamePhase {
                                                     try {
                                                         MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard - 1);
                                                         Halo.objectOutputStream.writeObject(msgToSend2);
+                                                        Halo.objectOutputStream.flush();
                                                     } catch (IllegalArgumentException e) {
                                                         System.out.println(A.RED + " > We couldn't build that message, please debut me" + A.RESET);
                                                     }
@@ -1292,6 +1299,7 @@ class GamePhase {
                                                     try {
                                                         MSG_ACTION_ACTIVATE_PRODUCTION msgToSend3 = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
                                                         Halo.objectOutputStream.writeObject(msgToSend3);
+                                                        Halo.objectOutputStream.flush();
                                                     } catch (IllegalArgumentException e) {
                                                         System.out.println(A.RED + " We couldn't build the message like that." + A.RESET);
                                                     }
@@ -1416,6 +1424,7 @@ class GamePhase {
                                                 try {
                                                     MSG_ACTION_CHANGE_DEPOT_CONFIG msgToSend4 = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
                                                     Halo.objectOutputStream.writeObject(msgToSend4);
+                                                    Halo.objectOutputStream.flush();
                                                 } catch (IllegalArgumentException e) {
                                                     System.out.println(A.RED + " > We couldn't build the message like that" + A.RESET);
                                                 }
@@ -1427,6 +1436,7 @@ class GamePhase {
                                                 System.out.println(" > Asking the Vendor which cards we can buy...");
                                                 MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
                                                 Halo.objectOutputStream.writeObject(msgToSend5);
+                                                Halo.objectOutputStream.flush();
                                                 break actionLoop;
                                             }
 //ACTION GET MARKET RESOURCES
@@ -1478,6 +1488,7 @@ class GamePhase {
                                                 try {
                                                     MSG_ACTION_GET_MARKET_RESOURCES msgToSend6 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num - 1);
                                                     Halo.objectOutputStream.writeObject(msgToSend6);
+                                                    Halo.objectOutputStream.flush();
                                                 } catch (IllegalArgumentException e) {
                                                     System.out.println(A.RED + " > We could not build that message" + A.RESET);
                                                 }
@@ -1488,6 +1499,7 @@ class GamePhase {
                                                 System.out.println(" > Ending the Turn...");
                                                 MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
                                                 Halo.objectOutputStream.writeObject(msgToSend7);
+                                                Halo.objectOutputStream.flush();
                                                 break actionLoop;
                                             }
 //GO BACK

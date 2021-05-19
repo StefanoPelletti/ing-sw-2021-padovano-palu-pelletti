@@ -33,7 +33,7 @@ public class MessageHelper extends ModelObservable {
     public synchronized void setNotificationMessage(String nickname, Message message) {
         switch (message.getMessageType()) {
             case MSG_ACTION_ACTIVATE_LEADERCARD:
-                helperMessage = nickname + " activated his leadercard number " + ((MSG_ACTION_ACTIVATE_LEADERCARD) message).getCardNumber();
+                helperMessage = nickname + " activated his leadercard number " + ((MSG_ACTION_ACTIVATE_LEADERCARD) message).getCardNumber()+1;
                 break;
             case MSG_INIT_CHOOSE_LEADERCARDS:
                 helperMessage = nickname + " has chosen his leadercards.";
@@ -43,7 +43,7 @@ public class MessageHelper extends ModelObservable {
                 helperMessage = nickname + " has chosen an initial resource: " + r1;
                 break;
             case MSG_ACTION_DISCARD_LEADERCARD:
-                helperMessage = nickname + " has discarded his leadercard number " + ((MSG_ACTION_DISCARD_LEADERCARD) message).getCardNumber();
+                helperMessage = nickname + " has discarded his leadercard number " + ((MSG_ACTION_DISCARD_LEADERCARD) message).getCardNumber()+1;
                 break;
             case MSG_ACTION_CHANGE_DEPOT_CONFIG:
                 helperMessage = nickname + " has changed the configuration of his depot";
@@ -67,7 +67,8 @@ public class MessageHelper extends ModelObservable {
                 int num = ((MSG_ACTION_GET_MARKET_RESOURCES) message).getNumber() + 1;
                 if (((MSG_ACTION_GET_MARKET_RESOURCES) message).getColumn())
                     helperMessage += " and picked the column " + num;
-                else helperMessage += " and picked the row " + ((MSG_ACTION_GET_MARKET_RESOURCES) message).getNumber();
+                else
+                    helperMessage += " and picked the row " + num;
                 break;
             case MSG_ACTION_BUY_DEVELOPMENT_CARD:
                 helperMessage = nickname + " has decided that it is time to buy a new card, let's see which one he wants";
