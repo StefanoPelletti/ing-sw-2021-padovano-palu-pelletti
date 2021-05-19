@@ -69,9 +69,6 @@ public class MessageHelper extends ModelObservable {
                     helperMessage += " and picked the column " + num;
                 else helperMessage += " and picked the row " + ((MSG_ACTION_GET_MARKET_RESOURCES) message).getNumber();
                 break;
-            case MSG_ACTION_MARKET_CHOICE:
-                helperMessage = nickname + " has done something on a resource grabbed in the market";
-                break;
             case MSG_ACTION_BUY_DEVELOPMENT_CARD:
                 helperMessage = nickname + " has decided that it is time to buy a new card, let's see which one he wants";
                 break;

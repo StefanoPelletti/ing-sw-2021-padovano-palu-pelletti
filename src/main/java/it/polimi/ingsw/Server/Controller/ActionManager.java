@@ -752,7 +752,6 @@ public class ActionManager {
             gameManager.setErrorObject("Error! method newChoiceMarket was somehow invoked WITHOUT marketHelper enabled!");
             return false;
         }
-        messageHelper.setNotificationMessage(player.getNickname(), message);
 
         Resource currentResource = marketHelper.getCurrentResource();
         boolean isNormalChoice;
@@ -772,13 +771,13 @@ public class ActionManager {
             if (choice == 0) {
                 if (choices[0]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[0]);
-                    //System.out.println("Risorsa cambiata!");
+                    game.getMessageHelper().setNewMessage(player.getNickname()+" changed his extra resource into "+ marketHelper.getExtraResources()[0]);
                 } else
                     error = true; //impossible?
             } else if (choice == 1) {
                 if (choices[1]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[1]);
-                    //System.out.println("Risorsa cambiata!");
+                    game.getMessageHelper().setNewMessage(player.getNickname()+" changed his extra resource into "+ marketHelper.getExtraResources()[1]);
                 } else
                     error = true; //impossible?
             }
@@ -788,7 +787,7 @@ public class ActionManager {
                 if (choices[0]) {
                     depot.add(currentResource);
                     marketHelper.removeResource();
-                    //System.out.println("\nRisorsa aggiunta al deposito!");
+                    game.getMessageHelper().setNewMessage(player.getNickname()+" added "+ currentResource+" in his depot.");
                 } else error = true;
             } else if (choice == 1) {
                 if (choices[1]) {
@@ -800,7 +799,7 @@ public class ActionManager {
                             break;
                         }
                     }
-                    //System.out.println("\nRisorsa aggiunta nel deposito extra!");
+                    game.getMessageHelper().setNewMessage(player.getNickname()+" added "+ currentResource+" in his extraDepot.");
                 } else error = true;
             }
         }
@@ -809,38 +808,39 @@ public class ActionManager {
             if (choices[2]) {
                 marketHelper.removeResource();
                 faithTrackManager.advanceAllExcept(player);
-                //System.out.println("\nRisorsa scartata! Non le volevi bene? Direi di no");
+                game.broadcastMessage(player.getNickname()+" discarded a "+ currentResource);
             } else error = true; //impossible?
         } else if (choice == 3) {
             if (choices[3]) {
                 depot.swapRow(1, 2);
-                //System.out.println("\nHo scambiato le righe 1 e 2!");
+                game.broadcastMessage(player.getNickname()+" swapped the rows 1 and 2 of his depot");
             } else error = true;
         } else if (choice == 4) {
             if (choices[4]) {
                 depot.swapRow(1, 3);
-                //System.out.println("\nHo scambiato le righe 1 e 3!");
+                game.broadcastMessage(player.getNickname()+" swapped the rows 1 and 3 of his depot");
             } else error = true;
         } else if (choice == 5) {
             if (choices[5]) {
                 depot.swapRow(2, 3);
-                //System.out.println("\nHo scambiato le righe 2 e 3!");
+                game.broadcastMessage(player.getNickname()+" swapped the rows 2 and 3 of his depot");
             } else error = true;
         } else if (choice == 6) {
             if (choices[6]) {
                 marketHelper.skipForward();
-                //System.out.println("\nRisorsa skippata! ");
+                game.broadcastMessage(player.getNickname()+" is pondering about his market resources");
             } else error = true;
         } else if (choice == 7) {
             if (choices[7]) {
                 marketHelper.skipBackward();
-                //System.out.println("\nTorniamo indietro!");
+                game.broadcastMessage(player.getNickname()+" is pondering about his market resources");
             } else error = true;
         }
 
 
         if (error) {
             gameManager.setErrorObject("Error! You chose an invalid action!");
+            game.broadcastMessage(player.getNickname() +" did not behave well");
             return false;
         } else {
             if (marketHelper.getResources().size() > 0) {
