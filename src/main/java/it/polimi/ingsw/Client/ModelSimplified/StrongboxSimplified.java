@@ -2,7 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.*;
-import it.polimi.ingsw.Server.Utils.A;
+import it.polimi.ingsw.Server.Utils.Displayer;
 
 import java.util.*;
 
@@ -14,22 +14,8 @@ public class StrongboxSimplified {
         this.resources = new HashMap<>(map);
     }
 
-
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("      STRONGBOX").append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        if (resources.isEmpty()) {
-            result.append(" The Strongbox is empty. ").append("\n");
-        } else {
-            result.append(" The Strongbox contains: ").append("\n");
-            for (Resource r : resources.keySet()) {
-                result.append(resources.get(r)).append(" of ").append(r.toString());
-                result.append("\n");
-            }
-        }
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
+        return Displayer.strongboxToString(this.resources);
     }
 }

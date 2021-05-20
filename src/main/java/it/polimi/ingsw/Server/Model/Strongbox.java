@@ -2,7 +2,7 @@ package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
-import it.polimi.ingsw.Server.Utils.A;
+import it.polimi.ingsw.Server.Utils.Displayer;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
@@ -64,19 +64,7 @@ public class Strongbox extends ModelObservable {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("      STRONGBOX").append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        if (resources.isEmpty()) {
-            result.append(" The Strongbox is empty. ").append("\n");
-        } else {
-            for (Resource r : resources.keySet()) {
-                result.append(resources.get(r)).append(" of ").append(r.toString());
-                result.append("\n");
-            }
-        }
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
+        return Displayer.strongboxToString(this.resources);
     }
 
     private void notifyObservers() {

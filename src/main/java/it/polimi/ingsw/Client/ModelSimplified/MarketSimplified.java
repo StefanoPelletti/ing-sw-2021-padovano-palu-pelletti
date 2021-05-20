@@ -3,7 +3,7 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
-import it.polimi.ingsw.Server.Utils.A;
+import it.polimi.ingsw.Server.Utils.Displayer;
 
 public class MarketSimplified {
     private MarketMarble[][] grid;
@@ -31,14 +31,6 @@ public class MarketSimplified {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        result.append("                   MARKET!                ").append("\n");
-        result.append("      Marble on the Slide: ").append(slideMarble).append("\n").append("\n");
-        result.append("             [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation()).append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation()).append(" ]").append("\n");
-        result.append("             [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation()).append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation()).append(" ]").append("\n");
-        result.append("             [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation()).append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation()).append(" ]").append("\n");
-        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
+        return Displayer.marketToString(this.grid, this.slideMarble);
     }
 }

@@ -1,10 +1,9 @@
 package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_DevDeck;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
-import it.polimi.ingsw.Server.Utils.A;
+import it.polimi.ingsw.Server.Utils.Displayer;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 import java.util.*;
@@ -408,27 +407,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(" DEVELOPMENT DECK, ALL THE VISIBLE CARDS: ");
-
-        DevelopmentCard[][] visible = this.getVisible();
-
-        for (int i = 0; i < 3; i++) {
-            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
-            result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
-            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-            result.append("\n").append(" Row ").append(i);
-            for (int j = 0; j < 4; j++) {
-                result.append("\n").append("  Column ").append(j);
-                if (visible[i][j] == null)
-                    result.append("\n").append(" X=====X Empty! X=====X");
-                else
-                    result.append("\n").append(visible[i][j].toString());
-            }
-        }
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
-        result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
+        return Displayer.developmentCardsDeckToString(getVisible());
     }
 
     private void notifyObservers() {

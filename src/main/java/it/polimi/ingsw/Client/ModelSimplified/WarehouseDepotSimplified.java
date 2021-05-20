@@ -2,7 +2,7 @@ package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
-import it.polimi.ingsw.Server.Utils.A;
+import it.polimi.ingsw.Server.Utils.Displayer;
 
 public class WarehouseDepotSimplified {
     private Resource shelf1;
@@ -34,12 +34,6 @@ public class WarehouseDepotSimplified {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("               WAREHOUSE DEPOT:").append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        result.append(A.CYAN + "  Shelf 1:  " + A.RESET).append(this.shelf1).append("\n");
-        result.append(A.CYAN + "  Shelf 2:  " + A.RESET).append(this.shelf2[0]).append(" - ").append(this.shelf2[1]).append("\n");
-        result.append(A.CYAN + "  Shelf 3:  " + A.RESET).append(this.shelf3[0]).append(" - ").append(this.shelf3[1]).append(" - ").append(this.shelf3[2]).append("\n"); result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
+        return Displayer.warehouseDepotToString(this.shelf1, this.shelf2, this.shelf3);
     }
 }
