@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class DevelopmentCardsVendor extends ModelObservable {
 
-    boolean enabled;
-    Map<DevelopmentCard, boolean[]> cards;
+    private boolean enabled;
+    private Map<DevelopmentCard, boolean[]> cards;
 
     public DevelopmentCardsVendor() {
         this.enabled = false;

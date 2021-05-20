@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FaithTrack extends ModelObservable {
     private boolean[] zones;
-    private Game game;
+    private final Game game;
 
     public FaithTrack(Game game) {
         this.game = game;

@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Model.DevelopmentCard;
 import it.polimi.ingsw.Server.Utils.A;
 
 public class DevelopmentCardsDeckSimplified {
-    DevelopmentCard[][] cards;
+    private DevelopmentCard[][] cards;
 
     public DevelopmentCardsDeckSimplified() {
         cards = new DevelopmentCard[3][4];

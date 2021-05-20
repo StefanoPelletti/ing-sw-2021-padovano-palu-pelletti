@@ -8,8 +8,8 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 import java.util.ArrayList;
 
 public class LeaderCardsObject extends ModelObservable {
-    boolean enabled;
-    ArrayList<LeaderCard> cards;
+    private boolean enabled;
+    private ArrayList<LeaderCard> cards;
 
     public LeaderCardsObject() {
         this.enabled = false;

@@ -7,8 +7,7 @@ import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Server.Model.Enumerators.*;
 
 public class MessageHelper extends ModelObservable {
-
-    String helperMessage;
+    private String helperMessage;
 
     public MessageHelper() {
         this.helperMessage = "";

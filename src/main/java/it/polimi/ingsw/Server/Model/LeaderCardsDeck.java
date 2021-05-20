@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.Map;
 
 public class LeaderCardsDeck {
-    private ArrayList<LeaderCard> deck;
-    int t_pos;
+    private final ArrayList<LeaderCard> deck;
+    private int t_pos;
 
     public LeaderCardsDeck() {
         t_pos = 0;

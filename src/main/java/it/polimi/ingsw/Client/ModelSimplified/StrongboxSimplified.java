@@ -7,7 +7,6 @@ import it.polimi.ingsw.Server.Utils.A;
 import java.util.*;
 
 public class StrongboxSimplified {
-
     private Map<Resource, Integer> resources;
 
     public void update(MSG_UPD_Strongbox message) {

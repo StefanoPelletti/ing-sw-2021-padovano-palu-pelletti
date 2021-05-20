@@ -16,16 +16,16 @@ public class GameSimplified {
     private int currentPlayer;
     private int blackCrossPosition;
 
-    MarketSimplified market;
-    DevelopmentCardsDeckSimplified devDeck;
-    FaithTrackSimplified faithTrack;
-    List<PlayerSimplified> playerSimplifiedList;
+    private final MarketSimplified market;
+    private final DevelopmentCardsDeckSimplified devDeck;
+    private final FaithTrackSimplified faithTrack;
+    private List<PlayerSimplified> playerSimplifiedList;
 
-    DevelopmentCardsVendor developmentCardsVendor;
-    LeaderCardsObject leaderCardsObject;
-    MarketHelper marketHelper;
-    ResourceObject resourceObject;
-    LeaderBoard leaderBoard;
+    private final DevelopmentCardsVendor developmentCardsVendor;
+    private final LeaderCardsObject leaderCardsObject;
+    private final MarketHelper marketHelper;
+    private final ResourceObject resourceObject;
+    private final LeaderBoard leaderBoard;
 
     public GameSimplified() {
         this.turn = -1;

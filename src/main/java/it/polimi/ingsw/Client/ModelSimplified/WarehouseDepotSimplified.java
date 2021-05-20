@@ -5,7 +5,6 @@ import it.polimi.ingsw.Server.Model.Enumerators.*;
 import it.polimi.ingsw.Server.Utils.A;
 
 public class WarehouseDepotSimplified {
-
     private Resource shelf1;
     private Resource[] shelf2;
     private Resource[] shelf3;

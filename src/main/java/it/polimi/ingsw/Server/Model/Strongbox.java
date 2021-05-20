@@ -9,7 +9,7 @@ import java.util.*;
 
 
 public class Strongbox extends ModelObservable {
-    private Map<Resource, Integer> resources;
+    private final Map<Resource, Integer> resources;
 
     public Strongbox() {
         this.resources = new HashMap<>();

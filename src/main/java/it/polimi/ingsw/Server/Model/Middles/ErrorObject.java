@@ -5,7 +5,6 @@ import it.polimi.ingsw.Networking.Message.MSG_ERROR;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 public class ErrorObject extends ModelObservable {
-
     private boolean enabled;
     private String errorMessage;
 

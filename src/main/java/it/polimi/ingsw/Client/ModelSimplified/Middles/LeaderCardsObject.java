@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class LeaderCardsObject {
     private boolean enabled;
-    ArrayList<LeaderCard> cards;
+    private ArrayList<LeaderCard> cards;
 
     public boolean isEnabled() {
         return enabled;
