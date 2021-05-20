@@ -611,7 +611,7 @@ public class ActionManager {
             return false;
         }
         if (cardNumber < 0) {
-            gameManager.setErrorObject("Error! Message not well formatted: cardNumber < 0!");
+            gameManager.setErrorObject("Error! Message not well formatted: cardNumber < 1!");
             return false;
         }
         if (slotNumber != 0 && slotNumber != 1 && slotNumber != 2) {
@@ -626,7 +626,13 @@ public class ActionManager {
             return false;
         }
 
-        DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber - 1);
+
+        DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber);
+
+        if(!developmentCardsVendor.getCards().get(dc)[cardNumber]){
+            gameManager.setErrorObject("Error! You can not put that card in the depot!");
+            return false;
+        }
 
         player.getDevelopmentSlot().addCard(dc, slotNumber);
         DevelopmentCard[][] visibleCards = game.getVisibleCards();
@@ -787,7 +793,7 @@ public class ActionManager {
                 if (choices[0]) {
                     depot.add(currentResource);
                     marketHelper.removeResource();
-                    game.getMessageHelper().setNewMessage(player.getNickname()+" added "+ currentResource+" in his depot.");
+                    game.getMessageHelper().setNewMessage(player.getNickname()+" added in his depot a "+ currentResource);
                 } else error = true;
             } else if (choice == 1) {
                 if (choices[1]) {
@@ -799,7 +805,7 @@ public class ActionManager {
                             break;
                         }
                     }
-                    game.getMessageHelper().setNewMessage(player.getNickname()+" added "+ currentResource+" in his extraDepot.");
+                    game.getMessageHelper().setNewMessage(player.getNickname()+" added in is extra depot a "+ currentResource);
                 } else error = true;
             }
         }
@@ -853,6 +859,10 @@ public class ActionManager {
     }
 
     public boolean endTurn(Player player, boolean notify) {
+        /*if(!player.getAction()){
+            game.getErrorObject().setErrorMessage("You must do a main action before ending the turn");
+            return false;
+        }*/
         player.resetPermittedAction();
         if (notify)
             messageHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());

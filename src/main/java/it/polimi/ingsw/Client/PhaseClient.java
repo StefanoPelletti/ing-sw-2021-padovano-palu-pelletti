@@ -846,7 +846,7 @@ class GamePhase {
                                 }else
                                 {
                                     Halo.triedAction = true;
-                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
+                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum -1, slotNum - 1);
                                 }
                                 Halo.objectOutputStream.writeObject(msgToSend);
                                 Halo.objectOutputStream.flush();
@@ -1131,10 +1131,7 @@ class GamePhase {
                                                 boolean[] standard = {false, false, false};
                                                 int input;
 
-                                                //FIXME
-                                                // action. The action! Gotta implement the action!
-
-                                                System.out.println(" Here's your depot and strongbox");
+                                                System.out.println(" Here are your depot and strongbox");
                                                 System.out.println(Halo.myPlayerRef.getWarehouseDepot());
                                                 System.out.println(Halo.myPlayerRef.getStrongbox());
                                                 if (Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
@@ -1496,6 +1493,10 @@ class GamePhase {
                                             }
 //ACTION BUY DEV CARDS
                                             case 7: {
+                                                /*if(!Halo.action){
+                                                    System.out.println("You must do a main action before ending the turn");
+                                                    break actionLoop;
+                                                }*/
                                                 System.out.println(" > Ending the Turn...");
                                                 MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
                                                 Halo.objectOutputStream.writeObject(msgToSend7);
@@ -1931,7 +1932,7 @@ class LocalPhase {
                         }else
                         {
                             Halo.triedAction = true;
-                            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum, slotNum - 1);
+                            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum - 1, slotNum - 1);
                         }
                         Halo.actionManager.onMessage(message);
                     } catch (IllegalArgumentException e) {
@@ -2479,6 +2480,10 @@ class LocalPhase {
                                         }
 //ACTION BUY DEV CARDS
                                         case 7: {
+                                            /*if(!Halo.action){
+                                                System.out.println("You must do a main action before ending the turn");
+                                                break actionLoop;
+                                            }*/
                                             System.out.println(" > Ending the Turn...");
                                             message = new MSG_ACTION_ENDTURN();
                                             Halo.actionManager.onMessage(message);
@@ -2662,7 +2667,7 @@ class LocalPhase {
                     System.out.println(A.RED + " > That's not a possible card!" + A.RESET);
                     return false;
                 }
-                if (slotNum < 0 || slotNum > 2) {
+                if (slotNum < 1 || slotNum > 3) {
                     System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
                     return false;
                 }

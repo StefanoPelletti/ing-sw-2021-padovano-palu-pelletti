@@ -68,7 +68,7 @@ public class UpdateHandler implements Runnable {
 // Shared objects update
                     case MSG_UPD_Game:
                         synchronized (Halo.game) {
-                            if(Halo.solo){
+                            if (Halo.solo) {
                                 if(Halo.game.getTurn()+1==((MSG_UPD_Game) message).getTurn()) Halo.action= false;
                             }
                             Halo.game.updateGame((MSG_UPD_Game) message);

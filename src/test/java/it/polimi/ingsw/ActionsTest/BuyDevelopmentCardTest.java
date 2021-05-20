@@ -261,7 +261,7 @@ public class BuyDevelopmentCardTest {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
         assertFalse(am.buyDevelopmentCard(p));
         c.emptyQueue();
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 2);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 1);
 
         assertFalse(am.chooseDevelopmentCard(p, msg));
 
@@ -301,7 +301,7 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 0);
 
         assertTrue(am.chooseDevelopmentCard(p, msg));
 
@@ -355,7 +355,7 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 0);
         assertTrue(am.chooseDevelopmentCard(p, msg));
         assertFalse(dcv.isEnabled());
 
@@ -415,7 +415,7 @@ public class BuyDevelopmentCardTest {
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 0);
 
         assertTrue(am.chooseDevelopmentCard(p, msg));
 
@@ -455,7 +455,7 @@ public class BuyDevelopmentCardTest {
 
         assertTrue(am.buyDevelopmentCard(p));
         c.emptyQueue();
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 0);
 
         assertTrue(am.chooseDevelopmentCard(p, msg));
 
@@ -497,7 +497,7 @@ public class BuyDevelopmentCardTest {
 
         a.emptyQueue();
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(1, 1);
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 0);
 
         assertTrue(actionManager.chooseDevelopmentCard(player, msg));
 
