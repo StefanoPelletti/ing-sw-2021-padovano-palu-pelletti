@@ -64,8 +64,7 @@ public class LeaderCard implements Serializable {
         LeaderCard o = (LeaderCard) obj;
         return (this.VP == o.VP &&
                 this.requirement.equals(o.requirement) &&
-                this.specialAbility.equals(o.specialAbility) &&
-                this.enabled == o.enabled);
+                this.specialAbility.equals(o.specialAbility));
 
     }
 }

@@ -97,6 +97,13 @@ public class ActionManager {
             gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsObject middle-object was not enabled!");
             return false;
         }
+        //TODO DISCOVER WHY THIS NOT WORKS???
+        /*
+        if(!leaderCardsObject.getCards().contains(cards))
+        {
+            gameManager.setErrorObject("Error! The cards that you choose are not the same in the middle-object!");
+            return false;
+        } */
 
         messageHelper.setNotificationMessage(player.getNickname(), message);
         player.associateLeaderCards(cards); //notifies player
