@@ -629,7 +629,7 @@ public class ActionManager {
 
         DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber);
 
-        if(!developmentCardsVendor.getCards().get(dc)[cardNumber]){
+        if(!developmentCardsVendor.getCards().get(dc)[slotNumber]){
             gameManager.setErrorObject("Error! You can not put that card in the depot!");
             return false;
         }
