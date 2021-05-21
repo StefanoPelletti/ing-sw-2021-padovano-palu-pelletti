@@ -1,9 +1,9 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.actionTokens.ActionToken;
 import it.polimi.ingsw.server.model.actionTokens.RemoverToken;
-import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.enumerators.Status;
@@ -87,16 +87,16 @@ public class ActionManager {
         LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
         ResourceObject resourceObject = game.getResourceObject();
 
-//MESSAGE VALIDATION
-        if(firstCard<0 || firstCard>3) {
+//MESSAGE VALIDATION    //impossible to test
+        if (firstCard < 0 || firstCard > 3) {
             gameManager.setErrorObject("Error! First Card number must be between 1 and 4!");
             return false;
         }
-        if(secondCard<0 || secondCard>3) {
+        if (secondCard < 0 || secondCard > 3) {
             gameManager.setErrorObject("Error! Second Card number must be between 1 and 4!");
             return false;
         }
-        if (firstCard==secondCard) {
+        if (firstCard == secondCard) {
             gameManager.setErrorObject("Error! Message not well formatted: card #1 == card #2!");
             return false;
         }
@@ -142,7 +142,7 @@ public class ActionManager {
 
         ResourceObject resourceObject = game.getResourceObject();
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION //impossible to test
         if (resource != Resource.COIN && resource != Resource.SERVANT && resource != Resource.STONE && resource != Resource.SHIELD) {
             gameManager.setErrorObject("Error! Message not well formatted: resource not a default one!");
             return false;
@@ -163,7 +163,7 @@ public class ActionManager {
         player.decrementStartingResource();
         resourceObject.decNumOfResources();
 
-        if (game.getStatus() == Status.INIT_2) //so it is distribuiting the resources
+        if (game.getStatus() == Status.INIT_2) //so it is distributing the resources
         {
             if (resourceObject.getNumOfResources() == 0) {
                 endTurn(player, false);
@@ -182,7 +182,7 @@ public class ActionManager {
     public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARD message) {
         int cardNumber = message.getCardNumber();
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION        //impossible to test
         if (cardNumber != 0 && cardNumber != 1) {
             gameManager.setErrorObject("Error! Message not well formatted: not 0 or 1!");
             return false;
@@ -246,7 +246,8 @@ public class ActionManager {
 
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message) {
         int cardNumber = message.getCardNumber();
-//MESSAGE VALIDATION
+
+//MESSAGE VALIDATION    //impossible to test
         if (cardNumber != 0 && cardNumber != 1) {
             gameManager.setErrorObject("Error! Message not well formatted: cardNumber != 0 1 ");
             return false; //impossible?  cannot build a message like that // still a layer of defense.
@@ -278,7 +279,7 @@ public class ActionManager {
         Resource leaderOutput1 = message.getLeaderOutput1();
         Resource leaderOutput2 = message.getLeaderOutput2();
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION    //impossible to test
         if (standardProduction == null || leaderProduction == null) {
             gameManager.setErrorObject("Error! Message not well formatted: standardproductioo or leaderproduction == null");
             return false;
@@ -432,7 +433,7 @@ public class ActionManager {
         LeaderCard[] playerLeaderCards = player.getLeaderCards();
 
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION    //impossible to test
         if (slot1 != Resource.COIN && slot1 != Resource.SERVANT && slot1 != Resource.SHIELD && slot1 != Resource.STONE && slot1 != Resource.NONE) {
             gameManager.setErrorObject("Error! Message not well formatted: slot1 not default resources!");
             return false;
@@ -542,7 +543,7 @@ public class ActionManager {
             }
         }
 
-        List <LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
+        List<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
         List<Resource> discountedResources = new ArrayList<>();
         if (!specialAb.isEmpty()) {
             for (LeaderCard leaderCard : specialAb) {
@@ -603,7 +604,7 @@ public class ActionManager {
 
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION    //impossible to test
         if (cardNumber == -1 && slotNumber == -1) {
             game.setDevelopmentCardsVendorEnabled(false);
             game.broadcastMessage(player.getNickname() + " did not buy any card");
@@ -622,6 +623,11 @@ public class ActionManager {
         if (!developmentCardsVendor.isEnabled()) //how the hell did he get in here?
         {
             gameManager.setErrorObject("Error! The method chooseDevelopmentCard was somehow invoked without developmentCardsVendor middle-object enabled!");
+            return false;
+        }
+
+        if (cardNumber >= developmentCardsVendor.getCards().size()) {
+            gameManager.setErrorObject("Error! The cardNumber cannot be that high!");
             return false;
         }
 
@@ -680,7 +686,7 @@ public class ActionManager {
         boolean column = message.getColumn();
         int number = message.getNumber();
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION    //impossible to test
         if (column && (number < 0 || number > 3)) // 0 1 2 3
         {
             gameManager.setErrorObject("Error! Message not well formatted: column but not columns value!");
@@ -744,7 +750,7 @@ public class ActionManager {
         MarketHelper marketHelper = game.getMarketHelper();
         int choice = message.getChoice();
 
-//MESSAGE VALIDATION
+//MESSAGE VALIDATION    //impossible to test
         if (choice < 0 || choice > 8) {
             gameManager.setErrorObject("Error! Message not well formatted: choice not between 1 and 8!");
             return false;
@@ -772,13 +778,13 @@ public class ActionManager {
                     marketHelper.setResource(marketHelper.getExtraResources()[0]);
                     game.getMessageHelper().setNewMessage(player.getNickname() + " changed his extra resource into " + marketHelper.getExtraResources()[0]);
                 } else
-                    error = true; //impossible?
+                    error = true; //impossible to test
             } else if (choice == 1) {
                 if (choices[1]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[1]);
                     game.getMessageHelper().setNewMessage(player.getNickname() + " changed his extra resource into " + marketHelper.getExtraResources()[1]);
                 } else
-                    error = true; //impossible?
+                    error = true; //impossible to test
             }
 
         } else {
@@ -808,7 +814,7 @@ public class ActionManager {
                 marketHelper.removeResource();
                 faithTrackManager.advanceAllExcept(player);
                 game.broadcastMessage(player.getNickname() + " discarded a " + currentResource);
-            } else error = true; //impossible?
+            } else error = true; //impossible to test
         } else if (choice == 3) {
             if (choices[3]) {
                 depot.swapRow(1, 2);

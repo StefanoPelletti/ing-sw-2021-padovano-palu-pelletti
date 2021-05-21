@@ -172,4 +172,29 @@ public class FaithManagerTest {
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(6, c.messages.size());
     }
+
+    @Test
+    //case 2 test SOLO
+    public void FaithTrackManagerTest7() {
+        GameManager gameManager = new GameManager(1);
+        Game game = gameManager.getGame();
+        Catcher a = new Catcher();
+        game.addPlayer("Primo", 1);
+        gameManager.addAllObserver(a);
+        Player player = game.getPlayer(1);
+        FaithTrackManager ftm1 = gameManager.getFaithTrackManager();
+
+        game.getFaithTrack().setZones(0, true);
+        game.setBlackCrossPosition(15);
+        a.emptyQueue();
+
+        assertTrue(ftm1.advanceLorenzo());
+        assertEquals(16, game.getBlackCrossPosition());
+        assertTrue(game.getFaithTrack().getZones()[1]);
+
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_FaithTrack).count());
+        assertEquals(1, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
+        assertEquals(2, a.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
+        assertEquals(4, a.messages.size());
+    }
 }

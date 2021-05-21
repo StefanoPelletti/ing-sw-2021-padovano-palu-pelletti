@@ -716,7 +716,7 @@ class GamePhase {
                             }
 
                             try {
-                                MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(first-1, second-1);
+                                MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(first - 1, second - 1);
                                 Halo.objectOutputStream.writeObject(msgToSend);
                                 Halo.objectOutputStream.flush();
                             } catch (IllegalArgumentException e) {
@@ -1841,7 +1841,7 @@ class LocalPhase {
                     }
 
                     try {
-                        message = new MSG_INIT_CHOOSE_LEADERCARDS(first-1, second-1);
+                        message = new MSG_INIT_CHOOSE_LEADERCARDS(first - 1, second - 1);
                         Halo.actionManager.onMessage(message);
                     } catch (IllegalArgumentException e) {
                         System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);

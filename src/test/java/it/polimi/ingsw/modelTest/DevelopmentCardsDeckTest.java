@@ -2,8 +2,13 @@ package it.polimi.ingsw.modelTest;
 
 import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.DevelopmentCardsDeck;
+import it.polimi.ingsw.server.model.Power;
+import it.polimi.ingsw.server.model.enumerators.Color;
+import it.polimi.ingsw.server.model.enumerators.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -225,5 +230,29 @@ public class DevelopmentCardsDeckTest {
     public void toStringCardFormat() {
         DevelopmentCard c = d.removeCard(2, 2);
         System.out.println(c);
+    }
+
+    @Test
+    public void equalsTest() {
+        DevelopmentCard card1 = new DevelopmentCard(3, Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1))
+        );
+
+        DevelopmentCard card2 = new DevelopmentCard(3, Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1))
+        );
+
+        DevelopmentCard card3 = new DevelopmentCard(3, Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 2))
+        );
+
+        assertEquals(card1, card2);
+        assertNotEquals(card1, card3);
     }
 }

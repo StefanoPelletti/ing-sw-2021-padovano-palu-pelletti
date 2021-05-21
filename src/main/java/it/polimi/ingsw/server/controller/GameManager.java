@@ -81,7 +81,6 @@ public class GameManager {
     }
 
 
-
     public Boolean getSoloWinner() {
         return soloWinner;
     }
@@ -94,12 +93,12 @@ public class GameManager {
         return game.getStatus();
     }
 
-    public boolean isGameOver() {
-        return (getStatus() == Status.GAME_OVER);
-    }
-
     public void setStatus(Status status) {
         game.changeStatus(status);
+    }
+
+    public boolean isGameOver() {
+        return (getStatus() == Status.GAME_OVER);
     }
 
     public boolean getSolo() {
@@ -121,7 +120,6 @@ public class GameManager {
     public ActionManager getActionManager() {
         return actionManager;
     }
-
 
 
     public void setErrorObject(String errorCause) {
@@ -179,7 +177,6 @@ public class GameManager {
     }
 
 
-
     public void addAllObserver(ModelObserver observer) {
         game.addAllObservers(observer);
     }
@@ -189,9 +186,11 @@ public class GameManager {
     public void addIdlePlayer(Integer playerNumber) {
         this.idlePlayers.add(playerNumber);
     }
+
     public void resetErrorObject() {
         game.getErrorObject().setEnabled(false);
     }
+
     public void removeIdlePlayer(Integer playerNumber) {
         this.idlePlayers.remove(playerNumber);
     }

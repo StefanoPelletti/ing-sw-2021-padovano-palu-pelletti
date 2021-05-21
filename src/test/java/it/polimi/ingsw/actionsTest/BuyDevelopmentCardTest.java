@@ -90,6 +90,19 @@ public class BuyDevelopmentCardTest {
     }
 
     @Test
+    //player cannot act when a main move has already been already made
+    public void errorMainMove() {
+        p.setAction();
+        assertFalse(am.buyDevelopmentCard(p));
+        assertTrue(p.getAction());
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+        assertFalse(dcv.isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+    }
+
+    @Test
     //if the player has enough resources but not space in any slot it is expected to return false and to have an ObjectError.
     public void buyDevelopmentCardTest3() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
@@ -315,6 +328,92 @@ public class BuyDevelopmentCardTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_DevSlot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(7, c.messages.size());
+    }
+
+    @Test
+    public void incorrectCardNumber() {
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
+        p.getStrongbox().addResource(Resource.SERVANT, 20);
+        p.getStrongbox().addResource(Resource.SHIELD, 20);
+        p.getStrongbox().addResource(Resource.STONE, 20);
+        p.getStrongbox().addResource(Resource.COIN, 20);
+
+        DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
+
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
+                    grid[r][c][p] = null;
+                }
+            }
+        }
+
+        grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
+
+        g.getDevelopmentCardsDeck().setGrid(grid);
+
+        assertTrue(am.buyDevelopmentCard(p));
+        c.emptyQueue();
+
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(2, 0);
+
+        assertFalse(am.chooseDevelopmentCard(p, msg));
+
+        assertTrue(dcv.isEnabled());
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+    }
+
+    @Test
+    public void incorrectSlotNumber() {
+        DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
+
+        p.getStrongbox().addResource(Resource.SERVANT, 20);
+        p.getStrongbox().addResource(Resource.SHIELD, 20);
+        p.getStrongbox().addResource(Resource.STONE, 20);
+        p.getStrongbox().addResource(Resource.COIN, 20);
+
+        DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
+
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 4; c++) {
+                for (int p = 0; p < 4; p++) {
+                    grid[r][c][p] = null;
+                }
+            }
+        }
+
+        grid[2][0][3] = new DevelopmentCard(1, Color.GREEN, 2,
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
+        grid[1][0][3] = new DevelopmentCard(2, Color.GREEN, 2,
+                Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.SERVANT, 1)));
+
+        g.getDevelopmentCardsDeck().setGrid(grid);
+
+        assertTrue(am.buyDevelopmentCard(p));
+        c.emptyQueue();
+
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 0);
+
+        assertTrue(am.chooseDevelopmentCard(p, msg));
+        p.resetPermittedAction();
+        assertTrue(am.buyDevelopmentCard(p));
+
+        msg = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(0, 1);
+        c.emptyQueue();
+        assertFalse(am.chooseDevelopmentCard(p, msg));
+
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
     }
 
     @Test

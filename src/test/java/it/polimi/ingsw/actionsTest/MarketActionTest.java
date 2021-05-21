@@ -1298,6 +1298,18 @@ public class MarketActionTest {
         c.emptyQueue();
     }
 
+
+    @Test
+    public void errorMarketNotEnabled() {
+        g.setMarketHelperEnabled(true);
+        c.emptyQueue();
+        MSG_ACTION_GET_MARKET_RESOURCES msg = new MSG_ACTION_GET_MARKET_RESOURCES(true, 2);
+        assertFalse(am.getMarketResources(p, msg));
+        assertTrue(g.isMarketHelperEnabled());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+    }
+
     @Test
     public void soloTest() {
         GameManager gameManager = new GameManager(1);

@@ -36,7 +36,7 @@ public class ResourceObject extends ModelObservable {
 
     public void decNumOfResources() {
         this.numOfResources--;
-        if (enabled) {
+        if (enabled && this.numOfResources != 0) {
             notifyObservers();
         }
     }

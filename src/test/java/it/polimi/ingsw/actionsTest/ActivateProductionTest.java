@@ -62,6 +62,24 @@ public class ActivateProductionTest {
         assertEquals(1, c.messages.size());
     }
 
+    //verifies that a Standard Production is refused if the player has already made a main move
+    @Test
+    public void mainMoveError() {
+        MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(
+                new boolean[]{false, true, false},
+                false,
+                new boolean[]{false, false},
+                null,
+                null,
+                null,
+                null);
+
+        p.setAction();
+        assertFalse(am.activateProduction(p, message));
+        assertTrue(p.getAction());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
+        assertEquals(1, c.messages.size());
+    }
 
     //verifies that a Leader Production is refused if the player has not a production LeaderCard in position 1
     @Test

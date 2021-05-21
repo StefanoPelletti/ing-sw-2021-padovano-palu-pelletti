@@ -22,54 +22,44 @@ public class FaithTrackManager {
     }
 
 
-    public boolean advance(Player p)
-    {
+    public boolean advance(Player p) {
         return advance(p, false);
     }
 
-    public boolean advanceLorenzo()
-    {
+    public boolean advanceLorenzo() {
         return advance(null, true);
     }
 
-    public boolean advance(Player player, boolean lorenzo)
-    {
+    public boolean advance(Player player, boolean lorenzo) {
         Player p;
         List<Player> players;
         StringBuilder message = new StringBuilder();
         int result;
 
-        if(lorenzo)
-        {
+        if (lorenzo) {
             p = game.getFirstPlayer();
             result = faithTrack.doesActivateZone(game.getBlackCrossPosition() + 1);
             players = new ArrayList<>();
             players.add(p);
-        }
-        else
-        {
+        } else {
             if (player == null) return false;
             players = game.getPlayerList();
             if (players.stream().noneMatch(x -> x.getNickname().equals(player.getNickname()))) return false;
             result = faithTrack.doesActivateZone(player);
         }
 
-        switch(result)
-        {
+        switch (result) {
             case 1:
             case 2:
-                if(lorenzo)
-                {
-                    if(result==1)
+                if (lorenzo) {
+                    if (result == 1)
                         message.append("Lorenzo has activated the first zone! ");
                     else
                         message = new StringBuilder("Lorenzo has activated the second zone! ");
                     message.append("\n Points have been awarded: ");
                     faithTrack.advanceLorenzo();
-                }
-                else
-                {
-                    if(result==1)
+                } else {
+                    if (result == 1)
                         message.append(player.getNickname()).append(" has activated the first zone! ");
                     else
                         message.append(player.getNickname()).append(" has activated the second zone! ");
@@ -77,11 +67,10 @@ public class FaithTrackManager {
                     faithTrack.advance(player);
                 }
                 message.append(returnAddedPoints(players));
-                faithTrack.setZones(result-1, true);
+                faithTrack.setZones(result - 1, true);
                 break;
             case 3:
-                if(lorenzo)
-                {
+                if (lorenzo) {
                     message = new StringBuilder("Lorenzo has activated the last zone! ");
                     message.append("\n Points have been awarded, but Gameover!: ");
                     faithTrack.advanceLorenzo();
@@ -89,9 +78,7 @@ public class FaithTrackManager {
                     if (gameManager.getSoloWinner() == null)
                         gameManager.setSoloWinner(false);
 
-                }
-                else
-                {
+                } else {
                     message.append(player.getNickname()).append(" has activated the third zone! ");
                     if (!gameManager.getSolo())
                         message.append("\n Points have been awarded: ");
@@ -110,7 +97,7 @@ public class FaithTrackManager {
                 faithTrack.setZones(2, true);
                 break;
             case 0:
-                if(lorenzo)
+                if (lorenzo)
                     faithTrack.advanceLorenzo();
                 else
                     faithTrack.advance(player);
@@ -132,7 +119,7 @@ public class FaithTrackManager {
         if (!gameManager.getSolo()) {
             for (Player p : players) {
                 if (!p.equals(player)) {
-                    advance(p,false);
+                    advance(p, false);
                 }
             }
         } else {
@@ -143,8 +130,7 @@ public class FaithTrackManager {
     }
 
 
-    private String returnAddedPoints(List<Player> players)
-    {
+    private String returnAddedPoints(List<Player> players) {
         StringBuilder message = new StringBuilder();
         for (Player p : players) {
             if (faithTrack.calculateVP(p) > 0) {

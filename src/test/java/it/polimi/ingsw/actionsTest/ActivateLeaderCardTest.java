@@ -102,6 +102,17 @@ public class ActivateLeaderCardTest {
         assertEquals(1, c.messages.size());
     }
 
+    //tests that an error is generated when the player tries to activate a discarded leaderCard
+    @Test
+    public void discardedCardError() {
+        MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(0);
+        p.setLeaderCards(0, false);
+        c.emptyQueue();
+        assertFalse(am.activateLeaderCard(p, message));
+        assertEquals(MessageType.MSG_ERROR, c.messages.get(0).getMessageType());
+        assertEquals(1, c.messages.size());
+    }
+
     //Verifies that if the player has the required resources, the leaderCard is activated
     @Test
     public void ResourceRequirement() {

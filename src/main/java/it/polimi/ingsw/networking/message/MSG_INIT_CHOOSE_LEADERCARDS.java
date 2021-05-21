@@ -1,10 +1,6 @@
 package it.polimi.ingsw.networking.message;
 
-import it.polimi.ingsw.server.model.LeaderCard;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MSG_INIT_CHOOSE_LEADERCARDS extends Message implements Serializable {
 
@@ -14,14 +10,19 @@ public class MSG_INIT_CHOOSE_LEADERCARDS extends Message implements Serializable
     public MSG_INIT_CHOOSE_LEADERCARDS(int firstCard, int secondCard) {
         super(MessageType.MSG_INIT_CHOOSE_LEADERCARDS);
 
-        if(firstCard<0 || firstCard>3) throw new IllegalArgumentException();
-        if(secondCard<0 || secondCard>3) throw new IllegalArgumentException();
-        if(firstCard==secondCard) throw new IllegalArgumentException();
+        if (firstCard < 0 || firstCard > 3) throw new IllegalArgumentException();
+        if (secondCard < 0 || secondCard > 3) throw new IllegalArgumentException();
+        if (firstCard == secondCard) throw new IllegalArgumentException();
 
-        this.firstCard=firstCard;
-        this.secondCard=secondCard;
+        this.firstCard = firstCard;
+        this.secondCard = secondCard;
     }
 
-    public int getFirstCard() { return this.firstCard; }
-    public int getSecondCard() { return this.secondCard; }
+    public int getFirstCard() {
+        return this.firstCard;
+    }
+
+    public int getSecondCard() {
+        return this.secondCard;
+    }
 }

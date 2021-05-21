@@ -4,27 +4,29 @@ import it.polimi.ingsw.server.model.enumerators.Color;
 
 public class RemoverToken implements ActionToken {
     private final Color color;
-    private int column;
 
     public RemoverToken(Color color) {
+        if (color != Color.GREEN && color != Color.BLUE && color != Color.YELLOW && color != Color.PURPLE)
+            throw new IllegalArgumentException();
         this.color = color;
-        switch (color) {
-            case GREEN:
-                this.column = 0;
-                break;
-            case BLUE:
-                this.column = 1;
-                break;
-            case YELLOW:
-                this.column = 2;
-                break;
-            case PURPLE:
-                this.column = 3;
-                break;
-        }
     }
 
     public int getColumn() {
+        int column = 0;
+        switch (color) {
+            case GREEN:
+                column = 0;
+                break;
+            case BLUE:
+                column = 1;
+                break;
+            case YELLOW:
+                column = 2;
+                break;
+            case PURPLE:
+                column = 3;
+                break;
+        }
         return column;
     }
 
