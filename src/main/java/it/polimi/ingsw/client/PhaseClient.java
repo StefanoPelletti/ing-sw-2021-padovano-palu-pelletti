@@ -77,6 +77,7 @@ class Halo {
     //TODO action
     static boolean action = false;
 
+    static boolean local;
     static boolean triedAction = false;
     static GameManager gameManager;
     static ActionManager actionManager;
@@ -106,6 +107,1027 @@ class Halo {
         yourTurn = false;
         action = false;
         gameSRV = null;
+    }
+
+    public static boolean checkAction(List<String> textList)
+    {
+        if (textList.size() > 1) {
+            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
+            return false;
+        }
+        try {
+            int number = Integer.parseInt(textList.get(0));
+            if (number < 0 || number > 8) {
+                System.out.println(A.RED + " > Please pick a number between 0 and 7" + A.RESET);
+                return false;
+            }
+//check very powerful action    already playedE
+            if (Halo.action && (number == 3 || number == 5 || number == 6)) {
+                System.out.println(A.RED + " > You already did a main move" + A.RESET);
+                return false;
+            }
+
+            LeaderCard l1;
+            LeaderCard l2;
+            if(Halo.local)
+            {
+                l1 = Halo.myPlayerRefSRV.getLeaderCards()[0];
+                l2 = Halo.myPlayerRefSRV.getLeaderCards()[1];
+            }
+            else
+            {
+                l1 = Halo.myPlayerRef.getLeaderCards()[0];
+                l2 = Halo.myPlayerRef.getLeaderCards()[1];
+            }
+
+//check action 1 and 2
+            if (number == 1 || number == 2) {
+                if (l1 == null && l2 == null) {
+                    System.out.println(A.RED + " > You can't, because the cards are absent " + A.RESET);
+                    return false;
+                }
+                if (l1 != null) {
+                    if (l2 != null) {
+                        if (l1.getEnable() && l2.getEnable()) {
+                            System.out.println(A.RED + " > You can't, because the cards are already activated " + A.RESET);
+                            return false;
+                        }
+                    } else {
+                        if (l1.getEnable()) {
+                            System.out.println(A.RED + " > You can't, because the first card is already enabled and the second one is absent " + A.RESET);
+                            return false;
+                        }
+                    }
+                } else {
+                    if (l2.getEnable()) {
+                        System.out.println(A.RED + " > You can't, the first card is absent and the second one is already enabled " + A.RESET);
+                        return false;
+                    }
+                }
+            }
+//check activate production
+            if (number == 3) {
+                //for giacomo (?)
+            }
+//check changeDepotConfig
+//check buyDevelopmentCard
+//getMarketResource
+        } catch (NumberFormatException e) {
+            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static MSG_ACTION_GET_MARKET_RESOURCES getMarketResources(List<String> textList)
+    {
+        String text;
+        Halo.triedAction = true;
+        int num;
+        boolean column;
+        System.out.println(" Here's the market, if this is not qol I don't know what could be then:");
+        if(Halo.local)
+            System.out.println(Halo.gameSRV.getMarket());
+        else
+            System.out.println(Halo.game.getMarket());
+        System.out.println(A.UL + " Please choose Row or Column" + A.RESET);
+        System.out.println(" Insert 1 for a row or 2 for a column, 0 to quit");
+
+        while (true) {
+            System.out.print(" Row ( 1 ) or column ( 2 ): ");
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+            if (Halo.checkNumber0_1_2(textList)) {
+                num = Integer.parseInt(textList.get(0));
+                if (num == 0) {
+                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    return null;
+                }
+                break;
+            }
+        }
+        if (num == 1) {
+            column = false;
+            System.out.println(A.UL + " > Please choose the row " + A.RESET + "(must be between 1 and 3). 0 to quit");
+        } else {
+            System.out.println(A.UL + " > Please choose the column " + A.RESET + "(must be between 1 and 4). 0 to quit");
+            column = true;
+        }
+
+        while (true) {
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            if (Halo.checkNumberMarket(textList, column)) {
+                num = Integer.parseInt(textList.get(0));
+                if (num == 0) {
+                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    return null;
+                }
+                break;
+            }
+        }
+        try
+        {
+            return new MSG_ACTION_GET_MARKET_RESOURCES(column,num);
+        }
+        catch (IllegalArgumentException e)
+        {
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
+            return null;
+        }
+    }
+
+    public static MSG_ACTION_CHANGE_DEPOT_CONFIG changeDepotConfig(List<String> textList)
+    {
+        Halo.triedAction = false;
+        String text;
+        //change depot
+        System.out.println(A.UL + " >> Please insert the new configuration for your Warehouse Depot. Write'm as: stone none shield" + A.RESET);
+        System.out.println(" Your actual depot: ");
+        System.out.println(Halo.myPlayerRef.getWarehouseDepot());
+        if(Halo.local)
+        {
+            if (Halo.myPlayerRefSRV.getLeaderCards()[0] != null && Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) {
+                if (Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility());
+                }
+            }
+            if (Halo.myPlayerRefSRV.getLeaderCards()[1] != null && Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable()) {
+                if (Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility());
+                }
+            }
+        }
+        else {
+            if (Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
+                if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
+                }
+            }
+            if (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
+                if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
+                }
+            }
+        }
+
+
+        Resource shelf1;
+        Resource[] shelf2 = new Resource[2];
+        Resource[] shelf3 = new Resource[3];
+        while (true) {
+            System.out.print(" Shelf 1: ");
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            if (!Halo.checkResource(textList, 1, true))
+                System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 1. Try again." + A.RESET);
+            else {
+                shelf1 = Halo.convertStringToResource(textList.get(0).toLowerCase());
+                break;
+            }
+        }
+
+        while (true) {
+            System.out.print(" Shelf 2: ");
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            if (!Halo.checkResource(textList, 2, true))
+                System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 2. Try again." + A.RESET);
+            else {
+                shelf2[0] = Halo.convertStringToResource(textList.get(0).toLowerCase());
+                shelf2[1] = Halo.convertStringToResource(textList.get(1).toLowerCase());
+                break;
+            }
+        }
+
+        while (true) {
+            System.out.print(" Shelf 3: ");
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            if (!Halo.checkResource(textList, 3, true))
+                System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 3. Try again." + A.RESET);
+            else {
+                shelf3[0] = Halo.convertStringToResource(textList.get(0).toLowerCase());
+                shelf3[1] = Halo.convertStringToResource(textList.get(1).toLowerCase());
+                shelf3[2] = Halo.convertStringToResource(textList.get(2).toLowerCase());
+                break;
+            }
+        }
+
+        int firstExtra = -1;
+        int secondExtra = -1;
+
+        if(Halo.local)
+        {
+            if (Halo.myPlayerRefSRV.getLeaderCards()[0] != null) {
+                if (Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                    if (Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) {
+                        System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + "." +
+                                " \n Please tell me how much I have to Phil Heath." + A.RESET + " 0 to quit");
+
+                        while (true) {
+                            System.out.print(" Number of Resources: ");
+                            text = Halo.input.nextLine();
+                            textList.clear();
+                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                            if (Halo.checkNumber0_1_2(textList)) {
+                                firstExtra = Integer.parseInt(textList.get(0));
+                                if (firstExtra == 0) {
+                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                    return null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (Halo.myPlayerRefSRV.getLeaderCards()[1] != null) {
+                if (Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                    if (Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable()) {
+                        System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getResourceType() + "." +
+                                " \n Please tell me how much I have to Phil Heath" + A.RESET + " 0 to quit");
+
+                        while (true) {
+                            System.out.print(" Number of Resources: ");
+                            text = Halo.input.nextLine();
+                            textList.clear();
+                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                            if (Halo.checkNumber0_1_2(textList)) {
+                                secondExtra = Integer.parseInt(textList.get(0));
+                                if (secondExtra == 0) {
+                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                    return null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (Halo.myPlayerRef.getLeaderCards()[0] != null) {
+                if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                    if (Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
+                        System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + "." +
+                                " \n Please tell me how much I have to Phil Heath." + A.RESET + " 0 to quit");
+
+                        while (true) {
+                            System.out.print(" Number of Resources: ");
+                            text = Halo.input.nextLine();
+                            textList.clear();
+                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                            if (Halo.checkNumber0_1_2(textList)) {
+                                firstExtra = Integer.parseInt(textList.get(0));
+                                if (firstExtra == 0) {
+                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                    return null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (Halo.myPlayerRef.getLeaderCards()[1] != null) {
+                if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                    if (Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
+                        System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getResourceType() + "." +
+                                " \n Please tell me how much I have to Phil Heath" + A.RESET + " 0 to quit");
+
+                        while (true) {
+                            System.out.print(" Number of Resources: ");
+                            text = Halo.input.nextLine();
+                            textList.clear();
+                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                            if (Halo.checkNumber0_1_2(textList)) {
+                                secondExtra = Integer.parseInt(textList.get(0));
+                                if (secondExtra == 0) {
+                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                    return null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        try {
+            return new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
+        } catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " We couldn't build the message like that." + A.RESET);
+            return null;
+        }
+
+    }
+
+    public static MSG_ACTION_ACTIVATE_PRODUCTION activateProduction(List<String> textList)
+    {
+        Halo.triedAction = true;
+        String text;
+        //production //all the system out must be reviewed by a standard that only stefano knows
+        boolean basic = false;
+        ArrayList<Resource> basicInput = new ArrayList<>();
+        Resource basicOutput = null;
+        boolean[] leader = {false, false};
+        Resource leaderOutput1 = null;
+        Resource leaderOutput2 = null;
+        boolean std = false;
+        boolean[] standard = {false, false, false};
+        int input;
+
+        System.out.println(" Here are your depot and strongbox");
+        if(Halo.local)
+        {
+            System.out.println(Halo.myPlayerRefSRV.getWarehouseDepot());
+            System.out.println(Halo.myPlayerRefSRV.getStrongbox());
+            if (Halo.myPlayerRefSRV.getLeaderCards()[0] != null && Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) {
+                if (Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility());
+                }
+            }
+            if (Halo.myPlayerRefSRV.getLeaderCards()[1] != null && Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable()) {
+                if (Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility());
+                }
+            }
+        }
+        else {
+            System.out.println(Halo.myPlayerRef.getWarehouseDepot());
+            System.out.println(Halo.myPlayerRef.getStrongbox());
+            if (Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
+                if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
+                }
+            }
+            if (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
+                if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
+                    System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
+                }
+            }
+        }
+
+        System.out.println(" >> BASE PRODUCTION ");
+        System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
+        System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
+        while (true) {
+            System.out.print(" will: ");
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            if (Halo.checkNumber0_1_2(textList)) {
+                input = Integer.parseInt(textList.get(0));
+                if (input == 0) {
+                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    return null;
+                }
+                if (input == 1)
+                    basic = true;
+                break;
+            }
+        }
+
+        if (basic) {
+            System.out.println(A.UL + " >> Which resources do you want as input for the basic production? Write'em as: stone shield" + A.RESET);
+            while (true) {
+                System.out.print(" will: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                if (!Halo.checkResource(textList, 2, false))
+                    System.out.println(A.RED + " > They are not a valid basic input!" + A.RESET);
+                else {
+                    basicInput.add(Halo.convertStringToResource(textList.get(0)));
+                    basicInput.add(Halo.convertStringToResource(textList.get(1)));
+                    break;
+                }
+            }
+            System.out.println(A.UL + " >> Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
+            while (true) {
+                System.out.print(" will: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                if (!Halo.checkResource(textList, 1, false))
+                    System.out.println(A.RED + " > That's not a valid basic output!" + A.RESET);
+                else {
+                    basicOutput = Halo.convertStringToResource(textList.get(0));
+                    break;
+                }
+            }
+        }
+
+        System.out.println(" >> STANDARD PRODUCTION ");
+        System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
+        System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
+        while (true) {
+            System.out.print(" will: ");
+            text = Halo.input.nextLine();
+            textList.clear();
+            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            if (Halo.checkNumber0_1_2(textList)) {
+                input = Integer.parseInt(textList.get(0));
+                if (input == 0) {
+                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    return null;
+                }
+                if (input == 1)
+                    std = true;
+                break;
+            }
+        }
+        if (std) {
+            if(Halo.local)
+                System.out.println(Halo.myPlayerRefSRV.getDevelopmentSlot());
+            else
+                System.out.println(Halo.myPlayerRef.getDevelopmentSlot());
+            System.out.println(A.UL + " Which cards do you want to activate? write the numbers as: 1 2 3" + A.RESET);
+            while (true) {
+                System.out.print(" will: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                if (Halo.checkStandardProductionInput(textList)) {
+                    for (String s : textList) {
+                        standard[Integer.parseInt(s) - 1] = true;
+                    }
+                    break;
+                }
+            }
+        }
+        if(Halo.local)
+        {
+            if ((Halo.myPlayerRefSRV.getLeaderCards()[0] != null && Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) || (Halo.myPlayerRefSRV.getLeaderCards()[1] != null && Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable())) {
+                if (Arrays.stream(Halo.myPlayerRefSRV.getLeaderCards()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
+                    System.out.println(" >> LEADER PRODUCTION");
+                    for (int i = 0; i < 2; i++) {
+                        LeaderCard l = Halo.myPlayerRefSRV.getLeaderCards()[i];
+                        if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
+                            System.out.println(l);
+                            System.out.println(A.UL + " Do you want to activate this card? " + A.RESET);
+                            System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
+                            while (true) {
+                                System.out.print(" will: ");
+                                text = Halo.input.nextLine();
+                                textList.clear();
+                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                if (Halo.checkNumber0_1_2(textList)) {
+                                    int number = Integer.parseInt(textList.get(0));
+                                    if (number == 0) {
+                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                        return null;
+                                    }
+                                    if (number == 1)
+                                        leader[i] = true;
+                                    break;
+                                } else
+                                    System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            if ((Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) || (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable())) {
+                if (Arrays.stream(Halo.myPlayerRef.getLeaderCards()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
+                    System.out.println(" >> LEADER PRODUCTION");
+                    for (int i = 0; i < 2; i++) {
+                        LeaderCard l = Halo.myPlayerRef.getLeaderCards()[i];
+                        if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
+                            System.out.println(l);
+                            System.out.println(A.UL + " Do you want to activate this card? " + A.RESET);
+                            System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
+                            while (true) {
+                                System.out.print(" will: ");
+                                text = Halo.input.nextLine();
+                                textList.clear();
+                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                                if (Halo.checkNumber0_1_2(textList)) {
+                                    int number = Integer.parseInt(textList.get(0));
+                                    if (number == 0) {
+                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                        return null;
+                                    }
+                                    if (number == 1)
+                                        leader[i] = true;
+                                    break;
+                                } else
+                                    System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (leader[0]) {
+            if(Halo.local)
+                System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
+                    ((Production) Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility()).getInput() + ")?" + A.RESET);
+            else
+                System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
+                        ((Production) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getInput() + ")?" + A.RESET);
+            while (true) {
+                System.out.print(" will: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                if (Halo.checkResource(textList, 1, false)) {
+                    leaderOutput1 = Halo.convertStringToResource(textList.get(0));
+                    break;
+                } else
+                    System.out.println(A.RED + "Invalid input, try again" + A.RESET);
+            }
+        }
+
+        if (leader[1]) {
+            if(Halo.local)
+                System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
+                        ((Production) Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility()).getInput() + ")?" + A.RESET);
+            else
+                System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
+                        ((Production) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getInput() + ")?" + A.RESET);
+            while (true) {
+                System.out.print(" will: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+                if (Halo.checkResource(textList, 1, false)) {
+                    leaderOutput2 = Halo.convertStringToResource(textList.get(0));
+                    break;
+                } else
+                    System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
+            }
+        }
+
+        if (basic || std || leader[0] || leader[1]) {
+            try {
+                return new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
+
+            } catch (IllegalArgumentException e) {
+                System.out.println(A.RED + " We couldn't build the message like that." + A.RESET);
+                return null;
+            }
+        } else {
+            System.out.println(A.RED + " Produce you do not, result you do not get" + A.RESET);
+            return null;
+        }
+    }
+
+    public static MSG_ACTION_DISCARD_LEADERCARD discardLeaderCard(List<String> textList)
+    {
+        Halo.triedAction = false;
+        int cardToDiscard;
+        String text;
+        LeaderCard l1a;
+        LeaderCard l2a;
+        if(Halo.local) {
+            l1a = Halo.myPlayerRefSRV.getLeaderCards()[0];
+            l2a = Halo.myPlayerRefSRV.getLeaderCards()[1];
+        }
+        else
+        {
+            l1a = Halo.myPlayerRef.getLeaderCards()[0];
+            l2a = Halo.myPlayerRef.getLeaderCards()[1];
+        }
+
+        if (Halo.checkLeaderCards()) {
+            System.out.print(A.UL + " Please pick a number: " + A.RESET);
+            System.out.println(" Press 0 to cancel the action ");
+            if (l1a != null)
+                System.out.println(" Press 1 to disable the first card and get a " + FAITH + " point ");
+            if (l2a != null)
+                System.out.println(" Press 2 to disable the second card and get a " + FAITH + " point");
+
+            while (true) {
+                System.out.print(" Card number: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                if (checkLeaderCardsNumber(textList)) {
+                    cardToDiscard = Integer.parseInt(textList.get(0));
+                    if (cardToDiscard == 0) {
+                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                        return null;
+                    }
+                    break;
+                }
+            }
+        }
+        else return null;
+
+        try
+        {
+            return new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            return null;
+        }
+    }
+
+    public static MSG_ACTION_ACTIVATE_LEADERCARD activateLeaderCard(List<String> textList)
+    {
+        Halo.triedAction = false;
+
+        String text;
+        int cardToActivate;
+        LeaderCard l1a;
+        LeaderCard l2a;
+        if(Halo.local) {
+             l1a = Halo.myPlayerRefSRV.getLeaderCards()[0];
+             l2a = Halo.myPlayerRefSRV.getLeaderCards()[1];
+        }
+        else
+        {
+             l1a = Halo.myPlayerRef.getLeaderCards()[0];
+             l2a = Halo.myPlayerRef.getLeaderCards()[1];
+        }
+
+        if (checkLeaderCards()) {
+            System.out.println(A.UL + " Please select an option: " + A.RESET);
+            System.out.println(" Press 0 to cancel the action ");
+            if (l1a != null)
+                System.out.println(" Press 1 to enable the first card ");
+            if (l2a != null)
+                System.out.println(" Press 2 to enable the second card ");
+
+            while (true) {
+                System.out.print(" Card number: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                if (checkLeaderCardsNumber(textList)) {
+                    cardToActivate = Integer.parseInt(textList.get(0));
+                    if (cardToActivate == 0) {
+                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                        return null;
+                    }
+                    break;
+                }
+            }
+        }
+        else return null;
+
+        try
+        {
+            return new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            return null;
+        }
+    }
+
+    private static boolean checkLeaderCards() {
+        LeaderCard l1a;
+        LeaderCard l2a;
+
+        if (Halo.local) {
+            l1a = Halo.myPlayerRefSRV.getLeaderCards()[0];
+            l2a = Halo.myPlayerRefSRV.getLeaderCards()[1];
+        } else {
+            l1a = Halo.myPlayerRef.getLeaderCards()[0];
+            l2a = Halo.myPlayerRef.getLeaderCards()[1];
+        }
+        if (l1a == null && l2a == null) {
+            System.out.println(A.RED + " > Both cards are discarded!" + A.RESET);
+            return false;
+        }
+        if (l1a != null) {
+            if (l2a != null) {
+                if (l1a.getEnable() && l2a.getEnable()) {
+                    System.out.println(A.RED + " > Both cards are already activated!" + A.RESET);
+                    return false;
+                }
+            } else {
+                if (l1a.getEnable()) {
+                    System.out.println(A.RED + " > The only card present, the first, is already activated!" + A.RESET);
+                    return false;
+                }
+            }
+        } else {
+            if (l2a.getEnable()) {
+                System.out.println(A.RED + " > The only card present, the second, is already activated!" + A.RESET);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean checkLeaderCardsNumber(List<String> textList) {
+        if (textList.size() > 1) {
+            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
+            return false;
+        }
+        try {
+            int number = Integer.parseInt(textList.get(0));
+            LeaderCard l1;
+            LeaderCard l2;
+            if(Halo.local) {
+                l1 = Halo.myPlayerRefSRV.getLeaderCards()[0];
+                l2 = Halo.myPlayerRefSRV.getLeaderCards()[1];
+            }
+            else
+            {
+                l1 = Halo.myPlayerRef.getLeaderCards()[0];
+                l2 = Halo.myPlayerRef.getLeaderCards()[1];
+            }
+            if (number < 0 || number > 2) {
+                System.out.println(A.RED + " > Please choose 0, 1 or 2" + A.RESET);
+                return false;
+            }
+            if (number == 1) {
+                if (l1 == null) {
+                    System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
+                    return false;
+                } else if (l1.getEnable()) {
+                    System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
+                    return false;
+                }
+            }
+            if (number == 2) {
+                if (l2 == null) {
+                    System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
+                    return false;
+                } else if (l2.getEnable()) {
+                    System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
+                    return false;
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static MSG_ACTION_CHOOSE_DEVELOPMENT_CARD chooseDevCard(List<String> textList)
+    {
+        boolean quit = false;
+        String text;
+        int cardNum = -1;
+        int slotNum = -1;
+        while (true) {
+            if (checkNumberDevSlot(textList)) {
+                if (textList.size() == 1) quit = true;
+                else {
+                    cardNum = Integer.parseInt(textList.get(0));
+                    slotNum = Integer.parseInt(textList.get(1));
+                }
+                break;
+            } else {
+                System.out.print(" Card | slot: (0 to quit the action) ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            }
+        }
+        try
+        {
+            MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend;
+            if (quit) {
+                Halo.triedAction = false;
+                msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
+            } else {
+                Halo.triedAction = true;
+                msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum - 1, slotNum - 1);
+            }
+            return msgToSend;
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            return null;
+        }
+    }
+
+    private static boolean checkNumberDevSlot(List<String> textList) {
+        if (textList.size() == 2) {
+            try {
+                int cardNum = Integer.parseInt(textList.get(0));
+                int slotNum = Integer.parseInt(textList.get(1));
+                Map<DevelopmentCard, boolean[]> cards;
+
+                if(Halo.local)
+                    cards = Halo.gameSRV.getDevelopmentCardsVendor().getCards();
+                else
+                    cards = Halo.game.getDevelopmentCardsVendor().getCards();
+
+                if (cardNum > cards.size() || cardNum < 1) {
+                    System.out.println(A.RED + " > That's not a possible card!" + A.RESET);
+                    return false;
+                }
+                if (slotNum < 0 || slotNum > 2) {
+                    System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
+                    return false;
+                }
+                Object[] dcards = cards.keySet().toArray();
+                if (!cards.get((DevelopmentCard) dcards[cardNum - 1])[slotNum - 1]) {
+                    System.out.println(A.RED + " > Error! You can't place that card in this slot" + A.RESET);
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
+                return false;
+            }
+        } else if (textList.size() == 1) {
+            try {
+                int quit = Integer.parseInt(textList.get(0));
+                if (quit != 0) {
+                    System.out.println("Invalid input, try again");
+                    return false;
+                }
+                return true;
+            } catch (NumberFormatException e) {
+                System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
+                return false;
+            }
+        } else {
+            System.out.println(A.RED + " > The number of parameters is different then expected." + A.RESET);
+            return false;
+        }
+        return true;
+    }
+
+    public static MSG_ACTION_MARKET_CHOICE marketChoice(List<String> textList)
+    {
+        int choice;
+        String text;
+
+        while (true) {
+            if (checkChoice(textList)) {
+                choice = Integer.parseInt(textList.get(0));
+                break;
+            } else {
+                System.out.print(" Choice: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            }
+        }
+
+        try
+        {
+            return new MSG_ACTION_MARKET_CHOICE(choice);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            return null;
+        }
+    }
+
+    private static boolean checkChoice(List<String> textList) {
+        if (textList.size() > 1) {
+            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
+            return false;
+        }
+        boolean[] choices;
+        if(Halo.local)
+            choices = Halo.gameSRV.getMarketHelper().getChoices();
+        else
+            choices = Halo.game.getMarketHelper().getChoices();
+
+        try {
+            int number = Integer.parseInt(textList.get(0));
+            if (number < 0 || number > 7)
+                System.out.println(A.RED + " > Number must be between 0 and 7" + A.RESET);
+            else if (!choices[number]) {
+                System.out.println(A.RED + " > That wasn't a possible choice" + A.RESET);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
+            return false;
+        }
+        return true;
+    }
+
+    public static MSG_INIT_CHOOSE_RESOURCE chooseResource(List<String> textList) {
+        Resource resource = Resource.NONE;
+        String text;
+        while (true) {
+            if (check1_4Number(textList)) {
+                int number = Integer.parseInt(textList.get(0));
+                switch (number) {
+                    case 1:
+                        resource = Resource.SHIELD;
+                        break;
+                    case 2:
+                        resource = Resource.COIN;
+                        break;
+                    case 3:
+                        resource = Resource.SERVANT;
+                        break;
+                    case 4:
+                        resource = Resource.STONE;
+                        break;
+                }
+                System.out.println(A.GREEN + " > Thanks, you choose a " + resource + A.RESET);
+                break;
+            } else {
+                System.out.print(" Resource number: ");
+                text = Halo.input.nextLine();
+                textList.clear();
+                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+            }
+        }
+        try
+        {
+            return new MSG_INIT_CHOOSE_RESOURCE(resource);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            return null;
+        }
+    }
+
+    public static MSG_INIT_CHOOSE_LEADERCARDS chooseLeaderCards(List<String> textList)
+    {
+        int first;
+        int second;
+        String text;
+        obtainNumberLoop: while(true) {
+            if(check1_4Number(textList)) {
+                first = Integer.parseInt(textList.get(0));
+
+                while(true) {
+                    System.out.println(A.UL + " > Please pick the second card: " + A.RESET);
+                    System.out.print(" Card number: ");
+                    text = Halo.input.nextLine();
+                    textList.clear();
+                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
+
+                    if(checkLeaderCardObjectNumber(textList, first)) {
+                        second = Integer.parseInt(textList.get(0));
+                        System.out.println(A.GREEN + " > Thanks, you choose " + A.RESET + first + A.GREEN + " and " + A.RESET + second);
+                        break obtainNumberLoop;
+                    }
+                }
+            }
+        }
+
+        try
+        {
+            return new MSG_INIT_CHOOSE_LEADERCARDS(first-1, second-1);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            return null;
+        }
+    }
+
+    private static boolean checkLeaderCardObjectNumber(List<String> textList, int first) {
+        if (textList.size() > 1) {
+            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
+            return false;
+        }
+        try {
+            int number = Integer.parseInt(textList.get(0));
+            if (number < 1 || number > 4) {
+                System.out.println(A.RED + " > Sorry, the player number must be between 1 and 4." + A.RESET);
+                return false;
+            }
+            if (number == first) {
+                System.out.println(A.RED + " > Sorry, but you inserted the same number as before." + A.RESET);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean check1_4Number(List<String> textList) {
+        if (textList.size() > 1) {
+            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
+            return false;
+        }
+        try {
+            int number = Integer.parseInt(textList.get(0));
+            if (number < 1 || number > 4) {
+                System.out.println(A.RED + " > Sorry, you have to choose between 1 and 4." + A.RESET);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
+            return false;
+        }
+        return true;
     }
 
     public static boolean checkNumber0_1_2(List<String> textList) {
@@ -226,6 +1248,9 @@ class Halo {
         System.out.println("  =>   6   : get market resources");
         System.out.println("  =>   7   : end turn");
     }
+
+
+
 }
 
 class ClosingPhase {
@@ -640,6 +1665,7 @@ class GamePhase {
     public Phase run() {
         Message message;
         boolean execute;
+        Halo.local = false;
 
         System.out.println(A.YELLOW + " >> Waiting for Initial update model." + A.RESET);
         System.out.println(A.RED + " >> Console is unresponsive. " + A.RESET + "Please wait.");
@@ -685,139 +1711,34 @@ class GamePhase {
                     if (Halo.game.isMiddleActive()) {
 //LEADERCARDS ROUTINE
                         if (Halo.game.isLeaderCardsObjectEnabled()) {
-                            int first;
-                            int second;
-                            obtainNumberLoop:
-                            while (true) {
-                                if (check1_4Number(textList)) {
-                                    first = Integer.parseInt(textList.get(0));
-
-                                    while (true) {
-                                        System.out.println(A.UL + " > Please pick the second card: " + A.RESET);
-                                        System.out.print(" Card number: ");
-                                        text = Halo.input.nextLine();
-                                        textList.clear();
-                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                        if (checkLeaderCardObjectNumber(textList, first)) {
-                                            second = Integer.parseInt(textList.get(0));
-                                            System.out.println(A.GREEN + " > Thanks, you choose " + A.RESET + first + A.GREEN + " and " + A.RESET + second);
-                                            break obtainNumberLoop;
-                                        }
-                                    }
-
-
-                                } else {
-                                    System.out.print(" Card number: ");
-                                    text = Halo.input.nextLine();
-                                    textList.clear();
-                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                }
-                            }
-
-                            try {
-                                MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(first - 1, second - 1);
-                                Halo.objectOutputStream.writeObject(msgToSend);
+                            message = Halo.chooseLeaderCards(textList);
+                            if(message!=null) {
+                                Halo.objectOutputStream.writeObject(message);
                                 Halo.objectOutputStream.flush();
-                            } catch (IllegalArgumentException e) {
-                                System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                             }
-
                         }
 //RESOURCE ROUTINE
                         else if (Halo.game.isResourceObjectEnabled()) {
-                            Resource resource = Resource.NONE;
-                            while (true) {
-                                if (check1_4Number(textList)) {
-                                    int number = Integer.parseInt(textList.get(0));
-                                    switch (number) {
-                                        case 1:
-                                            resource = Resource.SHIELD;
-                                            break;
-                                        case 2:
-                                            resource = Resource.COIN;
-                                            break;
-                                        case 3:
-                                            resource = Resource.SERVANT;
-                                            break;
-                                        case 4:
-                                            resource = Resource.STONE;
-                                            break;
-                                    }
-                                    System.out.println(A.GREEN + " > Thanks, you choose a " + resource + A.RESET);
-                                    break;
-                                } else {
-                                    System.out.print(" Resource number: ");
-                                    text = Halo.input.nextLine();
-                                    textList.clear();
-                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                }
-                            }
-                            try {
-                                MSG_INIT_CHOOSE_RESOURCE msgToSend = new MSG_INIT_CHOOSE_RESOURCE(resource);
-                                Halo.objectOutputStream.writeObject(msgToSend);
+                            message = Halo.chooseResource(textList);
+                            if(message!=null) {
+                                Halo.objectOutputStream.writeObject(message);
                                 Halo.objectOutputStream.flush();
-                            } catch (IllegalArgumentException e) {
-                                System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                             }
                         }
 //MARKETHELPER ROUTINE
                         else if (Halo.game.isMarketHelperEnabled()) {
-                            int choice;
-
-                            while (true) {
-                                if (checkChoice(textList)) {
-                                    choice = Integer.parseInt(textList.get(0));
-                                    break;
-                                } else {
-                                    System.out.print(" Choice: ");
-                                    text = Halo.input.nextLine();
-                                    textList.clear();
-                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                }
-                            }
-                            try {
-                                MSG_ACTION_MARKET_CHOICE msgToSend = new MSG_ACTION_MARKET_CHOICE(choice);
-                                Halo.objectOutputStream.writeObject(msgToSend);
+                            message = Halo.marketChoice(textList);
+                            if(message!=null) {
+                                Halo.objectOutputStream.writeObject(message);
                                 Halo.objectOutputStream.flush();
-                            } catch (IllegalArgumentException e) {
-                                System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                             }
-
                         }
 //VENDOR ROUTINE
                         else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
-                            boolean quit = false;
-                            int cardNum = -1;
-                            int slotNum = -1;
-                            while (true) {
-                                if (checkNumberDevSlot(textList)) {
-                                    if (textList.size() == 1) quit = true;
-                                    else {
-                                        cardNum = Integer.parseInt(textList.get(0));
-                                        slotNum = Integer.parseInt(textList.get(1));
-                                    }
-                                    break;
-                                } else {
-                                    System.out.print(" Card | slot: (0 to quit the action) ");
-                                    text = Halo.input.nextLine();
-                                    textList.clear();
-                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                }
-                            }
-                            try {
-                                MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend;
-                                if (quit) {
-                                    Halo.triedAction = false;
-                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
-                                } else {
-                                    Halo.triedAction = true;
-                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum - 1, slotNum - 1);
-                                }
-                                Halo.objectOutputStream.writeObject(msgToSend);
+                            message = Halo.chooseDevCard(textList);
+                            if(message!=null) {
+                                Halo.objectOutputStream.writeObject(message);
                                 Halo.objectOutputStream.flush();
-                            } catch (IllegalArgumentException e) {
-                                System.out.println(A.RED + " We could not build that message" + A.RESET);
                             }
                         }
                         execute = false;
@@ -1000,398 +1921,43 @@ class GamePhase {
                                     textList.clear();
                                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-                                    if (checkAction(textList)) {
+                                    if (Halo.checkAction(textList)) {
                                         int choice = Integer.parseInt(textList.get(0));
                                         switch (choice) {
 //ACTION ACTIVATE LEADERCARD
                                             case 1: {
-                                                Halo.triedAction = false;
-                                                int cardToActivate;
-                                                LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
-                                                LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
-
-                                                if (checkLeaderCards()) {
-                                                    System.out.println(A.UL + " Please select an option: " + A.RESET);
-                                                    System.out.println(" Press 0 to cancel the action ");
-                                                    if (l1a != null)
-                                                        System.out.println(" Press 1 to enable the first card ");
-                                                    if (l2a != null)
-                                                        System.out.println(" Press 2 to enable the second card ");
-
-                                                    while (true) {
-                                                        System.out.print(" Card number: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                        if (checkLeaderCardsNumber(textList)) {
-                                                            cardToActivate = Integer.parseInt(textList.get(0));
-                                                            if (cardToActivate == 0) {
-                                                                System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                break actionLoop;
-                                                            }
-                                                            break;
-                                                        }
-                                                    }
-                                                    try {
-                                                        MSG_ACTION_ACTIVATE_LEADERCARD msgToSend1 = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
-                                                        Halo.objectOutputStream.writeObject(msgToSend1);
-                                                        Halo.objectOutputStream.flush();
-                                                    } catch (IllegalArgumentException e) {
-                                                        System.out.println(A.RED + " > Somehow we could not build that message" + A.RESET);
-                                                    }
+                                                message = Halo.activateLeaderCard(textList);
+                                                if(message!=null) {
+                                                    Halo.objectOutputStream.writeObject(message);
+                                                    Halo.objectOutputStream.flush();
                                                 }
                                                 break actionLoop;
                                             }
 //ACTION DISCARD LEADERCARD
                                             case 2: {
-                                                Halo.triedAction = false;
-                                                int cardToDiscard;
-                                                LeaderCard l1d = Halo.myPlayerRef.getLeaderCards()[0];
-                                                LeaderCard l2d = Halo.myPlayerRef.getLeaderCards()[1];
-
-                                                if (checkLeaderCards()) {
-                                                    System.out.print(A.UL + " Please pick a number: " + A.RESET);
-                                                    System.out.println(" Press 0 to cancel the action ");
-                                                    if (l1d != null)
-                                                        System.out.println(" Press 1 to disable the first card and get a " + FAITH + " point ");
-                                                    if (l2d != null)
-                                                        System.out.println(" Press 2 to disable the second card and get a " + FAITH + " point");
-
-                                                    while (true) {
-                                                        System.out.print(" Card number: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                        if (checkLeaderCardsNumber(textList)) {
-                                                            cardToDiscard = Integer.parseInt(textList.get(0));
-                                                            if (cardToDiscard == 0) {
-                                                                System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                break actionLoop;
-                                                            }
-                                                            break;
-                                                        }
-                                                    }
-                                                    try {
-                                                        MSG_ACTION_DISCARD_LEADERCARD msgToSend2 = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard - 1);
-                                                        Halo.objectOutputStream.writeObject(msgToSend2);
-                                                        Halo.objectOutputStream.flush();
-                                                    } catch (IllegalArgumentException e) {
-                                                        System.out.println(A.RED + " > We couldn't build that message, please debut me" + A.RESET);
-                                                    }
+                                                message = Halo.discardLeaderCard(textList);
+                                                if(message!=null) {
+                                                    Halo.objectOutputStream.writeObject(message);
+                                                    Halo.objectOutputStream.flush();
                                                 }
                                                 break actionLoop;
                                             }
 //ACTION ACTIVATE PRODUCTION
                                             case 3: {
-                                                Halo.triedAction = true;
-                                                //production //all the system out must be reviewed by a standard that only stefano knows
-                                                boolean basic = false;
-                                                ArrayList<Resource> basicInput = new ArrayList<>();
-                                                Resource basicOutput = null;
-                                                boolean[] leader = {false, false};
-                                                Resource leaderOutput1 = null;
-                                                Resource leaderOutput2 = null;
-                                                boolean std = false;
-                                                boolean[] standard = {false, false, false};
-                                                int input;
-
-                                                System.out.println(" Here are your depot and strongbox");
-                                                System.out.println(Halo.myPlayerRef.getWarehouseDepot());
-                                                System.out.println(Halo.myPlayerRef.getStrongbox());
-                                                if (Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
-                                                    if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                        System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
-                                                    }
-                                                }
-                                                if (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
-                                                    if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                        System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
-                                                    }
-                                                }
-                                                System.out.println(" >> BASE PRODUCTION ");
-                                                System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
-                                                System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (Halo.checkNumber0_1_2(textList)) {
-                                                        input = Integer.parseInt(textList.get(0));
-                                                        if (input == 0) {
-                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                            break actionLoop;
-                                                        }
-                                                        if (input == 1)
-                                                            basic = true;
-                                                        break;
-                                                    }
-                                                }
-
-                                                if (basic) {
-                                                    System.out.println(A.UL + " >> Which resources do you want as input for the basic production? Write'em as: stone shield" + A.RESET);
-                                                    while (true) {
-                                                        System.out.print(" will: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (!Halo.checkResource(textList, 2, false))
-                                                            System.out.println(A.RED + " > They are not a valid basic input!" + A.RESET);
-                                                        else {
-                                                            basicInput.add(Halo.convertStringToResource(textList.get(0)));
-                                                            basicInput.add(Halo.convertStringToResource(textList.get(1)));
-                                                            break;
-                                                        }
-                                                    }
-                                                    System.out.println(A.UL + " >> Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
-                                                    while (true) {
-                                                        System.out.print(" will: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (!Halo.checkResource(textList, 1, false))
-                                                            System.out.println(A.RED + " > That's not a valid basic output!" + A.RESET);
-                                                        else {
-                                                            basicOutput = Halo.convertStringToResource(textList.get(0));
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-
-                                                System.out.println(" >> STANDARD PRODUCTION ");
-                                                System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
-                                                System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (Halo.checkNumber0_1_2(textList)) {
-                                                        input = Integer.parseInt(textList.get(0));
-                                                        if (input == 0) {
-                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                            break actionLoop;
-                                                        }
-                                                        if (input == 1)
-                                                            std = true;
-                                                        break;
-                                                    }
-                                                }
-                                                if (std) {
-                                                    System.out.println(Halo.myPlayerRef.getDevelopmentSlot());
-                                                    System.out.println(A.UL + " Which cards do you want to activate? write the numbers as: 1 2 3" + A.RESET);
-                                                    while (true) {
-                                                        System.out.print(" will: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (Halo.checkStandardProductionInput(textList)) {
-                                                            for (String s : textList) {
-                                                                standard[Integer.parseInt(s) - 1] = true;
-                                                            }
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                                if ((Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) || (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable())) {
-                                                    if (Arrays.stream(Halo.myPlayerRef.getLeaderCards()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
-                                                        System.out.println(" >> LEADER PRODUCTION");
-                                                        for (int i = 0; i < 2; i++) {
-                                                            LeaderCard l = Halo.myPlayerRef.getLeaderCards()[i];
-                                                            if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
-                                                                System.out.println(l);
-                                                                System.out.println(A.UL + " Do you want to activate this card? " + A.RESET);
-                                                                System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
-                                                                while (true) {
-                                                                    System.out.print(" will: ");
-                                                                    text = Halo.input.nextLine();
-                                                                    textList.clear();
-                                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                    if (Halo.checkNumber0_1_2(textList)) {
-                                                                        int number = Integer.parseInt(textList.get(0));
-                                                                        if (number == 0) {
-                                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                            break actionLoop;
-                                                                        }
-                                                                        if (number == 1)
-                                                                            leader[i] = true;
-                                                                        break;
-                                                                    } else
-                                                                        System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                if (leader[0]) {
-                                                    System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
-                                                            ((Production) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getInput() + ")?" + A.RESET);
-                                                    while (true) {
-                                                        System.out.print(" will: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (Halo.checkResource(textList, 1, false)) {
-                                                            leaderOutput1 = Halo.convertStringToResource(textList.get(0));
-                                                            break;
-                                                        } else
-                                                            System.out.println(A.RED + "Invalid input, try again" + A.RESET);
-                                                    }
-                                                }
-
-                                                if (leader[1]) {
-                                                    System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 2, along with a " + FAITH + A.UL + " point (input is" +
-                                                            ((Production) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getInput() + ")?" + A.RESET);
-                                                    while (true) {
-                                                        System.out.print(" will: ");
-                                                        text = Halo.input.nextLine();
-                                                        textList.clear();
-                                                        textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                        if (Halo.checkResource(textList, 1, false)) {
-                                                            leaderOutput2 = Halo.convertStringToResource(textList.get(0));
-                                                            break;
-                                                        } else
-                                                            System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
-                                                    }
-                                                }
-
-                                                if (basic || std || leader[0] || leader[1]) {
-                                                    try {
-                                                        MSG_ACTION_ACTIVATE_PRODUCTION msgToSend3 = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
-                                                        Halo.objectOutputStream.writeObject(msgToSend3);
-                                                        Halo.objectOutputStream.flush();
-                                                    } catch (IllegalArgumentException e) {
-                                                        System.out.println(A.RED + " We couldn't build the message like that." + A.RESET);
-                                                    }
-                                                } else {
-                                                    System.out.println(A.RED + " Produce you do not, result you do not get" + A.RESET);
+                                                message = Halo.activateProduction(textList);
+                                                if(message!=null) {
+                                                    Halo.objectOutputStream.writeObject(message);
+                                                    Halo.objectOutputStream.flush();
                                                 }
                                                 break actionLoop;
                                             }
 //ACTION CHANGE DEPOT CONFIG
                                             case 4: {
-                                                Halo.triedAction = false;
-                                                //change depot
-                                                System.out.println(A.UL + " >> Please insert the new configuration for your Warehouse Depot. Write'm as: stone none shield" + A.RESET);
-                                                System.out.println(" Your actual depot: ");
-                                                System.out.println(Halo.myPlayerRef.getWarehouseDepot());
-                                                if (Halo.myPlayerRef.getLeaderCards()[0] != null && Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
-                                                    if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                        System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility());
-                                                    }
-                                                }
-                                                if (Halo.myPlayerRef.getLeaderCards()[1] != null && Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
-                                                    if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                        System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility());
-                                                    }
-                                                }
-
-
-                                                Resource shelf1;
-                                                Resource[] shelf2 = new Resource[2];
-                                                Resource[] shelf3 = new Resource[3];
-                                                while (true) {
-                                                    System.out.print(" Shelf 1: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!Halo.checkResource(textList, 1, true))
-                                                        System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 1. Try again." + A.RESET);
-                                                    else {
-                                                        shelf1 = Halo.convertStringToResource(textList.get(0).toLowerCase());
-                                                        break;
-                                                    }
-                                                }
-
-                                                while (true) {
-                                                    System.out.print(" Shelf 2: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!Halo.checkResource(textList, 2, true))
-                                                        System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 2. Try again." + A.RESET);
-                                                    else {
-                                                        shelf2[0] = Halo.convertStringToResource(textList.get(0).toLowerCase());
-                                                        shelf2[1] = Halo.convertStringToResource(textList.get(1).toLowerCase());
-                                                        break;
-                                                    }
-                                                }
-
-                                                while (true) {
-                                                    System.out.print(" Shelf 3: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!Halo.checkResource(textList, 3, true))
-                                                        System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 3. Try again." + A.RESET);
-                                                    else {
-                                                        shelf3[0] = Halo.convertStringToResource(textList.get(0).toLowerCase());
-                                                        shelf3[1] = Halo.convertStringToResource(textList.get(1).toLowerCase());
-                                                        shelf3[2] = Halo.convertStringToResource(textList.get(2).toLowerCase());
-                                                        break;
-                                                    }
-                                                }
-
-                                                int firstExtra = -1;
-                                                int secondExtra = -1;
-
-                                                if (Halo.myPlayerRef.getLeaderCards()[0] != null) {
-                                                    if (Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                        if (Halo.myPlayerRef.getLeaderCards()[0].getEnable()) {
-                                                            System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[0].getSpecialAbility()).getResourceType() + "." +
-                                                                    " \n Please tell me how much I have to Phil Heath." + A.RESET + " 0 to quit");
-
-                                                            while (true) {
-                                                                System.out.print(" Number of Resources: ");
-                                                                text = Halo.input.nextLine();
-                                                                textList.clear();
-                                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                if (Halo.checkNumber0_1_2(textList)) {
-                                                                    firstExtra = Integer.parseInt(textList.get(0));
-                                                                    if (firstExtra == 0) {
-                                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                        break actionLoop;
-                                                                    }
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                if (Halo.myPlayerRef.getLeaderCards()[1] != null) {
-                                                    if (Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                        if (Halo.myPlayerRef.getLeaderCards()[1].getEnable()) {
-                                                            System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRef.getLeaderCards()[1].getSpecialAbility()).getResourceType() + "." +
-                                                                    " \n Please tell me how much I have to Phil Heath" + A.RESET + " 0 to quit");
-
-                                                            while (true) {
-                                                                System.out.print(" Number of Resources: ");
-                                                                text = Halo.input.nextLine();
-                                                                textList.clear();
-                                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                if (Halo.checkNumber0_1_2(textList)) {
-                                                                    secondExtra = Integer.parseInt(textList.get(0));
-                                                                    if (secondExtra == 0) {
-                                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                        break actionLoop;
-                                                                    }
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                try {
-                                                    MSG_ACTION_CHANGE_DEPOT_CONFIG msgToSend4 = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
-                                                    Halo.objectOutputStream.writeObject(msgToSend4);
+                                                message = Halo.changeDepotConfig(textList);
+                                                if(message!=null) {
+                                                    Halo.objectOutputStream.writeObject(message);
                                                     Halo.objectOutputStream.flush();
-                                                } catch (IllegalArgumentException e) {
-                                                    System.out.println(A.RED + " > We couldn't build the message like that" + A.RESET);
                                                 }
-
                                                 break actionLoop;
                                             }
 //ACTION BUY CARD
@@ -1404,56 +1970,10 @@ class GamePhase {
                                             }
 //ACTION GET MARKET RESOURCES
                                             case 6: {
-                                                Halo.triedAction = true;
-                                                int num;
-                                                boolean column;
-                                                System.out.println(" Here's the market, if this is not qol I don't know what could be then:");
-                                                System.out.println(Halo.game.getMarket());
-                                                System.out.println(A.UL + " Please choose Row or Column" + A.RESET);
-                                                System.out.println(" Insert 1 for a row or 2 for a column, 0 to quit");
-
-                                                while (true) {
-                                                    System.out.print(" Row ( 1 ) or column ( 2 ): ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                    if (Halo.checkNumber0_1_2(textList)) {
-                                                        num = Integer.parseInt(textList.get(0));
-                                                        if (num == 0) {
-                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                            break actionLoop;
-                                                        }
-                                                        break;
-                                                    }
-                                                }
-                                                if (num == 1) {
-                                                    column = false;
-                                                    System.out.println(A.UL + " > Please choose the row " + A.RESET + "(must be between 1 and 3). 0 to quit");
-                                                } else {
-                                                    System.out.println(A.UL + " > Please choose the column " + A.RESET + "(must be between 1 and 4). 0 to quit");
-                                                    column = true;
-                                                }
-
-                                                while (true) {
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (Halo.checkNumberMarket(textList, column)) {
-                                                        num = Integer.parseInt(textList.get(0));
-                                                        if (num == 0) {
-                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                            break actionLoop;
-                                                        }
-                                                        break;
-                                                    }
-                                                }
-                                                try {
-                                                    MSG_ACTION_GET_MARKET_RESOURCES msgToSend6 = new MSG_ACTION_GET_MARKET_RESOURCES(column, num - 1);
-                                                    Halo.objectOutputStream.writeObject(msgToSend6);
+                                                message = Halo.getMarketResources(textList);
+                                                if(message!=null) {
+                                                    Halo.objectOutputStream.writeObject(message);
                                                     Halo.objectOutputStream.flush();
-                                                } catch (IllegalArgumentException e) {
-                                                    System.out.println(A.RED + " > We could not build that message" + A.RESET);
                                                 }
                                                 break actionLoop;
                                             }
@@ -1496,237 +2016,7 @@ class GamePhase {
         //return Phase.MainMenu;
     }
 
-    private boolean checkLeaderCards() {
-        LeaderCard l1a = Halo.myPlayerRef.getLeaderCards()[0];
-        LeaderCard l2a = Halo.myPlayerRef.getLeaderCards()[1];
-        if (l1a == null && l2a == null) {
-            System.out.println(A.RED + " > Both cards are discarded!" + A.RESET);
-            return false;
-        }
-        if (l1a != null) {
-            if (l2a != null) {
-                if (l1a.getEnable() && l2a.getEnable()) {
-                    System.out.println(A.RED + " > Both cards are already activated!" + A.RESET);
-                    return false;
-                }
-            } else {
-                if (l1a.getEnable()) {
-                    System.out.println(A.RED + " > The only card present, the first, is already activated!" + A.RESET);
-                    return false;
-                }
-            }
-        } else {
-            if (l2a.getEnable()) {
-                System.out.println(A.RED + " > The only card present, the second, is already activated!" + A.RESET);
-                return false;
-            }
-        }
-        return true;
-    }
 
-    private boolean checkLeaderCardsNumber(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            LeaderCard l1 = Halo.myPlayerRef.getLeaderCards()[0];
-            LeaderCard l2 = Halo.myPlayerRef.getLeaderCards()[1];
-            if (number < 0 || number > 2) {
-                System.out.println(A.RED + " > Please choose 0, 1 or 2" + A.RESET);
-                return false;
-            }
-            if (number == 1) {
-                if (l1 == null) {
-                    System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
-                    return false;
-                } else if (l1.getEnable()) {
-                    System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
-                    return false;
-                }
-            }
-            if (number == 2) {
-                if (l2 == null) {
-                    System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
-                    return false;
-                } else if (l2.getEnable()) {
-                    System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
-                    return false;
-                }
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean checkAction(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 0 || number > 8) {
-                System.out.println(A.RED + " > Please pick a number between 0 and 7" + A.RESET);
-                return false;
-            }
-//check very powerful action    already playedE
-            if (Halo.action && (number == 3 || number == 5 || number == 6)) {
-                System.out.println(A.RED + " > You already did a main move" + A.RESET);
-                return false;
-            }
-
-            LeaderCard l1 = Halo.myPlayerRef.getLeaderCards()[0];
-            LeaderCard l2 = Halo.myPlayerRef.getLeaderCards()[1];
-//check action 1 and 2
-            if (number == 1 || number == 2) {
-                if (l1 == null && l2 == null) {
-                    System.out.println(A.RED + " > You can't, because the cards are absent " + A.RESET);
-                    return false;
-                }
-                if (l1 != null) {
-                    if (l2 != null) {
-                        if (l1.getEnable() && l2.getEnable()) {
-                            System.out.println(A.RED + " > You can't, because the cards are already activated " + A.RESET);
-                            return false;
-                        }
-                    } else {
-                        if (l1.getEnable()) {
-                            System.out.println(A.RED + " > You can't, because the first card is already enabled and the second one is absent " + A.RESET);
-                            return false;
-                        }
-                    }
-                } else {
-                    if (l2.getEnable()) {
-                        System.out.println(A.RED + " > You can't, the first card is absent and the second one is already enabled " + A.RESET);
-                        return false;
-                    }
-                }
-            }
-//check activate production
-            if (number == 3) {
-                //for giacomo (?)
-            }
-//check changeDepotConfig
-//check buyDevelopmentCard
-//getMarketResource
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean checkNumberDevSlot(List<String> textList) {
-        if (textList.size() == 2) {
-            try {
-                int cardNum = Integer.parseInt(textList.get(0));
-                int slotNum = Integer.parseInt(textList.get(1));
-                Map<DevelopmentCard, boolean[]> cards;
-                cards = Halo.game.getDevelopmentCardsVendor().getCards();
-
-                if (cardNum > cards.size() || cardNum < 1) {
-                    System.out.println(A.RED + " > That's not a possible card!" + A.RESET);
-                    return false;
-                }
-                if (slotNum < 0 || slotNum > 2) {
-                    System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
-                    return false;
-                }
-                Object[] dcards = cards.keySet().toArray();
-                if (!cards.get((DevelopmentCard) dcards[cardNum - 1])[slotNum - 1]) {
-                    System.out.println(A.RED + " > Error! You can't place that card in this slot" + A.RESET);
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
-                return false;
-            }
-        } else if (textList.size() == 1) {
-            try {
-                int quit = Integer.parseInt(textList.get(0));
-                if (quit != 0) {
-                    System.out.println("Invalid input, try again");
-                    return false;
-                }
-                return true;
-            } catch (NumberFormatException e) {
-                System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
-                return false;
-            }
-        } else {
-            System.out.println(A.RED + " > The number of parameters is different then expected." + A.RESET);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkChoice(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-
-        boolean[] choices = Halo.game.getMarketHelper().getChoices();
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 0 || number > 7)
-                System.out.println(A.RED + " > Number must be between 0 and 7" + A.RESET);
-            else if (!choices[number]) {
-                System.out.println(A.RED + " > That wasn't a possible choice" + A.RESET);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean check1_4Number(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 1 || number > 4) {
-                System.out.println(A.RED + " > Sorry, you have to choose between 1 and 4." + A.RESET);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkLeaderCardObjectNumber(List<String> textList, int first) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 1 || number > 4) {
-                System.out.println(A.RED + " > Sorry, the player number must be between 1 and 4." + A.RESET);
-                return false;
-            }
-            if (number == first) {
-                System.out.println(A.RED + " > Sorry, but you inserted the same number as before." + A.RESET);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-        return true;
-    }
 
     private boolean checkShowCommand(List<String> textList) {
         if (textList.size() != 4 && textList.size() != 2 && textList.size() != 3) {
@@ -1787,9 +2077,10 @@ class GamePhase {
 
 class LocalPhase {
 
-    public Phase run() {
+    public Phase run(){
         Message message;
         boolean execute;
+        Halo.local = true;
 
         System.out.println(A.YELLOW + " <<>> Starting local game..." + A.RESET);
         System.out.println(A.RED + " >> Console is unresponsive. " + A.RESET + "Please wait.");
@@ -1810,93 +2101,20 @@ class LocalPhase {
 
             if (Halo.gameSRV.isMiddleActive() && !Halo.gameSRV.isLeaderBoardEnabled()) {
                 if (Halo.gameSRV.isLeaderCardsObjectEnabled()) {
-                    int first;
-                    int second;
-                    obtainNumberLoop:
-                    while (true) {
-                        if (check1_4Number(textList)) {
-                            first = Integer.parseInt(textList.get(0));
-
-                            while (true) {
-                                System.out.println(A.UL + " > Please pick the second card: " + A.RESET);
-                                System.out.print(" Card number: ");
-                                text = Halo.input.nextLine();
-                                textList.clear();
-                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                if (checkLeaderCardObjectNumber(textList, first)) {
-                                    second = Integer.parseInt(textList.get(0));
-                                    System.out.println(A.GREEN + " > Thanks, you choose " + A.RESET + first + A.GREEN + " and " + A.RESET + second);
-                                    break obtainNumberLoop;
-                                }
-                            }
-
-
-                        } else {
-                            System.out.print(" Card number: ");
-                            text = Halo.input.nextLine();
-                            textList.clear();
-                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                        }
-                    }
-
-                    try {
-                        message = new MSG_INIT_CHOOSE_LEADERCARDS(first - 1, second - 1);
+                    message = Halo.chooseLeaderCards(textList);
+                    if(message!=null) {
                         Halo.actionManager.onMessage(message);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                     }
                 } else if (Halo.gameSRV.isMarketHelperEnabled()) {
-                    int choice;
-
-                    while (true) {
-                        if (checkChoice(textList)) {
-                            choice = Integer.parseInt(textList.get(0));
-                            break;
-                        } else {
-                            System.out.print(" Choice: ");
-                            text = Halo.input.nextLine();
-                            textList.clear();
-                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                        }
-                    }
-                    try {
-                        message = new MSG_ACTION_MARKET_CHOICE(choice);
+                    message = Halo.marketChoice(textList);
+                    if(message!=null) {
                         Halo.actionManager.onMessage(message);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                     }
 
                 } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
-                    boolean quit = false;
-                    int cardNum = -1;
-                    int slotNum = -1;
-                    while (true) {
-                        if (checkNumberDevSlot(textList)) {
-                            if (textList.size() == 1) quit = true;
-                            else {
-                                cardNum = Integer.parseInt(textList.get(0));
-                                slotNum = Integer.parseInt(textList.get(1));
-                            }
-                            break;
-                        } else {
-                            System.out.print(" Card | slot: ");
-                            text = Halo.input.nextLine();
-                            textList.clear();
-                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                        }
-                    }
-                    try {
-                        if (quit) {
-                            Halo.triedAction = false;
-                            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
-                        } else {
-                            Halo.triedAction = true;
-                            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum - 1, slotNum - 1);
-                        }
+                    message = Halo.chooseDevCard(textList);
+                    if(message!=null) {
                         Halo.actionManager.onMessage(message);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
                     }
                 }
                 execute = false;
@@ -1996,385 +2214,38 @@ class LocalPhase {
                                 textList.clear();
                                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-                                if (checkAction(textList)) {
+                                if (Halo.checkAction(textList)) {
                                     int choice = Integer.parseInt(textList.get(0));
                                     switch (choice) {
 //ACTION ACTIVATE LEADERCARD
                                         case 1: {
-                                            int cardToActivate;
-                                            LeaderCard l1a = Halo.myPlayerRefSRV.getLeaderCards()[0];
-                                            LeaderCard l2a = Halo.myPlayerRefSRV.getLeaderCards()[1];
-                                            if (checkLeaderCards()) {
-                                                System.out.println(A.UL + " Please select an option: " + A.RESET);
-                                                System.out.println(" Press 0 to cancel the action ");
-                                                if (l1a != null)
-                                                    System.out.println(" Press 1 to enable the first card ");
-                                                if (l2a != null)
-                                                    System.out.println(" Press 2 to enable the second card ");
-
-                                                while (true) {
-                                                    System.out.print(" Card number: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                    if (checkLeaderCardsNumber(textList)) {
-                                                        cardToActivate = Integer.parseInt(textList.get(0));
-                                                        if (cardToActivate == 0) {
-                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                            break actionLoop;
-                                                        }
-                                                        break;
-                                                    }
-                                                }
-                                                try {
-                                                    message = new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
-                                                    Halo.actionManager.onMessage(message);
-                                                } catch (IllegalArgumentException e) {
-                                                    System.out.println(A.RED + " > Somehow we could not build that message" + A.RESET);
-                                                }
+                                            message = Halo.activateLeaderCard(textList);
+                                            if(message!=null) {
+                                                Halo.actionManager.onMessage(message);
                                             }
                                             break actionLoop;
                                         }
 //ACTION DISCARD LEADERCARD
                                         case 2: {
-                                            int cardToDiscard;
-                                            LeaderCard l1d = Halo.myPlayerRefSRV.getLeaderCards()[0];
-                                            LeaderCard l2d = Halo.myPlayerRefSRV.getLeaderCards()[1];
-                                            if (checkLeaderCards()) {
-                                                System.out.print(A.UL + " Please pick a number: " + A.RESET);
-                                                System.out.println(" Press 0 to cancel the action ");
-                                                if (l1d != null)
-                                                    System.out.println(" Press 1 to disable the first card ");
-                                                if (l2d != null)
-                                                    System.out.println(" Press 2 to disable the second card ");
-
-                                                while (true) {
-                                                    System.out.print(" Card number: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                    if (checkLeaderCardsNumber(textList)) {
-                                                        cardToDiscard = Integer.parseInt(textList.get(0));
-                                                        if (cardToDiscard == 0) {
-                                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                            break actionLoop;
-                                                        }
-                                                        break;
-                                                    }
-                                                }
-                                                try {
-                                                    message = new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard - 1);
-                                                    Halo.actionManager.onMessage(message);
-                                                } catch (IllegalArgumentException e) {
-                                                    System.out.println(A.RED + " > We couldn't build that message, please debut me" + A.RESET);
-                                                }
+                                            message = Halo.discardLeaderCard(textList);
+                                            if(message!=null) {
+                                                Halo.actionManager.onMessage(message);
                                             }
                                             break actionLoop;
                                         }
 //ACTION ACTIVATE PRODUCTION
                                         case 3: {
-                                            boolean basic = false;
-                                            ArrayList<Resource> basicInput = new ArrayList<>();
-                                            Resource basicOutput = null;
-                                            boolean[] leader = {false, false};
-                                            Resource leaderOutput1 = null;
-                                            Resource leaderOutput2 = null;
-                                            boolean std = false;
-                                            boolean[] standard = {false, false, false};
-                                            int input;
-                                            System.out.println("Here's your depot and strongbox");
-                                            System.out.println(Halo.myPlayerRefSRV.getWarehouseDepot());
-                                            System.out.println(Halo.myPlayerRefSRV.getStrongbox());
-                                            if (Halo.myPlayerRefSRV.getLeaderCards()[0] != null && Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) {
-                                                if (Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                    System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility());
-                                                }
-                                            }
-                                            if (Halo.myPlayerRefSRV.getLeaderCards()[1] != null && Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable()) {
-                                                if (Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                    System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility());
-                                                }
-                                            }
-                                            System.out.println(" >> BASE PRODUCTION ");
-                                            System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
-                                            System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
-                                            while (true) {
-                                                System.out.print(" will: ");
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                if (Halo.checkNumber0_1_2(textList)) {
-                                                    input = Integer.parseInt(textList.get(0));
-                                                    if (input == 0) {
-                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                        break actionLoop;
-                                                    }
-                                                    if (input == 1)
-                                                        basic = true;
-                                                    break;
-                                                }
-                                            }
-
-                                            if (basic) {
-                                                System.out.println(A.UL + " >> Which resources do you want as input for the basic production? Write'em as: stone shield" + A.RESET);
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!Halo.checkResource(textList, 2, false))
-                                                        System.out.println(A.RED + " > They are not a valid basic input!" + A.RESET);
-                                                    else {
-                                                        basicInput.add(Halo.convertStringToResource(textList.get(0)));
-                                                        basicInput.add(Halo.convertStringToResource(textList.get(1)));
-                                                        break;
-                                                    }
-                                                }
-                                                System.out.println(A.UL + " >> Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (!Halo.checkResource(textList, 1, false))
-                                                        System.out.println(A.RED + " > That's not a valid basic output!" + A.RESET);
-                                                    else {
-                                                        basicOutput = Halo.convertStringToResource(textList.get(0));
-                                                        break;
-                                                    }
-                                                }
-                                            }
-
-                                            System.out.println(" >> STANDARD PRODUCTION ");
-                                            System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
-                                            System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
-                                            while (true) {
-                                                System.out.print(" will: ");
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                if (Halo.checkNumber0_1_2(textList)) {
-                                                    input = Integer.parseInt(textList.get(0));
-                                                    if (input == 0) {
-                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                        break actionLoop;
-                                                    }
-                                                    if (input == 1)
-                                                        std = true;
-                                                    break;
-                                                } else {
-                                                    System.out.println("Invalid input, try again");
-                                                }
-                                            }
-                                            if (std) {
-                                                System.out.println(Halo.myPlayerRefSRV.getDevelopmentSlot());
-                                                System.out.println(A.UL + " Which cards do you want to activate? write the numbers as: 1 2 3" + A.RESET);
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (Halo.checkStandardProductionInput(textList)) {
-                                                        for (String s : textList) {
-                                                            standard[Integer.parseInt(s) - 1] = true;
-                                                        }
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            if ((Halo.myPlayerRefSRV.getLeaderCards()[0] != null && Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) || (Halo.myPlayerRefSRV.getLeaderCards()[1] != null && Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable())) {
-                                                if (Arrays.stream(Halo.myPlayerRefSRV.getLeaderCards()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
-                                                    System.out.println(" >> LEADER PRODUCTION");
-                                                    for (int i = 0; i < 2; i++) {
-                                                        LeaderCard l = Halo.myPlayerRefSRV.getLeaderCards()[i];
-                                                        if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
-                                                            System.out.println(l);
-                                                            System.out.println(A.UL + " Do you want to activate this card? " + A.RESET);
-                                                            System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
-                                                            while (true) {
-                                                                System.out.print(" will: ");
-                                                                text = Halo.input.nextLine();
-                                                                textList.clear();
-                                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                                if (Halo.checkNumber0_1_2(textList)) {
-                                                                    int number = Integer.parseInt(textList.get(0));
-                                                                    if (number == 0) {
-                                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                        break actionLoop;
-                                                                    }
-                                                                    if (number == 1)
-                                                                        leader[i] = true;
-                                                                    break;
-                                                                } else
-                                                                    System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            if (leader[0]) {
-                                                System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
-                                                        ((Production) Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility()).getInput() + ")?" + A.RESET);
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (Halo.checkResource(textList, 1, false)) {
-                                                        leaderOutput1 = Halo.convertStringToResource(textList.get(0));
-                                                        break;
-                                                    } else
-                                                        System.out.println(A.RED + "Invalid input, try again" + A.RESET);
-                                                }
-                                            }
-
-                                            if (leader[1]) {
-                                                System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 2, along with a " + FAITH + A.UL + " point (input is" +
-                                                        ((Production) Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility()).getInput() + ")?" + A.RESET);
-                                                while (true) {
-                                                    System.out.print(" will: ");
-                                                    text = Halo.input.nextLine();
-                                                    textList.clear();
-                                                    textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                    if (Halo.checkResource(textList, 1, false)) {
-                                                        leaderOutput2 = Halo.convertStringToResource(textList.get(0));
-                                                        break;
-                                                    } else
-                                                        System.out.println(A.RED + " > Invalid input, try again" + A.RESET);
-                                                }
-                                            }
-
-                                            if (basic || std || leader[0] || leader[1]) {
-                                                try {
-                                                    message = new MSG_ACTION_ACTIVATE_PRODUCTION(standard, basic, leader, basicInput, basicOutput, leaderOutput1, leaderOutput2);
-                                                    Halo.actionManager.onMessage(message);
-                                                } catch (IllegalArgumentException e) {
-                                                    System.out.println(A.RED + " We couldn't build the message like that." + A.RESET);
-                                                }
-                                            } else {
-                                                System.out.println(A.RED + " Produce you do not, result you do not get" + A.RESET);
+                                            message = Halo.activateProduction(textList);
+                                            if(message!=null) {
+                                                Halo.actionManager.onMessage(message);
                                             }
                                             break actionLoop;
                                         }
 //ACTION CHANGE DEPOT CONFIG
                                         case 4: {
-                                            //change depot
-                                            System.out.println(A.UL + " >> Please insert the new configuration for your Warehouse Depot. Write'm as: stone none shield" + A.RESET);
-                                            System.out.println(" Your actual depot: ");
-                                            System.out.println(Halo.myPlayerRefSRV.getWarehouseDepot());
-                                            if (Halo.myPlayerRefSRV.getLeaderCards()[0] != null && Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) {
-                                                if (Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                    System.out.println(" Extra depot of Card Number 1: " + Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility());
-                                                }
-                                            }
-                                            if (Halo.myPlayerRefSRV.getLeaderCards()[1] != null && Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable()) {
-                                                if (Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                    System.out.println(" Extra depot of Card Number 2: " + Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility());
-                                                }
-                                            }
-
-                                            Resource shelf1;
-                                            Resource[] shelf2 = new Resource[2];
-                                            Resource[] shelf3 = new Resource[3];
-                                            while (true) {
-                                                System.out.print(" Shelf 1: ");
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                if (!Halo.checkResource(textList, 1, true))
-                                                    System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 1. Try again." + A.RESET);
-                                                else {
-                                                    shelf1 = Halo.convertStringToResource(textList.get(0).toLowerCase());
-                                                    break;
-                                                }
-                                            }
-
-                                            while (true) {
-                                                System.out.print(" Shelf 2: ");
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                if (!Halo.checkResource(textList, 2, true))
-                                                    System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 2. Try again." + A.RESET);
-                                                else {
-                                                    shelf2[0] = Halo.convertStringToResource(textList.get(0).toLowerCase());
-                                                    shelf2[1] = Halo.convertStringToResource(textList.get(1).toLowerCase());
-                                                    break;
-                                                }
-                                            }
-
-                                            while (true) {
-                                                System.out.print(" Shelf 3: ");
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                if (!Halo.checkResource(textList, 3, true))
-                                                    System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 3. Try again." + A.RESET);
-                                                else {
-                                                    shelf3[0] = Halo.convertStringToResource(textList.get(0).toLowerCase());
-                                                    shelf3[1] = Halo.convertStringToResource(textList.get(1).toLowerCase());
-                                                    shelf3[2] = Halo.convertStringToResource(textList.get(2).toLowerCase());
-                                                    break;
-                                                }
-                                            }
-
-                                            int firstExtra = -1;
-                                            int secondExtra = -1;
-
-                                            if (Halo.myPlayerRefSRV.getLeaderCards()[0] != null) {
-                                                if (Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility().isExtraDepot()) {
-                                                    if (Halo.myPlayerRefSRV.getLeaderCards()[0].getEnable()) {
-                                                        System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRefSRV.getLeaderCards()[0].getSpecialAbility()).getResourceType() + "." +
-                                                                " \n Please tell me how much I have to Phil Heath." + A.RESET + " 0 to quit");
-
-                                                        while (true) {
-                                                            System.out.print(" Number of Resources: ");
-                                                            text = Halo.input.nextLine();
-                                                            textList.clear();
-                                                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                            if (Halo.checkNumber0_1_2(textList)) {
-                                                                firstExtra = Integer.parseInt(textList.get(0));
-                                                                if (firstExtra == 0) {
-                                                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                    break actionLoop;
-                                                                }
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            if (Halo.myPlayerRefSRV.getLeaderCards()[1] != null) {
-                                                if (Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility().isExtraDepot()) {
-                                                    if (Halo.myPlayerRefSRV.getLeaderCards()[1].getEnable()) {
-                                                        System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) Halo.myPlayerRefSRV.getLeaderCards()[1].getSpecialAbility()).getResourceType() + "." +
-                                                                " \n Please tell me how much I have to Phil Heath" + A.RESET + " 0 to quit");
-
-                                                        while (true) {
-                                                            System.out.print(" Number of Resources: ");
-                                                            text = Halo.input.nextLine();
-                                                            textList.clear();
-                                                            textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                            if (Halo.checkNumber0_1_2(textList)) {
-                                                                secondExtra = Integer.parseInt(textList.get(0));
-                                                                if (secondExtra == 0) {
-                                                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                                    break actionLoop;
-                                                                }
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            try {
-                                                message = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, firstExtra, secondExtra);
+                                            message = Halo.changeDepotConfig(textList);
+                                            if(message!=null) {
                                                 Halo.actionManager.onMessage(message);
-                                            } catch (IllegalArgumentException e) {
-                                                System.out.println(A.RED + " > We couldn't build the message like that" + A.RESET);
                                             }
                                             break actionLoop;
                                         }
@@ -2387,54 +2258,9 @@ class LocalPhase {
                                         }
 //ACTION GET MARKET RESOURCES
                                         case 6: {
-                                            int num;
-                                            boolean column;
-                                            System.out.println(" Here's the market, if this is not qol I don't know what could be then:");
-                                            System.out.println(Halo.gameSRV.getMarket());
-                                            System.out.println(A.UL + " Please choose Row or Column" + A.RESET);
-                                            System.out.println(" Insert 1 for a row or 2 for a column, 0 to quit");
-
-                                            while (true) {
-                                                System.out.print(" Row ( 1 ) or column ( 2 ): ");
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-
-                                                if (Halo.checkNumber0_1_2(textList)) {
-                                                    num = Integer.parseInt(textList.get(0));
-                                                    if (num == 0) {
-                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                        break actionLoop;
-                                                    }
-                                                    break;
-                                                }
-                                            }
-                                            if (num == 1) {
-                                                column = false;
-                                                System.out.println(A.UL + " > Please choose the row " + A.RESET + "(must be between 1 and 3). 0 to quit");
-                                            } else {
-                                                System.out.println(A.UL + " > Please choose the column " + A.RESET + "(must be between 1 and 4). 0 to quit");
-                                                column = true;
-                                            }
-
-                                            while (true) {
-                                                text = Halo.input.nextLine();
-                                                textList.clear();
-                                                textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
-                                                if (Halo.checkNumberMarket(textList, column)) {
-                                                    num = Integer.parseInt(textList.get(0));
-                                                    if (num == 0) {
-                                                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
-                                                        break actionLoop;
-                                                    }
-                                                    break;
-                                                }
-                                            }
-                                            try {
-                                                message = new MSG_ACTION_GET_MARKET_RESOURCES(column, num - 1);
+                                            message = Halo.getMarketResources(textList);
+                                            if(message!=null) {
                                                 Halo.actionManager.onMessage(message);
-                                            } catch (IllegalArgumentException e) {
-                                                System.out.println(A.RED + " > We could not build that message" + A.RESET);
                                             }
                                             break actionLoop;
                                         }
@@ -2469,132 +2295,6 @@ class LocalPhase {
         }
     }
 
-    private boolean checkLeaderCardsNumber(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            LeaderCard l1 = Halo.myPlayerRefSRV.getLeaderCards()[0];
-            LeaderCard l2 = Halo.myPlayerRefSRV.getLeaderCards()[1];
-            if (number < 0 || number > 2) {
-                System.out.println(A.RED + " > Please choose 0, 1 or 2" + A.RESET);
-                return false;
-            }
-            if (number == 1) {
-                if (l1 == null) {
-                    System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
-                    return false;
-                } else if (l1.getEnable()) {
-                    System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
-                    return false;
-                }
-            }
-            if (number == 2) {
-                if (l2 == null) {
-                    System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
-                    return false;
-                } else if (l2.getEnable()) {
-                    System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
-                    return false;
-                }
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean checkLeaderCards() {
-        LeaderCard l1a = Halo.myPlayerRefSRV.getLeaderCards()[0];
-        LeaderCard l2a = Halo.myPlayerRefSRV.getLeaderCards()[1];
-        if (l1a == null && l2a == null) {
-            System.out.println(A.RED + " > Both cards are discarded!" + A.RESET);
-            return false;
-        }
-        if (l1a != null) {
-            if (l2a != null) {
-                if (l1a.getEnable() && l2a.getEnable()) {
-                    System.out.println(A.RED + " > Both cards are already activated!" + A.RESET);
-                    return false;
-                }
-            } else {
-                if (l1a.getEnable()) {
-                    System.out.println(A.RED + " > The only card present, the first, is already activated!" + A.RESET);
-                    return false;
-                }
-            }
-        } else {
-            if (l2a.getEnable()) {
-                System.out.println(A.RED + " > The only card present, the second, is already activated!" + A.RESET);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean checkAction(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 0 || number > 8) {
-                System.out.println(A.RED + " > Please pick a number between 0 and 7" + A.RESET);
-                return false;
-            }
-//check very powerful action    already playedE
-            if (Halo.action && (number == 3 || number == 5 || number == 6)) {
-                System.out.println(A.RED + " > You already did a main move" + A.RESET);
-                return false;
-            }
-
-            LeaderCard l1 = Halo.myPlayerRefSRV.getLeaderCards()[0];
-            LeaderCard l2 = Halo.myPlayerRefSRV.getLeaderCards()[1];
-//check action 1 and 2
-            if (number == 1 || number == 2) {
-                if (l1 == null && l2 == null) {
-                    System.out.println(A.RED + " > You can't, because the cards are absent " + A.RESET);
-                    return false;
-                }
-                if (l1 != null) {
-                    if (l2 != null) {
-                        if (l1.getEnable() && l2.getEnable()) {
-                            System.out.println(A.RED + " > You can't, because the cards are already activated " + A.RESET);
-                            return false;
-                        }
-                    } else {
-                        if (l1.getEnable()) {
-                            System.out.println(A.RED + " > You can't, because the first card is already enabled and the second one is absent " + A.RESET);
-                            return false;
-                        }
-                    }
-                } else {
-                    if (l2.getEnable()) {
-                        System.out.println(A.RED + " > You can't, the first card is absent and the second one is already enabled " + A.RESET);
-                        return false;
-                    }
-                }
-            }
-//check activate production
-            if (number == 3) {
-                //TODO
-                //for giacomo (?) //again? //ma che è sta roba, perché vanno rifatti i controlli (g)
-            }
-//check changeDepotConfig
-//check buyDevelopmentCard
-//getMarketResource
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-
-        return true;
-    }
 
     private boolean checkShowCommand(List<String> textList) {
         if (textList.size() != 2) {
@@ -2615,98 +2315,7 @@ class LocalPhase {
         return false;
     }
 
-    private boolean checkNumberDevSlot(List<String> textList) {
-        if (textList.size() == 2) {
-            try {
-                int cardNum = Integer.parseInt(textList.get(0));
-                int slotNum = Integer.parseInt(textList.get(1));
-                Map<DevelopmentCard, boolean[]> cards;
-                cards = Halo.gameSRV.getDevelopmentCardsVendor().getCards();
 
-                if (cardNum > cards.size() || cardNum < 1) {
-                    System.out.println(A.RED + " > That's not a possible card!" + A.RESET);
-                    return false;
-                }
-                if (slotNum < 1 || slotNum > 3) {
-                    System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
-                    return false;
-                }
-                Object[] dcards = cards.keySet().toArray();
-                if (!cards.get((DevelopmentCard) dcards[cardNum - 1])[slotNum - 1]) {
-                    System.out.println(A.RED + " > Error! You can't place that card in this slot" + A.RESET);
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
-                return false;
-            }
-        } else {
-            System.out.println(A.RED + " > The number of parameters is different then expected." + A.RESET);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkChoice(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-
-        boolean[] choices = Halo.gameSRV.getMarketHelper().getChoices();
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 0 || number > 7) System.out.println("Invalid input");
-            else if (!choices[number]) {
-                System.out.println(A.RED + " > That wasn't a possible choice" + A.RESET);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkLeaderCardObjectNumber(List<String> textList, int first) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 1 || number > 4) {
-                System.out.println(A.RED + " > Sorry, the player number must be between 1 and 4." + A.RESET);
-                return false;
-            }
-            if (number == first) {
-                System.out.println(A.RED + " > Sorry, but you inserted the same number as before." + A.RESET);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean check1_4Number(List<String> textList) {
-        if (textList.size() > 1) {
-            System.out.println(A.RED + " > Please insert just a number" + A.RESET);
-            return false;
-        }
-        try {
-            int number = Integer.parseInt(textList.get(0));
-            if (number < 1 || number > 4) {
-                System.out.println(A.RED + " > Sorry, you have to choose between 1 and 4." + A.RESET);
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(A.RED + " > Sorry, but that was not a number" + A.RESET);
-            return false;
-        }
-        return true;
-    }
 
     private void init() {
         Halo.solo = true;
