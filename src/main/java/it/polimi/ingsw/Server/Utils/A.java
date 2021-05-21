@@ -4,6 +4,7 @@ public enum A {
 
     RESET, BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE, UL;
 
+    @Override
     public String toString() {
         switch (this) {
             case RESET:

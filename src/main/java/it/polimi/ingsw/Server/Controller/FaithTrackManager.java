@@ -5,7 +5,6 @@ import it.polimi.ingsw.Server.Model.FaithTrack;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Server.Model.Player;
 
-
 import java.util.ArrayList;
 
 public class FaithTrackManager {

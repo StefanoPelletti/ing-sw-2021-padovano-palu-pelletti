@@ -5,8 +5,8 @@ import it.polimi.ingsw.Server.Utils.Displayer;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
 public class FaithTrack extends ModelObservable {
-    private boolean[] zones;
     private final Game game;
+    private final boolean[] zones;
 
     public FaithTrack(Game game) {
         this.game = game;

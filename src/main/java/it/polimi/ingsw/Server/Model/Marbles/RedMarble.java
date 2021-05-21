@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class RedMarble implements MarketMarble, Serializable {
-    private final Color color;
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";
+    private final Color color;
 
     public RedMarble() {
         color = Color.RED;

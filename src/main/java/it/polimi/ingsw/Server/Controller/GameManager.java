@@ -1,13 +1,16 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Full;
+import it.polimi.ingsw.Server.Model.DevelopmentCard;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
-import it.polimi.ingsw.Server.Model.*;
+import it.polimi.ingsw.Server.Model.Game;
+import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
+import it.polimi.ingsw.Server.Model.Player;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class GameManager {
 
@@ -67,8 +70,8 @@ public class GameManager {
 
     private int getNextPlayer(int playerNumber) {
         if (playerNumber > lobbyMaxPlayers) {
-            if(game.getStatus()==Status.INIT_1) game.changeStatus(Status.INIT_2);
-            else if(game.getStatus()==Status.INIT_2) game.changeStatus(Status.STANDARD_TURN);
+            if (game.getStatus() == Status.INIT_1) game.changeStatus(Status.INIT_2);
+            else if (game.getStatus() == Status.INIT_2) game.changeStatus(Status.STANDARD_TURN);
             game.setTurn(game.getTurn() + 1);
             return getNextPlayer(1);
         }
@@ -90,10 +93,6 @@ public class GameManager {
         return (lobbyMaxPlayers == idlePlayers.size());
     }
 
-    public void setStatus(Status status) {
-        game.changeStatus(status);
-    }
-
     public Boolean getSoloWinner() {
         return soloWinner;
     }
@@ -104,6 +103,10 @@ public class GameManager {
 
     public Status getStatus() {
         return game.getStatus();
+    }
+
+    public void setStatus(Status status) {
+        game.changeStatus(status);
     }
 
     public boolean getSolo() {

@@ -16,6 +16,7 @@ public enum Color implements Serializable {
         return abbreviation;
     }
 
+    @Override
     public String toString() {
         switch (this) {
             case YELLOW:

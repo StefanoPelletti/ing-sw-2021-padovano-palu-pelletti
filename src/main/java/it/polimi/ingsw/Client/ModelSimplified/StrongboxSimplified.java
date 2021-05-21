@@ -1,10 +1,11 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.*;
 import it.polimi.ingsw.Server.Utils.Displayer;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StrongboxSimplified {
     private Map<Resource, Integer> resources;

@@ -4,41 +4,37 @@ package it.polimi.ingsw.Client;
 import it.polimi.ingsw.Client.ModelSimplified.GameSimplified;
 import it.polimi.ingsw.Client.ModelSimplified.PlayerSimplified;
 import it.polimi.ingsw.Networking.Message.*;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
-import it.polimi.ingsw.Server.Utils.A;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.Game;
 import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Model.Player;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
-
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.Production;
+import it.polimi.ingsw.Server.Utils.A;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
-import java.util.List;
-
 import static it.polimi.ingsw.Server.Model.Enumerators.Resource.FAITH;
 
-enum Phase{ Quit, MainMenu, Game, Local, Error }
+enum Phase {Quit, MainMenu, Game, Local, Error}
 
 
-public class PhaseClient  {
+public class PhaseClient {
 
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
 
-        System.out.println(A.YELLOW+" <<>> Welcome player."+A.RESET);
+        System.out.println(A.YELLOW + " <<>> Welcome player." + A.RESET);
 
         Phase phase = Phase.MainMenu;
 
-        while(true)
-        {
-            switch(phase)
-            {
+        while (true) {
+            switch (phase) {
                 case MainMenu:
                     phase = (new MenuPhase()).run();
                     break;
@@ -48,7 +44,7 @@ public class PhaseClient  {
                 case Error:
                     phase = (new ErrorPhase()).run();
                     break;
-                    case Local:
+                case Local:
                     phase = (new LocalPhase()).run();
                     break;
                 case Quit:
@@ -60,8 +56,7 @@ public class PhaseClient  {
     }
 }
 
-class Halo
-{
+class Halo {
     static String defaultAddress = "localhost";
     static int defaultPort = 43210;
 
@@ -95,14 +90,12 @@ class Halo
             inputStream.close();
             objectOutputStream.close();
             objectInputStream.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void sweep()
-    {
+    public static void sweep() {
         game = null;
         gameManager = null;
         actionManager = null;
@@ -115,8 +108,7 @@ class Halo
         gameSRV = null;
     }
 
-    public static boolean checkNumber0_1_2(List<String> textList)
-    {
+    public static boolean checkNumber0_1_2(List<String> textList) {
         if (textList.size() == 1) {
             try {
                 int number = Integer.parseInt(textList.get(0));
@@ -128,17 +120,14 @@ class Halo
                 System.out.println(" > That was not a number");
                 return false;
             }
-        }
-        else
-        {
+        } else {
             System.out.println(" > Too many parameters");
             return false;
         }
         return true;
     }
 
-    public static boolean checkResource(List<String> textList, int numberOfResources, boolean resourceNonePermitted)
-    {
+    public static boolean checkResource(List<String> textList, int numberOfResources, boolean resourceNonePermitted) {
         if (textList.size() != numberOfResources) return false;
         for (String resource : textList) {
             if ((resourceNonePermitted) && !(resource.equalsIgnoreCase("stone") || resource.equalsIgnoreCase("coin") || resource.equalsIgnoreCase("shield") || resource.equalsIgnoreCase("servant") || resource.equalsIgnoreCase("none")))
@@ -149,42 +138,32 @@ class Halo
         return true;
     }
 
-    public static boolean checkNumberMarket(List<String> textList, boolean column)
-    {
-        if(textList.size()>1)
-        {
+    public static boolean checkNumberMarket(List<String> textList, boolean column) {
+        if (textList.size() > 1) {
             System.out.println(" > Too many parameters");
             return false;
         }
-        try
-        {
+        try {
             int number = Integer.parseInt(textList.get(0));
-            if(column)
-            {
-                if(number < 0 || number > 4)
-                {
+            if (column) {
+                if (number < 0 || number > 4) {
                     System.out.println(" > The column number must be 1, 2, 3, 4. Or 0 to quit.");
                     return false;
                 }
-            }
-            else
-            {
-                if(number < 0 || number > 3)
-                {
+            } else {
+                if (number < 0 || number > 3) {
                     System.out.println(" > The row number must be 1, 2, 3. Or 0 to quit.");
                     return false;
                 }
             }
-        } catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             System.out.println(" > That was not a number");
             return false;
         }
         return true;
     }
 
-    public static boolean checkStandardProductionInput(List<String> input)
-    {
+    public static boolean checkStandardProductionInput(List<String> input) {
         int n1;
         int n2 = -1;
         int n3;
@@ -227,8 +206,7 @@ class Halo
         return true;
     }
 
-    public static Resource convertStringToResource(String resource)
-    {
+    public static Resource convertStringToResource(String resource) {
         if (resource.equals("servant")) return Resource.SERVANT;
         if (resource.equals("coin")) return Resource.COIN;
         if (resource.equals("shield")) return Resource.SHIELD;
@@ -237,8 +215,7 @@ class Halo
         return null;
     }
 
-    public static void printActions()
-    {
+    public static void printActions() {
         System.out.println(A.CYAN + "  LIST OF ACTIONS! " + A.RESET);
         System.out.println("  =>   0   : go back");
         System.out.println("  =>   1   : activate a leader card");
@@ -251,10 +228,8 @@ class Halo
     }
 }
 
-class ClosingPhase
-{
-    public void run()
-    {
+class ClosingPhase {
+    public void run() {
         Halo.closeStreams();
         Halo.sweep();
     }
@@ -263,7 +238,7 @@ class ClosingPhase
 class MenuPhase {
     public Phase run() {
         Halo.sweep();
-        System.out.println(A.UL+" <<>> Main Menu."+A.RESET);
+        System.out.println(A.UL + " <<>> Main Menu." + A.RESET);
         System.out.println(" >> write " + A.CYAN + "help" + A.RESET + " for a list of commands.");
         List<String> textList = new ArrayList<>();
         String text;
@@ -300,7 +275,7 @@ class MenuPhase {
                             Halo.objectOutputStream.writeObject(m);
                             Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
-                            System.out.println(A.RED+" > The parameters for the creation are not correct!"+A.RESET);
+                            System.out.println(A.RED + " > The parameters for the creation are not correct!" + A.RESET);
                             return Phase.MainMenu;
                         }
 
@@ -311,10 +286,7 @@ class MenuPhase {
                             System.out.println(A.GREEN + " >> Connected! " + A.RESET);
                             System.out.println(A.GREEN + " <> Your lobby number is " + msg.getLobbyNumber() + A.RESET);
                             Halo.myNickname = textList.get(1);
-                            if (Integer.parseInt(textList.get(2)) == 1)
-                                Halo.solo = true;
-                            else
-                                Halo.solo = false;
+                            Halo.solo = Integer.parseInt(textList.get(2)) == 1;
                             return Phase.Game;
                         } else if (message.getMessageType() == MessageType.MSG_ERROR) {
                             MSG_ERROR msg = (MSG_ERROR) message;
@@ -340,7 +312,7 @@ class MenuPhase {
                             Halo.objectOutputStream.writeObject(m);
                             Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
-                            System.out.println(A.RED+" > The parameters for the join are not correct!"+A.RESET);
+                            System.out.println(A.RED + " > The parameters for the join are not correct!" + A.RESET);
                             return Phase.MainMenu;
                         }
 
@@ -376,7 +348,7 @@ class MenuPhase {
                             Halo.objectOutputStream.writeObject(m);
                             Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
-                            System.out.println(A.RED+" > The parameters for the rejoin are not correct!"+A.RESET);
+                            System.out.println(A.RED + " > The parameters for the rejoin are not correct!" + A.RESET);
                             return Phase.MainMenu;
                         }
 
@@ -405,24 +377,24 @@ class MenuPhase {
                     return Phase.Quit;
                 case "help":
                     System.out.println(" >> List of commands! \n \n");
-                    System.out.println("=> "+A.CYAN+"quit"+A.RESET+"                            : kills the thread and exits the program");
-                    System.out.println("=> "+A.CYAN+"help"+A.RESET+"                            : displays the possible terminal commands");
-                    System.out.println("=> "+A.CYAN+"set"+A.RESET+" "+A.PURPLE+"<something> <value>"+A.RESET+"         : sets a new default port or address");
-                    System.out.println("                                     default values: "+A.GREEN+Halo.defaultAddress + ":"+Halo.defaultPort+A.RESET);
-                    System.out.println(A.PURPLE+"something"+A.RESET+" :>  'port'");
+                    System.out.println("=> " + A.CYAN + "quit" + A.RESET + "                            : kills the thread and exits the program");
+                    System.out.println("=> " + A.CYAN + "help" + A.RESET + "                            : displays the possible terminal commands");
+                    System.out.println("=> " + A.CYAN + "set" + A.RESET + " " + A.PURPLE + "<something> <value>" + A.RESET + "         : sets a new default port or address");
+                    System.out.println("                                     default values: " + A.GREEN + Halo.defaultAddress + ":" + Halo.defaultPort + A.RESET);
+                    System.out.println(A.PURPLE + "something" + A.RESET + " :>  'port'");
                     System.out.println("          :>  'address' ");
-                    System.out.println("=> "+A.CYAN+"c"+A.RESET+" "+A.PURPLE+"<nickname> <capacity>"+A.RESET+"         : quickly creates a new lobby using default values");
-                    System.out.println("=> "+A.CYAN+"j"+A.RESET+" "+A.PURPLE+"<nickname> <lobbyNumber>"+A.RESET+"      : quickly joins a lobby using default values");
-                    System.out.println("=> "+A.CYAN+"create"+A.RESET+" "+A.PURPLE+"<ip> <port> <nickname> <capacity>"+A.RESET+"  ");
+                    System.out.println("=> " + A.CYAN + "c" + A.RESET + " " + A.PURPLE + "<nickname> <capacity>" + A.RESET + "         : quickly creates a new lobby using default values");
+                    System.out.println("=> " + A.CYAN + "j" + A.RESET + " " + A.PURPLE + "<nickname> <lobbyNumber>" + A.RESET + "      : quickly joins a lobby using default values");
+                    System.out.println("=> " + A.CYAN + "create" + A.RESET + " " + A.PURPLE + "<ip> <port> <nickname> <capacity>" + A.RESET + "  ");
                     System.out.println("                                   : creates a new lobby using custom port number \n" +
-                                       "                                     and address values");
-                    System.out.println("=> "+A.CYAN+"join"+A.RESET+" "+A.PURPLE+"<ip> <port> <nickname> <lobbyNumber>"+A.RESET+"  ");
+                            "                                     and address values");
+                    System.out.println("=> " + A.CYAN + "join" + A.RESET + " " + A.PURPLE + "<ip> <port> <nickname> <lobbyNumber>" + A.RESET + "  ");
                     System.out.println("                                   : joins an existing lobby using custom port number \n" +
-                                       "                                     and address values");
-                    System.out.println("=> "+A.CYAN+"rejoin"+A.RESET+" "+A.PURPLE+"<ip> <port> <nickname> <lobbyNumber>"+A.RESET+"  ");
+                            "                                     and address values");
+                    System.out.println("=> " + A.CYAN + "rejoin" + A.RESET + " " + A.PURPLE + "<ip> <port> <nickname> <lobbyNumber>" + A.RESET + "  ");
                     System.out.println("                                   : gives the ability to reconnect to a lobby,  \n" +
-                                       "                                     if connection was lost. Nickname must match \n" +
-                                       "                                     the previously used one. ");
+                            "                                     if connection was lost. Nickname must match \n" +
+                            "                                     the previously used one. ");
                     break;
                 case "create":  // CREATE localhost 43210 Tommaso 4
                     if (!checkCreateCommand(textList)) break;
@@ -438,7 +410,7 @@ class MenuPhase {
                             Halo.objectOutputStream.writeObject(m);
                             Halo.objectOutputStream.flush();
                         } catch (IllegalArgumentException e) {
-                            System.out.println(A.RED+ " > The parameters for the creation are not correct!"+A.RESET);
+                            System.out.println(A.RED + " > The parameters for the creation are not correct!" + A.RESET);
                             return Phase.MainMenu;
                         }
 
@@ -449,10 +421,7 @@ class MenuPhase {
                             System.out.println(A.GREEN + " <<>> Connected! " + A.RESET);
                             System.out.println(A.GREEN + " <> Your lobby number is " + msg.getLobbyNumber() + A.RESET);
                             Halo.myNickname = textList.get(3);
-                            if (Integer.parseInt(textList.get(4)) == 1)
-                                Halo.solo = true;
-                            else
-                                Halo.solo = false;
+                            Halo.solo = Integer.parseInt(textList.get(4)) == 1;
                             return Phase.Game;
                         } else if (message.getMessageType() == MessageType.MSG_ERROR) {
                             MSG_ERROR msg = (MSG_ERROR) message;
@@ -660,7 +629,8 @@ class MenuPhase {
             try {
                 Thread.sleep(333);
                 System.out.println(s);
-            } catch (InterruptedException ignored) { }
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 }
@@ -821,12 +791,12 @@ class GamePhase {
 //VENDOR ROUTINE
                         else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                             boolean quit = false;
-                            int cardNum=-1;
-                            int slotNum=-1;
+                            int cardNum = -1;
+                            int slotNum = -1;
                             while (true) {
                                 if (checkNumberDevSlot(textList)) {
-                                    if(textList.size()==1) quit = true;
-                                    else{
+                                    if (textList.size() == 1) quit = true;
+                                    else {
                                         cardNum = Integer.parseInt(textList.get(0));
                                         slotNum = Integer.parseInt(textList.get(1));
                                     }
@@ -840,13 +810,12 @@ class GamePhase {
                             }
                             try {
                                 MSG_ACTION_CHOOSE_DEVELOPMENT_CARD msgToSend;
-                                if(quit){
-                                    Halo.triedAction= false;
+                                if (quit) {
+                                    Halo.triedAction = false;
                                     msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
-                                }else
-                                {
+                                } else {
                                     Halo.triedAction = true;
-                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum -1, slotNum - 1);
+                                    msgToSend = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum - 1, slotNum - 1);
                                 }
                                 Halo.objectOutputStream.writeObject(msgToSend);
                                 Halo.objectOutputStream.flush();
@@ -1681,16 +1650,15 @@ class GamePhase {
                 System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
                 return false;
             }
-        }else if(textList.size()==1){
-            try{
+        } else if (textList.size() == 1) {
+            try {
                 int quit = Integer.parseInt(textList.get(0));
-                if(quit!=0){
+                if (quit != 0) {
                     System.out.println("Invalid input, try again");
                     return false;
                 }
                 return true;
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 System.out.println(A.RED + " > Sorry, that was not a number" + A.RESET);
                 return false;
             }
@@ -1908,12 +1876,12 @@ class LocalPhase {
 
                 } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
                     boolean quit = false;
-                    int cardNum=-1;
-                    int slotNum=-1;
+                    int cardNum = -1;
+                    int slotNum = -1;
                     while (true) {
                         if (checkNumberDevSlot(textList)) {
-                            if(textList.size()==1) quit = true;
-                            else{
+                            if (textList.size() == 1) quit = true;
+                            else {
                                 cardNum = Integer.parseInt(textList.get(0));
                                 slotNum = Integer.parseInt(textList.get(1));
                             }
@@ -1926,11 +1894,10 @@ class LocalPhase {
                         }
                     }
                     try {
-                        if(quit){
-                            Halo.triedAction= false;
+                        if (quit) {
+                            Halo.triedAction = false;
                             message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
-                        }else
-                        {
+                        } else {
                             Halo.triedAction = true;
                             message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNum - 1, slotNum - 1);
                         }
@@ -2623,7 +2590,7 @@ class LocalPhase {
 //check activate production
             if (number == 3) {
                 //TODO
-                //for giacomo (?) //again?
+                //for giacomo (?) //again? //ma che è sta roba, perché vanno rifatti i controlli (g)
             }
 //check changeDepotConfig
 //check buyDevelopmentCard

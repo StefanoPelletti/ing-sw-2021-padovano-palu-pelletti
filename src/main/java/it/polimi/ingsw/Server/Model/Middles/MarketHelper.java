@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.Displayer;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.util.*;
+import java.util.ArrayList;
 
 
 public class MarketHelper extends ModelObservable {
@@ -19,23 +19,6 @@ public class MarketHelper extends ModelObservable {
     public MarketHelper() {
         resources = new ArrayList<>();
         enabled = false;
-    }
-
-    //called at the beginning of a Market Action
-    public void setResources(ArrayList<Resource> newResources) {
-        this.resources = newResources;
-        this.currentResource = 0;
-        this.choices = new boolean[8];
-        this.extraResourceChoices = new Resource[2];
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        notifyObservers();
-    }
-
-    public void setNormalChoice(boolean value) {
-        isNormalChoice = value;
     }
 
     public void setExtraResourceChoices(Resource[] extraChoices) {
@@ -61,22 +44,33 @@ public class MarketHelper extends ModelObservable {
         if (currentResource == resources.size()) currentResource = 0;
     }
 
-    public void setChoices(boolean[] choices) {
-        this.choices = choices;
-        if (enabled)
-            notifyObservers();
-    }
-
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        notifyObservers();
     }
 
     public ArrayList<Resource> getResources() {
         return resources;
     }
 
+    //called at the beginning of a Market Action
+    public void setResources(ArrayList<Resource> newResources) {
+        this.resources = newResources;
+        this.currentResource = 0;
+        this.choices = new boolean[8];
+        this.extraResourceChoices = new Resource[2];
+    }
+
     public boolean isNormalChoice() {
         return isNormalChoice;
+    }
+
+    public void setNormalChoice(boolean value) {
+        isNormalChoice = value;
     }
 
     public Resource[] getExtraResources() {
@@ -93,6 +87,12 @@ public class MarketHelper extends ModelObservable {
 
     public boolean[] getChoices() {
         return this.choices;
+    }
+
+    public void setChoices(boolean[] choices) {
+        this.choices = choices;
+        if (enabled)
+            notifyObservers();
     }
 
     @Override

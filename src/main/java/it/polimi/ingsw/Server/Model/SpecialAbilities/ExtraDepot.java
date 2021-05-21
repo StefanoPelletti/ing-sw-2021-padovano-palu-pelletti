@@ -7,7 +7,7 @@ import it.polimi.ingsw.Server.Utils.ModelObservable;
 import java.io.Serializable;
 
 public class ExtraDepot extends ModelObservable implements SpecialAbility, Serializable {
-    private Resource resource;
+    private final Resource resource;
     private int number;
 
     public ExtraDepot(Resource resource) {

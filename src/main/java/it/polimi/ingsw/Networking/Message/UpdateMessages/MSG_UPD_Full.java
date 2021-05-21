@@ -6,10 +6,6 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_D
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_LeaderCardsObject;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_MarketHelper;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.MSG_UPD_ResourceObject;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +26,7 @@ public class MSG_UPD_Full extends Message implements Serializable {
     private MSG_UPD_DevDeck devDeck;
     private MSG_UPD_FaithTrack faithTrack;
 
-    private Map<Integer, List<Message>> playerList;
+    private final Map<Integer, List<Message>> playerList;
 
     public MSG_UPD_Full() {
         super(MessageType.MSG_UPD_Full);
@@ -54,68 +50,68 @@ public class MSG_UPD_Full extends Message implements Serializable {
         playerList.put(playerNumber, list);
     }
 
-    public void setDevCardsVendor(MSG_UPD_DevCardsVendor devCardsVendor) {
-        this.devCardsVendor = devCardsVendor;
-    }
-
-    public void setLeaderCardsObject(MSG_UPD_LeaderCardsObject leaderCardsObject) {
-        this.leaderCardsObject = leaderCardsObject;
-    }
-
-    public void setMarketHelper(MSG_UPD_MarketHelper marketHelper) {
-        this.marketHelper = marketHelper;
-    }
-
-    public void setResourceObject(MSG_UPD_ResourceObject resourceObject) {
-        this.resourceObject = resourceObject;
-    }
-
-    public void setGame(MSG_UPD_Game game) {
-        this.game = game;
-    }
-
-    public void setDevDeck(MSG_UPD_DevDeck devDeck) {
-        this.devDeck = devDeck;
-    }
-
-    public void setFaithTrack(MSG_UPD_FaithTrack faithTrack) {
-        this.faithTrack = faithTrack;
-    }
-
-    public void setMarket(MSG_UPD_Market market) {
-        this.market = market;
-    }
-
     public MSG_UPD_DevCardsVendor getDevCardsVendor() {
         return devCardsVendor;
+    }
+
+    public void setDevCardsVendor(MSG_UPD_DevCardsVendor devCardsVendor) {
+        this.devCardsVendor = devCardsVendor;
     }
 
     public MSG_UPD_LeaderCardsObject getLeaderCardsObject() {
         return leaderCardsObject;
     }
 
+    public void setLeaderCardsObject(MSG_UPD_LeaderCardsObject leaderCardsObject) {
+        this.leaderCardsObject = leaderCardsObject;
+    }
+
     public MSG_UPD_MarketHelper getMarketHelper() {
         return marketHelper;
+    }
+
+    public void setMarketHelper(MSG_UPD_MarketHelper marketHelper) {
+        this.marketHelper = marketHelper;
     }
 
     public MSG_UPD_ResourceObject getResourceObject() {
         return resourceObject;
     }
 
+    public void setResourceObject(MSG_UPD_ResourceObject resourceObject) {
+        this.resourceObject = resourceObject;
+    }
+
     public MSG_UPD_Game getGame() {
         return game;
+    }
+
+    public void setGame(MSG_UPD_Game game) {
+        this.game = game;
     }
 
     public MSG_UPD_DevDeck getDevDeck() {
         return devDeck;
     }
 
+    public void setDevDeck(MSG_UPD_DevDeck devDeck) {
+        this.devDeck = devDeck;
+    }
+
     public MSG_UPD_FaithTrack getFaithTrack() {
         return faithTrack;
     }
 
+    public void setFaithTrack(MSG_UPD_FaithTrack faithTrack) {
+        this.faithTrack = faithTrack;
+    }
+
     public MSG_UPD_Market getMarket() {
         return market;
+    }
+
+    public void setMarket(MSG_UPD_Market market) {
+        this.market = market;
     }
 
     public Map<Integer, List<Message>> getPlayerList() {

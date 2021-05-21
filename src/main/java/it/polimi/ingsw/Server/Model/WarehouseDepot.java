@@ -6,12 +6,15 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.Displayer;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class WarehouseDepot extends ModelObservable {
 
+    private final Resource[] shelf2;
+    private final Resource[] shelf3;
     private Resource shelf1;
-    private Resource[] shelf2;
-    private Resource[] shelf3;
 
     public WarehouseDepot() {
         this.shelf1 = Resource.NONE;
@@ -295,8 +298,6 @@ public class WarehouseDepot extends ModelObservable {
         notifyObservers();
         return true;
     }
-
-
 
 
     @Override

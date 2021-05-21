@@ -3,7 +3,6 @@ package it.polimi.ingsw.Networking.Message.UpdateMessages;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Model.LeaderCard;
-import it.polimi.ingsw.Server.Model.Middles.LeaderBoard;
 
 import java.io.Serializable;
 

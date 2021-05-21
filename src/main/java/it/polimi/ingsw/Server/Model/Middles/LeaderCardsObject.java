@@ -16,13 +16,17 @@ public class LeaderCardsObject extends ModelObservable {
         this.cards = null;
     }
 
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         notifyObservers();
     }
 
-    public boolean isEnabled() {
-        return this.enabled;
+    public ArrayList<LeaderCard> getCards() {
+        return new ArrayList<>(this.cards);
     }
 
     public void setCards(ArrayList<LeaderCard> newCards) {
@@ -30,10 +34,6 @@ public class LeaderCardsObject extends ModelObservable {
         if (enabled) {
             notifyObservers();
         }
-    }
-
-    public ArrayList<LeaderCard> getCards() {
-        return new ArrayList<>(this.cards);
     }
 
     @Override

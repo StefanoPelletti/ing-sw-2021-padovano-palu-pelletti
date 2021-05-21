@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.io.Serializable;
 
 public class DiscountResource implements SpecialAbility, Serializable {
-    private Resource resource;
+    private final Resource resource;
 
     public DiscountResource(Resource resource) {
         this.resource = resource;

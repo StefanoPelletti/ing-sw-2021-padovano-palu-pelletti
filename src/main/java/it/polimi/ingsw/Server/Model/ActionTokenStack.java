@@ -1,11 +1,16 @@
 package it.polimi.ingsw.Server.Model;
-import it.polimi.ingsw.Server.Model.ActionTokens.*;
+
+import it.polimi.ingsw.Server.Model.ActionTokens.ActionToken;
+import it.polimi.ingsw.Server.Model.ActionTokens.Forward2Token;
+import it.polimi.ingsw.Server.Model.ActionTokens.ForwardAndShuffleToken;
+import it.polimi.ingsw.Server.Model.ActionTokens.RemoverToken;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ActionTokenStack {
-    private ArrayList<ActionToken> stack;
+    private final ArrayList<ActionToken> stack;
 
     public ActionTokenStack() {
         this.stack = new ArrayList<>();

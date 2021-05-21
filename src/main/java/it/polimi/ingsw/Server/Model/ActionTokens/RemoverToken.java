@@ -3,7 +3,7 @@ package it.polimi.ingsw.Server.Model.ActionTokens;
 import it.polimi.ingsw.Server.Model.Enumerators.Color;
 
 public class RemoverToken implements ActionToken {
-    private Color color;
+    private final Color color;
     private int column;
 
     public RemoverToken(Color color) {

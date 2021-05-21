@@ -1,24 +1,26 @@
 package it.polimi.ingsw.Server.Model;
 
 
-import java.util.*;
-
 import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Player;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
 import it.polimi.ingsw.Server.Utils.ModelObservable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
 public class Player extends ModelObservable {
     private final String nickname;
-    private int VP;
-    private int position;   //used for FaithTrack tracking
-    private int playerNumber;
-
     private final Strongbox strongbox;
     private final WarehouseDepot warehouseDepot;
     private final LeaderCard[] leaderCards;
     private final DevelopmentSlot developmentSlot;
+    private int VP;
+    private int position;   //used for FaithTrack tracking
+    private int playerNumber;
     private boolean permittedAction;
 
     private boolean disconnectedBeforeLeaderCard;
@@ -39,17 +41,29 @@ public class Player extends ModelObservable {
         this.permittedAction = false;
     }
 
-    public ArrayList<LeaderCard> getStartingCards() { return this.startingCards; }
-    public void setStartingCards(ArrayList<LeaderCard> startingCards) { this.startingCards=startingCards;}
-    public int getStartingResources() { return this.startingResources; }
-    public void setInitialStartingResources() {
-        this.startingResources=0;
-        if(this.playerNumber == 2 || this.playerNumber == 3)
-            this.startingResources=1;
-        if(this.playerNumber==4)
-            this.startingResources=2;
+    public ArrayList<LeaderCard> getStartingCards() {
+        return this.startingCards;
     }
-    public void decrementStartingResource() { this.startingResources--;}
+
+    public void setStartingCards(ArrayList<LeaderCard> startingCards) {
+        this.startingCards = startingCards;
+    }
+
+    public int getStartingResources() {
+        return this.startingResources;
+    }
+
+    public void setInitialStartingResources() {
+        this.startingResources = 0;
+        if (this.playerNumber == 2 || this.playerNumber == 3)
+            this.startingResources = 1;
+        if (this.playerNumber == 4)
+            this.startingResources = 2;
+    }
+
+    public void decrementStartingResource() {
+        this.startingResources--;
+    }
 
     public String getNickname() {
         return nickname;

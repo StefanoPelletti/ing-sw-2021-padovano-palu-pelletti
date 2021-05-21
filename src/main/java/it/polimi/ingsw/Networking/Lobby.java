@@ -1,29 +1,28 @@
 package it.polimi.ingsw.Networking;
 
-import it.polimi.ingsw.Networking.Message.*;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
+import it.polimi.ingsw.Networking.Message.Message;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.Server.Controller.ActionManager;
 import it.polimi.ingsw.Server.Controller.GameManager;
-import it.polimi.ingsw.Server.Model.*;
+import it.polimi.ingsw.Server.Model.Game;
+import it.polimi.ingsw.Server.Model.Player;
 
-import java.net.*;
+import java.net.Socket;
 import java.util.*;
 
 
 public class Lobby {
-    List<Socket> socketList;
-    List<String> nicknameList;
-    List<ClientHandler> clientHandlers;
-
-    private GameManager gameManager;
-    private ActionManager actionManager;
     private final static ArrayList<Lobby> lobbies = new ArrayList<>();
     private final int lobbyNumber;
     private final int lobbyMaxPlayers;
+    List<Socket> socketList;
+    List<String> nicknameList;
+    List<ClientHandler> clientHandlers;
+    boolean solo;
+    private GameManager gameManager;
+    private ActionManager actionManager;
     private boolean started;
     private boolean deleted;
-
-    boolean solo;
 
     public Lobby(int lobbyNumber, int lobbyMaxPlayers) {
         solo = (lobbyMaxPlayers == 1);
@@ -35,6 +34,37 @@ public class Lobby {
 
         this.started = false;
         this.deleted = false;
+    }
+
+    public static synchronized boolean checkLobbies(int i) {
+        for (Lobby l : lobbies) {
+            if (l.getLobbyNumber() == i) return true;
+        }
+        return false;
+    }
+
+    public static synchronized Lobby getLobby(int n) {
+        for (Lobby lobby : lobbies) {
+            if (lobby.getLobbyNumber() == n) return lobby;
+        }
+        return null;
+    }
+
+    public static synchronized void addLobby(Lobby lobby) {
+        Lobby.lobbies.add(lobby);
+        Lobby.createCountDownThread(lobby);
+    }
+
+    public static synchronized ArrayList<Lobby> getLobbies() {
+        return Lobby.lobbies;
+    }
+
+    public static synchronized void removeLobby(Lobby lobby) {
+        Lobby.lobbies.remove(lobby);
+    }
+
+    public static void createCountDownThread(Lobby lobby) {
+        new Thread(new CountDownThread(lobby, 30)).start();
     }
 
     public synchronized void init() {
@@ -107,7 +137,6 @@ public class Lobby {
 
     }
 
-
     public synchronized ClientHandler findPendingClientHandler(String nickname) {
         Optional<ClientHandler> result = this.clientHandlers.stream().filter(ClientHandler::isPendingConnection).sorted(
                 (a, b) -> Integer.compare(b.getNickname().length(), a.getNickname().length())).filter(x -> x.getNickname().startsWith(nickname)).findFirst();
@@ -131,22 +160,8 @@ public class Lobby {
         return this.nicknameList.size();
     }
 
-    public static synchronized boolean checkLobbies(int i) {
-        for (Lobby l : lobbies) {
-            if (l.getLobbyNumber() == i) return true;
-        }
-        return false;
-    }
-
     public synchronized int whoIs(String nickname) {
         return gameManager.getGame().getPlayer(nickname).getPlayerNumber();
-    }
-
-    public static synchronized Lobby getLobby(int n) {
-        for (Lobby lobby : lobbies) {
-            if (lobby.getLobbyNumber() == n) return lobby;
-        }
-        return null;
     }
 
     public synchronized int currentPlayer() {
@@ -157,33 +172,16 @@ public class Lobby {
         return gameManager.getFullModel();
     }
 
-    public static synchronized void addLobby(Lobby lobby) {
-        Lobby.lobbies.add(lobby);
-        Lobby.createCountDownThread(lobby);
-    }
-
-    public static synchronized ArrayList<Lobby> getLobbies() {
-        return Lobby.lobbies;
-    }
-
-    public static synchronized void removeLobby(Lobby lobby) {
-        Lobby.lobbies.remove(lobby);
-    }
-
-    public static void createCountDownThread(Lobby lobby) {
-        new Thread(new CountDownThread(lobby, 30)).start();
-    }
-
     public synchronized boolean isStarted() {
         return this.started;
     }
 
-    public synchronized boolean isDeleted() {
-        return this.deleted;
-    }
-
     public synchronized void setStarted(boolean started) {
         this.started = started;
+    }
+
+    public synchronized boolean isDeleted() {
+        return this.deleted;
     }
 
     public synchronized void setDeleted(boolean deleted) {

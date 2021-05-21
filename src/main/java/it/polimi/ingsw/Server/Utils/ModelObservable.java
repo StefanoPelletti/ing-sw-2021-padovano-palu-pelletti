@@ -1,12 +1,11 @@
 package it.polimi.ingsw.Server.Utils;
 
 import it.polimi.ingsw.Networking.Message.Message;
-import it.polimi.ingsw.Server.Utils.ModelObserver;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public abstract class ModelObservable {
-    private ArrayList<ModelObserver> observers;
+    private final ArrayList<ModelObserver> observers;
 
     public ModelObservable() {
         observers = new ArrayList<>();

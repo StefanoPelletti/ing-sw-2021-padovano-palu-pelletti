@@ -4,8 +4,8 @@ import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_FaithTrack;
 import it.polimi.ingsw.Server.Utils.Displayer;
 
 public class FaithTrackSimplified {
-    private boolean[] zones;
-    private GameSimplified game;
+    private final boolean[] zones;
+    private final GameSimplified game;
 
     public FaithTrackSimplified(GameSimplified game) {
         zones = new boolean[3];

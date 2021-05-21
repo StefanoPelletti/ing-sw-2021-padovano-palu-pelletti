@@ -7,18 +7,13 @@ import it.polimi.ingsw.Server.Model.ActionTokens.ActionToken;
 import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Middles.*;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
-import it.polimi.ingsw.Server.Utils.*;
+import it.polimi.ingsw.Server.Utils.ModelObservable;
+import it.polimi.ingsw.Server.Utils.ModelObserver;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class Game extends ModelObservable {
-    private Status status;
-    private Player firstPlayer;
-
-    private int turn;
-    private int blackCrossPosition;
-    private int currentPlayer;
-
     private final ActionTokenStack actionTokenStack;
     private final ArrayList<Player> playerList;
     private final LeaderCardsDeck leaderCardsDeck;
@@ -32,6 +27,11 @@ public class Game extends ModelObservable {
     private final LeaderCardsObject leaderCardsObject;
     private final ResourceObject resourceObject;
     private final LeaderBoard leaderBoard;
+    private Status status;
+    private Player firstPlayer;
+    private int turn;
+    private int blackCrossPosition;
+    private int currentPlayer;
 
     public Game() {
         status = Status.INIT_1;
@@ -66,8 +66,20 @@ public class Game extends ModelObservable {
         return this.turn;
     }
 
+    //SETTERS
+    public void setTurn(int turn) {
+        this.turn = turn;
+        notifyObservers();
+    }
+
     public int getBlackCrossPosition() {
         return this.blackCrossPosition;
+    }
+
+    public void setBlackCrossPosition(int blackCrossPosition) {
+        this.blackCrossPosition = blackCrossPosition;
+        notifyLorenzoMovement();
+        notifyObservers();
     }
 
     public int getCurrentPlayerInt() {
@@ -131,6 +143,11 @@ public class Game extends ModelObservable {
         return getPlayer(currentPlayer);
     }
 
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
+        notifyObservers();
+    }
+
     public Player getPlayer(String nickname) {
         Optional<Player> result = playerList.stream().filter(p -> p.getNickname().equals(nickname)).findFirst();
         return result.orElse(null);
@@ -139,23 +156,6 @@ public class Game extends ModelObservable {
     public Player getPlayer(int playerNumber) {
         Optional<Player> result = playerList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();
         return result.orElse(null);
-    }
-
-    //SETTERS
-    public void setTurn(int turn) {
-        this.turn = turn;
-        notifyObservers();
-    }
-
-    public void setBlackCrossPosition(int blackCrossPosition) {
-        this.blackCrossPosition = blackCrossPosition;
-        notifyLorenzoMovement();
-        notifyObservers();
-    }
-
-    public void setCurrentPlayer(int currentPlayer) {
-        this.currentPlayer = currentPlayer;
-        notifyObservers();
     }
 
     public void changeStatus(Status status) {
@@ -211,108 +211,89 @@ public class Game extends ModelObservable {
         return playerList.removeIf(x -> (x.getNickname()).equals(nickname));
     }
 
-    public void broadcastMessage(String message)
-    {
+    public void broadcastMessage(String message) {
         messageHelper.setNewMessage(message);
     }
 
-    public ArrayList<LeaderCard> getCurrentPlayerStartingCards()
-    {
+    public ArrayList<LeaderCard> getCurrentPlayerStartingCards() {
         return this.getCurrentPlayer().getStartingCards();
     }
 
-    public DevelopmentCard[][] getVisibleCards()
-    {
+    public DevelopmentCard[][] getVisibleCards() {
         return developmentCardsDeck.getVisible();
     }
 
-    public void removeCardOnDevelopmentCardsDeck(int row, int column)
-    {
+    public void removeCardOnDevelopmentCardsDeck(int row, int column) {
         developmentCardsDeck.removeCard(row, column);
     }
 
-    public void removeColumnOnDevelopmentCardsDeck(int column)
-    {
+    public void removeColumnOnDevelopmentCardsDeck(int column) {
         developmentCardsDeck.removeCard(column);
     }
 
-    public boolean isOneColumnDestroyedOnTheDevelopmentCardsDeck()
-    {
+    public boolean isOneColumnDestroyedOnTheDevelopmentCardsDeck() {
         return developmentCardsDeck.isOneColumnDestroyed();
     }
 
-    public ActionToken pickFirstActionToken()
-    {
+    public ActionToken pickFirstActionToken() {
         return actionTokenStack.pickFirst();
     }
 
-    public void shuffleActionStack()
-    {
+    public void shuffleActionStack() {
         actionTokenStack.shuffle();
     }
 
-    public void setLeaderCardsObjectCards(ArrayList<LeaderCard> list )
-    {
+    public void setLeaderCardsObjectCards(ArrayList<LeaderCard> list) {
         leaderCardsObject.setCards(list);
     }
 
-    public void setLeaderCardsObjectEnabled(boolean value)
-    {
-        leaderCardsObject.setEnabled(value);
-    }
-
-    public void setResourceObjectNumOfResources(int value)
-    {
+    public void setResourceObjectNumOfResources(int value) {
         resourceObject.setNumOfResources(value);
     }
 
-    public void setResourceObjectEnabled(boolean value)
-    {
-        resourceObject.setEnabled(value);
-    }
-
-    public void setDevelopmentCardsVendorEnabled(boolean value)
-    {
-        developmentCardsVendor.setEnabled(value);
-    }
-
-    public void setMarketHelperEnabled(boolean value)
-    {
-        marketHelper.setEnabled(value);
-    }
-
-    public boolean isMiddleActive()
-    {
-        return( this.leaderCardsObject.isEnabled() ||
+    public boolean isMiddleActive() {
+        return (this.leaderCardsObject.isEnabled() ||
                 this.resourceObject.isEnabled() ||
                 this.marketHelper.isEnabled() ||
-                this.developmentCardsVendor.isEnabled() );
+                this.developmentCardsVendor.isEnabled());
     }
 
-    public boolean isLeaderBoardEnabled()
-    {
+    public boolean isLeaderBoardEnabled() {
         return this.leaderBoard.isEnabled();
     }
 
-    public boolean isLeaderCardsObjectEnabled()
-    {
+    public boolean isLeaderCardsObjectEnabled() {
         return this.leaderCardsObject.isEnabled();
     }
 
-    public boolean isResourceObjectEnabled()
-    {
+    public void setLeaderCardsObjectEnabled(boolean value) {
+        leaderCardsObject.setEnabled(value);
+    }
+
+    public boolean isResourceObjectEnabled() {
         return this.resourceObject.isEnabled();
     }
 
-    public boolean isMarketHelperEnabled()
-    {
+    public void setResourceObjectEnabled(boolean value) {
+        resourceObject.setEnabled(value);
+    }
+
+    public boolean isMarketHelperEnabled() {
         return this.marketHelper.isEnabled();
     }
 
-    public boolean isDevelopmentCardsVendorEnabled()
-    {
+    public void setMarketHelperEnabled(boolean value) {
+        marketHelper.setEnabled(value);
+    }
+
+    public boolean isDevelopmentCardsVendorEnabled() {
         return this.developmentCardsVendor.isEnabled();
     }
+
+    public void setDevelopmentCardsVendorEnabled(boolean value) {
+        developmentCardsVendor.setEnabled(value);
+    }
+
     //OBSERVABLE
     private void notifyObservers() {
         this.notifyObservers(generateMessage());

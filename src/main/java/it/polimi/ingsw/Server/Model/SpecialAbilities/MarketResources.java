@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.io.Serializable;
 
 public class MarketResources implements SpecialAbility, Serializable {
-    private Resource resource;
+    private final Resource resource;
 
     public MarketResources(Resource resource) {
         this.resource = resource;

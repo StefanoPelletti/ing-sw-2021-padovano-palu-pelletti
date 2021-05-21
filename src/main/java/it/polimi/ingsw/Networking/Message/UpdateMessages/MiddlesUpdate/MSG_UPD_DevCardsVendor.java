@@ -1,12 +1,12 @@
 package it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Model.DevelopmentCard;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
 

@@ -1,9 +1,8 @@
 package it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate;
 
-import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.MessageType;
-import it.polimi.ingsw.Server.Model.DevelopmentSlot;
+import it.polimi.ingsw.Server.Model.DevelopmentCard;
 
 import java.io.Serializable;
 

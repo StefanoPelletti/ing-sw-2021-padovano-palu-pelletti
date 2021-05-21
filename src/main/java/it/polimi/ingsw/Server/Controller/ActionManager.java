@@ -1,21 +1,27 @@
 package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Networking.Message.*;
+import it.polimi.ingsw.Server.Model.ActionTokens.ActionToken;
+import it.polimi.ingsw.Server.Model.ActionTokens.RemoverToken;
 import it.polimi.ingsw.Server.Model.*;
-import it.polimi.ingsw.Server.Model.ActionTokens.*;
-import it.polimi.ingsw.Server.Model.Enumerators.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Color;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
+import it.polimi.ingsw.Server.Model.Enumerators.Status;
 import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import it.polimi.ingsw.Server.Model.Marbles.RedMarbleException;
-import it.polimi.ingsw.Server.Model.Middles.DevelopmentCardsVendor;
-import it.polimi.ingsw.Server.Model.Middles.LeaderCardsObject;
-import it.polimi.ingsw.Server.Model.Middles.MarketHelper;
-import it.polimi.ingsw.Server.Model.Middles.ResourceObject;
-import it.polimi.ingsw.Server.Model.Requirements.*;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.*;
-import it.polimi.ingsw.Server.Model.Middles.MessageHelper;
+import it.polimi.ingsw.Server.Model.Middles.*;
+import it.polimi.ingsw.Server.Model.Requirements.CardRequirements;
+import it.polimi.ingsw.Server.Model.Requirements.Requirement;
+import it.polimi.ingsw.Server.Model.Requirements.ResourceRequirements;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.DiscountResource;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.MarketResources;
+import it.polimi.ingsw.Server.Model.SpecialAbilities.Production;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ActionManager {
@@ -213,8 +219,7 @@ public class ActionManager {
             messageHelper.setNotificationMessage(player.getNickname(), message);
             player.setLeaderCards(cardNumber, true);
             return true;
-        }
-        else { //if (requirement.isCardRequirement()) {
+        } else { //if (requirement.isCardRequirement()) {
             CardRequirements cardRequirements = (CardRequirements) requirement;
             Map<Color, Integer[]> requiredCards = cardRequirements.getRequirements();
             ArrayList<DevelopmentCard> playerCards = player.getDevelopmentSlot().getCards();
@@ -612,7 +617,7 @@ public class ActionManager {
         DevelopmentCardsVendor developmentCardsVendor = game.getDevelopmentCardsVendor();
 
 //MESSAGE VALIDATION
-        if(cardNumber == -1 && slotNumber == -1){
+        if (cardNumber == -1 && slotNumber == -1) {
             game.setDevelopmentCardsVendorEnabled(false);
             game.broadcastMessage(player.getNickname() + " did not buy any card");
             return false;
@@ -636,7 +641,7 @@ public class ActionManager {
 
         DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber);
 
-        if(!developmentCardsVendor.getCards().get(dc)[slotNumber]){
+        if (!developmentCardsVendor.getCards().get(dc)[slotNumber]) {
             gameManager.setErrorObject("Error! You can not put that card in the depot!");
             return false;
         }
@@ -772,10 +777,7 @@ public class ActionManager {
 
         boolean error = false;
 
-        if (currentResource == Resource.EXTRA)
-            isNormalChoice = false;
-        else
-            isNormalChoice = true;
+        isNormalChoice = currentResource != Resource.EXTRA;
 
         WarehouseDepot depot = player.getWarehouseDepot();
         ArrayList<LeaderCard> extraDepotCards = player.getCardsWithExtraDepotAbility();
@@ -784,13 +786,13 @@ public class ActionManager {
             if (choice == 0) {
                 if (choices[0]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[0]);
-                    game.getMessageHelper().setNewMessage(player.getNickname()+" changed his extra resource into "+ marketHelper.getExtraResources()[0]);
+                    game.getMessageHelper().setNewMessage(player.getNickname() + " changed his extra resource into " + marketHelper.getExtraResources()[0]);
                 } else
                     error = true; //impossible?
             } else if (choice == 1) {
                 if (choices[1]) {
                     marketHelper.setResource(marketHelper.getExtraResources()[1]);
-                    game.getMessageHelper().setNewMessage(player.getNickname()+" changed his extra resource into "+ marketHelper.getExtraResources()[1]);
+                    game.getMessageHelper().setNewMessage(player.getNickname() + " changed his extra resource into " + marketHelper.getExtraResources()[1]);
                 } else
                     error = true; //impossible?
             }
@@ -800,7 +802,7 @@ public class ActionManager {
                 if (choices[0]) {
                     depot.add(currentResource);
                     marketHelper.removeResource();
-                    game.getMessageHelper().setNewMessage(player.getNickname()+" added in his depot a "+ currentResource);
+                    game.getMessageHelper().setNewMessage(player.getNickname() + " added a resource in his depot: " + currentResource);
                 } else error = true;
             } else if (choice == 1) {
                 if (choices[1]) {
@@ -812,7 +814,7 @@ public class ActionManager {
                             break;
                         }
                     }
-                    game.getMessageHelper().setNewMessage(player.getNickname()+" added in is extra depot a "+ currentResource);
+                    game.getMessageHelper().setNewMessage(player.getNickname() + " added a resource in his extra depot: " + currentResource);
                 } else error = true;
             }
         }
@@ -821,39 +823,39 @@ public class ActionManager {
             if (choices[2]) {
                 marketHelper.removeResource();
                 faithTrackManager.advanceAllExcept(player);
-                game.broadcastMessage(player.getNickname()+" discarded a "+ currentResource);
+                game.broadcastMessage(player.getNickname() + " discarded a " + currentResource);
             } else error = true; //impossible?
         } else if (choice == 3) {
             if (choices[3]) {
                 depot.swapRow(1, 2);
-                game.broadcastMessage(player.getNickname()+" swapped the rows 1 and 2 of his depot");
+                game.broadcastMessage(player.getNickname() + " swapped the rows 1 and 2 of his depot");
             } else error = true;
         } else if (choice == 4) {
             if (choices[4]) {
                 depot.swapRow(1, 3);
-                game.broadcastMessage(player.getNickname()+" swapped the rows 1 and 3 of his depot");
+                game.broadcastMessage(player.getNickname() + " swapped the rows 1 and 3 of his depot");
             } else error = true;
         } else if (choice == 5) {
             if (choices[5]) {
                 depot.swapRow(2, 3);
-                game.broadcastMessage(player.getNickname()+" swapped the rows 2 and 3 of his depot");
+                game.broadcastMessage(player.getNickname() + " swapped the rows 2 and 3 of his depot");
             } else error = true;
         } else if (choice == 6) {
             if (choices[6]) {
                 marketHelper.skipForward();
-                game.broadcastMessage(player.getNickname()+" is pondering about his market resources");
+                game.broadcastMessage(player.getNickname() + " is pondering about his market resources");
             } else error = true;
         } else if (choice == 7) {
             if (choices[7]) {
                 marketHelper.skipBackward();
-                game.broadcastMessage(player.getNickname()+" is pondering about his market resources");
+                game.broadcastMessage(player.getNickname() + " is pondering about his market resources");
             } else error = true;
         }
 
 
         if (error) {
             gameManager.setErrorObject("Error! You chose an invalid action!");
-            game.broadcastMessage(player.getNickname() +" did not behave well");
+            game.broadcastMessage(player.getNickname() + " did not behave well");
             return false;
         } else {
             if (marketHelper.getResources().size() > 0) {

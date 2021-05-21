@@ -70,15 +70,11 @@ public class DevelopmentSlot extends ModelObservable {
             //System.out.println("Nope, this stack is full!");
             return false;
         } else {
-            if (newCardLevel != cardLevel + 1) //then level is not ok!
-            {
-                //System.out.println("Nope, you cannot add a card on this deck, levels are different!");
-                return false;
-            } else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
-            {
-                //System.out.println("Yes, adding in this position is possible!");
-                return true;
-            }
+            //then level is not ok!
+            //System.out.println("Nope, you cannot add a card on this deck, levels are different!");
+            // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
+            //System.out.println("Yes, adding in this position is possible!");
+            return newCardLevel == cardLevel + 1;
         }
     }
 

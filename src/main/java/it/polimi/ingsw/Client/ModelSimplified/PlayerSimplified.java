@@ -1,24 +1,23 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
-import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
-import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.*;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.MSG_UPD_Player;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
+import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Model.LeaderCard;
 import it.polimi.ingsw.Server.Model.SpecialAbilities.ExtraDepot;
-import it.polimi.ingsw.Server.Model.SpecialAbilities.SpecialAbility;
-
-import java.util.*;
 
 public class PlayerSimplified {
+    private final StrongboxSimplified strongbox;
+    private final WarehouseDepotSimplified warehouseDepot;
+    private final DevelopmentSlotSimplified developmentSlot;
     private int VP;
     private int playerNumber;
     private String nickname;
     private int position;
     private LeaderCard[] leaderCards;
-
-    private final StrongboxSimplified strongbox;
-    private final WarehouseDepotSimplified warehouseDepot;
-    private final DevelopmentSlotSimplified developmentSlot;
 
     public PlayerSimplified(int playerNumber) {
         this.VP = 0;

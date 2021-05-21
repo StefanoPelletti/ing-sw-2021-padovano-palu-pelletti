@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class ResourceRequirements implements Requirement, Serializable {
-    private Map<Resource, Integer> requirements;
+    private final Map<Resource, Integer> requirements;
 
     public ResourceRequirements(Map<Resource, Integer> requirements) {
         this.requirements = requirements;

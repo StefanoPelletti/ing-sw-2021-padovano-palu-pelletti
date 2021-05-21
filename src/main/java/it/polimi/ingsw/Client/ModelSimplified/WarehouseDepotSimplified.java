@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
-import it.polimi.ingsw.Server.Model.Enumerators.*;
+import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import it.polimi.ingsw.Server.Utils.Displayer;
 
 public class WarehouseDepotSimplified {

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.Networking.Message;
 
-import it.polimi.ingsw.Networking.Message.Message;
-import it.polimi.ingsw.Networking.Message.MessageType;
-
 import java.io.Serializable;
 
 public class MSG_ERROR extends Message implements Serializable {

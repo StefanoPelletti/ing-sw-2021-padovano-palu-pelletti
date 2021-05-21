@@ -27,15 +27,15 @@ public class ResourceObject extends ModelObservable {
         return numOfResources;
     }
 
-    public void decNumOfResources() {
-        this.numOfResources--;
+    public void setNumOfResources(int numOfResources) {
+        this.numOfResources = numOfResources;
         if (enabled) {
             notifyObservers();
         }
     }
 
-    public void setNumOfResources(int numOfResources) {
-        this.numOfResources = numOfResources;
+    public void decNumOfResources() {
+        this.numOfResources--;
         if (enabled) {
             notifyObservers();
         }

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class CardRequirements implements Requirement, Serializable {
-    private Map<Color, Integer[]> requirements;
+    private final Map<Color, Integer[]> requirements;
 
     public CardRequirements(Map<Color, Integer[]> requirements) {
         this.requirements = requirements;

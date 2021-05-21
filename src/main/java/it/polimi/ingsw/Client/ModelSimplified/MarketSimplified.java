@@ -6,7 +6,7 @@ import it.polimi.ingsw.Server.Model.Marbles.MarketMarble;
 import it.polimi.ingsw.Server.Utils.Displayer;
 
 public class MarketSimplified {
-    private MarketMarble[][] grid;
+    private final MarketMarble[][] grid;
     private MarketMarble slideMarble;
 
     public MarketSimplified() {

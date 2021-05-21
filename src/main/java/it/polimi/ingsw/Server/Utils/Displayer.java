@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.Server.Model.Enumerators.Resource.*;
-import static it.polimi.ingsw.Server.Model.Enumerators.Resource.STONE;
 
 public abstract class Displayer {
 

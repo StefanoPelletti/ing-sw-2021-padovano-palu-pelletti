@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 import java.io.Serializable;
 
 public class Production implements SpecialAbility, Serializable {
-    private Resource input;
+    private final Resource input;
 
     public Production(Resource input) {
         this.input = input;

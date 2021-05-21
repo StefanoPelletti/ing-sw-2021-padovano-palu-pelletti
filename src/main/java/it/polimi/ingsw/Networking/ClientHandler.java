@@ -3,18 +3,17 @@ package it.polimi.ingsw.Networking;
 import it.polimi.ingsw.Networking.Message.*;
 import it.polimi.ingsw.Server.Utils.ModelObserver;
 
-import java.util.*;
-
-import java.net.*;
 import java.io.*;
+import java.net.Socket;
+import java.util.Random;
 
-enum Phase { GiveModel, Disconnected, GameOver, TimeOut, ListenClient}
+enum Phase {GiveModel, Disconnected, GameOver, TimeOut, ListenClient}
 
 public class ClientHandler implements Runnable, ModelObserver {
 
-    private Socket clientSocket;
     private final Object outputLock;
     private final Object pendingLock;
+    private Socket clientSocket;
     private int playerNumber;
 
     private Lobby lobby;

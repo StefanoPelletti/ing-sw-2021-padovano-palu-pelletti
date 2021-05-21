@@ -1,31 +1,32 @@
 package it.polimi.ingsw.Client.ModelSimplified;
 
+import it.polimi.ingsw.Client.ModelSimplified.Middles.*;
 import it.polimi.ingsw.Networking.Message.Message;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.*;
-import it.polimi.ingsw.Client.ModelSimplified.Middles.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.MiddlesUpdate.*;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_DevSlot;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.Networking.Message.UpdateMessages.PlayerUpdate.MSG_UPD_WarehouseDepot;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class GameSimplified {
-    private int turn;
-    private int currentPlayer;
-    private int blackCrossPosition;
-
     private final MarketSimplified market;
     private final DevelopmentCardsDeckSimplified devDeck;
     private final FaithTrackSimplified faithTrack;
-    private List<PlayerSimplified> playerSimplifiedList;
-
     private final DevelopmentCardsVendor developmentCardsVendor;
     private final LeaderCardsObject leaderCardsObject;
     private final MarketHelper marketHelper;
     private final ResourceObject resourceObject;
     private final LeaderBoard leaderBoard;
+    private int turn;
+    private int currentPlayer;
+    private int blackCrossPosition;
+    private List<PlayerSimplified> playerSimplifiedList;
 
     public GameSimplified() {
         this.turn = -1;

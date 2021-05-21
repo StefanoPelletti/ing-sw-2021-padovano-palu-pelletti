@@ -12,7 +12,7 @@ public class Market extends ModelObservable {
     private MarketMarble[][] grid;
     private MarketMarble slideMarble;
 
-    private ArrayList<MarketMarble> internalList;
+    private final ArrayList<MarketMarble> internalList;
 
     //4 white, 2 blue, 2 grey, 2 yellow, 2 purple, 1 red
 

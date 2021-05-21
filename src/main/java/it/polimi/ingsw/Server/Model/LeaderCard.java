@@ -31,15 +31,14 @@ public class LeaderCard implements Serializable {
         return specialAbility;
     }
 
-    public void setEnable(boolean enable) {
-// does not need to notify(), the players updates it automatically
-        this.enabled = enable;
-    }
-
     public boolean getEnable() {
         return enabled;
     }
 
+    public void setEnable(boolean enable) {
+// does not need to notify(), the players updates it automatically
+        this.enabled = enable;
+    }
 
     @Override
     public String toString() {

@@ -5,7 +5,8 @@ import it.polimi.ingsw.Networking.Message.MessageType;
 import it.polimi.ingsw.Server.Model.Enumerators.Resource;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MSG_UPD_Strongbox extends Message implements Serializable {
 

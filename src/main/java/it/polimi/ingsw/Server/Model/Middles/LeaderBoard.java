@@ -56,7 +56,6 @@ public class LeaderBoard extends ModelObservable {
     }
 
 
-
     public String toResult(String thisPlayer, boolean solo) {
         return Displayer.leaderboardToResult(this.enabled, this.leaderboard, thisPlayer, solo);
     }
