@@ -1,9 +1,9 @@
 package it.polimi.ingsw.server.controller;
 
 import it.polimi.ingsw.networking.message.*;
-import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.actionTokens.ActionToken;
 import it.polimi.ingsw.server.model.actionTokens.RemoverToken;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.enumerators.Status;
@@ -81,16 +81,22 @@ public class ActionManager {
     }
 
     public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message) {
-        List<LeaderCard> cards = message.getCards();
+        int firstCard = message.getFirstCard();
+        int secondCard = message.getSecondCard();
+        List<LeaderCard> cards = new ArrayList<>();
         LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
         ResourceObject resourceObject = game.getResourceObject();
 
 //MESSAGE VALIDATION
-        if (cards.size() != 2) {
-            gameManager.setErrorObject("Error! Message not well formatted: contains != 2 cards!");
+        if(firstCard<0 || firstCard>3) {
+            gameManager.setErrorObject("Error! First Card number must be between 1 and 4!");
             return false;
         }
-        if (cards.get(0).equals(cards.get(1))) {
+        if(secondCard<0 || secondCard>3) {
+            gameManager.setErrorObject("Error! Second Card number must be between 1 and 4!");
+            return false;
+        }
+        if (firstCard==secondCard) {
             gameManager.setErrorObject("Error! Message not well formatted: card #1 == card #2!");
             return false;
         }
@@ -100,14 +106,9 @@ public class ActionManager {
             gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsObject middle-object was not enabled!");
             return false;
         }
-        //TODO DISCOVER WHY THIS NOT WORKS???
-        /*
-        if(!leaderCardsObject.getCards().contains(cards))
-        {
-            gameManager.setErrorObject("Error! The cards that you choose are not the same in the middle-object!");
-            return false;
-        } */
 
+        cards.add(leaderCardsObject.getCards().get(firstCard));
+        cards.add(leaderCardsObject.getCards().get(secondCard));
         messageHelper.setNotificationMessage(player.getNickname(), message);
         player.associateLeaderCards(cards); //notifies player
 
@@ -541,7 +542,7 @@ public class ActionManager {
             }
         }
 
-        List<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
+        List <LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
         List<Resource> discountedResources = new ArrayList<>();
         if (!specialAb.isEmpty()) {
             for (LeaderCard leaderCard : specialAb) {

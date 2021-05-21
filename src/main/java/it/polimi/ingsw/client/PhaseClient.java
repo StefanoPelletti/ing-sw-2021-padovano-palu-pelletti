@@ -715,11 +715,8 @@ class GamePhase {
                                 }
                             }
 
-                            ArrayList<LeaderCard> list = new ArrayList<>();
-                            list.add(Halo.game.getLeaderCardsObject().getCard(first - 1));
-                            list.add(Halo.game.getLeaderCardsObject().getCard(second - 1));
                             try {
-                                MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(list);
+                                MSG_INIT_CHOOSE_LEADERCARDS msgToSend = new MSG_INIT_CHOOSE_LEADERCARDS(first-1, second-1);
                                 Halo.objectOutputStream.writeObject(msgToSend);
                                 Halo.objectOutputStream.flush();
                             } catch (IllegalArgumentException e) {
@@ -899,11 +896,11 @@ class GamePhase {
                                         case "leadercards":
                                             LeaderCard[] cards = Halo.myPlayerRef.getLeaderCards();
                                             if (cards[0] != null) {
-                                                System.out.println(" Leader Card #1: " + cards[0]);
+                                                System.out.println(" Leader Card #1: \n" + cards[0]);
                                             } else
                                                 System.out.println(" Leader Card #1: none");
                                             if (cards[1] != null) {
-                                                System.out.println(" Leader Card #2: " + cards[1]);
+                                                System.out.println(" Leader Card #2: \n" + cards[1]);
                                             } else
                                                 System.out.println(" Leader Card #2: none");
                                             break;
@@ -921,14 +918,14 @@ class GamePhase {
                                             LeaderCard[] cards = player.getLeaderCards();
                                             if (cards[0] != null) {
                                                 if (cards[0].getEnable())
-                                                    System.out.println(" Leader Card #1: " + cards[0].toString());
+                                                    System.out.println(" Leader Card #1: \n" + cards[0].toString());
                                                 else
                                                     System.out.println(" Leader Card #1: covered");
                                             } else
                                                 System.out.println(" Leader Card #1: none");
                                             if (cards[1] != null) {
                                                 if (cards[1].getEnable())
-                                                    System.out.println(" Leader Card #2: " + cards[1].toString());
+                                                    System.out.println(" Leader Card #2: \n" + cards[1].toString());
                                                 else
                                                     System.out.println(" Leader Card #2: covered");
                                             } else
@@ -962,14 +959,14 @@ class GamePhase {
                                             LeaderCard[] cards = player.getLeaderCards();
                                             if (cards[0] != null) {
                                                 if (cards[0].getEnable())
-                                                    System.out.println(" Leader Card #1: " + cards[0].toString());
+                                                    System.out.println(" Leader Card #1: \n" + cards[0].toString());
                                                 else
                                                     System.out.println(" Leader Card #1: covered");
                                             } else
                                                 System.out.println(" Leader Card #1: none");
                                             if (cards[1] != null) {
                                                 if (cards[1].getEnable())
-                                                    System.out.println(" Leader Card #2: " + cards[1].toString());
+                                                    System.out.println(" Leader Card #2: \n" + cards[1].toString());
                                                 else
                                                     System.out.println(" Leader Card #2: covered");
                                             } else
@@ -1843,12 +1840,8 @@ class LocalPhase {
                         }
                     }
 
-                    List<LeaderCard> cards = Halo.gameSRV.getLeaderCardsObject().getCards();
-                    List<LeaderCard> list = new ArrayList<>();
-                    list.add(cards.get(first - 1));
-                    list.add(cards.get(second - 1));
                     try {
-                        message = new MSG_INIT_CHOOSE_LEADERCARDS(list);
+                        message = new MSG_INIT_CHOOSE_LEADERCARDS(first-1, second-1);
                         Halo.actionManager.onMessage(message);
                     } catch (IllegalArgumentException e) {
                         System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
@@ -1978,11 +1971,11 @@ class LocalPhase {
                                 case "leadercards":
                                     LeaderCard[] cards = Halo.myPlayerRefSRV.getLeaderCards();
                                     if (cards[0] != null) {
-                                        System.out.println(" Leader Card #1: " + cards[0]);
+                                        System.out.println(" Leader Card #1: \n" + cards[0]);
                                     } else
                                         System.out.println(" Leader Card #1: none");
                                     if (cards[1] != null) {
-                                        System.out.println(" Leader Card #2: " + cards[1]);
+                                        System.out.println(" Leader Card #2: \n" + cards[1]);
                                     } else
                                         System.out.println(" Leader Card #2: none");
                                     break;

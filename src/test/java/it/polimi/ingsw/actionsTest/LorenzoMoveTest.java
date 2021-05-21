@@ -8,6 +8,7 @@ import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.enumerators.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -119,7 +120,7 @@ public class LorenzoMoveTest {
             else
                 reset();
         } while (!stop);
-
+        assertNotSame(gm.getStatus(), Status.GAME_OVER);
         assertEquals(9, g.getBlackCrossPosition());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(5, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
@@ -148,6 +149,7 @@ public class LorenzoMoveTest {
                 reset();
         } while (!stop);
 
+        assertTrue(gm.isGameOver());
         assertEquals(24, g.getBlackCrossPosition());
         //one from the BlackCross, one notification, one faithTrack, and the leaderboard
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());

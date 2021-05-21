@@ -66,6 +66,7 @@ public class EndTurnActionTest {
         g.changeStatus(Status.STANDARD_TURN);
         assertTrue(am.endTurn(p, true));
         assertEquals(g.getCurrentPlayerInt(), 2);
+        assertEquals(2, gm.currentPlayer().getPlayerNumber());
         //just the currentPlayer should change
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());

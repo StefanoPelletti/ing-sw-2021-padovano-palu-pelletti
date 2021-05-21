@@ -39,7 +39,6 @@ public class GameManager {
         return game.getCurrentPlayer();
     }
 
-
     public boolean endTurn() {
         setNextPlayer();
 
@@ -81,17 +80,7 @@ public class GameManager {
         return playerNumber;
     }
 
-    public void addIdlePlayer(Integer playerNumber) {
-        this.idlePlayers.add(playerNumber);
-    }
 
-    public void removeIdlePlayer(Integer playerNumber) {
-        this.idlePlayers.remove(playerNumber);
-    }
-
-    public boolean areAllPlayersIdle() {
-        return (lobbyMaxPlayers == idlePlayers.size());
-    }
 
     public Boolean getSoloWinner() {
         return soloWinner;
@@ -103,6 +92,10 @@ public class GameManager {
 
     public Status getStatus() {
         return game.getStatus();
+    }
+
+    public boolean isGameOver() {
+        return (getStatus() == Status.GAME_OVER);
     }
 
     public void setStatus(Status status) {
@@ -129,9 +122,7 @@ public class GameManager {
         return actionManager;
     }
 
-    public void resetErrorObject() {
-        game.getErrorObject().setEnabled(false);
-    }
+
 
     public void setErrorObject(String errorCause) {
         game.getErrorObject().setErrorMessage(errorCause);
@@ -187,6 +178,28 @@ public class GameManager {
         return false;
     }
 
+
+
+    public void addAllObserver(ModelObserver observer) {
+        game.addAllObservers(observer);
+    }
+
+
+    //used in lobby or for disconnection
+    public void addIdlePlayer(Integer playerNumber) {
+        this.idlePlayers.add(playerNumber);
+    }
+    public void resetErrorObject() {
+        game.getErrorObject().setEnabled(false);
+    }
+    public void removeIdlePlayer(Integer playerNumber) {
+        this.idlePlayers.remove(playerNumber);
+    }
+
+    public boolean areAllPlayersIdle() {
+        return (lobbyMaxPlayers == idlePlayers.size());
+    }
+
     public MSG_UPD_Full getFullModel() {
         MSG_UPD_Full result = new MSG_UPD_Full();
 
@@ -224,13 +237,5 @@ public class GameManager {
         }
 
         return result;
-    }
-
-    public void addAllObserver(ModelObserver observer) {
-        game.addAllObservers(observer);
-    }
-
-    public boolean isGameOver() {
-        return (getStatus() == Status.GAME_OVER);
     }
 }
