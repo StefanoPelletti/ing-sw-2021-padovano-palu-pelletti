@@ -1,14 +1,11 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Networking.Message.MSG_ERROR;
-import it.polimi.ingsw.Networking.Message.MSG_NOTIFICATION;
-import it.polimi.ingsw.Networking.Message.Message;
-import it.polimi.ingsw.Networking.Message.MessageType;
-import it.polimi.ingsw.Server.Utils.ModelObserver;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import it.polimi.ingsw.networking.message.MSG_ERROR;
+import it.polimi.ingsw.networking.message.MSG_NOTIFICATION;
+import it.polimi.ingsw.networking.message.Message;
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.utils.ModelObserver;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
