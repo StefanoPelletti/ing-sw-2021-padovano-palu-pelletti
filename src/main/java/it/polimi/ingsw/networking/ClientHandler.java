@@ -5,15 +5,15 @@ import it.polimi.ingsw.server.utils.ModelObserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Random;
 
 enum Phase {GIVE_MODEL, DISCONNECTED, GAME_OVER, TIME_OUT, LISTEN_CLIENT}
 
 public class ClientHandler implements Runnable, ModelObserver {
+    // Random random = new Random();
 
     private final Object outputLock;
     private final Object pendingLock;
-    Random random = new Random();
+
     private Socket clientSocket;
     private int playerNumber;
 
@@ -102,7 +102,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
                 do {
                     //i = random.nextInt(lobbyMaxSize);
-                    i = 0;
+                    i = 0; //delete this when OK
                     found = Lobby.checkLobbies(i);
                 } while (found);
 

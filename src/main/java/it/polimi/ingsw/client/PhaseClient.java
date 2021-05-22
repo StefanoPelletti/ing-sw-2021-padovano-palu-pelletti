@@ -79,6 +79,7 @@ class Halo {
     static ActionManager actionManager;
     static Player myPlayerRefSRV;
     static Game gameSRV;
+
     private Halo() {
     }
 

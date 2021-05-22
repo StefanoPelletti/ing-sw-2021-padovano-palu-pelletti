@@ -26,7 +26,8 @@ public class RemoverToken implements ActionToken {
             case PURPLE:
                 column = 3;
                 break;
-            default: break;
+            default:
+                break;
         }
         return column;
     }
