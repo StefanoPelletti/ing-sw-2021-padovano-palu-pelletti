@@ -18,7 +18,6 @@ public class FaithTrackManager {
         this.faithTrack = game.getFaithTrack();
         this.gameManager = gameManager;
         this.game = game;
-
     }
 
 

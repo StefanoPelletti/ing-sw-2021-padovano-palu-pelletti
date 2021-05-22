@@ -2,7 +2,7 @@ package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_DevDeck;
 import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.DevelopmentCardsDeck;
 
 public class DevelopmentCardsDeckSimplified {
     private final DevelopmentCard[][] cards;
@@ -20,6 +20,6 @@ public class DevelopmentCardsDeckSimplified {
 
     @Override
     public String toString() {
-        return Displayer.developmentCardsDeckToString(this.cards);
+        return DevelopmentCardsDeck.toString(this.cards);
     }
 }

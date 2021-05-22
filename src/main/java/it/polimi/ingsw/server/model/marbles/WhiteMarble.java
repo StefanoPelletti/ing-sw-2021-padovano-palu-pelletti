@@ -20,10 +20,10 @@ public class WhiteMarble implements MarketMarble, Serializable {
 
     @Override
     public String toString() {
-        return A.WHITE + " " + color + A.RESET + " Marble  ";
+        return A.WHITE + "" + color + A.RESET + " Marble  ";
     }
 
     public String toAbbreviation() {
-        return A.WHITE + " " + color.toAbbreviation() + A.RESET;
+        return A.WHITE + "" + color.toAbbreviation() + A.RESET;
     }
 }

@@ -13,6 +13,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     private final Object outputLock;
     private final Object pendingLock;
+    Random random = new Random();
     private Socket clientSocket;
     private int playerNumber;
 
@@ -82,10 +83,9 @@ public class ClientHandler implements Runnable, ModelObserver {
                 this.nickname = inputNickname;
                 int numOfPlayers = msg.getNumOfPlayers();
 
-                Random random = new Random();
                 boolean found = false;
                 int i;
-                int lobbyMaxSize = 1;
+                int lobbyMaxSize = 50;
 
                 if (numOfPlayers < 1 || numOfPlayers > 4) {
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby with a wrong number of player");
@@ -101,7 +101,8 @@ public class ClientHandler implements Runnable, ModelObserver {
                 }
 
                 do {
-                    i = random.nextInt(lobbyMaxSize);
+                    //i = random.nextInt(lobbyMaxSize);
+                    i = 0;
                     found = Lobby.checkLobbies(i);
                 } while (found);
 
@@ -159,14 +160,18 @@ public class ClientHandler implements Runnable, ModelObserver {
                     }
 
                 }
-            } else {
+            }
+//NON OPENING MESSAGE RECEIVED
+            else {
                 this.send(new MSG_ERROR("Huh?"));
                 closeStreams();
                 return;
             }
-        } catch (IOException | InterruptedException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return;
+        } catch (InterruptedException i) {
+            Thread.currentThread().interrupt();
         }
 
 //all players connected, lobby init OR timeout
@@ -299,7 +304,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                 while (this.pendingConnection) this.pendingLock.wait();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 // if the game is over when he wakes up
         if (lobby.isDeleted()) {

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
+import it.polimi.ingsw.server.model.WarehouseDepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.Displayer;
 
 public class WarehouseDepotSimplified {
     private Resource shelf1;
@@ -34,6 +34,6 @@ public class WarehouseDepotSimplified {
 
     @Override
     public String toString() {
-        return Displayer.warehouseDepotToString(this.shelf1, this.shelf2, this.shelf3);
+        return WarehouseDepot.toString(this.shelf1, this.shelf2, this.shelf3);
     }
 }

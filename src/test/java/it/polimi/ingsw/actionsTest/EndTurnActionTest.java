@@ -34,7 +34,7 @@ public class EndTurnActionTest {
 // SOLO mode:
 //     IF status is GAME OVER (silently modified by the actionManager) => notify leaderBoard (1 MSG_UPD_Leaderboard)
 //     OTHERWISE Lorenzo must play. He can modify the DevDeck, its position in Game, (#? Messages) and surely the ActionTokenStack (which does not generate any message)
-//         After the action, the status could be GAME OVER. in THIS case, load the LeaderBoard ( 1 MSG_UPD_LeaderBoard)
+//         After the action, the status could be GAME OVER. in THIS case, load the LeaderboardSimplified ( 1 MSG_UPD_LeaderBoard)
 //             IF status is not GAME OVER, that's it. Continue the game as always.
     @BeforeEach
     public void reset() {
@@ -103,7 +103,7 @@ public class EndTurnActionTest {
         g.setCurrentPlayer(g.getCurrentPlayerInt() + 3);
         c.emptyQueue();
 
-        //returns false because the LeaderBoard message is the last one.
+        //returns false because the LeaderboardSimplified message is the last one.
         assertFalse(am.endTurn(p, true));
 
         //assert Model changes
@@ -126,7 +126,7 @@ public class EndTurnActionTest {
         g2.changeStatus(Status.GAME_OVER);
         gm2.setSoloWinner(true); // <- if this is set to true, the game will end
 
-        //returns false because the LeaderBoard message is the last one.
+        //returns false because the LeaderboardSimplified message is the last one.
         assertFalse(am2.endTurn(p2, true));
 
         //assert Model changes
@@ -149,7 +149,7 @@ public class EndTurnActionTest {
         g2.changeStatus(Status.GAME_OVER);
         gm2.setSoloWinner(false);
 
-        //returns false because the LeaderBoard message is the last one.
+        //returns false because the LeaderboardSimplified message is the last one.
         assertFalse(am2.endTurn(p2, true));
 
         //assert correct messages are generated

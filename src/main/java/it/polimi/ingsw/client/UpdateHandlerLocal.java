@@ -15,12 +15,12 @@ public class UpdateHandlerLocal implements ModelObserver {
             case MSG_UPD_End:
                 if (Halo.gameSRV.isMiddleActive()) {
                     if (Halo.gameSRV.isMarketHelperEnabled()) {
-                        System.out.println(Halo.gameSRV.getMarketHelper().toString());
-                        System.out.println(Halo.gameSRV.getCurrentPlayer().getWarehouseDepot());
+                        System.out.println(Halo.printMarketHelper());
+                        System.out.println(Halo.printMyWarehouseDepot());
                         System.out.println(A.UL + " > Please select an option" + A.RESET);
                         System.out.print(" Choice: ");
                     } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
-                        System.out.println(Halo.gameSRV.getDevelopmentCardsVendor().toString());
+                        System.out.println(Halo.printDevelopmentCardsVendor());
                         System.out.println(A.UL + " > Please select a card number and a slot number" + A.RESET);
                         System.out.print(" Card | Slot: (0 to quit the action)");
                     }

@@ -65,7 +65,7 @@ public class MarketActionTest {
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
-        //in this case the action should: modify the Market, activate the MarketHelper, modify the Player  and return true
+        //in this case the action should: modify the Market, activate the MarketHelperSimplified, modify the Player  and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -98,7 +98,7 @@ public class MarketActionTest {
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
-        //in this case the action should: modify the Market, activate the MarketHelper, NOT modify the Player and return true
+        //in this case the action should: modify the Market, activate the MarketHelperSimplified, NOT modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -129,7 +129,7 @@ public class MarketActionTest {
         Market market = g.getMarket();
         market.setGrid(re, new WhiteMarble());
 
-        //in this case the action should: modify the Market, NOT activate the MarketHelper, modify the Player and return true
+        //in this case the action should: modify the Market, NOT activate the MarketHelperSimplified, modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -157,7 +157,7 @@ public class MarketActionTest {
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
-        //in this case the action should: modify the Market, NOT activate the MarketHelper, NOT modify the Player and return true
+        //in this case the action should: modify the Market, NOT activate the MarketHelperSimplified, NOT modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -185,7 +185,7 @@ public class MarketActionTest {
         Market market = g.getMarket();
         market.setGrid(re, new RedMarble());
 
-        //in this case the action should: modify the Market, NOT activate the MarketHelper, NOT modify the Player and return true
+        //in this case the action should: modify the Market, NOT activate the MarketHelperSimplified, NOT modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -232,7 +232,7 @@ public class MarketActionTest {
 
         c.emptyQueue();
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with exchanged resources, NOT modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with exchanged resources, NOT modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -278,7 +278,7 @@ public class MarketActionTest {
 
         c.emptyQueue();
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with the exchanged resource, modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -326,7 +326,7 @@ public class MarketActionTest {
 
         c.emptyQueue();
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with the exchanged resource, modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         //asserting the model is modified correctly
@@ -412,7 +412,7 @@ public class MarketActionTest {
         p.associateLeaderCards(lc);
         c.emptyQueue();
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with the exchanged resource, modify the Player and return true
         //saving or asserting (in a simplified way) the starting condition
         assertTrue(am.getMarketResources(p, msg));
         assertTrue(g.getMarketHelper().isEnabled());
@@ -473,8 +473,8 @@ public class MarketActionTest {
 //Actions performed on controller: 0 : save in Depot (check)
 //                                 1 : save in ExtraDepot (check)
 //                                 1 : save in ExtraDepot (check)
-//                                -> MarketHelper deactivates (check)
-//                                 0 : save in Depot (gives Error because MarketHelper is not active) (check)
+//                                -> MarketHelperSimplified deactivates (check)
+//                                 0 : save in Depot (gives Error because MarketHelperSimplified is not active) (check)
     @Test
     public void chooseResource2() {
         MSG_ACTION_GET_MARKET_RESOURCES msg;
@@ -507,7 +507,7 @@ public class MarketActionTest {
 
         List<Resource> resources;
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with the exchanged resource, modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(0);
@@ -601,7 +601,7 @@ public class MarketActionTest {
 
         List<Resource> resources;
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with the exchanged resource, modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(1);
@@ -685,7 +685,7 @@ public class MarketActionTest {
 
         List<Resource> resources;
 
-        //in this case the action should: modify the Market (always), activate the MarketHelper with the exchanged resource, modify the Player and return true
+        //in this case the action should: modify the Market (always), activate the MarketHelperSimplified with the exchanged resource, modify the Player and return true
         assertTrue(am.getMarketResources(p, msg));
 
         MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(1);

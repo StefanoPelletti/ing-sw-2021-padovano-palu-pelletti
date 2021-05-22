@@ -2,12 +2,12 @@ package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsObject;
 import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.middles.LeaderCardsPicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderCardsObject {
+public class LeaderCardsPickerSimplified {
     private boolean enabled;
     private ArrayList<LeaderCard> cards;
 
@@ -30,6 +30,6 @@ public class LeaderCardsObject {
 
     @Override
     public String toString() {
-        return Displayer.leaderCardsObjectToString(this.enabled, this.cards);
+        return LeaderCardsPicker.toString(this.enabled, this.cards);
     }
 }

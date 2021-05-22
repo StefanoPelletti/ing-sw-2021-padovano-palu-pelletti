@@ -18,11 +18,11 @@ public class GameSimplified {
     private final MarketSimplified market;
     private final DevelopmentCardsDeckSimplified devDeck;
     private final FaithTrackSimplified faithTrack;
-    private final DevelopmentCardsVendor developmentCardsVendor;
-    private final LeaderCardsObject leaderCardsObject;
-    private final MarketHelper marketHelper;
-    private final ResourceObject resourceObject;
-    private final LeaderBoard leaderBoard;
+    private final DevelopmentCardsVendorSimplified developmentCardsVendorSimplified;
+    private final LeaderCardsPickerSimplified leaderCardsPickerSimplified;
+    private final MarketHelperSimplified marketHelperSimplified;
+    private final ResourceObjectSimplified resourceObjectSimplified;
+    private final LeaderboardSimplified leaderboardSimplified;
     private int turn;
     private int currentPlayer;
     private int blackCrossPosition;
@@ -37,27 +37,27 @@ public class GameSimplified {
         faithTrack = new FaithTrackSimplified(this);
         playerSimplifiedList = new ArrayList<>();
 
-        developmentCardsVendor = new DevelopmentCardsVendor();
-        leaderCardsObject = new LeaderCardsObject();
-        marketHelper = new MarketHelper();
-        resourceObject = new ResourceObject();
-        leaderBoard = new LeaderBoard();
+        developmentCardsVendorSimplified = new DevelopmentCardsVendorSimplified();
+        leaderCardsPickerSimplified = new LeaderCardsPickerSimplified();
+        marketHelperSimplified = new MarketHelperSimplified();
+        resourceObjectSimplified = new ResourceObjectSimplified();
+        leaderboardSimplified = new LeaderboardSimplified();
     }
 
     public boolean isDevelopmentCardsVendorEnabled() {
-        return this.developmentCardsVendor.isEnabled();
+        return this.developmentCardsVendorSimplified.isEnabled();
     }
 
     public boolean isLeaderCardsObjectEnabled() {
-        return this.leaderCardsObject.isEnabled();
+        return this.leaderCardsPickerSimplified.isEnabled();
     }
 
     public boolean isMarketHelperEnabled() {
-        return this.marketHelper.isEnabled();
+        return this.marketHelperSimplified.isEnabled();
     }
 
     public boolean isResourceObjectEnabled() {
-        return this.resourceObject.isEnabled();
+        return this.resourceObjectSimplified.isEnabled();
     }
 
     public void updateGame(MSG_UPD_Game message) {
@@ -83,33 +83,33 @@ public class GameSimplified {
     }
 
     public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) {
-        this.developmentCardsVendor.update(message);
+        this.developmentCardsVendorSimplified.update(message);
     }
 
     public void updateLeaderCardsObject(MSG_UPD_LeaderCardsObject message) {
-        this.leaderCardsObject.update(message);
+        this.leaderCardsPickerSimplified.update(message);
     }
 
     public void updateMarketHelper(MSG_UPD_MarketHelper message) {
-        this.marketHelper.update(message);
+        this.marketHelperSimplified.update(message);
     }
 
     public void updateResourceObject(MSG_UPD_ResourceObject message) {
-        this.resourceObject.update(message);
+        this.resourceObjectSimplified.update(message);
     }
 
     public void updateLeaderBoard(MSG_UPD_LeaderBoard message) {
-        this.leaderBoard.update(message);
+        this.leaderboardSimplified.update(message);
     }
 
     // absolutely needs testing
     public void updateAll(MSG_UPD_Full message) {
         this.updateGame(message.getGame());
 
-        this.developmentCardsVendor.update(message.getDevCardsVendor());
-        this.leaderCardsObject.update(message.getLeaderCardsObject());
-        this.marketHelper.update(message.getMarketHelper());
-        this.resourceObject.update(message.getResourceObject());
+        this.developmentCardsVendorSimplified.update(message.getDevCardsVendor());
+        this.leaderCardsPickerSimplified.update(message.getLeaderCardsObject());
+        this.marketHelperSimplified.update(message.getMarketHelper());
+        this.resourceObjectSimplified.update(message.getResourceObject());
 
         this.market.update(message.getMarket());
         this.devDeck.update(message.getDevDeck());
@@ -170,20 +170,20 @@ public class GameSimplified {
     }
 
 
-    public DevelopmentCardsVendor getDevelopmentCardsVendor() {
-        return this.developmentCardsVendor;
+    public DevelopmentCardsVendorSimplified getDevelopmentCardsVendor() {
+        return this.developmentCardsVendorSimplified;
     }
 
-    public LeaderCardsObject getLeaderCardsObject() {
-        return this.leaderCardsObject;
+    public LeaderCardsPickerSimplified getLeaderCardsObject() {
+        return this.leaderCardsPickerSimplified;
     }
 
-    public MarketHelper getMarketHelper() {
-        return this.marketHelper;
+    public MarketHelperSimplified getMarketHelper() {
+        return this.marketHelperSimplified;
     }
 
-    public ResourceObject getResourceObject() {
-        return this.resourceObject;
+    public ResourceObjectSimplified getResourceObject() {
+        return this.resourceObjectSimplified;
     }
 
     public int getBlackCrossPosition() {
@@ -206,8 +206,8 @@ public class GameSimplified {
         return playerSimplifiedList;
     }
 
-    public LeaderBoard getLeaderBoard() {
-        return leaderBoard;
+    public LeaderboardSimplified getLeaderBoard() {
+        return leaderboardSimplified;
     }
 
     public List<PlayerSimplified> getPlayerList() {
@@ -263,6 +263,6 @@ public class GameSimplified {
     }
 
     public boolean isLeaderBoardEnabled() {
-        return this.leaderBoard.isEnabled();
+        return this.leaderboardSimplified.isEnabled();
     }
 }

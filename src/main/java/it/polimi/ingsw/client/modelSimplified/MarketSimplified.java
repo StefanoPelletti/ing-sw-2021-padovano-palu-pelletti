@@ -2,8 +2,8 @@ package it.polimi.ingsw.client.modelSimplified;
 
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Market;
+import it.polimi.ingsw.server.model.Market;
 import it.polimi.ingsw.server.model.marbles.MarketMarble;
-import it.polimi.ingsw.server.utils.Displayer;
 
 public class MarketSimplified {
     private final MarketMarble[][] grid;
@@ -31,6 +31,6 @@ public class MarketSimplified {
 
     @Override
     public String toString() {
-        return Displayer.marketToString(this.grid, this.slideMarble);
+        return Market.toString(this.grid, this.slideMarble);
     }
 }

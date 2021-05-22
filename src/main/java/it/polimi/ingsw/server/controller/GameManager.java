@@ -6,7 +6,7 @@ import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Status;
-import it.polimi.ingsw.server.model.middles.LeaderBoard;
+import it.polimi.ingsw.server.model.middles.Leaderboard;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 import it.polimi.ingsw.server.utils.ModelObserver;
 
@@ -132,7 +132,7 @@ public class GameManager {
     //       Lorenzo could be the loser (points will be 1)
     //       Lorenzo could be the winner (points will be 2)
     public boolean endgame() {
-        LeaderBoard leaderBoard = game.getLeaderBoard();
+        Leaderboard leaderBoard = game.getLeaderBoard();
         for (Player p : game.getPlayerList()) {
             int points = p.getVp();
 

@@ -25,9 +25,9 @@ public class Game extends ModelObservable {
     private final MessageHelper messageHelper;
     private final DevelopmentCardsVendor developmentCardsVendor;
     private final ErrorObject errorObject;
-    private final LeaderCardsObject leaderCardsObject;
+    private final LeaderCardsPicker leaderCardsPicker;
     private final ResourceObject resourceObject;
-    private final LeaderBoard leaderBoard;
+    private final Leaderboard leaderBoard;
     private Status status;
     private Player firstPlayer;
     private int turn;
@@ -48,9 +48,9 @@ public class Game extends ModelObservable {
         messageHelper = new MessageHelper();
         developmentCardsVendor = new DevelopmentCardsVendor();
         errorObject = new ErrorObject();
-        leaderCardsObject = new LeaderCardsObject();
+        leaderCardsPicker = new LeaderCardsPicker();
         resourceObject = new ResourceObject();
-        leaderBoard = new LeaderBoard();
+        leaderBoard = new Leaderboard();
         currentPlayer = 1;
     }
 
@@ -127,15 +127,15 @@ public class Game extends ModelObservable {
         return this.actionTokenStack;
     }
 
-    public LeaderCardsObject getLeaderCardsObject() {
-        return this.leaderCardsObject;
+    public LeaderCardsPicker getLeaderCardsObject() {
+        return this.leaderCardsPicker;
     }
 
     public ResourceObject getResourceObject() {
         return this.resourceObject;
     }
 
-    public LeaderBoard getLeaderBoard() {
+    public Leaderboard getLeaderBoard() {
         return this.leaderBoard;
     }
 
@@ -191,7 +191,7 @@ public class Game extends ModelObservable {
         marketHelper.addObserver(observer);
         messageHelper.addObserver(observer);
         resourceObject.addObserver(observer);
-        leaderCardsObject.addObserver(observer);
+        leaderCardsPicker.addObserver(observer);
         leaderBoard.addObserver(observer);
         for (LeaderCard l : leaderCardsDeck.getCards()) {
             if (l.getSpecialAbility().isExtraDepot()) {
@@ -245,7 +245,7 @@ public class Game extends ModelObservable {
     }
 
     public void setLeaderCardsObjectCards(List<LeaderCard> list) {
-        leaderCardsObject.setCards(list);
+        leaderCardsPicker.setCards(list);
     }
 
     public void setResourceObjectNumOfResources(int value) {
@@ -253,7 +253,7 @@ public class Game extends ModelObservable {
     }
 
     public boolean isMiddleActive() {
-        return (this.leaderCardsObject.isEnabled() ||
+        return (this.leaderCardsPicker.isEnabled() ||
                 this.resourceObject.isEnabled() ||
                 this.marketHelper.isEnabled() ||
                 this.developmentCardsVendor.isEnabled());
@@ -264,11 +264,11 @@ public class Game extends ModelObservable {
     }
 
     public boolean isLeaderCardsObjectEnabled() {
-        return this.leaderCardsObject.isEnabled();
+        return this.leaderCardsPicker.isEnabled();
     }
 
     public void setLeaderCardsObjectEnabled(boolean value) {
-        leaderCardsObject.setEnabled(value);
+        leaderCardsPicker.setEnabled(value);
     }
 
     public boolean isResourceObjectEnabled() {

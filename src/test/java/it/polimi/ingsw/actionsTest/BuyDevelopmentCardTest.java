@@ -48,7 +48,7 @@ public class BuyDevelopmentCardTest {
     }
 
     @Test
-    //ensures that DevelopmentCardsVendor is correctly set to disabled at the beginning.
+    //ensures that DevelopmentCardsVendorSimplified is correctly set to disabled at the beginning.
     public void buyDevelopmentCardTest0() {
         DevelopmentCardsVendor dcv = g.getDevelopmentCardsVendor();
 

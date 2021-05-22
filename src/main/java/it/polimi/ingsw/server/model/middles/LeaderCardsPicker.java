@@ -2,19 +2,34 @@ package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsObject;
 import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderCardsObject extends ModelObservable {
+public class LeaderCardsPicker extends ModelObservable {
     private boolean enabled;
-    private ArrayList<LeaderCard> cards;
+    private List<LeaderCard> cards;
 
-    public LeaderCardsObject() {
+    public LeaderCardsPicker() {
         this.enabled = false;
         this.cards = null;
+    }
+
+    public static String toString(boolean enabled, List<LeaderCard> cards) {
+        StringBuilder result = new StringBuilder();
+        if (!enabled) return result.append(A.RED + " LEADERCARD PICKER IS NOT ENABLED!" + A.RESET).toString();
+
+        result.append(A.CYAN + " LEADERCARD PICKER IS HERE TO HELP! " + A.RESET).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(" These are the cards: ").append("\n");
+        for (int i = 0; i < cards.size(); i++) {
+            result.append("\n\n").append(" Card number #").append(i + 1).append("\n");
+            result.append(cards.get(i).toString());
+        }
+
+        return result.toString();
     }
 
     public boolean isEnabled() {
@@ -39,7 +54,7 @@ public class LeaderCardsObject extends ModelObservable {
 
     @Override
     public String toString() {
-        return Displayer.leaderCardsObjectToString(this.enabled, this.cards);
+        return LeaderCardsPicker.toString(this.enabled, this.cards);
     }
 
     private void notifyObservers() {

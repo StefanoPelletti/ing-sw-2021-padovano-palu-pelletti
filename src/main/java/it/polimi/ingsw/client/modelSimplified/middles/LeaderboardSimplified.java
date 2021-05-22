@@ -1,12 +1,12 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderBoard;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.middles.Leaderboard;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class LeaderBoard {
+public class LeaderboardSimplified {
     private boolean enabled;
     private Map<String, Integer> board;
 
@@ -23,6 +23,6 @@ public class LeaderBoard {
     }
 
     public String toResult(String thisPlayer, boolean solo) {
-        return Displayer.leaderboardToResult(this.enabled, this.board, thisPlayer, solo);
+        return Leaderboard.toResult(this.enabled, this.board, thisPlayer, solo);
     }
 }

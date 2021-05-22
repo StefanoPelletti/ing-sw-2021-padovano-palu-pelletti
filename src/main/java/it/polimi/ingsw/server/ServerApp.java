@@ -6,32 +6,25 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
 
 public class ServerApp {
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) {
         final int port = 43210;
-        ServerSocket serverSocket;
-
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            System.out.println("SRV ERROR: " + e.getMessage());
-            return;
-        }
-
-        System.out.println("Server online, listening on: " + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort());
-
+        long openedConnections = 0;
         Socket socket;
 
-        while (true) {
-            try {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server online, listening on: " + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort());
+            while (openedConnections < 1000000L) {
                 socket = serverSocket.accept();
                 new Thread(new ClientHandler(socket)).start();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+
+                openedConnections++;
+                if (openedConnections == 1000000L)
+                    openedConnections = 0;
             }
+        } catch (IOException e) {
+            System.out.println("[SRV] ERROR: " + e.getMessage());
         }
     }
 }

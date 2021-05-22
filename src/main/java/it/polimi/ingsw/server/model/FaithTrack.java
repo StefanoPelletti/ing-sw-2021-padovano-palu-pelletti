@@ -1,8 +1,12 @@
 package it.polimi.ingsw.server.model;
 
+import it.polimi.ingsw.client.modelSimplified.GameSimplified;
+import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_FaithTrack;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
+
+import java.util.List;
 
 public class FaithTrack extends ModelObservable {
     private final Game game;
@@ -12,7 +16,6 @@ public class FaithTrack extends ModelObservable {
         this.game = game;
         zones = new boolean[3];
     }
-
 
     //auxiliary method: -1 is error,
 //3 would activate the last zone (zone 3)
@@ -73,6 +76,53 @@ public class FaithTrack extends ModelObservable {
         return result;
     }
 
+    public String toString(boolean solo) {
+        return FaithTrack.toString(solo, this.zones, false, this.game, null);
+    }
+
+    public static String toString(boolean solo, boolean[] zones, boolean simplified, Game game, GameSimplified gameSimplified) {
+        StringBuilder result = new StringBuilder();
+        List<PlayerSimplified> playerListSimplified;
+        List<Player> playerList;
+
+        result.append("                  FAITH TRACK: ").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        if (simplified) {
+            playerListSimplified = gameSimplified.getPlayerList();
+            for (PlayerSimplified player : playerListSimplified) {
+                result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
+            }
+        } else {
+            playerList = game.getPlayerList();
+            for (Player player : playerList) {
+                result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
+            }
+        }
+
+        if (solo) {
+            if (simplified)
+                result.append("\n").append(" Lorenzo is at position: ").append(gameSimplified.getBlackCrossPosition()).append("\n");
+            else
+                result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
+        }
+
+        result.append("\n");
+        if (zones[2])
+            result.append("   Third and last zone has been activated!");
+        else {
+            if (zones[1])
+                result.append("   Second zone has been activated!");
+            else {
+                if (zones[0])
+                    result.append("   The First zone has been activated!");
+                else
+                    result.append("   No zone has been activated yet!");
+            }
+        }
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        return result.toString();
+    }
+
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
@@ -81,7 +131,5 @@ public class FaithTrack extends ModelObservable {
         return new MSG_UPD_FaithTrack(zones);
     }
 
-    public String toString(boolean solo) {
-        return Displayer.faithTrackToString(solo, this.zones, false, this.game, null);
-    }
+
 }

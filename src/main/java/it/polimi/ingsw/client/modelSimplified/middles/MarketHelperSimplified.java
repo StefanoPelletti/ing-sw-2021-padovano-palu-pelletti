@@ -2,12 +2,12 @@ package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_MarketHelper;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.middles.MarketHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarketHelper {
+public class MarketHelperSimplified {
     private boolean enabled;
     private ArrayList<Resource> resources;
     private int currentResource;
@@ -60,6 +60,6 @@ public class MarketHelper {
 
     @Override
     public String toString() {
-        return Displayer.marketHelperToString(this.enabled, this.resources, this.currentResource, this.choices, this.extraResourceChoices);
+        return MarketHelper.toString(this.enabled, this.resources, this.currentResource, this.choices, this.extraResourceChoices);
     }
 }

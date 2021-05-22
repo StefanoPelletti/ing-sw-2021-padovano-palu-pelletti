@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.Arrays;
@@ -38,6 +38,16 @@ public class WarehouseDepot extends ModelObservable {
                 && (Arrays.stream(shelf3).filter(r -> r != Resource.NONE).distinct().count() <= 1);
     }
 
+    public static String toString(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
+        StringBuilder result = new StringBuilder();
+        result.append("               WAREHOUSE DEPOT:").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "  Shelf 1:  " + A.RESET).append(shelf1).append("\n");
+        result.append(A.CYAN + "  Shelf 2:  " + A.RESET).append(shelf2[0]).append(" - ").append(shelf2[1]).append("\n");
+        result.append(A.CYAN + "  Shelf 3:  " + A.RESET).append(shelf3[0]).append(" - ").append(shelf3[1]).append(" - ").append(shelf3[2]).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        return result.toString();
+    }
 
     //sets the given configuration if valid
     public boolean setConfig(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
@@ -194,7 +204,6 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
-
     public WarehouseDepot getSwapPreview(int r1, int r2) {
         WarehouseDepot result = new WarehouseDepot();
         result.setConfig(this.shelf1, new Resource[]{this.shelf2[0], this.shelf2[1]}, new Resource[]{this.shelf3[0], this.shelf3[1], this.shelf3[2]});
@@ -300,10 +309,9 @@ public class WarehouseDepot extends ModelObservable {
         return true;
     }
 
-
     @Override
     public String toString() {
-        return Displayer.warehouseDepotToString(this.shelf1, this.shelf2, this.shelf3);
+        return WarehouseDepot.toString(this.shelf1, this.shelf2, this.shelf3);
     }
 
     @Override

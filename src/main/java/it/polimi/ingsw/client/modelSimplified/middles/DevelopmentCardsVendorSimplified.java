@@ -2,12 +2,12 @@ package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_DevCardsVendor;
 import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.middles.DevelopmentCardsVendor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DevelopmentCardsVendor {
+public class DevelopmentCardsVendorSimplified {
     private boolean enabled;
 
     private Map<DevelopmentCard, boolean[]> cards;
@@ -32,6 +32,6 @@ public class DevelopmentCardsVendor {
 
     @Override
     public String toString() {
-        return Displayer.developmentCardsVendorToString(this.cards);
+        return DevelopmentCardsVendor.toString(this.enabled, this.cards);
     }
 }

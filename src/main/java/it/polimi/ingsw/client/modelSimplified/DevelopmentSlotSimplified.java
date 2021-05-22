@@ -2,7 +2,7 @@ package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_DevSlot;
 import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.DevelopmentSlot;
 
 public class DevelopmentSlotSimplified {
     private DevelopmentCard[][] cards;
@@ -22,6 +22,6 @@ public class DevelopmentSlotSimplified {
 
     @Override
     public String toString() {
-        return Displayer.developmentSlotToString(this.cards);
+        return DevelopmentSlot.toString(this.cards);
     }
 }

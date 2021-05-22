@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.server.model.marbles.*;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.ArrayList;
@@ -41,6 +41,18 @@ public class Market extends ModelObservable {
         internalList.add(new RedMarble());
 
         shuffle();
+    }
+
+    public static String toString(MarketMarble[][] grid, MarketMarble slideMarble) {
+        StringBuilder result = new StringBuilder();
+        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append("                   MARKET!                ").append("\n");
+        result.append("      Marble on the Slide: ").append(slideMarble).append("\n").append("\n");
+        result.append("             [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation()).append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation()).append(" ]").append("\n");
+        result.append("             [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation()).append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation()).append(" ]").append("\n");
+        result.append("             [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation()).append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation()).append(" ]").append("\n");
+        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        return result.toString();
     }
 
     public void shuffle() {
@@ -121,7 +133,7 @@ public class Market extends ModelObservable {
 
     @Override
     public String toString() {
-        return Displayer.marketToString(this.grid, this.slideMarble);
+        return Market.toString(this.grid, this.slideMarble);
     }
 
     private void notifyObservers() {

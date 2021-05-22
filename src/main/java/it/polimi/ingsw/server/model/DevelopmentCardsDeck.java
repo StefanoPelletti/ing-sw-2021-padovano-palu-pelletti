@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_DevDeck;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.*;
@@ -307,6 +307,27 @@ public class DevelopmentCardsDeck extends ModelObservable {
         shuffle();
     }
 
+    public static String toString(DevelopmentCard[][] cards) {
+        StringBuilder result = new StringBuilder(" DEVELOPMENT DECK, ALL THE VISIBLE CARDS: ");
+
+        for (int i = 0; i < 3; i++) {
+            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
+            result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
+            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+            result.append("\n").append(" Row ").append(i);
+            for (int j = 0; j < 4; j++) {
+                result.append("\n").append("  Column ").append(j);
+                if (cards[i][j] == null)
+                    result.append("\n").append(" X=====X Empty! X=====X");
+                else
+                    result.append("\n").append(cards[i][j].toString());
+            }
+        }
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
+        result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        return result.toString();
+    }
 
     //DO NOT CALL AFTER A REMOVE!
     public void shuffle() {
@@ -407,7 +428,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     @Override
     public String toString() {
-        return Displayer.developmentCardsDeckToString(getVisible());
+        return DevelopmentCardsDeck.toString(getVisible());
     }
 
     private void notifyObservers() {

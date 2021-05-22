@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.HashMap;
@@ -14,6 +14,22 @@ public class Strongbox extends ModelObservable {
 
     public Strongbox() {
         this.resources = new HashMap<>();
+    }
+
+    public static String toString(Map<Resource, Integer> resources) {
+        StringBuilder result = new StringBuilder();
+        result.append("      STRONGBOX").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        if (resources.isEmpty()) {
+            result.append(" The Strongbox is empty. ").append("\n");
+        } else {
+            for (Resource r : resources.keySet()) {
+                result.append(resources.get(r)).append(" of ").append(r.toString());
+                result.append("\n");
+            }
+        }
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        return result.toString();
     }
 
     public boolean addResource(Resource resource, int quantity) {
@@ -65,7 +81,7 @@ public class Strongbox extends ModelObservable {
 
     @Override
     public String toString() {
-        return Displayer.strongboxToString(this.resources);
+        return Strongbox.toString(this.resources);
     }
 
     private void notifyObservers() {

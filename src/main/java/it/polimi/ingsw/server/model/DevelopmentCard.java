@@ -65,7 +65,6 @@ public class DevelopmentCard implements Serializable {
                 this.cost.equals(o.cost) &&
                 this.vp == o.vp &&
                 this.power.equals(o.power));
-
     }
 
     @Override

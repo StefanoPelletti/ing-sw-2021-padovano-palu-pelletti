@@ -25,7 +25,8 @@ public class CountDownThread implements Runnable {
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("[CountDown " + Thread.currentThread().getName() + "] : thread interrupted!");
+            Thread.currentThread().interrupt();
         }
     }
 }

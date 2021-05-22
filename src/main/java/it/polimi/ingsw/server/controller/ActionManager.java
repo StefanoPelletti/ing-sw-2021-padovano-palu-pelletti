@@ -84,7 +84,7 @@ public class ActionManager {
         int firstCard = message.getFirstCard();
         int secondCard = message.getSecondCard();
         List<LeaderCard> cards = new ArrayList<>();
-        LeaderCardsObject leaderCardsObject = game.getLeaderCardsObject();
+        LeaderCardsPicker leaderCardsPicker = game.getLeaderCardsObject();
         ResourceObject resourceObject = game.getResourceObject();
 
 //MESSAGE VALIDATION    //impossible to test
@@ -101,19 +101,19 @@ public class ActionManager {
             return false;
         }
 //VALIDATION
-        if (!leaderCardsObject.isEnabled()) //how the h did he get in here?
+        if (!leaderCardsPicker.isEnabled()) //how the h did he get in here?
         {
-            gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsObject middle-object was not enabled!");
+            gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsPicker middle-object was not enabled!");
             return false;
         }
 
-        cards.add(leaderCardsObject.getCards().get(firstCard));
-        cards.add(leaderCardsObject.getCards().get(secondCard));
+        cards.add(leaderCardsPicker.getCards().get(firstCard));
+        cards.add(leaderCardsPicker.getCards().get(secondCard));
         messageHelper.setNotificationMessage(player.getNickname(), message);
         player.associateLeaderCards(cards); //notifies player
 
         if (gameManager.getSolo()) {
-            leaderCardsObject.setEnabled(false);
+            leaderCardsPicker.setEnabled(false);
             game.changeStatus(Status.STANDARD_TURN);
         } else //if MULTIPLAYER
         {
@@ -123,7 +123,7 @@ public class ActionManager {
                 endTurn(player, false); //if STATUS is DISTRIBUTING CARDS, advance.
             } else //if status == Status.STANDARD_TURN (can't be INIT_2), maybe the player was disconnected and has to choose the resource.
             {
-                leaderCardsObject.setEnabled(false);
+                leaderCardsPicker.setEnabled(false);
                 if (player.isDisconnectedBeforeResource()) {
                     if (player.getPlayerNumber() == 1) {
                     } else  //he has to choose even the resources, without the game going forward
@@ -150,7 +150,7 @@ public class ActionManager {
 //VALIDATION
         if (!resourceObject.isEnabled()) //how the h did he get in here?
         {
-            gameManager.setErrorObject("Error! Method chooseResource was somehow invoked while ResourceObject middle-object was not enabled!");
+            gameManager.setErrorObject("Error! Method chooseResource was somehow invoked while ResourceObjectSimplified middle-object was not enabled!");
             return false;
         }
 

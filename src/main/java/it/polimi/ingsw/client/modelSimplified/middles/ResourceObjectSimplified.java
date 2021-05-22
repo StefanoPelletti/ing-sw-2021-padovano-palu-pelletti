@@ -1,9 +1,9 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourceObject;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.middles.ResourceObject;
 
-public class ResourceObject {
+public class ResourceObjectSimplified {
     private boolean enabled;
     private int numOfResources;
 
@@ -25,6 +25,6 @@ public class ResourceObject {
 
     @Override
     public String toString() {
-        return Displayer.resourceObjectToString(this.enabled, this.numOfResources);
+        return ResourceObject.toString(this.enabled, this.numOfResources);
     }
 }

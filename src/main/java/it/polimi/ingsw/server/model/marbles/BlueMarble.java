@@ -20,7 +20,7 @@ public class BlueMarble implements MarketMarble, Serializable {
 
     @Override
     public String toString() {
-        return " " + A.BLUE + color + A.RESET + " Marble  ";
+        return "" + A.BLUE + color + A.RESET + " Marble  ";
     }
 
     public String toAbbreviation() {

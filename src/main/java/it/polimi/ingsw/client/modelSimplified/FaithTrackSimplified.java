@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_FaithTrack;
-import it.polimi.ingsw.server.utils.Displayer;
+import it.polimi.ingsw.server.model.FaithTrack;
 
 public class FaithTrackSimplified {
     private final boolean[] zones;
@@ -20,6 +20,6 @@ public class FaithTrackSimplified {
 
 
     public String toString(boolean solo) {
-        return Displayer.faithTrackToString(solo, this.zones, true, null, this.game);
+        return FaithTrack.toString(solo, this.zones, true, null, this.game);
     }
 }
