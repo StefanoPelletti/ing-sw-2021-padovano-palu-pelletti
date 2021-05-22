@@ -358,35 +358,9 @@ class Halo {
                 System.out.println(A.RED + " > You already did a main move" + A.RESET);
                 return false;
             }
-
-            LeaderCard l1 = getMyLeaderCard(0);
-            LeaderCard l2 = getMyLeaderCard(1);
-
 //check action 1 and 2
-            if (number == 1 || number == 2) {
-                if (l1 == null && l2 == null) {
-                    System.out.println(A.RED + " > You can't, because the cards are absent " + A.RESET);
-                    return false;
-                }
-                if (l1 != null) {
-                    if (l2 != null) {
-                        if (l1.getEnable() && l2.getEnable()) {
-                            System.out.println(A.RED + " > You can't, because the cards are already activated " + A.RESET);
-                            return false;
-                        }
-                    } else {
-                        if (l1.getEnable()) {
-                            System.out.println(A.RED + " > You can't, because the first card is already enabled and the second one is absent " + A.RESET);
-                            return false;
-                        }
-                    }
-                } else {
-                    if (l2.getEnable()) {
-                        System.out.println(A.RED + " > You can't, the first card is absent and the second one is already enabled " + A.RESET);
-                        return false;
-                    }
-                }
-            }
+            if (number == 1 || number == 2)
+                return checkLeaderCards();
 //check activate production
             if (number == 3) {
                 //for giacomo (?)
