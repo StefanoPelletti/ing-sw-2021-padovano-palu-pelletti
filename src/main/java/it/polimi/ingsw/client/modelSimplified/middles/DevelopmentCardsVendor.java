@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client.modelSimplified.Middles;
+package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_DevCardsVendor;
 import it.polimi.ingsw.server.model.DevelopmentCard;

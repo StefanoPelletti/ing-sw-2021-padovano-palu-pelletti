@@ -78,7 +78,13 @@ public abstract class Displayer {
         result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
 
         if (solo)
-            result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
+        {
+            if(simplified)
+                result.append("\n").append(" Lorenzo is at position: ").append(gameSimplified.getBlackCrossPosition()).append("\n");
+            else
+                result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
+        }
+
         result.append("\n");
         if (zones[2])
             result.append("   Third and last zone has been activated!");

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.modelSimplified;
 
-import it.polimi.ingsw.client.modelSimplified.Middles.*;
+import it.polimi.ingsw.client.modelSimplified.middles.*;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.updateMessages.*;
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.*;
