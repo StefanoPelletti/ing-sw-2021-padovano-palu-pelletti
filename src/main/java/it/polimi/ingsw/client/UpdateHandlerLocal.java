@@ -1,7 +1,9 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.networking.message.MSG_ERROR;
 import it.polimi.ingsw.networking.message.MSG_NOTIFICATION;
 import it.polimi.ingsw.networking.message.Message;
+import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Game;
 import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObserver;
 
@@ -26,6 +28,7 @@ public class UpdateHandlerLocal implements ModelObserver {
                     }
                 } else {
                     System.out.println(A.GREEN + " <> Still your turn!" + A.RESET);
+                    if(Halo.triedAction) Halo.action = true;
                 }
                 break;
 //final update
@@ -40,6 +43,7 @@ public class UpdateHandlerLocal implements ModelObserver {
                 break;
             case MSG_ERROR:
                 System.out.println(A.RED + " <> You got an error: " + A.RESET);
+                System.out.println(A.RED +((MSG_ERROR) message).getErrorMessage()+A.RESET);
                 break;
             default:
                 //System.out.println("DEBUG handler : received : "+message.getMessageType());

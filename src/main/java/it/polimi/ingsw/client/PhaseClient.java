@@ -425,9 +425,15 @@ class Halo {
                 System.out.println(A.RED + " > Sorry, the player number is not a number." + A.RESET);
                 return false;
             }
-        }
-        if (allowedKey.stream().anyMatch(s -> s.equalsIgnoreCase(textList.get(2))))
+        }else {
+            if(Halo.game.getPlayerList().stream().noneMatch(p-> p.getNickname().equals(textList.get(1)))){
+                System.out.println(A.RED + " > No player with that nickname" + A.RESET);
+                return false;
+            }
+            if (allowedKey.stream().anyMatch(s -> s.equalsIgnoreCase(textList.get(2))))
+                return true;
             System.out.println(A.RED + " > Error! You can't show this. I don't even know what 'this' is!" + A.RESET);
+        }
         return false;
     }
 
@@ -771,7 +777,7 @@ class Halo {
             }
         }
         try {
-            return new MSG_ACTION_GET_MARKET_RESOURCES(column, num);
+            return new MSG_ACTION_GET_MARKET_RESOURCES(column, num - 1);
         } catch (IllegalArgumentException e) {
             System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
@@ -2016,6 +2022,8 @@ class LocalPhase {
                                                 System.out.println("You must do a main action before ending the turn");
                                                 break actionLoop;
                                             }*/
+                                            Halo.action = false;
+                                            Halo.triedAction = false;
                                             message = new MSG_ACTION_ENDTURN();
                                             Halo.actionManager.onMessage(message);
                                             break actionLoop;
