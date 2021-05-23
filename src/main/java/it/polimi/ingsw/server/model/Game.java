@@ -164,7 +164,6 @@ public class Game extends ModelObservable {
             Message m = new MSG_NOTIFICATION("LAST TURN!");
             notifyObservers(m);
         }
-        System.out.println(" STATUS MODIFIED " + status);
         this.status = status;
     }
 
