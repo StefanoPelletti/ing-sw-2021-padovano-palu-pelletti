@@ -1,26 +1,26 @@
 package it.polimi.ingsw.server.model.middles;
 
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourceObject;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourcePicker;
 import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import static it.polimi.ingsw.server.model.enumerators.Resource.*;
 
 
-public class ResourceObject extends ModelObservable {
+public class ResourcePicker extends ModelObservable {
     private boolean enabled;
     private int numOfResources;
 
-    public ResourceObject() {
+    public ResourcePicker() {
         this.enabled = false;
         this.numOfResources = 0;
     }
 
     public static String toString(boolean enabled, int numOfResources) {
         StringBuilder result = new StringBuilder();
-        if (!enabled) return result.append(A.RED + " RESOURCE OBJECT IS NOT ENABLED! " + A.RESET).toString();
+        if (!enabled) return result.append(A.RED + " RESOURCE PICKER IS NOT ENABLED! " + A.RESET).toString();
 
-        result.append(A.CYAN + " RESOURCE OBJECT IS HERE TO HELP! " + A.RESET).append("\n");
+        result.append(A.CYAN + " RESOURCE PICKER IS HERE TO HELP! " + A.RESET).append("\n");
         result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
 
         result.append("  Number of resource to get: ").append(numOfResources).append("\n");
@@ -61,15 +61,15 @@ public class ResourceObject extends ModelObservable {
 
     @Override
     public String toString() {
-        return ResourceObject.toString(this.enabled, this.numOfResources);
+        return ResourcePicker.toString(this.enabled, this.numOfResources);
     }
 
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_ResourceObject generateMessage() {
-        return new MSG_UPD_ResourceObject(
+    public MSG_UPD_ResourcePicker generateMessage() {
+        return new MSG_UPD_ResourcePicker(
                 this.enabled,
                 this.numOfResources
         );

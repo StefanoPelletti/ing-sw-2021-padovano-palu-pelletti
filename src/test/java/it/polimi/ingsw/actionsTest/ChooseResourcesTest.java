@@ -58,8 +58,8 @@ public class ChooseResourcesTest {
         MSG_INIT_CHOOSE_RESOURCE message = new MSG_INIT_CHOOSE_RESOURCE(Resource.STONE);
         g.setCurrentPlayer(2);
         p = g.getCurrentPlayer();
-        g.setResourceObjectEnabled(true);
-        g.setResourceObjectNumOfResources(p.getStartingResources());
+        g.setResourcePickerEnabled(true);
+        g.setResourcePickerNumOfResources(p.getStartingResources());
         g.changeStatus(Status.STANDARD_TURN);
         c.emptyQueue();
 
@@ -69,11 +69,11 @@ public class ChooseResourcesTest {
         assertEquals(1, (int) depot.getResources().get(Resource.STONE));
         assertSame(depot.getShelf1(), Resource.STONE);
         assertEquals(0, p.getStartingResources());
-        assertFalse(g.isResourceObjectEnabled());
+        assertFalse(g.isResourcePickerEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourceObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourcePicker).count());
         assertEquals(3, c.messages.size());
     }
 
@@ -82,8 +82,8 @@ public class ChooseResourcesTest {
         MSG_INIT_CHOOSE_RESOURCE message = new MSG_INIT_CHOOSE_RESOURCE(Resource.STONE);
         g.setCurrentPlayer(4);
         p = g.getCurrentPlayer();
-        g.setResourceObjectEnabled(true);
-        g.setResourceObjectNumOfResources(p.getStartingResources());
+        g.setResourcePickerEnabled(true);
+        g.setResourcePickerNumOfResources(p.getStartingResources());
         g.changeStatus(Status.STANDARD_TURN);
         c.emptyQueue();
 
@@ -93,13 +93,13 @@ public class ChooseResourcesTest {
         assertEquals(1, (int) depot.getResources().get(Resource.STONE));
         assertSame(depot.getShelf2()[0], Resource.STONE);
 
-        assertTrue(g.isResourceObjectEnabled());
-        assertEquals(1, g.getResourceObject().getNumOfResources());
+        assertTrue(g.isResourcePickerEnabled());
+        assertEquals(1, g.getResourcePicker().getNumOfResources());
         assertEquals(1, p.getStartingResources());
 
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourceObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourcePicker).count());
         assertEquals(4, c.messages.size());
 
         c.emptyQueue();
@@ -110,11 +110,11 @@ public class ChooseResourcesTest {
         assertSame(depot.getShelf2()[0], Resource.STONE);
         assertSame(depot.getShelf2()[1], Resource.STONE);
         assertEquals(0, p.getStartingResources());
-        assertFalse(g.isResourceObjectEnabled());
+        assertFalse(g.isResourcePickerEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourceObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourcePicker).count());
         assertEquals(3, c.messages.size());
     }
 
@@ -123,14 +123,14 @@ public class ChooseResourcesTest {
         MSG_INIT_CHOOSE_RESOURCE message = new MSG_INIT_CHOOSE_RESOURCE(Resource.STONE);
         g.setCurrentPlayer(4);
         p = g.getCurrentPlayer();
-        g.setResourceObjectEnabled(true);
-        g.setResourceObjectNumOfResources(p.getStartingResources());
+        g.setResourcePickerEnabled(true);
+        g.setResourcePickerNumOfResources(p.getStartingResources());
         g.changeStatus(Status.INIT_2);
         c.emptyQueue();
 
         assertTrue(am.chooseResource(p, message));
         WarehouseDepot depot = p.getWarehouseDepot();
-        assertTrue(g.isResourceObjectEnabled());
+        assertTrue(g.isResourcePickerEnabled());
         assertSame(Status.INIT_2, g.getStatus());
         assertEquals(4, g.getCurrentPlayerInt());
         c.emptyQueue();
@@ -139,7 +139,7 @@ public class ChooseResourcesTest {
         assertEquals(2, depot.getTotal());
         assertEquals(2, (int) depot.getResources().get(Resource.STONE));
         assertEquals(0, p.getStartingResources());
-        assertFalse(g.isResourceObjectEnabled());
+        assertFalse(g.isResourcePickerEnabled());
         assertEquals(1, g.getCurrentPlayerInt());
         assertSame(g.getStatus(), Status.STANDARD_TURN);
         assertEquals(false, p.isDisconnectedBeforeResource());
@@ -147,7 +147,7 @@ public class ChooseResourcesTest {
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourceObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourcePicker).count());
         assertEquals(5, c.messages.size());
     }
 

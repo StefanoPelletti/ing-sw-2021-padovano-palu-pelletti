@@ -84,8 +84,8 @@ public class ActionManager {
         int firstCard = message.getFirstCard();
         int secondCard = message.getSecondCard();
         List<LeaderCard> cards = new ArrayList<>();
-        LeaderCardsPicker leaderCardsPicker = game.getLeaderCardsObject();
-        ResourceObject resourceObject = game.getResourceObject();
+        LeaderCardsPicker leaderCardsPicker = game.getLeaderCardsPicker();
+        ResourcePicker resourcePicker = game.getResourcePicker();
 
 //MESSAGE VALIDATION    //impossible to test
         if (firstCard < 0 || firstCard > 3) {
@@ -128,8 +128,8 @@ public class ActionManager {
                     if (player.getPlayerNumber() == 1) {
                     } else  //he has to choose even the resources, without the game going forward
                     {
-                        resourceObject.setNumOfResources(player.getStartingResources());
-                        resourceObject.setEnabled(true);
+                        resourcePicker.setNumOfResources(player.getStartingResources());
+                        resourcePicker.setEnabled(true);
                     }
                 }
             }
@@ -140,7 +140,7 @@ public class ActionManager {
     public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message) {
         Resource resource = message.getResource();
 
-        ResourceObject resourceObject = game.getResourceObject();
+        ResourcePicker resourcePicker = game.getResourcePicker();
 
 //MESSAGE VALIDATION //impossible to test
         if (resource != Resource.COIN && resource != Resource.SERVANT && resource != Resource.STONE && resource != Resource.SHIELD) {
@@ -148,9 +148,9 @@ public class ActionManager {
             return false;
         }
 //VALIDATION
-        if (!resourceObject.isEnabled()) //how the h did he get in here?
+        if (!resourcePicker.isEnabled()) //how the h did he get in here?
         {
-            gameManager.setErrorObject("Error! Method chooseResource was somehow invoked while ResourceObjectSimplified middle-object was not enabled!");
+            gameManager.setErrorObject("Error! Method chooseResource was somehow invoked while ResourcePicker middle-object was not enabled!");
             return false;
         }
 
@@ -158,22 +158,22 @@ public class ActionManager {
         player.getWarehouseDepot().add(resource); //notifies Warehouse
 
 
-        if (resourceObject.getNumOfResources() == 2)
+        if (resourcePicker.getNumOfResources() == 2)
             player.getWarehouseDepot().swapRow(1, 2);
         player.decrementStartingResource();
-        resourceObject.decNumOfResources();
+        resourcePicker.decNumOfResources();
 
         if (game.getStatus() == Status.INIT_2) //so it is distributing the resources
         {
-            if (resourceObject.getNumOfResources() == 0) {
+            if (resourcePicker.getNumOfResources() == 0) {
                 endTurn(player, false);
                 player.setDisconnectedBeforeResource(false);
             } else return true;
         } else //status == StandardTurn
         {
-            if (resourceObject.getNumOfResources() == 0) {
+            if (resourcePicker.getNumOfResources() == 0) {
                 player.setDisconnectedBeforeResource(false);
-                resourceObject.setEnabled(false);
+                resourcePicker.setEnabled(false);
             } else return true;
         }
         return true;
@@ -880,10 +880,10 @@ public class ActionManager {
         if (previousStatus == Status.INIT_1 && game.getStatus() == Status.INIT_1) //so we've been called by the chooseLeadercards, and we're STILL in the distribuiting phase
         {
             //assert( game.getLeaderCardsObject().isEnabled())
-            game.setLeaderCardsObjectCards(newPlayer.getStartingCards());
+            game.setLeaderCardsPickerCards(newPlayer.getStartingCards());
         } else if (previousStatus == Status.INIT_1 && game.getStatus() == Status.INIT_2) //so we've made a circle, we are now distributing resources
         {
-            game.setLeaderCardsObjectEnabled(false);
+            game.setLeaderCardsPickerEnabled(false);
             if (newPlayer.getPlayerNumber() == 1) //we have to skip him
             {
                 gameManager.endTurn();
@@ -892,29 +892,29 @@ public class ActionManager {
                 {
                 } else //we're still in INIT_2, and the player is his successor (2, 3, 4)
                 {
-                    game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
-                    game.setResourceObjectEnabled(true);
+                    game.setResourcePickerNumOfResources(newPlayer.getStartingResources());
+                    game.setResourcePickerEnabled(true);
                 }
             } else //we have skipped to a newPlayer which is not the #1, so he has to choose resources
             {
-                game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
-                game.setResourceObjectEnabled(true);
+                game.setResourcePickerNumOfResources(newPlayer.getStartingResources());
+                game.setResourcePickerEnabled(true);
             }
         } else if (previousStatus == Status.INIT_2 && game.getStatus() == Status.INIT_2) //so we've just advanced in the distribution of resources
         {
-            game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
+            game.setResourcePickerNumOfResources(newPlayer.getStartingResources());
         } else if (previousStatus == Status.INIT_2 && game.getStatus() == Status.STANDARD_TURN) //so we've entered in the game, we must deactivate
         {
-            game.setResourceObjectEnabled(false);
+            game.setResourcePickerEnabled(false);
         } else if (previousStatus == Status.STANDARD_TURN && game.getStatus() == Status.STANDARD_TURN) //we've advanced in a normal situation
         {
 //reconnection part
             if (newPlayer.isDisconnectedBeforeLeaderCard()) { //in that case he has to choose his leadercards
-                game.setLeaderCardsObjectCards(game.getCurrentPlayerStartingCards()); //setting up the object
-                game.setLeaderCardsObjectEnabled(true); //enabling the object
+                game.setLeaderCardsPickerCards(game.getCurrentPlayerStartingCards()); //setting up the object
+                game.setLeaderCardsPickerEnabled(true); //enabling the object
             } else if (newPlayer.isDisconnectedBeforeResource()) {
-                game.setResourceObjectNumOfResources(newPlayer.getStartingResources());
-                game.setResourceObjectEnabled(true);
+                game.setResourcePickerNumOfResources(newPlayer.getStartingResources());
+                game.setResourcePickerEnabled(true);
             }
 //end of reconnection
         }
@@ -1034,7 +1034,7 @@ public class ActionManager {
 
     public void disconnectPlayer(Player player, int currentPlayerNumber) {
         messageHelper.setNewMessage(" " + player.getNickname() + " has crashed! ");
-        if (game.isLeaderCardsObjectEnabled()) {
+        if (game.isLeaderCardsPickerEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(true);
                 player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
@@ -1042,7 +1042,7 @@ public class ActionManager {
                 player.setDisconnectedBeforeLeaderCard(false);
                 player.setDisconnectedBeforeResource(player.getPlayerNumber() != 1);
             }
-        } else if (game.isResourceObjectEnabled()) {
+        } else if (game.isResourcePickerEnabled()) {
             if (player.getPlayerNumber() >= currentPlayerNumber) {
                 player.setDisconnectedBeforeLeaderCard(false);
                 player.setDisconnectedBeforeResource(true);

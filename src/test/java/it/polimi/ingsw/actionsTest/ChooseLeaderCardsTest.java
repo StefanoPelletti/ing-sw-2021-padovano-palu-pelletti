@@ -55,18 +55,18 @@ public class ChooseLeaderCardsTest {
     public void standardTurn() {
         MSG_INIT_CHOOSE_LEADERCARDS message = new MSG_INIT_CHOOSE_LEADERCARDS(0, 1);
         List<LeaderCard> list = p.getStartingCards();
-        g.setLeaderCardsObjectCards(list);
-        g.setLeaderCardsObjectEnabled(true);
+        g.setLeaderCardsPickerCards(list);
+        g.setLeaderCardsPickerEnabled(true);
         g.changeStatus(Status.STANDARD_TURN);
         c.emptyQueue();
 
         assertTrue(am.chooseLeaderCard(p, message));
         assertEquals(list.get(0), p.getLeaderCards()[0]);
         assertEquals(list.get(1), p.getLeaderCards()[1]);
-        assertFalse(g.isLeaderCardsObjectEnabled());
+        assertFalse(g.isLeaderCardsPickerEnabled());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsPicker).count());
         assertEquals(3, c.messages.size());
     }
 
@@ -74,23 +74,23 @@ public class ChooseLeaderCardsTest {
     public void continuingStateINIT_1() {
         MSG_INIT_CHOOSE_LEADERCARDS message = new MSG_INIT_CHOOSE_LEADERCARDS(0, 1);
         List<LeaderCard> list = p.getStartingCards();
-        g.setLeaderCardsObjectCards(list);
-        g.setLeaderCardsObjectEnabled(true);
+        g.setLeaderCardsPickerCards(list);
+        g.setLeaderCardsPickerEnabled(true);
         g.changeStatus(Status.INIT_1);
         c.emptyQueue();
 
         assertTrue(am.chooseLeaderCard(p, message));
         assertEquals(list.get(0), p.getLeaderCards()[0]);
         assertEquals(list.get(1), p.getLeaderCards()[1]);
-        assertTrue(g.isLeaderCardsObjectEnabled());
+        assertTrue(g.isLeaderCardsPickerEnabled());
         assertEquals(2, g.getCurrentPlayerInt());
 
-        assertEquals(g.getLeaderCardsObject().getCards(), gm.currentPlayer().getStartingCards());
+        assertEquals(g.getLeaderCardsPicker().getCards(), gm.currentPlayer().getStartingCards());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsPicker).count());
         assertEquals(4, c.messages.size());
     }
 
@@ -100,24 +100,24 @@ public class ChooseLeaderCardsTest {
         g.setCurrentPlayer(4);
         p = g.getCurrentPlayer();
         List<LeaderCard> list = p.getStartingCards();
-        g.setLeaderCardsObjectCards(list);
-        g.setLeaderCardsObjectEnabled(true);
+        g.setLeaderCardsPickerCards(list);
+        g.setLeaderCardsPickerEnabled(true);
         g.changeStatus(Status.INIT_1);
         c.emptyQueue();
 
         assertTrue(am.chooseLeaderCard(p, message));
         assertEquals(list.get(2), p.getLeaderCards()[0]);
         assertEquals(list.get(3), p.getLeaderCards()[1]);
-        assertFalse(g.isLeaderCardsObjectEnabled());
+        assertFalse(g.isLeaderCardsPickerEnabled());
         assertEquals(2, g.getCurrentPlayerInt());
-        assertTrue(g.isResourceObjectEnabled());
-        assertEquals(1, g.getResourceObject().getNumOfResources());
+        assertTrue(g.isResourcePickerEnabled());
+        assertEquals(1, g.getResourcePicker().getNumOfResources());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Game).count()); //one for the turn+1, 2 for the advancing players
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsObject).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourceObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsPicker).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourcePicker).count());
         assertEquals(7, c.messages.size());
     }
 
@@ -132,22 +132,22 @@ public class ChooseLeaderCardsTest {
         c.emptyQueue();
 
         assertEquals(2, g.getCurrentPlayerInt());
-        assertTrue(g.isLeaderCardsObjectEnabled());
-        assertEquals(g.getLeaderCardsObject().getCards(), gm.currentPlayer().getStartingCards());
+        assertTrue(g.isLeaderCardsPickerEnabled());
+        assertEquals(g.getLeaderCardsPicker().getCards(), gm.currentPlayer().getStartingCards());
         assertTrue(gm.currentPlayer().isDisconnectedBeforeLeaderCard());
 
         assertTrue(am.chooseLeaderCard(p2, message));
 
         assertEquals(2, g.getCurrentPlayerInt());
-        assertFalse(g.isLeaderCardsObjectEnabled());
+        assertFalse(g.isLeaderCardsPickerEnabled());
         assertFalse(gm.currentPlayer().isDisconnectedBeforeLeaderCard());
         assertEquals(p2.getLeaderCards()[0], p2.getStartingCards().get(0));
         assertEquals(p2.getLeaderCards()[1], p2.getStartingCards().get(1));
-        assertFalse(g.isResourceObjectEnabled());
+        assertFalse(g.isResourcePickerEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsPicker).count());
         assertEquals(3, c.messages.size());
     }
 
@@ -164,16 +164,16 @@ public class ChooseLeaderCardsTest {
         assertTrue(am.chooseLeaderCard(p2, message));
 
         assertEquals(2, g.getCurrentPlayerInt());
-        assertFalse(g.isLeaderCardsObjectEnabled());
+        assertFalse(g.isLeaderCardsPickerEnabled());
         assertFalse(gm.currentPlayer().isDisconnectedBeforeLeaderCard());
         assertTrue(gm.currentPlayer().isDisconnectedBeforeResource());
-        assertTrue(g.isResourceObjectEnabled());
-        assertEquals(1, g.getResourceObject().getNumOfResources());
+        assertTrue(g.isResourcePickerEnabled());
+        assertEquals(1, g.getResourcePicker().getNumOfResources());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsObject).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourceObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsPicker).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_ResourcePicker).count());
         assertEquals(4, c.messages.size());
     }
 
@@ -190,9 +190,9 @@ public class ChooseLeaderCardsTest {
 
         MSG_INIT_CHOOSE_LEADERCARDS message = new MSG_INIT_CHOOSE_LEADERCARDS(0, 1);
         List<LeaderCard> list = p.getStartingCards();
-        g.setLeaderCardsObjectCards(list);
-        g.setLeaderCardsObjectEnabled(true);
-        assertTrue(g.isLeaderCardsObjectEnabled());
+        g.setLeaderCardsPickerCards(list);
+        g.setLeaderCardsPickerEnabled(true);
+        assertTrue(g.isLeaderCardsPickerEnabled());
         g.changeStatus(Status.INIT_1);
         c.emptyQueue();
 
@@ -200,11 +200,11 @@ public class ChooseLeaderCardsTest {
 
         assertEquals(list.get(0), p.getLeaderCards()[0]);
         assertEquals(list.get(1), p.getLeaderCards()[1]);
-        assertFalse(g.isLeaderCardsObjectEnabled());
+        assertFalse(g.isLeaderCardsPickerEnabled());
         assertSame(Status.STANDARD_TURN, g.getStatus());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
-        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsObject).count());
+        assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_LeaderCardsPicker).count());
         assertEquals(3, c.messages.size());
     }
 }

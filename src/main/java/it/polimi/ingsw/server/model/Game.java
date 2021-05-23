@@ -26,7 +26,7 @@ public class Game extends ModelObservable {
     private final DevelopmentCardsVendor developmentCardsVendor;
     private final ErrorObject errorObject;
     private final LeaderCardsPicker leaderCardsPicker;
-    private final ResourceObject resourceObject;
+    private final ResourcePicker resourcePicker;
     private final Leaderboard leaderBoard;
     private Status status;
     private Player firstPlayer;
@@ -49,7 +49,7 @@ public class Game extends ModelObservable {
         developmentCardsVendor = new DevelopmentCardsVendor();
         errorObject = new ErrorObject();
         leaderCardsPicker = new LeaderCardsPicker();
-        resourceObject = new ResourceObject();
+        resourcePicker = new ResourcePicker();
         leaderBoard = new Leaderboard();
         currentPlayer = 1;
     }
@@ -127,12 +127,12 @@ public class Game extends ModelObservable {
         return this.actionTokenStack;
     }
 
-    public LeaderCardsPicker getLeaderCardsObject() {
+    public LeaderCardsPicker getLeaderCardsPicker() {
         return this.leaderCardsPicker;
     }
 
-    public ResourceObject getResourceObject() {
-        return this.resourceObject;
+    public ResourcePicker getResourcePicker() {
+        return this.resourcePicker;
     }
 
     public Leaderboard getLeaderBoard() {
@@ -189,7 +189,7 @@ public class Game extends ModelObservable {
         errorObject.addObserver(observer);
         marketHelper.addObserver(observer);
         messageHelper.addObserver(observer);
-        resourceObject.addObserver(observer);
+        resourcePicker.addObserver(observer);
         leaderCardsPicker.addObserver(observer);
         leaderBoard.addObserver(observer);
         for (LeaderCard l : leaderCardsDeck.getCards()) {
@@ -243,17 +243,17 @@ public class Game extends ModelObservable {
         actionTokenStack.shuffle();
     }
 
-    public void setLeaderCardsObjectCards(List<LeaderCard> list) {
+    public void setLeaderCardsPickerCards(List<LeaderCard> list) {
         leaderCardsPicker.setCards(list);
     }
 
-    public void setResourceObjectNumOfResources(int value) {
-        resourceObject.setNumOfResources(value);
+    public void setResourcePickerNumOfResources(int value) {
+        resourcePicker.setNumOfResources(value);
     }
 
     public boolean isMiddleActive() {
         return (this.leaderCardsPicker.isEnabled() ||
-                this.resourceObject.isEnabled() ||
+                this.resourcePicker.isEnabled() ||
                 this.marketHelper.isEnabled() ||
                 this.developmentCardsVendor.isEnabled());
     }
@@ -262,20 +262,20 @@ public class Game extends ModelObservable {
         return this.leaderBoard.isEnabled();
     }
 
-    public boolean isLeaderCardsObjectEnabled() {
+    public boolean isLeaderCardsPickerEnabled() {
         return this.leaderCardsPicker.isEnabled();
     }
 
-    public void setLeaderCardsObjectEnabled(boolean value) {
+    public void setLeaderCardsPickerEnabled(boolean value) {
         leaderCardsPicker.setEnabled(value);
     }
 
-    public boolean isResourceObjectEnabled() {
-        return this.resourceObject.isEnabled();
+    public boolean isResourcePickerEnabled() {
+        return this.resourcePicker.isEnabled();
     }
 
-    public void setResourceObjectEnabled(boolean value) {
-        resourceObject.setEnabled(value);
+    public void setResourcePickerEnabled(boolean value) {
+        resourcePicker.setEnabled(value);
     }
 
     public boolean isMarketHelperEnabled() {

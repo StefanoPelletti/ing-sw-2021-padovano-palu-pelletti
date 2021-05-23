@@ -204,11 +204,11 @@ public class GameManager {
 
         result.setDevCardsVendor(game.getDevelopmentCardsVendor().generateMessage());
 
-        result.setLeaderCardsObject(game.getLeaderCardsObject().generateMessage());
+        result.setLeaderCardsPicker(game.getLeaderCardsPicker().generateMessage());
 
         result.setMarketHelper(game.getMarketHelper().generateMessage());
 
-        result.setResourceObject(game.getResourceObject().generateMessage());
+        result.setResourcePicker(game.getResourcePicker().generateMessage());
 
         result.setGame(game.generateMessage());
 

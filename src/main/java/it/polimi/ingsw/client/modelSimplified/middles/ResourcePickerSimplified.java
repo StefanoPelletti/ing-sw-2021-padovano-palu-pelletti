@@ -1,9 +1,9 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourceObject;
-import it.polimi.ingsw.server.model.middles.ResourceObject;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourcePicker;
+import it.polimi.ingsw.server.model.middles.ResourcePicker;
 
-public class ResourceObjectSimplified {
+public class ResourcePickerSimplified {
     private boolean enabled;
     private int numOfResources;
 
@@ -11,7 +11,7 @@ public class ResourceObjectSimplified {
         return enabled;
     }
 
-    public void update(MSG_UPD_ResourceObject message) {
+    public void update(MSG_UPD_ResourcePicker message) {
         boolean newEnabled = message.getEnabled();
         int newNumOfResource = message.getNumOfResources();
 
@@ -25,6 +25,6 @@ public class ResourceObjectSimplified {
 
     @Override
     public String toString() {
-        return ResourceObject.toString(this.enabled, this.numOfResources);
+        return ResourcePicker.toString(this.enabled, this.numOfResources);
     }
 }

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model.middles;
 
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsObject;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsPicker;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
@@ -61,8 +61,8 @@ public class LeaderCardsPicker extends ModelObservable {
         this.notifyObservers(generateMessage());
     }
 
-    public MSG_UPD_LeaderCardsObject generateMessage() {
-        return new MSG_UPD_LeaderCardsObject(
+    public MSG_UPD_LeaderCardsPicker generateMessage() {
+        return new MSG_UPD_LeaderCardsPicker(
                 this.enabled,
                 this.cards
         );

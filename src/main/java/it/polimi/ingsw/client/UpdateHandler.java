@@ -20,9 +20,9 @@ public class UpdateHandler implements Runnable {
 
         Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
-        if (Halo.yourTurn) { // && Halo.game.isLeaderCardsObjectEnabled()
+        if (Halo.yourTurn) { // && Halo.game.isLeaderCardsPickerEnabled()
             System.out.println(A.YELLOW + " <> Two free Leader Cards!" + A.RESET);
-            System.out.println(Halo.game.getLeaderCardsObject().toString());
+            System.out.println(Halo.game.getLeaderCardsPicker().toString());
             System.out.println(" > Please pick the first card:");
             System.out.print(" Card number: ");
         }
@@ -54,14 +54,14 @@ public class UpdateHandler implements Runnable {
                             Halo.game.updateDevelopmentCardsVendor((MSG_UPD_DevCardsVendor) message);
                         }
                         break;
-                    case MSG_UPD_LeaderCardsObject:
+                    case MSG_UPD_LeaderCardsPicker:
                         synchronized (Halo.game) {
-                            Halo.game.updateLeaderCardsObject((MSG_UPD_LeaderCardsObject) message);
+                            Halo.game.updateLeaderCardsPicker((MSG_UPD_LeaderCardsPicker) message);
                         }
                         break;
-                    case MSG_UPD_ResourceObject:
+                    case MSG_UPD_ResourcePicker:
                         synchronized (Halo.game) {
-                            Halo.game.updateResourceObject((MSG_UPD_ResourceObject) message);
+                            Halo.game.updateResourcePicker((MSG_UPD_ResourcePicker) message);
                         }
                         break;
                     case MSG_UPD_MarketHelper:
@@ -99,14 +99,14 @@ public class UpdateHandler implements Runnable {
                             Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
                             if (Halo.yourTurn) {
                                 if (Halo.game.isMiddleActive()) {
-                                    if (Halo.game.isLeaderCardsObjectEnabled()) {
+                                    if (Halo.game.isLeaderCardsPickerEnabled()) {
                                         System.out.println(A.YELLOW + " <> Two free Leader Cards!" + A.RESET);
-                                        System.out.println(Halo.game.getLeaderCardsObject().toString());
+                                        System.out.println(Halo.game.getLeaderCardsPicker().toString());
                                         System.out.println(A.UL + " > Please pick the first card" + A.RESET);
                                         System.out.print(" Card number: ");
-                                    } else if (Halo.game.isResourceObjectEnabled()) {
+                                    } else if (Halo.game.isResourcePickerEnabled()) {
                                         System.out.println(A.YELLOW + " <> Free resources!" + A.RESET);
-                                        System.out.println(Halo.game.getResourceObject().toString());
+                                        System.out.println(Halo.game.getResourcePicker().toString());
                                         System.out.println(A.UL + " > Please pick the resource you want" + A.RESET);
                                         System.out.print(" Resource number: ");
                                     } else if (Halo.game.isMarketHelperEnabled()) {

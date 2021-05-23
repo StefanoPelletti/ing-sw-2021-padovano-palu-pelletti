@@ -5,13 +5,13 @@ import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;
 
-public class MSG_UPD_ResourceObject extends Message implements Serializable {
+public class MSG_UPD_ResourcePicker extends Message implements Serializable {
 
     private final boolean enabled;
     private final int numOfResources;
 
-    public MSG_UPD_ResourceObject(boolean enabled, int numOfResources) {
-        super(MessageType.MSG_UPD_ResourceObject);
+    public MSG_UPD_ResourcePicker(boolean enabled, int numOfResources) {
+        super(MessageType.MSG_UPD_ResourcePicker);
 
         this.enabled = enabled;
         this.numOfResources = numOfResources;

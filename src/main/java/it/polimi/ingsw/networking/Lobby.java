@@ -84,8 +84,8 @@ public class Lobby {
             game.addPlayer(nicknameList.get(i), playerNumbers.get(i));
         }
 
-        game.setLeaderCardsObjectCards(game.getCurrentPlayerStartingCards());
-        game.setLeaderCardsObjectEnabled(true);
+        game.setLeaderCardsPickerCards(game.getCurrentPlayerStartingCards());
+        game.setLeaderCardsPickerEnabled(true);
 
         for (ClientHandler c : clientHandlers) {
             gameManager.addAllObserver(c);

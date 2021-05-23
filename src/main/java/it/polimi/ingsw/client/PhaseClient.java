@@ -622,7 +622,7 @@ class Halo {
         return true;
     }
 
-    private static boolean checkLeaderCardObjectNumber(List<String> textList, int first) {
+    private static boolean checkLeaderCardPickerNumber(List<String> textList, int first) {
         if (textList.size() > 1) {
             System.out.println(A.RED + " > Please insert just a number" + A.RESET);
             return false;
@@ -1276,7 +1276,7 @@ class Halo {
                     textList.clear();
                     textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-                    if (checkLeaderCardObjectNumber(textList, first)) {
+                    if (checkLeaderCardPickerNumber(textList, first)) {
                         second = Integer.parseInt(textList.get(0));
                         System.out.println(A.GREEN + " > Thanks, you choose " + A.RESET + first + A.GREEN + " and " + A.RESET + second);
                         break obtainNumberLoop;
@@ -1728,7 +1728,7 @@ class OnlinePhase {
                 if (Halo.yourTurn) {
                     if (Halo.game.isMiddleActive()) {
 //LEADERCARDS ROUTINE
-                        if (Halo.game.isLeaderCardsObjectEnabled()) {
+                        if (Halo.game.isLeaderCardsPickerEnabled()) {
                             message = Halo.chooseLeaderCards(textList);
                             if (message != null) {
                                 Halo.objectOutputStream.writeObject(message);
@@ -1736,7 +1736,7 @@ class OnlinePhase {
                             }
                         }
 //RESOURCE ROUTINE
-                        else if (Halo.game.isResourceObjectEnabled()) {
+                        else if (Halo.game.isResourcePickerEnabled()) {
                             message = Halo.chooseResource(textList);
                             if (message != null) {
                                 Halo.objectOutputStream.writeObject(message);
@@ -1916,7 +1916,7 @@ class LocalPhase {
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
             if (Halo.gameSRV.isMiddleActive() && !Halo.gameSRV.isLeaderBoardEnabled()) {
-                if (Halo.gameSRV.isLeaderCardsObjectEnabled()) {
+                if (Halo.gameSRV.isLeaderCardsPickerEnabled()) {
                     message = Halo.chooseLeaderCards(textList);
                     if (message != null) {
                         Halo.actionManager.onMessage(message);
@@ -2052,8 +2052,8 @@ class LocalPhase {
         Halo.gameSRV.addPlayer(Halo.myNickname, Halo.myPlayerNumber);
         Halo.myPlayerRefSRV = Halo.gameManager.currentPlayer();
 
-        Halo.gameSRV.setLeaderCardsObjectCards(Halo.gameSRV.getCurrentPlayerStartingCards());
-        Halo.gameSRV.setLeaderCardsObjectEnabled(true);
+        Halo.gameSRV.setLeaderCardsPickerCards(Halo.gameSRV.getCurrentPlayerStartingCards());
+        Halo.gameSRV.setLeaderCardsPickerEnabled(true);
 
         UpdateHandlerLocal updateHandlerLocal = new UpdateHandlerLocal();
         Halo.gameManager.addAllObserver(updateHandlerLocal);
@@ -2063,7 +2063,7 @@ class LocalPhase {
         System.out.println(" >> Game started!");
 
         System.out.println(" <> Two free Leader Cards!");
-        System.out.println(Halo.gameSRV.getLeaderCardsObject().toString());
+        System.out.println(Halo.gameSRV.getLeaderCardsPicker().toString());
         System.out.println(" > Please pick the first card:");
         System.out.print(" Card number: ");
     }

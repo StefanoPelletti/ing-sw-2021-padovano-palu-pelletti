@@ -8,13 +8,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MSG_UPD_LeaderCardsObject extends Message implements Serializable {
+public class MSG_UPD_LeaderCardsPicker extends Message implements Serializable {
 
     private final boolean enabled;
     private final List<LeaderCard> cards;
 
-    public MSG_UPD_LeaderCardsObject(boolean enabled, List<LeaderCard> cards) {
-        super(MessageType.MSG_UPD_LeaderCardsObject);
+    public MSG_UPD_LeaderCardsPicker(boolean enabled, List<LeaderCard> cards) {
+        super(MessageType.MSG_UPD_LeaderCardsPicker);
 
         this.enabled = enabled;
         this.cards = new ArrayList<>(cards);

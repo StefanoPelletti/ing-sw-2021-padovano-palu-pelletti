@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsObject;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsPicker;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.middles.LeaderCardsPicker;
 
@@ -15,7 +15,7 @@ public class LeaderCardsPickerSimplified {
         return enabled;
     }
 
-    public void update(MSG_UPD_LeaderCardsObject message) {
+    public void update(MSG_UPD_LeaderCardsPicker message) {
         boolean newEnabled = message.getEnabled();
         List<LeaderCard> newCards = message.getCards();
 

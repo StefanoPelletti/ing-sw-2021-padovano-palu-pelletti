@@ -3,9 +3,9 @@ package it.polimi.ingsw.networking.message.updateMessages;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_DevCardsVendor;
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsObject;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsPicker;
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_MarketHelper;
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourceObject;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourcePicker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ public class MSG_UPD_Full extends Message implements Serializable {
     private final Map<Integer, List<Message>> playerList;
     private MSG_UPD_Game game;
     private MSG_UPD_DevCardsVendor devCardsVendor;
-    private MSG_UPD_LeaderCardsObject leaderCardsObject;
+    private MSG_UPD_LeaderCardsPicker leaderCardsPicker;
     private MSG_UPD_MarketHelper marketHelper;
-    private MSG_UPD_ResourceObject resourceObject;
+    private MSG_UPD_ResourcePicker resourcePicker;
     private MSG_UPD_Market market;
     private MSG_UPD_DevDeck devDeck;
     private MSG_UPD_FaithTrack faithTrack;
@@ -55,12 +55,12 @@ public class MSG_UPD_Full extends Message implements Serializable {
         this.devCardsVendor = devCardsVendor;
     }
 
-    public MSG_UPD_LeaderCardsObject getLeaderCardsObject() {
-        return leaderCardsObject;
+    public MSG_UPD_LeaderCardsPicker getLeaderCardsPicker() {
+        return leaderCardsPicker;
     }
 
-    public void setLeaderCardsObject(MSG_UPD_LeaderCardsObject leaderCardsObject) {
-        this.leaderCardsObject = leaderCardsObject;
+    public void setLeaderCardsPicker(MSG_UPD_LeaderCardsPicker leaderCardsPicker) {
+        this.leaderCardsPicker = leaderCardsPicker;
     }
 
     public MSG_UPD_MarketHelper getMarketHelper() {
@@ -71,12 +71,12 @@ public class MSG_UPD_Full extends Message implements Serializable {
         this.marketHelper = marketHelper;
     }
 
-    public MSG_UPD_ResourceObject getResourceObject() {
-        return resourceObject;
+    public MSG_UPD_ResourcePicker getResourcePicker() {
+        return resourcePicker;
     }
 
-    public void setResourceObject(MSG_UPD_ResourceObject resourceObject) {
-        this.resourceObject = resourceObject;
+    public void setResourcePicker(MSG_UPD_ResourcePicker resourcePicker) {
+        this.resourcePicker = resourcePicker;
     }
 
     public MSG_UPD_Game getGame() {

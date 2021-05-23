@@ -21,7 +21,7 @@ public class GameSimplified {
     private final DevelopmentCardsVendorSimplified developmentCardsVendorSimplified;
     private final LeaderCardsPickerSimplified leaderCardsPickerSimplified;
     private final MarketHelperSimplified marketHelperSimplified;
-    private final ResourceObjectSimplified resourceObjectSimplified;
+    private final ResourcePickerSimplified resourcePickerSimplified;
     private final LeaderboardSimplified leaderboardSimplified;
     private int turn;
     private int currentPlayer;
@@ -40,7 +40,7 @@ public class GameSimplified {
         developmentCardsVendorSimplified = new DevelopmentCardsVendorSimplified();
         leaderCardsPickerSimplified = new LeaderCardsPickerSimplified();
         marketHelperSimplified = new MarketHelperSimplified();
-        resourceObjectSimplified = new ResourceObjectSimplified();
+        resourcePickerSimplified = new ResourcePickerSimplified();
         leaderboardSimplified = new LeaderboardSimplified();
     }
 
@@ -48,7 +48,7 @@ public class GameSimplified {
         return this.developmentCardsVendorSimplified.isEnabled();
     }
 
-    public boolean isLeaderCardsObjectEnabled() {
+    public boolean isLeaderCardsPickerEnabled() {
         return this.leaderCardsPickerSimplified.isEnabled();
     }
 
@@ -56,8 +56,8 @@ public class GameSimplified {
         return this.marketHelperSimplified.isEnabled();
     }
 
-    public boolean isResourceObjectEnabled() {
-        return this.resourceObjectSimplified.isEnabled();
+    public boolean isResourcePickerEnabled() {
+        return this.resourcePickerSimplified.isEnabled();
     }
 
     public void updateGame(MSG_UPD_Game message) {
@@ -86,7 +86,7 @@ public class GameSimplified {
         this.developmentCardsVendorSimplified.update(message);
     }
 
-    public void updateLeaderCardsObject(MSG_UPD_LeaderCardsObject message) {
+    public void updateLeaderCardsPicker(MSG_UPD_LeaderCardsPicker message) {
         this.leaderCardsPickerSimplified.update(message);
     }
 
@@ -94,8 +94,8 @@ public class GameSimplified {
         this.marketHelperSimplified.update(message);
     }
 
-    public void updateResourceObject(MSG_UPD_ResourceObject message) {
-        this.resourceObjectSimplified.update(message);
+    public void updateResourcePicker(MSG_UPD_ResourcePicker message) {
+        this.resourcePickerSimplified.update(message);
     }
 
     public void updateLeaderBoard(MSG_UPD_LeaderBoard message) {
@@ -107,9 +107,9 @@ public class GameSimplified {
         this.updateGame(message.getGame());
 
         this.developmentCardsVendorSimplified.update(message.getDevCardsVendor());
-        this.leaderCardsPickerSimplified.update(message.getLeaderCardsObject());
+        this.leaderCardsPickerSimplified.update(message.getLeaderCardsPicker());
         this.marketHelperSimplified.update(message.getMarketHelper());
-        this.resourceObjectSimplified.update(message.getResourceObject());
+        this.resourcePickerSimplified.update(message.getResourcePicker());
 
         this.market.update(message.getMarket());
         this.devDeck.update(message.getDevDeck());
@@ -174,7 +174,7 @@ public class GameSimplified {
         return this.developmentCardsVendorSimplified;
     }
 
-    public LeaderCardsPickerSimplified getLeaderCardsObject() {
+    public LeaderCardsPickerSimplified getLeaderCardsPicker() {
         return this.leaderCardsPickerSimplified;
     }
 
@@ -182,8 +182,8 @@ public class GameSimplified {
         return this.marketHelperSimplified;
     }
 
-    public ResourceObjectSimplified getResourceObject() {
-        return this.resourceObjectSimplified;
+    public ResourcePickerSimplified getResourcePicker() {
+        return this.resourcePickerSimplified;
     }
 
     public int getBlackCrossPosition() {
@@ -259,7 +259,7 @@ public class GameSimplified {
     }
 
     public boolean isMiddleActive() {
-        return isLeaderCardsObjectEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled() || isResourceObjectEnabled();
+        return isLeaderCardsPickerEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled() || isResourcePickerEnabled();
     }
 
     public boolean isLeaderBoardEnabled() {
