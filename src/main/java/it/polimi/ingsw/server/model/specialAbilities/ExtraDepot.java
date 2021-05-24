@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ExtraDepot extends ModelObservable implements SpecialAbility, Serializable {
     private final Resource resource;
@@ -70,6 +71,11 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         if (!(obj instanceof ExtraDepot)) return false;
         ExtraDepot o = (ExtraDepot) obj;
         return (this.resource.equals(o.resource) && this.number == o.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.resource, this.number);
     }
 
     @Override

@@ -7,6 +7,7 @@ import it.polimi.ingsw.server.utils.ModelObservable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class DevelopmentSlot extends ModelObservable {
     private final DevelopmentCard[][] cards;
@@ -183,6 +184,11 @@ public class DevelopmentSlot extends ModelObservable {
         if (!(obj instanceof DevelopmentSlot)) return false;
         DevelopmentSlot o = (DevelopmentSlot) obj;
         return (Arrays.deepEquals(this.cards, (o).cards));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.cards);
     }
 
     @Override

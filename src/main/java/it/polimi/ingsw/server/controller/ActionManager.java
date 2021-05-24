@@ -937,7 +937,6 @@ public class ActionManager {
         return result;
     }
 
-
     private void lorenzoMove() {
         ActionToken token = game.pickFirstActionToken();
         if (token.isRemover()) {

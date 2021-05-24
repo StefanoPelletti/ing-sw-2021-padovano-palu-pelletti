@@ -247,7 +247,12 @@ public class Player extends ModelObservable {
         return (this.nickname.equals(o.nickname));
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.nickname, this.position);
+    }
 
+    @Deprecated
     public boolean deepEquals(Object obj) {
         if (obj == this) return true;
         if (!(obj instanceof Player)) return false;

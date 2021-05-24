@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model.specialAbilities;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class MarketResources implements SpecialAbility, Serializable {
     private final Resource resource;
@@ -37,6 +38,11 @@ public class MarketResources implements SpecialAbility, Serializable {
         if (!(obj instanceof MarketResources)) return false;
         MarketResources o = (MarketResources) obj;
         return (this.resource.equals(o.resource));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.resource);
     }
 
     @Override

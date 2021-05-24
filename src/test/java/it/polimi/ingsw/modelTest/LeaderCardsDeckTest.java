@@ -85,6 +85,11 @@ public class LeaderCardsDeckTest {
     }
 
     @Test
+    public void equalsTest() {
+
+    }
+
+    @Test
     public void toStringFormat() {
         System.out.println(deck.getCards().get(0));
         assertTrue(true);

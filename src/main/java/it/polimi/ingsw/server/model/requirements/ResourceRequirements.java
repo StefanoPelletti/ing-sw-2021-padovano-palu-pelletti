@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.utils.A;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class ResourceRequirements implements Requirement, Serializable {
     private final Map<Resource, Integer> requirements;
@@ -56,5 +57,10 @@ public class ResourceRequirements implements Requirement, Serializable {
         if (!(obj instanceof ResourceRequirements)) return false;
         ResourceRequirements o = (ResourceRequirements) obj;
         return (o.getRequirements().equals(this.requirements));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.requirements);
     }
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.server.model.specialAbilities.SpecialAbility;
 import it.polimi.ingsw.server.utils.A;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class LeaderCard implements Serializable {
     private final int vp;
@@ -65,5 +66,10 @@ public class LeaderCard implements Serializable {
                 this.requirement.equals(o.requirement) &&
                 this.specialAbility.equals(o.specialAbility));
 
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.vp, this.requirement, this.specialAbility);
     }
 }

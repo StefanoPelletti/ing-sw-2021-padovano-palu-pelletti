@@ -178,6 +178,9 @@ public class UpdateHandler implements Runnable {
                             System.out.println(A.RED + " <> " + ((MSG_ERROR) message).getErrorMessage() + A.RESET);
                         }
                         break;
+                    default:
+                        System.out.println(A.RED + " <> UPDATE HANDLER ERROR: received: "+message+ A.RESET);
+                        break;
                 }
             } catch (IOException | ClassNotFoundException | ClassCastException e) {
                 //e.printStackTrace();

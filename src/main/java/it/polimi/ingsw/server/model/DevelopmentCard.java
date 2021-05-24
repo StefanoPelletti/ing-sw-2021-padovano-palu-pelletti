@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.model.enumerators.Resource;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DevelopmentCard implements Serializable {
     private final int level;
@@ -65,6 +66,11 @@ public class DevelopmentCard implements Serializable {
                 this.cost.equals(o.cost) &&
                 this.vp == o.vp &&
                 this.power.equals(o.power));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.level, this.color, this.cost, this.vp, this.power);
     }
 
     @Override

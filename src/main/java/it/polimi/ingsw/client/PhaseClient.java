@@ -929,7 +929,7 @@ class Halo {
         System.out.println(" " + A.UL + "Do you want to activate it?" + A.RESET);
         System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
         while (true) {
-            System.out.print("Will: ");
+            System.out.print(" Will: ");
             text = Halo.input.nextLine();
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));

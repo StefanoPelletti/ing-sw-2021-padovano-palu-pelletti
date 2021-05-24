@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model.specialAbilities;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Production implements SpecialAbility, Serializable {
     private final Resource input;
@@ -37,6 +38,11 @@ public class Production implements SpecialAbility, Serializable {
         if (!(obj instanceof Production)) return false;
         Production o = (Production) obj;
         return (this.input.equals(o.input));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.input);
     }
 
     @Override

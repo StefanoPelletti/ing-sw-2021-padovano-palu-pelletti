@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 public class Power implements Serializable {
     private final Map<Resource, Integer> input;
@@ -28,6 +29,11 @@ public class Power implements Serializable {
         if (!(obj instanceof Power)) return false;
         Power o = (Power) obj;
         return (this.input.equals(o.input) && this.output.equals(o.output));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.input, this.output);
     }
 
     @Override

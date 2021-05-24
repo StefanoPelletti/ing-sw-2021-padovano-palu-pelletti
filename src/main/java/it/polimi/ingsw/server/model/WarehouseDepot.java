@@ -9,6 +9,7 @@ import it.polimi.ingsw.server.utils.ModelObservable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class WarehouseDepot extends ModelObservable {
 
@@ -322,6 +323,11 @@ public class WarehouseDepot extends ModelObservable {
         return (this.shelf1 == o.shelf1
                 && Arrays.equals(this.shelf2, o.shelf2)
                 && Arrays.equals(this.shelf3, o.shelf3));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.shelf1, Arrays.hashCode(this.shelf2), Arrays.hashCode(this.shelf3));
     }
 
     private void notifyObservers() {
