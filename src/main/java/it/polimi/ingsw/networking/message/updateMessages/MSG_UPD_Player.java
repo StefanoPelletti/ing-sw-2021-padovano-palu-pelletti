@@ -17,6 +17,14 @@ public class MSG_UPD_Player extends Message implements Serializable {
     public MSG_UPD_Player(int vp, int playerNumber, String nickname, int position, LeaderCard[] leaderCards) {
         super(MessageType.MSG_UPD_Player);
 
+        if(leaderCards[0]!=null && leaderCards[1]!=null)
+        {
+            if(leaderCards[0].getEnable()==true||leaderCards[1].getEnable()==true)
+                System.out.println("wadkaiwdjiusjdif");
+        }
+
+
+
         this.vp = vp;
         this.playerNumber = playerNumber;
         this.nickname = nickname;
