@@ -174,6 +174,8 @@ public class Game extends ModelObservable {
         Player player = new Player(nickname, playerNumber);
         player.setStartingCards(leaderCardsDeck.pickFourCards());
         player.setInitialStartingResources();
+        if(playerNumber == 3 || playerNumber == 4)
+            player.setPosition(1);
         if (playerNumber == 1)
             firstPlayer = player;
         if (playerNumber == 3 || playerNumber == 4)

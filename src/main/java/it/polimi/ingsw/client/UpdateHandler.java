@@ -21,10 +21,23 @@ public class UpdateHandler implements Runnable {
         Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
         if (Halo.yourTurn) { // && Halo.game.isLeaderCardsPickerEnabled()
+            System.out.println(A.YELLOW + " > You are the First player! "+A.RESET);
             System.out.println(A.YELLOW + " <> Two free Leader Cards!" + A.RESET);
             System.out.println(Halo.game.getLeaderCardsPicker().toString());
             System.out.println(" > Please pick the first card:");
             System.out.print(" Card number: ");
+        }
+        else
+        {
+            System.out.println(A.YELLOW + " > You are the player number "+Halo.myPlayerRef.getPlayerNumber()+"!"+A.RESET);
+            System.out.println(A.YELLOW + " > Please wait for your turn to choose the your Leader Cards");
+            System.out.print(" > Because you are player number "+Halo.myPlayerRef.getPlayerNumber()+", you will also receive ");
+            if(Halo.myPlayerRef.getPlayerNumber() == 2 || Halo.myPlayerRef.getPlayerNumber()==3)
+                System.out.println(1+ " resource");
+            else
+                System.out.println(2+ " resources");
+            if(Halo.myPlayerRef.getPlayerNumber() == 3 || Halo.myPlayerRef.getPlayerNumber() == 4)
+                System.out.println(A.YELLOW + " > And lastly, you are starting in position 1");
         }
 
         Message message;
