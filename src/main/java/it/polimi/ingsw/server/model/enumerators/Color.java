@@ -34,7 +34,7 @@ public enum Color implements Serializable {
             case GREEN:
                 return A.GREEN + "GREEN" + A.RESET;
             default:
-                return A.UL + "" + A.WHITE + "GREY" + A.RESET;
+                return A.WHITE + "GREY" + A.RESET;
         }
     }
 }

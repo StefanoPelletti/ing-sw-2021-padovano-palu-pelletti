@@ -158,6 +158,7 @@ class Halo {
         System.out.println("                                   : gives the ability to reconnect to a lobby,  \n" +
                 "                                     if connection was lost. Nickname must match \n" +
                 "                                     the previously used one. ");
+        System.out.println("=> " + A.CYAN + "local" + A.RESET + "                           : starts a local game in single player against Lorenzo.");
     }
 
     public static void printActions() {
@@ -357,7 +358,7 @@ class Halo {
             }
 //check very powerful action    already playedE
             if (Halo.action && (number == 3 || number == 5 || number == 6)) {
-                System.out.println(A.RED + " > You already did a main move" + A.RESET);
+                System.out.println(A.RED + " > You already did a main move." + A.RESET);
                 return false;
             }
 //check action 1 and 2
@@ -443,7 +444,7 @@ class Halo {
             try {
                 int number = Integer.parseInt(textList.get(0));
                 if (number != 0 && number != 1 && number != 2) {
-                    System.out.println(" > Please insert 0, 1 or 2");
+                    System.out.println(A.RED +" > Please insert 0, 1 or 2" + A.RESET);
                     return false;
                 }
             } catch (NumberFormatException e) {
@@ -462,7 +463,7 @@ class Halo {
             try {
                 int number = Integer.parseInt(textList.get(0));
                 if (number != 0 && number != 1 && number != 2 && number != -1) {
-                    System.out.println(" > Please insert 0, 1 or 2");
+                    System.out.println(A.RED + " > Please insert 0, 1 or 2" + A.RESET);
                     return false;
                 }
             } catch (NumberFormatException e) {
@@ -749,7 +750,7 @@ class Halo {
             if (Halo.checkNumber0_1_2(textList)) {
                 num = Integer.parseInt(textList.get(0));
                 if (num == 0) {
-                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                     return null;
                 }
                 break;
@@ -757,9 +758,9 @@ class Halo {
         }
         if (num == 1) {
             column = false;
-            System.out.println(" > " + A.UL + "Please choose the row " + A.RESET + "(must be between 1 and 3). 0 to quit");
+            System.out.println(" > " + A.UL + "Please choose the row " + A.RESET + "(must be between 1 and 3. 0 to quit)");
         } else {
-            System.out.println(" > " + A.UL + "Please choose the column " + A.RESET + "(must be between 1 and 4). 0 to quit");
+            System.out.println(" > " + A.UL + "Please choose the column " + A.RESET + "(must be between 1 and 4. 0 to quit)");
             column = true;
         }
 
@@ -946,7 +947,7 @@ class Halo {
         }
 
         if (basic) {
-            System.out.println(" >> " +A.UL + "Which resources do you want as input for the basic production? Write them as: stone shield" + A.RESET);
+            System.out.println(" >> " + A.UL + "Which resources do you want as input for the basic production? Write them as: stone shield" + A.RESET);
             while (true) {
                 System.out.print(" Will: ");
                 text = Halo.input.nextLine();
@@ -960,7 +961,7 @@ class Halo {
                     break;
                 }
             }
-            System.out.println(" " + A.UL + ">> Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
+            System.out.println(" >> " + A.UL + "Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
             while (true) {
                 System.out.print(" Will: ");
                 text = Halo.input.nextLine();
@@ -1582,7 +1583,7 @@ class MenuPhase {
         }
         try {
             if (Integer.parseInt(textList.get(2)) >= 65536) {
-                System.out.println(A.RED + " > Error! The port number is way too high!" + A.RESET);
+                System.out.println(A.RED + " > Error! The port number is too high!" + A.RESET);
                 return false;
             }
             if (Integer.parseInt(textList.get(2)) <= 1023) {
@@ -1611,7 +1612,7 @@ class MenuPhase {
         }
         try {
             if (Integer.parseInt(textList.get(2)) >= 65536) {
-                System.out.println(A.RED + " > Error! The port number is way too high!" + A.RESET);
+                System.out.println(A.RED + " > Error! The port number is too high!" + A.RESET);
                 return false;
             }
             if (Integer.parseInt(textList.get(2)) <= 1023) {
@@ -1619,7 +1620,7 @@ class MenuPhase {
                 return false;
             }
             if (Integer.parseInt(textList.get(4)) <= -1 || Integer.parseInt(textList.get(4)) >= 500) {
-                System.out.println(A.RED + " > Error! Lobby number must be hamburgered between 0 and 500!" + A.RESET);
+                System.out.println(A.RED + " > Error! Lobby number must be between between 0 and 500!" + A.RESET);
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -1874,7 +1875,7 @@ class OnlinePhase {
                                             }
 //GO BACK
                                             case 0: {
-                                                System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
+                                                System.out.println(A.GREEN + " > Going back to Main Menu..." + A.RESET);
                                                 break actionLoop;
                                             }
                                         }
@@ -1886,7 +1887,7 @@ class OnlinePhase {
                             }
                             break;
                         default:
-                            System.out.println(A.RED + " > Sorry, I didn't catch that" + A.RESET);
+                            System.out.println(A.RED + " > Sorry, I didn't catch that." + A.RESET);
                     } //switch(text get(0) lowercase)
                 } //if(execute)
             } //while(true)
@@ -2030,7 +2031,7 @@ class LocalPhase {
                                         }
 //GO BACK
                                         case 0: {
-                                            System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
+                                            System.out.println(A.GREEN + " > Going back to Main Menu..." + A.RESET);
                                             break actionLoop;
                                         }
 
@@ -2038,7 +2039,7 @@ class LocalPhase {
                                 }
                             }
                         } else
-                            System.out.println(A.RED + " > Game is Over, you can only show your things and quit" + A.RESET);
+                            System.out.println(A.RED + " > Game is Over. You can only show your things and quit" + A.RESET);
                         break;
                     default:
                         System.out.println(A.RED + " > Sorry, I didn't catch that" + A.RESET);

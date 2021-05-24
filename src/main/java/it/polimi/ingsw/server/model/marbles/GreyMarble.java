@@ -24,6 +24,6 @@ public class GreyMarble implements MarketMarble, Serializable {
     }
 
     public String toAbbreviation() {
-        return A.WHITE + "" + A.UL + color.toAbbreviation() + A.RESET;
+        return A.WHITE + color.toAbbreviation() + A.RESET;
     }
 }

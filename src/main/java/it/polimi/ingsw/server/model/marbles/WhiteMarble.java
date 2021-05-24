@@ -24,6 +24,6 @@ public class WhiteMarble implements MarketMarble, Serializable {
     }
 
     public String toAbbreviation() {
-        return A.RESET + "" + A.UL + "" + color.toAbbreviation() + A.RESET;
+        return color.toAbbreviation();
     }
 }
