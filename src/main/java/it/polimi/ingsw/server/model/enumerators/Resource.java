@@ -17,7 +17,7 @@ public enum Resource implements Serializable {
             case SERVANT:
                 return A.PURPLE + "SERVANT" + A.RESET;
             case STONE:
-                return A.WHITE + "" + A.UL + "STONE" + A.RESET;
+                return A.WHITE + "STONE" + A.RESET;
             case EXTRA:
                 return A.WHITE + "EXTRA" + A.RESET;
             case FAITH:

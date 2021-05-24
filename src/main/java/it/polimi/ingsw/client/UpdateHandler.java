@@ -24,7 +24,7 @@ public class UpdateHandler implements Runnable {
             System.out.println(A.YELLOW + " > You are the First player! "+A.RESET);
             System.out.println(A.YELLOW + " <> Two free Leader Cards!" + A.RESET);
             System.out.println(Halo.game.getLeaderCardsPicker().toString());
-            System.out.println(" > Please pick the first card:");
+            System.out.println(" > "+ A.UL + "Please pick the first card:" + A.RESET);
             System.out.print(" Card number: ");
         }
         else
@@ -115,21 +115,21 @@ public class UpdateHandler implements Runnable {
                                     if (Halo.game.isLeaderCardsPickerEnabled()) {
                                         System.out.println(A.YELLOW + " <> Two free Leader Cards!" + A.RESET);
                                         System.out.println(Halo.game.getLeaderCardsPicker().toString());
-                                        System.out.println(A.UL + " > Please pick the first card" + A.RESET);
+                                        System.out.println(" > " + A.UL + "Please pick the first card" + A.RESET);
                                         System.out.print(" Card number: ");
                                     } else if (Halo.game.isResourcePickerEnabled()) {
                                         System.out.println(A.YELLOW + " <> Free resources!" + A.RESET);
                                         System.out.println(Halo.game.getResourcePicker().toString());
-                                        System.out.println(A.UL + " > Please pick the resource you want" + A.RESET);
+                                        System.out.println(" > " + A.UL + "Please pick the resource you want" + A.RESET);
                                         System.out.print(" Resource number: ");
                                     } else if (Halo.game.isMarketHelperEnabled()) {
                                         System.out.println(Halo.game.getMarketHelper().toString());
                                         System.out.println(Halo.game.getCurrentPlayerRef().getWarehouseDepot());
-                                        System.out.println(A.UL + " > Please select an option" + A.RESET);
+                                        System.out.println(" > " + A.UL + "Please select an option" + A.RESET);
                                         System.out.print(" Choice: ");
                                     } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                                         System.out.println(Halo.game.getDevelopmentCardsVendor().toString());
-                                        System.out.println(A.UL + " > Please select a card number and a slot number (0 to quit the action)" + A.RESET);
+                                        System.out.println(" >" + A.UL + "Please select a card number and a slot number (0 to quit the action)" + A.RESET);
                                         System.out.print(" Card | Slot: ");
                                     }
                                 } else {
@@ -158,7 +158,7 @@ public class UpdateHandler implements Runnable {
                             Halo.game.updateLeaderBoard((MSG_UPD_LeaderBoard) message);
                             Halo.yourTurn = false;
                             System.out.println(A.YELLOW + " <> Game over : " + A.RESET + Halo.game.getLeaderBoard().toResult(Halo.myNickname, Halo.solo));
-                            System.out.println(A.UL + " > Please write quit to go back to the main menu" + A.RESET);
+                            System.out.println(" > " + A.UL + "Please write quit to go back to the Main Menu" + A.RESET);
                         }
                         return;
 //Notification

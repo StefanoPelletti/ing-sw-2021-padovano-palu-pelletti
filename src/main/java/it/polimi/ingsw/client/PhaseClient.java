@@ -243,14 +243,14 @@ class Halo {
 
     public static String printMyVP() {
         if (local)
-            return " my VP : " + myPlayerRefSRV.getVp();
+            return " My VP : " + myPlayerRefSRV.getVp();
         else
-            return " my VP : " + myPlayerRef.getVp();
+            return " My VP : " + myPlayerRef.getVp();
     }
 
     public static String printPlayers() {
         StringBuilder result = new StringBuilder();
-        result.append(A.GREEN + " > showing players  name - number" + A.RESET);
+        result.append(A.GREEN + " > Showing players name - number" + A.RESET);
         if (local) {
             for (Player p : Halo.gameSRV.getPlayerList())
                 result.append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
@@ -277,9 +277,9 @@ class Halo {
 
     public static String printCurrentTurn() {
         if (local)
-            return " current turn is : " + gameSRV.getTurn();
+            return " Current turn is : " + gameSRV.getTurn();
         else
-            return " current turn is : " + game.getTurn();
+            return " Current turn is : " + game.getTurn();
     }
 
     public static String printMyLeaderCards() {
@@ -398,7 +398,7 @@ class Halo {
         if (textList.size() == 2) {
             if (allowedKeySolo.stream().anyMatch(s -> s.equalsIgnoreCase(textList.get(1))))
                 return true;
-            System.out.println(A.RED + " > Error! You can't show this. I don't even know what 'this' is!" + A.RESET);
+            System.out.println(A.RED + " > Error! You can't show this." + A.RESET);
             return false;
         }
         if (textList.size() == 4) {
@@ -432,7 +432,7 @@ class Halo {
             }
             if (allowedKey.stream().anyMatch(s -> s.equalsIgnoreCase(textList.get(2))))
                 return true;
-            System.out.println(A.RED + " > Error! You can't show this. I don't even know what 'this' is!" + A.RESET);
+            System.out.println(A.RED + " > Error! You can't show this." + A.RESET);
         }
         return false;
     }
@@ -446,11 +446,11 @@ class Halo {
                     return false;
                 }
             } catch (NumberFormatException e) {
-                System.out.println(" > That was not a number");
+                System.out.println(A.RED + " > That was not a number" + A.RESET);
                 return false;
             }
         } else {
-            System.out.println(" > Too many parameters");
+            System.out.println(A.RED + " > Too many parameters" + A.RESET);
             return false;
         }
         return true;
@@ -465,11 +465,11 @@ class Halo {
                     return false;
                 }
             } catch (NumberFormatException e) {
-                System.out.println(" > That was not a number");
+                System.out.println(A.RED + " > That was not a number" + A.RESET);
                 return false;
             }
         } else {
-            System.out.println(" > Too many parameters");
+            System.out.println(A.RED + " > Too many parameters" + A.RESET);
             return false;
         }
         return true;
@@ -663,24 +663,24 @@ class Halo {
 
     private static boolean checkNumberMarket(List<String> textList, boolean column) {
         if (textList.size() > 1) {
-            System.out.println(" > Too many parameters");
+            System.out.println(A.RED + " > Too many parameters" + A.RESET);
             return false;
         }
         try {
             int number = Integer.parseInt(textList.get(0));
             if (column) {
                 if (number < 0 || number > 4) {
-                    System.out.println(" > The column number must be 1, 2, 3, 4. Or 0 to quit.");
+                    System.out.println(A.RED + " > The column number must be 1, 2, 3, 4. Or 0 to quit." + A.RESET);
                     return false;
                 }
             } else {
                 if (number < 0 || number > 3) {
-                    System.out.println(" > The row number must be 1, 2, 3. Or 0 to quit.");
+                    System.out.println(A.RED + " > The row number must be 1, 2, 3. Or 0 to quit."+ A.RESET);
                     return false;
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println(" > That was not a number");
+            System.out.println(A.RED + " > That was not a number" + A.RESET);
             return false;
         }
         return true;
@@ -691,39 +691,39 @@ class Halo {
         int n2 = -1;
         int n3;
         if (input.size() > 3) {
-            System.out.println("Please insert a maximum of 3 numbers");
+            System.out.println(A.RED + " Please insert a maximum of 3 numbers" + A.RESET);
             return false;
         }
         try {
             n1 = Integer.parseInt(input.get(0));
             if (n1 < 1 || n1 > 4) {
-                System.out.println("The numbers you insert must be between 1 and 3");
+                System.out.println(A.RED + "The numbers you insert must be between 1 and 3"+ A.RESET);
                 return false;
             }
             if (input.size() > 1) {
                 n2 = Integer.parseInt(input.get(1));
                 if (n2 < 1 || n2 > 4) {
-                    System.out.println("The numbers you insert must be between 1 and 3");
+                    System.out.println(A.RED + "The numbers you insert must be between 1 and 3" + A.RESET);
                     return false;
                 }
                 if (n1 == n2) {
-                    System.out.println("The numbers you insert must be different!");
+                    System.out.println(A.RED + "The numbers you insert must be different!" + A.RESET);
                     return false;
                 }
             }
             if (input.size() > 2) {
                 n3 = Integer.parseInt(input.get(2));
                 if (n3 < 1 || n3 > 4) {
-                    System.out.println("The numbers you insert must be between 1 and 3");
+                    System.out.println(A.RED + "The numbers you insert must be between 1 and 3" + A.RESET);
                     return false;
                 }
                 if ((n1 == n3) || (n2 == n3)) {
-                    System.out.println("The numbers you insert must be different!");
+                    System.out.println(A.RED + "The numbers you insert must be different!" + A.RESET);
                     return false;
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("You didn't insert only numbers!");
+            System.out.println(A.RED + "You didn't insert only numbers!" + A.RESET);
             return false;
         }
         return true;
@@ -735,9 +735,9 @@ class Halo {
         Halo.triedAction = true;
         int num;
         boolean column;
-        System.out.println(" Here's the market, if this is not qol I don't know what could be then:");
+        System.out.println(" Here's the market:");
         System.out.println(printMarket());
-        System.out.println(A.UL + " Please choose Row or Column" + A.RESET);
+        System.out.println(" > " + A.UL + "Please choose Row or Column" + A.RESET);
         System.out.println(" Insert 1 for a row or 2 for a column, 0 to quit");
 
         while (true) {
@@ -757,9 +757,9 @@ class Halo {
         }
         if (num == 1) {
             column = false;
-            System.out.println(A.UL + " > Please choose the row " + A.RESET + "(must be between 1 and 3). 0 to quit");
+            System.out.println(" > " + A.UL + "Please choose the row " + A.RESET + "(must be between 1 and 3). 0 to quit");
         } else {
-            System.out.println(A.UL + " > Please choose the column " + A.RESET + "(must be between 1 and 4). 0 to quit");
+            System.out.println(" > " + A.UL + "Please choose the column " + A.RESET + "(must be between 1 and 4). 0 to quit");
             column = true;
         }
 
@@ -788,7 +788,7 @@ class Halo {
         Halo.triedAction = false;
         String text;
         //change depot
-        System.out.println(A.UL + " >> Please insert the new configuration for your Warehouse Depot. Write'm as: stone none shield" + A.RESET);
+        System.out.println(" >> " + A.UL + "Please insert the new configuration for your Warehouse Depot. Write them as: stone none shield" + A.RESET);
         System.out.println(" Your actual depot: ");
         System.out.println(printMyWarehouseDepot());
 
@@ -811,7 +811,7 @@ class Halo {
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
             if (!checkResource(textList, 1, true))
-                System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 1. Try again." + A.RESET);
+                System.out.println(A.RED + " > That is not possible in shelf 1. Try again." + A.RESET);
             else {
                 shelf1 = convertStringToResource(textList.get(0).toLowerCase());
                 break;
@@ -824,7 +824,7 @@ class Halo {
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
             if (!checkResource(textList, 2, true))
-                System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 2. Try again." + A.RESET);
+                System.out.println(A.RED + " > That is not possible in shelf 2. Try again." + A.RESET);
             else {
                 shelf2[0] = convertStringToResource(textList.get(0).toLowerCase());
                 shelf2[1] = convertStringToResource(textList.get(1).toLowerCase());
@@ -838,7 +838,7 @@ class Halo {
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
             if (!Halo.checkResource(textList, 3, true))
-                System.out.println(A.RED + " > Ohoh my friend, that's not possible in shelf 3. Try again." + A.RESET);
+                System.out.println(A.RED + " > That is not possible in shelf 3. Try again." + A.RESET);
             else {
                 shelf3[0] = convertStringToResource(textList.get(0).toLowerCase());
                 shelf3[1] = convertStringToResource(textList.get(1).toLowerCase());
@@ -852,8 +852,8 @@ class Halo {
 
 
         if (l1 != null && l1.getEnable() && l1.getSpecialAbility().isExtraDepot()) {
-            System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) l1.getSpecialAbility()).getResourceType() + "." +
-                    " \n Please tell me how much I have to Phil Heath." + A.RESET + " 0-1 to quit");
+            System.out.println(" > " + A.UL + "What about the extra depot for the resource " + ((ExtraDepot) l1.getSpecialAbility()).getResourceType() + "." +
+                    " \n Please tell me how many resources you want to put in" + A.RESET + " -1 to quit");
             while (true) {
                 System.out.print(" Number of Resources: ");
                 text = Halo.input.nextLine();
@@ -871,8 +871,8 @@ class Halo {
 
         }
         if (l2 != null && l2.getEnable() && l2.getSpecialAbility().isExtraDepot()) {
-            System.out.println(A.UL + " > What about the extra depot for the resource " + ((ExtraDepot) l2.getSpecialAbility()).getResourceType() + "." +
-                    " \n Please tell me how much I have to Phil Heath" + A.RESET + " -1 to quit");
+            System.out.println(" > " + A.UL + "What about the extra depot for the resource" + ((ExtraDepot) l2.getSpecialAbility()).getResourceType() + "." +
+                    " \n Please tell me how many resources you want to put in" + A.RESET + " -1 to quit");
             while (true) {
                 System.out.print(" Number of Resources: ");
                 text = Halo.input.nextLine();
@@ -881,7 +881,7 @@ class Halo {
                 if (checkNumberN1_0_1_2(textList)) {
                     secondExtra = Integer.parseInt(textList.get(0));
                     if (secondExtra == -1) {
-                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                        System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                         return null;
                     }
                     break;
@@ -926,17 +926,17 @@ class Halo {
         }
 
         System.out.println(" >> BASE PRODUCTION ");
-        System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
+        System.out.println(" " + A.UL + "Do you want to activate it?" + A.RESET);
         System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
         while (true) {
-            System.out.print(" will: ");
+            System.out.print("Will: ");
             text = Halo.input.nextLine();
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
             if (checkNumber0_1_2(textList)) {
                 input = Integer.parseInt(textList.get(0));
                 if (input == 0) {
-                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                     return null;
                 }
                 if (input == 1)
@@ -946,9 +946,9 @@ class Halo {
         }
 
         if (basic) {
-            System.out.println(A.UL + " >> Which resources do you want as input for the basic production? Write'em as: stone shield" + A.RESET);
+            System.out.println(" >> " +A.UL + "Which resources do you want as input for the basic production? Write them as: stone shield" + A.RESET);
             while (true) {
-                System.out.print(" will: ");
+                System.out.print(" Will: ");
                 text = Halo.input.nextLine();
                 textList.clear();
                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -960,9 +960,9 @@ class Halo {
                     break;
                 }
             }
-            System.out.println(A.UL + " >> Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
+            System.out.println(" " + A.UL + ">> Which resource do you want as output for the basic production? Write it as: stone" + A.RESET);
             while (true) {
-                System.out.print(" will: ");
+                System.out.print(" Will: ");
                 text = Halo.input.nextLine();
                 textList.clear();
                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -976,17 +976,17 @@ class Halo {
         }
 
         System.out.println(" >> STANDARD PRODUCTION ");
-        System.out.println(A.UL + " Do you want to activate it? " + A.RESET);
+        System.out.println(" " +A.UL + "Do you want to activate it?" + A.RESET);
         System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
         while (true) {
-            System.out.print(" will: ");
+            System.out.print(" Will: ");
             text = Halo.input.nextLine();
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
             if (Halo.checkNumber0_1_2(textList)) {
                 input = Integer.parseInt(textList.get(0));
                 if (input == 0) {
-                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                    System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                     return null;
                 }
                 if (input == 1)
@@ -996,9 +996,9 @@ class Halo {
         }
         if (std) {
             System.out.println(printMyDevelopmentSlot());
-            System.out.println(A.UL + " Which cards do you want to activate? write the numbers as: 1 2 3" + A.RESET);
+            System.out.println(" " + A.UL + "Which cards do you want to activate? Write the numbers as: 1 2 3" + A.RESET);
             while (true) {
-                System.out.print(" will: ");
+                System.out.print(" Will: ");
                 text = Halo.input.nextLine();
                 textList.clear();
                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -1017,17 +1017,17 @@ class Halo {
                     LeaderCard l = getMyLeaderCard(i);
                     if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
                         System.out.println(l);
-                        System.out.println(A.UL + " Do you want to activate this card? " + A.RESET);
+                        System.out.println(" " + A.UL + "Do you want to activate this card?" + A.RESET);
                         System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
                         while (true) {
-                            System.out.print(" will: ");
+                            System.out.print(" Will: ");
                             text = Halo.input.nextLine();
                             textList.clear();
                             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
                             if (checkNumber0_1_2(textList)) {
                                 int number = Integer.parseInt(textList.get(0));
                                 if (number == 0) {
-                                    System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                    System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                                     return null;
                                 }
                                 if (number == 1)
@@ -1043,10 +1043,10 @@ class Halo {
 
 
         if (leader[0]) {
-            System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
+            System.out.println(" " + A.UL + "Which resource do you want to produce with your leaderCard 1, along with a " + FAITH + A.UL + " point (input is" +
                     ((Production) l1.getSpecialAbility()).getInput() + ")?" + A.RESET);
             while (true) {
-                System.out.print(" will: ");
+                System.out.print(" Will: ");
                 text = Halo.input.nextLine();
                 textList.clear();
                 textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
@@ -1059,7 +1059,7 @@ class Halo {
         }
 
         if (leader[1]) {
-            System.out.println(A.UL + " Which resource do you want to produce with your leaderCard 2, along with a " + FAITH + A.UL + " point (input is" +
+            System.out.println(" " + A.UL + "Which resource do you want to produce with your leaderCard 2, along with a " + FAITH + A.UL + " point (input is" +
                     ((Production) l2.getSpecialAbility()).getInput() + ")?" + A.RESET);
             while (true) {
                 System.out.print(" will: ");
@@ -1096,7 +1096,7 @@ class Halo {
         LeaderCard l2 = getMyLeaderCard(1);
 
         if (Halo.checkLeaderCards()) {
-            System.out.print(A.UL + " Please pick a number: " + A.RESET);
+            System.out.print(" " + A.UL + "Please pick a number:" + A.RESET);
             System.out.println(" Press 0 to cancel the action ");
             if (l1 != null)
                 System.out.println(" Press 1 to disable the first card and get a " + FAITH + " point ");
@@ -1112,7 +1112,7 @@ class Halo {
                 if (checkLeaderCardsNumber(textList)) {
                     cardToDiscard = Integer.parseInt(textList.get(0));
                     if (cardToDiscard == 0) {
-                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                        System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                         return null;
                     }
                     break;
@@ -1123,7 +1123,7 @@ class Halo {
         try {
             return new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
         } catch (IllegalArgumentException e) {
-            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
         }
     }
@@ -1137,7 +1137,7 @@ class Halo {
         LeaderCard l2 = getMyLeaderCard(1);
 
         if (checkLeaderCards()) {
-            System.out.println(A.UL + " Please select an option: " + A.RESET);
+            System.out.println(" " + A.UL + "Please select an option:" + A.RESET);
             System.out.println(" Press 0 to cancel the action ");
             if (l1 != null)
                 System.out.println(" Press 1 to enable the first card ");
@@ -1153,7 +1153,7 @@ class Halo {
                 if (checkLeaderCardsNumber(textList)) {
                     cardToActivate = Integer.parseInt(textList.get(0));
                     if (cardToActivate == 0) {
-                        System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                        System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                         return null;
                     }
                     break;
@@ -1164,7 +1164,7 @@ class Halo {
         try {
             return new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
         } catch (IllegalArgumentException e) {
-            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
         }
     }
@@ -1200,7 +1200,7 @@ class Halo {
             }
             return msgToSend;
         } catch (IllegalArgumentException e) {
-            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
         }
     }
@@ -1224,7 +1224,7 @@ class Halo {
         try {
             return new MSG_ACTION_MARKET_CHOICE(choice);
         } catch (IllegalArgumentException e) {
-            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
         }
     }
@@ -1261,7 +1261,7 @@ class Halo {
         try {
             return new MSG_INIT_CHOOSE_RESOURCE(resource);
         } catch (IllegalArgumentException e) {
-            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
         }
     }
@@ -1276,7 +1276,7 @@ class Halo {
                 first = Integer.parseInt(textList.get(0));
 
                 while (true) {
-                    System.out.println(A.UL + " > Please pick the second card: " + A.RESET);
+                    System.out.println(" > " + A.UL + "Please pick the second card:" + A.RESET);
                     System.out.print(" Card number: ");
                     text = Halo.input.nextLine();
                     textList.clear();
@@ -1294,7 +1294,7 @@ class Halo {
         try {
             return new MSG_INIT_CHOOSE_LEADERCARDS(first - 1, second - 1);
         } catch (IllegalArgumentException e) {
-            System.out.println(A.RED + " > We could not build that message, please debug me: " + A.RESET);
+            System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
         }
     }
@@ -1321,7 +1321,7 @@ class Halo {
     private static void showPlayerAsset(String key, PlayerSimplified player) {
         switch (key.toLowerCase()) {
             case "vp":
-                System.out.println(" his/her VP : " + player.getVp());
+                System.out.println(" His/her VP : " + player.getVp());
                 break;
             case "leadercards":
                 LeaderCard[] cards = player.getLeaderCards();
@@ -1367,14 +1367,14 @@ class ClosingPhase {
 class MenuPhase {
     public Phase run() {
         Halo.sweep();
-        System.out.println(A.UL + " <<>> Main Menu." + A.RESET);
-        System.out.println(" >> write " + A.CYAN + "help" + A.RESET + " for a list of commands.");
+        System.out.println(" <<>> "+ A.UL + "Main Menu." + A.RESET);
+        System.out.println(" >> Write " + A.CYAN + "help" + A.RESET + " for a list of commands.");
         List<String> textList = new ArrayList<>();
         String text;
         Message message;
 
         while (true) {
-            System.out.print(" command: ");
+            System.out.print(" Command: ");
             text = Halo.input.nextLine();
 
             textList.clear();
@@ -1385,12 +1385,12 @@ class MenuPhase {
                     if (textList.size() != 3) break;
                     if (textList.get(1).equalsIgnoreCase("ip")) {
                         Halo.defaultAddress = textList.get(2);
-                        System.out.println(A.GREEN + " > new ip: " + A.RESET + Halo.defaultAddress);
+                        System.out.println(A.GREEN + " > New ip: " + A.RESET + Halo.defaultAddress);
                     }
-                    if (textList.get(1).equalsIgnoreCase("port")) {
+                    if (textList.get(1).equalsIgnoreCase("Port")) {
                         try {
                             Halo.defaultPort = Integer.parseInt(textList.get(3));
-                            System.out.println(A.GREEN + " > new port: " + A.RESET + Halo.defaultPort);
+                            System.out.println(A.GREEN + " > New port: " + A.RESET + Halo.defaultPort);
                         } catch (NumberFormatException e) {
                             System.out.println(A.RED + " > That was not a number" + A.RESET);
                         }
@@ -1798,7 +1798,7 @@ class OnlinePhase {
                                 Halo.printActions();
                                 actionLoop:
                                 while (true) {
-                                    System.out.println(A.UL + " Please pick a number: " + A.RESET);
+                                    System.out.println(" > " + A.UL + "Please pick a number:" + A.RESET);
                                     System.out.print(" Number: ");
                                     text = Halo.input.nextLine();
                                     textList.clear();
@@ -1874,7 +1874,7 @@ class OnlinePhase {
                                             }
 //GO BACK
                                             case 0: {
-                                                System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                                System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                                                 break actionLoop;
                                             }
                                         }
@@ -1960,7 +1960,7 @@ class LocalPhase {
                             Halo.printActions();
                             actionLoop:
                             while (true) {
-                                System.out.println(A.UL + " Please pick a number: " + A.RESET);
+                                System.out.println(" > " + A.UL + "Please pick a number:" + A.RESET);
                                 System.out.print(" Number: ");
                                 text = Halo.input.nextLine();
                                 textList.clear();
@@ -2030,7 +2030,7 @@ class LocalPhase {
                                         }
 //GO BACK
                                         case 0: {
-                                            System.out.println(A.GREEN + " > Going back to main menu" + A.RESET);
+                                            System.out.println(A.GREEN + " > Going back to Main Menu" + A.RESET);
                                             break actionLoop;
                                         }
 
@@ -2072,7 +2072,7 @@ class LocalPhase {
 
         System.out.println(" <> Two free Leader Cards!");
         System.out.println(Halo.gameSRV.getLeaderCardsPicker().toString());
-        System.out.println(" > Please pick the first card:");
+        System.out.println(" > " + A.UL + "Please pick the first card:" + A.RESET);
         System.out.print(" Card number: ");
     }
 }
