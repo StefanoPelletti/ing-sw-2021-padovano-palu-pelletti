@@ -469,7 +469,6 @@ public class ActivateProductionTest {
 
         assertEquals(0, p.getWarehouseDepot().getTotal());
         assertEquals(1, p.getStrongbox().getQuantity(Resource.STONE));
-        assertEquals(0, p.getStrongbox().getQuantity(Resource.COIN));
         assertEquals(4, p.getStrongbox().getQuantity(Resource.SHIELD));
         assertNull(p.getStrongbox().getQuantity(Resource.SERVANT));
 

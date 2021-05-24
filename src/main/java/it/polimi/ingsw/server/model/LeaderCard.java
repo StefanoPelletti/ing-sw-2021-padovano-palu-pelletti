@@ -11,7 +11,7 @@ public class LeaderCard implements Serializable {
     private final int vp;
     private final Requirement requirement;
     private final SpecialAbility specialAbility;
-    private boolean enabled;
+    private Boolean enabled;
 
     public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility) {
         this.vp = vp;
@@ -32,13 +32,13 @@ public class LeaderCard implements Serializable {
         return specialAbility;
     }
 
-    public boolean getEnable() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnable(boolean enable) {
+    public void setEnabled(boolean enabled) {
 // does not need to notify(), the players updates it automatically
-        this.enabled = enable;
+        this.enabled = enabled;
     }
 
     @Override
@@ -70,6 +70,6 @@ public class LeaderCard implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.vp, this.requirement, this.specialAbility, this.enabled);
+        return Objects.hash(this.vp, this.requirement, this.specialAbility);
     }
 }

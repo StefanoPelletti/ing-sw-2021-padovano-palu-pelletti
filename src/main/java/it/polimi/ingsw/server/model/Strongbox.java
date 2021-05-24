@@ -53,6 +53,7 @@ public class Strongbox extends ModelObservable {
         } else {
             if ((tmp - quantity) >= 0) /*there will be resources after the remove */ {
                 resources.put(resource, tmp - quantity);
+                if(resources.get(resource)==0) resources.remove(resource);
                 notifyObservers();
                 return true;
             } else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
@@ -72,18 +73,6 @@ public class Strongbox extends ModelObservable {
         return resources.values().stream().reduce(0, Integer::sum);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (!(obj instanceof Strongbox)) return false;
-        Strongbox o = (Strongbox) obj;
-        return (this.resources.equals((o).resources));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.resources);
-    }
 
     @Override
     public String toString() {

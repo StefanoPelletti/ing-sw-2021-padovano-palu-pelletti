@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;

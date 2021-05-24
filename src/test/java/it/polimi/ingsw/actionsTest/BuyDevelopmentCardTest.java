@@ -10,7 +10,7 @@ import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.enumerators.Status;
 import it.polimi.ingsw.server.model.middles.DevelopmentCardsVendor;
-import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
@@ -144,7 +144,7 @@ public class BuyDevelopmentCardTest {
                 new ExtraDepot(Resource.SERVANT)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -192,8 +192,8 @@ public class BuyDevelopmentCardTest {
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -240,8 +240,8 @@ public class BuyDevelopmentCardTest {
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -433,8 +433,8 @@ public class BuyDevelopmentCardTest {
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
 
         DevelopmentCard[][][] grid = new DevelopmentCard[3][4][4];
 
@@ -501,8 +501,8 @@ public class BuyDevelopmentCardTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.COIN;

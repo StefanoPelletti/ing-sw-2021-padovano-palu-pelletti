@@ -11,6 +11,7 @@ import it.polimi.ingsw.server.model.marbles.MarketMarble;
 import it.polimi.ingsw.server.model.marbles.RedMarbleException;
 import it.polimi.ingsw.server.model.middles.*;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.Requirement;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
@@ -193,7 +194,7 @@ public class ActionManager {
             return false;
         }
 
-        if (player.getLeaderCards()[cardNumber].getEnable()) {
+        if (player.getLeaderCards()[cardNumber].isEnabled()) {
             gameManager.setErrorObject("Error! This card was already enabled!");
             return false;
         }
@@ -257,7 +258,7 @@ public class ActionManager {
             gameManager.setErrorObject("Error! You already discarded that card!");
             return false;
         }
-        if (player.getLeaderCards()[cardNumber].getEnable()) {
+        if (player.getLeaderCards()[cardNumber].isEnabled()) {
             gameManager.setErrorObject("Error! You can't discard a card that has already been enabled!");
             return false;
         }
@@ -304,7 +305,7 @@ public class ActionManager {
 
         if (leaderProduction[0]) {
             LeaderCard l1 = player.getLeaderCards()[0];
-            if (l1 == null || !l1.getEnable() || !l1.getSpecialAbility().isProduction()) {
+            if (l1 == null || !l1.isEnabled() || !l1.getSpecialAbility().isProduction()) {
                 gameManager.setErrorObject("You cannot produce with the first leader card!");
                 return false;
             }
@@ -312,7 +313,7 @@ public class ActionManager {
 
         if (leaderProduction[1]) {
             LeaderCard l2 = player.getLeaderCards()[1];
-            if (l2 == null || !l2.getEnable() || !l2.getSpecialAbility().isProduction()) {
+            if (l2 == null || !l2.isEnabled() || !l2.getSpecialAbility().isProduction()) {
                 gameManager.setErrorObject("You cannot produce with the second leader card!");
                 return false;
             }

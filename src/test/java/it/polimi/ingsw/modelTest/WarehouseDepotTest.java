@@ -655,6 +655,21 @@ public class WarehouseDepotTest {
     }
 
     @Test
+    public void hashEqualsTest()
+    {
+        WarehouseDepot depot1 = warehouseDepot;
+        WarehouseDepot depot2 = new WarehouseDepot();
+        WarehouseDepot depot3 = new WarehouseDepot();
+
+        depot1.add(Resource.STONE);
+        depot2.add(Resource.STONE);
+        depot3.add(Resource.COIN);
+
+        assertEquals(depot1.hashCode(), depot2.hashCode());
+        assertNotEquals(depot1.hashCode(), depot3.hashCode());
+    }
+
+    @Test
     public void toStringFormat() {
         System.out.println(warehouseDepot.toString());
     }

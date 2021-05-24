@@ -255,4 +255,28 @@ public class DevelopmentCardsDeckTest {
         assertEquals(card1, card2);
         assertNotEquals(card1, card3);
     }
+
+    @Test
+    public void hashEqualsTest() {
+        DevelopmentCard card1 = new DevelopmentCard(3, Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1))
+        );
+
+        DevelopmentCard card2 = new DevelopmentCard(3, Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1))
+        );
+
+        DevelopmentCard card3 = new DevelopmentCard(3, Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 2))
+        );
+
+        assertEquals(card1.hashCode(), card2.hashCode());
+        assertNotEquals(card1.hashCode(), card3.hashCode());
+    }
 }

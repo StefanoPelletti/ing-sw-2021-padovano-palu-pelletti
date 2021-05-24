@@ -179,19 +179,6 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (!(obj instanceof DevelopmentSlot)) return false;
-        DevelopmentSlot o = (DevelopmentSlot) obj;
-        return (Arrays.deepEquals(this.cards, (o).cards));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.cards);
-    }
-
-    @Override
     public String toString() {
         return DevelopmentSlot.toString(this.cards);
     }

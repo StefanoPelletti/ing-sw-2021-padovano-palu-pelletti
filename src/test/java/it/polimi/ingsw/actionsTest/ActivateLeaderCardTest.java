@@ -11,7 +11,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
@@ -125,7 +125,7 @@ public class ActivateLeaderCardTest {
 
         assertTrue(am.activateLeaderCard(p, message));
 
-        assertTrue(l1.getEnable());
+        assertTrue(l1.isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
@@ -145,7 +145,7 @@ public class ActivateLeaderCardTest {
 
         assertTrue(am.activateLeaderCard(p, message));
 
-        assertTrue(l2.getEnable());
+        assertTrue(l2.isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
@@ -174,7 +174,7 @@ public class ActivateLeaderCardTest {
 
         assertTrue(am.activateLeaderCard(p, message));
 
-        assertTrue(l3.getEnable());
+        assertTrue(l3.isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());

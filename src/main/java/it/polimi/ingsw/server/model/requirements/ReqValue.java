@@ -1,8 +1,7 @@
-package it.polimi.ingsw.server.model.middles;
-
-import it.polimi.ingsw.server.model.requirements.CardRequirements;
+package it.polimi.ingsw.server.model.requirements;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ReqValue implements Serializable {
     private final int reqNumCard;
@@ -19,8 +18,13 @@ public class ReqValue implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (!(obj instanceof CardRequirements)) return false;
+        if (!(obj instanceof ReqValue)) return false;
         ReqValue o = (ReqValue) obj;
         return (this.reqNumCard == o.reqNumCard && this.reqLvlCard == o.reqLvlCard);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.reqNumCard, this.reqLvlCard);
     }
 }

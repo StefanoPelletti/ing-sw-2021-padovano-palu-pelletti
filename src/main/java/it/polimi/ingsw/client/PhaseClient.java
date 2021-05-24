@@ -516,18 +516,18 @@ class Halo {
         }
         if (l1 != null) {
             if (l2 != null) {
-                if (l1.getEnable() && l2.getEnable()) {
+                if (l1.isEnabled() && l2.isEnabled()) {
                     System.out.println(A.RED + " > Both cards are already activated!" + A.RESET);
                     return false;
                 }
             } else {
-                if (l1.getEnable()) {
+                if (l1.isEnabled()) {
                     System.out.println(A.RED + " > The only card present, the first, is already activated!" + A.RESET);
                     return false;
                 }
             }
         } else {
-            if (l2.getEnable()) {
+            if (l2.isEnabled()) {
                 System.out.println(A.RED + " > The only card present, the second, is already activated!" + A.RESET);
                 return false;
             }
@@ -552,7 +552,7 @@ class Halo {
                 if (l1 == null) {
                     System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
                     return false;
-                } else if (l1.getEnable()) {
+                } else if (l1.isEnabled()) {
                     System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
                     return false;
                 }
@@ -561,7 +561,7 @@ class Halo {
                 if (l2 == null) {
                     System.out.println(A.RED + " > Sorry, but that card is discarded" + A.RESET);
                     return false;
-                } else if (l2.getEnable()) {
+                } else if (l2.isEnabled()) {
                     System.out.println(A.RED + " > Sorry, but that card is already activated" + A.RESET);
                     return false;
                 }
@@ -807,10 +807,10 @@ class Halo {
         LeaderCard l1 = getMyLeaderCard(0);
         LeaderCard l2 = getMyLeaderCard(1);
 
-        if (l1 != null && l1.getEnable() && l1.getSpecialAbility().isExtraDepot()) {
+        if (l1 != null && l1.isEnabled() && l1.getSpecialAbility().isExtraDepot()) {
             System.out.println(" Extra depot of Card Number 1: " + l1.getSpecialAbility());
         }
-        if (l2 != null && l2.getEnable() && l2.getSpecialAbility().isExtraDepot()) {
+        if (l2 != null && l2.isEnabled() && l2.getSpecialAbility().isExtraDepot()) {
             System.out.println(" Extra depot of Card Number 2: " + l2.getSpecialAbility());
         }
 
@@ -863,7 +863,7 @@ class Halo {
         int secondExtra = -1;
 
 
-        if (l1 != null && l1.getEnable() && l1.getSpecialAbility().isExtraDepot()) {
+        if (l1 != null && l1.isEnabled() && l1.getSpecialAbility().isExtraDepot()) {
             System.out.println(" > " + A.UL + "What about the extra depot for the resource " + ((ExtraDepot) l1.getSpecialAbility()).getResourceType() + "." +
                     " \n Please tell me how many resources you want to put in" + A.RESET + " -1 to quit");
             while (true) {
@@ -882,7 +882,7 @@ class Halo {
             }
 
         }
-        if (l2 != null && l2.getEnable() && l2.getSpecialAbility().isExtraDepot()) {
+        if (l2 != null && l2.isEnabled() && l2.getSpecialAbility().isExtraDepot()) {
             System.out.println(" > " + A.UL + "What about the extra depot for the resource" + ((ExtraDepot) l2.getSpecialAbility()).getResourceType() + "." +
                     " \n Please tell me how many resources you want to put in" + A.RESET + " -1 to quit");
             while (true) {
@@ -930,10 +930,10 @@ class Halo {
 
         System.out.println(Halo.printMyWarehouseDepot());
         System.out.println(Halo.printMyStrongbox());
-        if (l1 != null && l1.getEnable() && l1.getSpecialAbility().isExtraDepot()) {
+        if (l1 != null && l1.isEnabled() && l1.getSpecialAbility().isExtraDepot()) {
             System.out.println(" Extra depot of Card Number 1: " + l1.getSpecialAbility());
         }
-        if (l2 != null && l2.getEnable() && l2.getSpecialAbility().isExtraDepot()) {
+        if (l2 != null && l2.isEnabled() && l2.getSpecialAbility().isExtraDepot()) {
             System.out.println(" Extra depot of Card Number 2: " + l2.getSpecialAbility());
         }
 
@@ -1022,12 +1022,12 @@ class Halo {
                 }
             }
         }
-        if ((l1 != null && l1.getEnable()) || (l2 != null && l2.getEnable())) {
+        if ((l1 != null && l1.isEnabled()) || (l2 != null && l2.isEnabled())) {
             if (Arrays.stream(getBothMyLeaderCard()).anyMatch(l -> l.getSpecialAbility().isProduction())) {
                 System.out.println(" >> LEADER PRODUCTION");
                 for (int i = 0; i < 2; i++) {
                     LeaderCard l = getMyLeaderCard(i);
-                    if (l != null && l.getEnable() && l.getSpecialAbility().isProduction()) {
+                    if (l != null && l.isEnabled() && l.getSpecialAbility().isProduction()) {
                         System.out.println(l);
                         System.out.println(" " + A.UL + "Do you want to activate this card?" + A.RESET);
                         System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
@@ -1338,14 +1338,14 @@ class Halo {
             case "leadercards":
                 LeaderCard[] cards = player.getLeaderCards();
                 if (cards[0] != null) {
-                    if (cards[0].getEnable())
+                    if (cards[0].isEnabled())
                         System.out.println(" Leader Card #1: \n" + cards[0].toString());
                     else
                         System.out.println(" Leader Card #1: covered");
                 } else
                     System.out.println(" Leader Card #1: none");
                 if (cards[1] != null) {
-                    if (cards[1].getEnable())
+                    if (cards[1].isEnabled())
                         System.out.println(" Leader Card #2: \n" + cards[1].toString());
                     else
                         System.out.println(" Leader Card #2: covered");

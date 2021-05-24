@@ -2,15 +2,23 @@ package it.polimi.ingsw.modelTest;
 
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.LeaderCardsDeck;
+import it.polimi.ingsw.server.model.enumerators.Color;
+import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
+import it.polimi.ingsw.server.model.requirements.CardRequirements;
+import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
+import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
+import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class LeaderCardsDeckTest {
 
@@ -85,8 +93,68 @@ public class LeaderCardsDeckTest {
     }
 
     @Test
-    public void equalsTest() {
+    public void equalsTestCardRequirements() {
+        LeaderCard l1=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SERVANT));
+        LeaderCard l2=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SERVANT));
+        LeaderCard l3=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.COIN));
 
+        assertEquals(l1, l2);
+        assertNotEquals(l1, l3);
+
+    }
+
+    @Test
+    public void equalsTestResourceRequirements() {
+        LeaderCard l1=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.STONE));
+        LeaderCard l2=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.STONE));
+        LeaderCard l3=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.COIN));
+
+        assertEquals(l1, l2);
+        assertNotEquals(l1, l3);
+    }
+    @Test
+    public void hashEqualsTestCardRequirements() {
+        LeaderCard l1=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SERVANT));
+        LeaderCard l2=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SERVANT));
+        LeaderCard l3=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.COIN));
+
+        assertEquals(l1.hashCode(), l2.hashCode());
+        assertNotEquals(l1.hashCode(), l3.hashCode());
+
+    }
+
+    @Test
+    public void hashEqualsTestResourceRequirements() {
+        LeaderCard l1=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.STONE));
+        LeaderCard l2=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.STONE));
+        LeaderCard l3=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.COIN));
+
+        assertEquals(l1.hashCode(), l2.hashCode());
+        assertNotEquals(l1.hashCode(), l3.hashCode());
     }
 
     @Test

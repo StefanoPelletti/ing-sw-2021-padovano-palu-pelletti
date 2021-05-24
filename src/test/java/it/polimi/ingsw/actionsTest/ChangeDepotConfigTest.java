@@ -10,7 +10,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
@@ -67,8 +67,8 @@ public class ChangeDepotConfigTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.COIN;
@@ -132,8 +132,8 @@ public class ChangeDepotConfigTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.SHIELD;
@@ -190,7 +190,7 @@ public class ChangeDepotConfigTest {
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         //p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.NONE;
@@ -214,7 +214,7 @@ public class ChangeDepotConfigTest {
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.SERVANT);
-        assertFalse(p.getLeaderCards()[0].getEnable());
+        assertFalse(p.getLeaderCards()[0].isEnabled());
         assertEquals(0, ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).getNumber());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
@@ -245,8 +245,8 @@ public class ChangeDepotConfigTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.COIN;
@@ -271,8 +271,8 @@ public class ChangeDepotConfigTest {
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
-        assertTrue(p.getLeaderCards()[0].getEnable());
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertTrue(p.getLeaderCards()[0].isEnabled());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
         assertEquals(0, ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).getNumber());
         assertEquals(2, ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).getNumber());
 
@@ -304,8 +304,8 @@ public class ChangeDepotConfigTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.NONE;
@@ -361,8 +361,8 @@ public class ChangeDepotConfigTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         Resource r0 = Resource.NONE;
@@ -418,8 +418,8 @@ public class ChangeDepotConfigTest {
                 new CardRequirements(Map.of(Color.GREEN, new ReqValue(2, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         Resource r0 = Resource.SHIELD;
         Resource[] r1 = new Resource[]{Resource.COIN, Resource.NONE};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.NONE};
@@ -440,8 +440,8 @@ public class ChangeDepotConfigTest {
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.NONE);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.SHIELD);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
-        assertTrue(p.getLeaderCards()[0].getEnable());
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertTrue(p.getLeaderCards()[0].isEnabled());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_WarehouseDepot).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());
@@ -487,8 +487,8 @@ public class ChangeDepotConfigTest {
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
-        assertFalse(p.getLeaderCards()[0].getEnable());
-        assertFalse(p.getLeaderCards()[1].getEnable());
+        assertFalse(p.getLeaderCards()[0].isEnabled());
+        assertFalse(p.getLeaderCards()[1].isEnabled());
 
 //no messages generated, cause no updates were made!
         assertEquals(0, c.messages.size());
@@ -532,8 +532,8 @@ public class ChangeDepotConfigTest {
                 new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
                 new ExtraDepot(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).setResource(0);
@@ -575,8 +575,8 @@ public class ChangeDepotConfigTest {
                 new CardRequirements(Map.of(Color.GREEN, new ReqValue(2, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[0].setEnable(false);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[0].setEnabled(false);
         Resource r0 = Resource.SHIELD;
         Resource[] r1 = new Resource[]{Resource.COIN, Resource.NONE};
         Resource[] r2 = new Resource[]{Resource.SERVANT, Resource.SERVANT, Resource.NONE};
@@ -597,8 +597,8 @@ public class ChangeDepotConfigTest {
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
-        assertFalse(p.getLeaderCards()[0].getEnable());
-        assertFalse(p.getLeaderCards()[1].getEnable());
+        assertFalse(p.getLeaderCards()[0].isEnabled());
+        assertFalse(p.getLeaderCards()[1].isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
@@ -614,8 +614,8 @@ public class ChangeDepotConfigTest {
         assertSame(p.getWarehouseDepot().getShelf3()[0], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[1], Resource.SERVANT);
         assertSame(p.getWarehouseDepot().getShelf3()[2], Resource.NONE);
-        assertFalse(p.getLeaderCards()[0].getEnable());
-        assertFalse(p.getLeaderCards()[1].getEnable());
+        assertFalse(p.getLeaderCards()[0].isEnabled());
+        assertFalse(p.getLeaderCards()[1].isEnabled());
 
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());

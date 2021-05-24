@@ -13,17 +13,14 @@ public class MSG_UPD_Player extends Message implements Serializable {
     private final String nickname;
     private final int position;
     private final LeaderCard[] leaderCards;
+    private final boolean card1Enabled;
+    private final boolean card2Enabled;
 
     public MSG_UPD_Player(int vp, int playerNumber, String nickname, int position, LeaderCard[] leaderCards) {
         super(MessageType.MSG_UPD_Player);
 
-        if(leaderCards[0]!=null && leaderCards[1]!=null)
-        {
-            if(leaderCards[0].getEnable()==true||leaderCards[1].getEnable()==true)
-                System.out.println("wadkaiwdjiusjdif");
-        }
-
-
+        this.card1Enabled= leaderCards[0] != null && leaderCards[0].isEnabled();
+        this.card2Enabled= leaderCards[1] != null && leaderCards[1].isEnabled();
 
         this.vp = vp;
         this.playerNumber = playerNumber;
@@ -52,4 +49,8 @@ public class MSG_UPD_Player extends Message implements Serializable {
     public LeaderCard[] getLeaderCards() {
         return this.leaderCards;
     }
+
+    public boolean isCard1Enabled() { return this.card1Enabled;}
+
+    public boolean isCard2Enabled() { return this.card2Enabled;}
 }

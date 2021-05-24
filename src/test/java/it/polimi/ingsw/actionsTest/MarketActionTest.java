@@ -11,7 +11,7 @@ import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.enumerators.Status;
 import it.polimi.ingsw.server.model.marbles.*;
-import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
@@ -229,7 +229,7 @@ public class MarketActionTest {
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
 
         c.emptyQueue();
 
@@ -275,7 +275,7 @@ public class MarketActionTest {
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[1].setEnabled(true);
 
         c.emptyQueue();
 
@@ -322,8 +322,8 @@ public class MarketActionTest {
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
 
         c.emptyQueue();
 
@@ -500,8 +500,8 @@ public class MarketActionTest {
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         c.emptyQueue();
@@ -596,7 +596,7 @@ public class MarketActionTest {
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         c.emptyQueue();
 
@@ -680,7 +680,7 @@ public class MarketActionTest {
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         c.emptyQueue();
 
@@ -776,8 +776,8 @@ public class MarketActionTest {
                 new MarketResources(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         p.setPosition(7);
         g.getPlayer(2).setPosition(5);
         c.emptyQueue();
@@ -1126,8 +1126,8 @@ public class MarketActionTest {
                 new ExtraDepot(Resource.STONE)));
 
         p.associateLeaderCards(lc);
-        p.getLeaderCards()[0].setEnable(true);
-        p.getLeaderCards()[1].setEnable(true);
+        p.getLeaderCards()[0].setEnabled(true);
+        p.getLeaderCards()[1].setEnabled(true);
         ((ExtraDepot) p.getLeaderCards()[0].getSpecialAbility()).addObserver(c);
         ((ExtraDepot) p.getLeaderCards()[1].getSpecialAbility()).addObserver(c);
         c.emptyQueue();

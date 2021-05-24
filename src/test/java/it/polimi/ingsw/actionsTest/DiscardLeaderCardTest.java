@@ -10,7 +10,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.MarketResources;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,15 +93,15 @@ public class DiscardLeaderCardTest {
         p.setLeaderCards(1, true);
         c.emptyQueue();
 
-        assertTrue(p.getLeaderCards()[0].getEnable());
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertTrue(p.getLeaderCards()[0].isEnabled());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
 
         assertFalse(am.discardLeaderCard(p, new MSG_ACTION_DISCARD_LEADERCARD(0)));
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_ERROR).count());
         assertEquals(1, c.messages.size());
 
-        assertTrue(p.getLeaderCards()[0].getEnable());
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertTrue(p.getLeaderCards()[0].isEnabled());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
     }
 
     //card 0 is going to be discarded
@@ -121,8 +121,8 @@ public class DiscardLeaderCardTest {
         p.setLeaderCards(1, true);
         c.emptyQueue();
 
-        assertFalse(p.getLeaderCards()[0].getEnable());
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertFalse(p.getLeaderCards()[0].isEnabled());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
         assertEquals(0, p.getPosition());
 
         assertTrue(am.discardLeaderCard(p, new MSG_ACTION_DISCARD_LEADERCARD(0)));
@@ -132,7 +132,7 @@ public class DiscardLeaderCardTest {
         assertEquals(4, c.messages.size());
 
         assertNull(p.getLeaderCards()[0]);
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
         assertEquals(1, p.getPosition());
     }
 
@@ -161,7 +161,7 @@ public class DiscardLeaderCardTest {
         assertEquals(1, c.messages.size());
 
         assertNull(p.getLeaderCards()[0]);
-        assertTrue(p.getLeaderCards()[1].getEnable());
+        assertTrue(p.getLeaderCards()[1].isEnabled());
     }
 
     //discarding both leader cards
@@ -180,13 +180,13 @@ public class DiscardLeaderCardTest {
         p.associateLeaderCards(lc);
         c.emptyQueue();
 
-        assertFalse(p.getLeaderCards()[0].getEnable());
-        assertFalse(p.getLeaderCards()[1].getEnable());
+        assertFalse(p.getLeaderCards()[0].isEnabled());
+        assertFalse(p.getLeaderCards()[1].isEnabled());
         assertEquals(0, p.getPosition());
 
         assertTrue(am.discardLeaderCard(p, new MSG_ACTION_DISCARD_LEADERCARD(0)));
         assertNull(p.getLeaderCards()[0]);
-        assertFalse(p.getLeaderCards()[1].getEnable());
+        assertFalse(p.getLeaderCards()[1].isEnabled());
         assertEquals(1, p.getPosition());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(2, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_NOTIFICATION).count());

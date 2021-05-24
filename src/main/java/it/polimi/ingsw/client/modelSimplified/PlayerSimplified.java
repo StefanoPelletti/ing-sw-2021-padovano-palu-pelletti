@@ -46,6 +46,9 @@ public class PlayerSimplified {
         this.leaderCards = new LeaderCard[2];
         this.leaderCards[0] = newLeaderCards[0];
         this.leaderCards[1] = newLeaderCards[1];
+
+        if(newLeaderCards[0]!=null && message.isCard1Enabled()) this.leaderCards[0].setEnabled(true);
+        if(newLeaderCards[1]!=null && message.isCard2Enabled()) this.leaderCards[1].setEnabled(true);
     }
 
     public void updateExtradepot(MSG_UPD_Extradepot message) {

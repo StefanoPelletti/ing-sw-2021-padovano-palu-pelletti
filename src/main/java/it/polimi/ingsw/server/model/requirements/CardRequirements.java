@@ -1,7 +1,6 @@
 package it.polimi.ingsw.server.model.requirements;
 
 import it.polimi.ingsw.server.model.enumerators.Color;
-import it.polimi.ingsw.server.model.middles.ReqValue;
 import it.polimi.ingsw.server.utils.A;
 
 import java.io.Serializable;
