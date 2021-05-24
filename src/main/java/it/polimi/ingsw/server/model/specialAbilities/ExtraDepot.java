@@ -83,7 +83,7 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         StringBuilder result = new StringBuilder();
         result.append("\u001B[31m" + "   SPECIAL ABILITY: " + "\u001B[0m").append("\n");
         result.append("    You have 2 more slots for ").append(resource).append("\n");
-        if (number > 0) result.append("    There is/are").append(number).append("!").append("\n");
+        if (number > 0) result.append("    There is/are ").append(number).append("!").append("\n");
         return result.toString();
     }
 

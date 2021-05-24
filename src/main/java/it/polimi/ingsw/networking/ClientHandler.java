@@ -272,6 +272,7 @@ public class ClientHandler implements Runnable, ModelObserver {
     public void send(Message message) throws IOException {
         if (!pendingConnection) {
             synchronized (outputLock) {
+                objectOutputStream.reset();
                 objectOutputStream.writeObject(message);
                 objectOutputStream.flush();
             }

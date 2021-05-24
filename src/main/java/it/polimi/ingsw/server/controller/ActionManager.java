@@ -282,7 +282,7 @@ public class ActionManager {
 
 //MESSAGE VALIDATION    //impossible to test
         if (standardProduction == null || leaderProduction == null) {
-            gameManager.setErrorObject("Error! Message not well formatted: standardproductioo or leaderproduction == null");
+            gameManager.setErrorObject("Error! Message not well formatted: standardproduction or leaderproduction == null");
             return false;
         }
         if (baseProduction && (basicInput == null || basicInput.size() != 2)) {
@@ -972,7 +972,7 @@ public class ActionManager {
             if (warehouseDepot.isAddable(resource)) choices[0] = true;
 
             //choice 1: put in extra depot
-            ExtraDepot e = null;
+            ExtraDepot e;
             if (extraDepotCards.isEmpty()) {
                 choices[1] = false;
             } else if (extraDepotCards.size() == 1) {

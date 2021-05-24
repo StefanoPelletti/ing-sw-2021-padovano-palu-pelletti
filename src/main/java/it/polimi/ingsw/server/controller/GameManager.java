@@ -141,7 +141,7 @@ public class GameManager {
                 points += card.getVp();
             }
             for (LeaderCard leaderCard : p.getLeaderCards()) {
-                if (leaderCard != null) {
+                if (leaderCard != null && leaderCard.isEnabled()) {
                     points += leaderCard.getVp();
                 }
             }
