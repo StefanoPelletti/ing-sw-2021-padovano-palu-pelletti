@@ -124,6 +124,7 @@ public class GameManager {
 
     public void setErrorObject(String errorCause) {
         game.getErrorObject().setErrorMessage(errorCause);
+        System.out.println(errorCause);
         game.getErrorObject().setEnabled(true);
     }
 

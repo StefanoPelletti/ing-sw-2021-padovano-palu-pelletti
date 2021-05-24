@@ -640,6 +640,21 @@ public class WarehouseDepotTest {
     }
 
     @Test
+    public void equalsTest()
+    {
+        WarehouseDepot depot1 = warehouseDepot;
+        WarehouseDepot depot2 = new WarehouseDepot();
+        WarehouseDepot depot3 = new WarehouseDepot();
+
+        depot1.add(Resource.STONE);
+        depot2.add(Resource.STONE);
+        depot3.add(Resource.COIN);
+
+        assertEquals(depot1, depot2);
+        assertNotEquals(depot1, (depot3));
+    }
+
+    @Test
     public void toStringFormat() {
         System.out.println(warehouseDepot.toString());
     }

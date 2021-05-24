@@ -17,27 +17,18 @@ public class DevelopmentCardsVendor extends ModelObservable {
         vendorCards = null;
     }
 
-    public static String toString(boolean enabled, Map<DevelopmentCard, boolean[]> cards) {
+    public static String toString(boolean enabled, List<VendorCard> cards) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append(A.RED + " VENDOR IS NOT ENABLED!" + A.RESET).toString();
-        int i = 1;
         result.append(A.CYAN + " THE VENDOR IS HERE TO HELP! " + A.RESET).append("\n").append("\n");
-        if (cards != null) {
-            for (DevelopmentCard dc : cards.keySet()) {
-                result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-                result.append("  The card number: ").append(i).append("\n");
-                result.append(dc).append("\n");
-                int k = 1;
-                for (boolean b : cards.get(dc)) {
-                    if (b) {
-                        result.append("  Can be placed in slot number: ").append(k).append("\n");
-                    }
-                    k++;
-                }
-                i++;
-            }
-        } else
-            result.append(" No cards present");
+        for(int i=0; i<cards.size(); i++) {
+            result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+            result.append("  The card number: ").append(i + 1).append("\n");
+            result.append(cards.get(i).getCard()).append("\n");
+            if (cards.get(i).isSlot1()) result.append("  Can be placed in slot number 1").append("\n");
+            if (cards.get(i).isSlot2()) result.append("  Can be placed in slot number 2").append("\n");
+            if (cards.get(i).isSlot3()) result.append("  Can be placed in slot number 3").append("\n");
+        }
         return result.toString();
     }
 

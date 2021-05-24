@@ -525,7 +525,8 @@ public class ActionManager {
 
     public boolean buyDevelopmentCard(Player player) {
         DevelopmentCard[][] possibleCards = game.getVisibleCards();
-        Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
+        List<VendorCard> finalCards = new ArrayList<>();
+        //Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
         if (player.getAction()) {
             gameManager.setErrorObject("Error! You already performed a very powerful action!");
@@ -543,13 +544,16 @@ public class ActionManager {
 
         List<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
         List<Resource> discountedResources = new ArrayList<>();
+
         if (!specialAb.isEmpty()) {
             for (LeaderCard leaderCard : specialAb) {
                 discountedResources.add(((DiscountResource) leaderCard.getSpecialAbility()).getDiscountedResource());
             }
         }
 
-        ArrayList<DevelopmentCard> tmp = new ArrayList<>(cards);
+        Map<Resource, Integer> playerResources = player.getResources();
+        List<DevelopmentCard> tmp = new ArrayList<>(cards);
+
         //first check: all the cards that the player can't buy are removed from the ones that are on top.
         for (int i = 0; i < tmp.size(); i++) {
             Map<Resource, Integer> cost = tmp.get(i).getCost();
@@ -571,13 +575,20 @@ public class ActionManager {
             return false;
         }
 
+        boolean slot1;
+        boolean slot2;
+        boolean slot3;
+
         //second check: all the cards that the player can't put in his slot are removed from the ones selected before.
         for (int i = 0; i < cards.size(); i++) {
-            boolean[] pos = new boolean[3];
-            for (int j = 0; j < 3; j++) {
-                if (player.getDevelopmentSlot().validateNewCard(cards.get(i), j)) {
-                    pos[j] = true;
-                }
+            slot1=false;
+            slot2=false;
+            slot3=false;
+            if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 0)) {
+                slot1=true;
+            }
+            if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 1)) {
+                slot2=true;
             }
             if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 2)) {
                 slot3=true;
@@ -650,6 +661,11 @@ public class ActionManager {
                     break loop;
                 }
             }
+        }
+        if(r==3)
+        {
+            gameManager.setErrorObject("Error! Card was not present!");
+            return false;
         }
 
         game.removeCardOnDevelopmentCardsDeck(r, c);

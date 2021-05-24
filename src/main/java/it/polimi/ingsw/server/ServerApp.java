@@ -15,7 +15,7 @@ public class ServerApp {
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server online, listening on: " + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort());
-            while (openedConnections < 1000000L) {
+            while (openedConnections <= 1000000L) {
                 socket = serverSocket.accept();
                 new Thread(new ClientHandler(socket)).start();
 

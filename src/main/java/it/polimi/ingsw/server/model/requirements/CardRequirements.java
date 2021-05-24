@@ -1,19 +1,21 @@
 package it.polimi.ingsw.server.model.requirements;
 
 import it.polimi.ingsw.server.model.enumerators.Color;
+import it.polimi.ingsw.server.model.middles.ReqValue;
+import it.polimi.ingsw.server.utils.A;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
 public class CardRequirements implements Requirement, Serializable {
-    private final Map<Color, Integer[]> requirements;
+    private final Map<Color, ReqValue> requirements;
 
-    public CardRequirements(Map<Color, Integer[]> requirements) {
+    public CardRequirements(Map<Color, ReqValue> requirements) {
         this.requirements = requirements;
     }
 
-    public Map<Color, Integer[]> getRequirements() {
+    public Map<Color, ReqValue> getRequirements() {
         return requirements;
     }
 
@@ -32,8 +34,9 @@ public class CardRequirements implements Requirement, Serializable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        Integer numOfCards = requirements.values().stream().map(integers -> integers[0]).reduce(0, Integer::sum);
-        result.append("\u001B[35m" + "   REQUIREMENTS: " + "\u001B[0m").append("\n");
+        Integer numOfCards = requirements.values().stream().map(ReqValue::getReqNumCard).reduce(0, Integer::sum);
+
+        result.append(A.CYAN + "   REQUIREMENTS: " + A.RESET).append("\n");
         result.append("    You need ").append(numOfCards);
         if (numOfCards > 1)
             result.append(" cards, with these stats: ").append("\n");
@@ -41,9 +44,9 @@ public class CardRequirements implements Requirement, Serializable {
             result.append(" card, with these stats: ").append("\n");
 
         for (Color c : requirements.keySet()) {
-            result.append("     ").append(requirements.get(c)[0]).append(" ").append(c.toString()).append(" card(s)");
-            if (requirements.get(c)[1] != -1)
-                result.append(" at level ").append(requirements.get(c)[1]);
+            result.append("     ").append(requirements.get(c).getReqNumCard()).append(" ").append(c.toString()).append(" card(s)");
+            if (requirements.get(c).getReqLvlCard() != -1)
+                result.append(" at level ").append(requirements.get(c).getReqLvlCard());
             result.append("\n");
         }
         return result.toString();

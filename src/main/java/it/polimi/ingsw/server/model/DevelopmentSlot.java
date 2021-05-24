@@ -118,6 +118,7 @@ public class DevelopmentSlot extends ModelObservable {
         }
     }
 
+    //decks are 0 1 2
     public boolean validateNewCard(DevelopmentCard newCard, int selectedDeck) {
         if (newCard == null) {
             return false;
