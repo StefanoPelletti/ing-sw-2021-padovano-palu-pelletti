@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.middles.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
@@ -23,19 +24,19 @@ public class LeaderCardsDeck {
         deck = new ArrayList<>();
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
                 new DiscountResource(Resource.SERVANT)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.BLUE, new ReqValue(1, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.SHIELD)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(1, -1), Color.BLUE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.STONE)));
 
         deck.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.COIN))
         );
 
@@ -60,42 +61,42 @@ public class LeaderCardsDeck {
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(2, -1), Color.BLUE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(2, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[]{2, -1}, Color.YELLOW, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.BLUE, new ReqValue(2, -1), Color.YELLOW, new ReqValue(1, -1))),
                 new MarketResources(Resource.STONE))
         );
 
         deck.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.PURPLE, new Integer[]{2, -1}, Color.GREEN, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.PURPLE, new ReqValue(2, -1), Color.GREEN, new ReqValue(1, -1))),
                 new MarketResources(Resource.COIN))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, 2})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, 2))),
                 new Production(Resource.SHIELD))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, 2})),
+                new CardRequirements(Map.of(Color.BLUE, new ReqValue(1, 2))),
                 new Production(Resource.SERVANT))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.PURPLE, new Integer[]{1, 2})),
+                new CardRequirements(Map.of(Color.PURPLE, new ReqValue(1, 2))),
                 new Production(Resource.STONE))
         );
 
         deck.add(new LeaderCard(4,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, 2})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(1, 2))),
                 new Production(Resource.COIN))
         );
 

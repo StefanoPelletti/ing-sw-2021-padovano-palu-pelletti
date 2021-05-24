@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.enumerators.Status;
 import it.polimi.ingsw.server.model.middles.DevelopmentCardsVendor;
+import it.polimi.ingsw.server.model.middles.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
@@ -135,7 +136,7 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(1, -1), Color.BLUE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(3,
@@ -183,11 +184,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(1, -1), Color.BLUE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.BLUE, new ReqValue(1, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -231,11 +232,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(1, -1), Color.BLUE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.BLUE, new ReqValue(1, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);
@@ -424,11 +425,11 @@ public class BuyDevelopmentCardTest {
         ArrayList<LeaderCard> lc = new ArrayList<>();
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{1, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(1, -1), Color.BLUE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.STONE)));
 
         lc.add(new LeaderCard(2,
-                new CardRequirements(Map.of(Color.BLUE, new Integer[]{1, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.BLUE, new ReqValue(1, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new DiscountResource(Resource.SHIELD)));
 
         p.associateLeaderCards(lc);

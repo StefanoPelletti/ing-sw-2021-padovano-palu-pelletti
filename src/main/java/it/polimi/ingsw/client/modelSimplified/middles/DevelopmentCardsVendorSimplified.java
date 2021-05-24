@@ -4,8 +4,9 @@ import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_D
 import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.middles.DevelopmentCardsVendor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import it.polimi.ingsw.server.model.middles.VendorCard;
 
 public class DevelopmentCardsVendorSimplified {
     private boolean enabled;

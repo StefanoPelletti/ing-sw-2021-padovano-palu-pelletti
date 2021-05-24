@@ -2,24 +2,24 @@ package it.polimi.ingsw.networking.message.updateMessages.middlesUpdate;
 
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
-import it.polimi.ingsw.server.model.DevelopmentCard;
+import it.polimi.ingsw.server.model.middles.VendorCard;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
 
     private final boolean enabled;
-    private final Map<DevelopmentCard, boolean[]> cards;
+    private final List<VendorCard> vendorCards;
 
-    public MSG_UPD_DevCardsVendor(boolean enabled, Map<DevelopmentCard, boolean[]> map) {
+    public MSG_UPD_DevCardsVendor(boolean enabled, List<VendorCard> vendorCards) {
         super(MessageType.MSG_UPD_DevCardsVendor);
 
-        if (map == null) {
-            cards = null;
+        if (vendorCards == null) {
+            this.vendorCards = null;
         } else {
-            cards = new HashMap<>(map);
+            this.vendorCards = new ArrayList<VendorCard>(vendorCards);
         }
         this.enabled = enabled;
     }
@@ -28,7 +28,7 @@ public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
         return this.enabled;
     }
 
-    public Map<DevelopmentCard, boolean[]> getCards() {
-        return this.cards;
+    public List<VendorCard> getCards() {
+        return this.vendorCards;
     }
 }

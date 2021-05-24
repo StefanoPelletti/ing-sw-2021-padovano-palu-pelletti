@@ -11,6 +11,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.middles.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
@@ -53,7 +54,7 @@ public class ActivateLeaderCardTest {
                 new ExtraDepot(Resource.COIN));
 
         l2 = new LeaderCard(2,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, -1}, Color.GREEN, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
                 new DiscountResource(Resource.SERVANT));
 
         gm.addAllObserver(c);
@@ -159,7 +160,7 @@ public class ActivateLeaderCardTest {
         MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(1);
 
         LeaderCard l3 = new LeaderCard(4,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{1, 2})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, 2))),
                 new Production(Resource.SHIELD));
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(l1);

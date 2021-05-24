@@ -219,13 +219,13 @@ public class ActionManager {
             return true;
         } else { //if (requirement.isCardRequirement()) {
             CardRequirements cardRequirements = (CardRequirements) requirement;
-            Map<Color, Integer[]> requiredCards = cardRequirements.getRequirements();
+            Map<Color, ReqValue> requiredCards = cardRequirements.getRequirements();
             List<DevelopmentCard> playerCards = player.getDevelopmentSlot().getCards();
             int requiredNumCard;
             int requiredLevelCard;
             for (Color color : requiredCards.keySet()) {
-                requiredNumCard = requiredCards.get(color)[0];
-                requiredLevelCard = requiredCards.get(color)[1];
+                requiredNumCard = requiredCards.get(color).getReqNumCard();
+                requiredLevelCard = requiredCards.get(color).getReqLvlCard();
                 for (DevelopmentCard card : playerCards) {
                     if (card.getColor() == color) {
                         if (requiredLevelCard == -1 || requiredLevelCard == card.getLevel()) {
@@ -532,10 +532,8 @@ public class ActionManager {
             return false;
         }
 
+        List<DevelopmentCard> cards = new ArrayList<>();
 
-        Map<Resource, Integer> playerResources = player.getResources();
-
-        ArrayList<DevelopmentCard> cards = new ArrayList<>();
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 4; c++) {
                 if (possibleCards[r][c] != null)
@@ -581,8 +579,11 @@ public class ActionManager {
                     pos[j] = true;
                 }
             }
-            if (pos[0] || pos[1] || pos[2]) {
-                finalCards.put(cards.get(i), pos);
+            if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 2)) {
+                slot3=true;
+            }
+            if (slot1 || slot2 || slot3) {
+                finalCards.add(new VendorCard(cards.get(i), slot1, slot2, slot3));
             }
         }
 
@@ -631,22 +632,21 @@ public class ActionManager {
             return false;
         }
 
+        VendorCard vendorCard = developmentCardsVendor.getCards().get(cardNumber);
 
-        DevelopmentCard dc = (new ArrayList<>(developmentCardsVendor.getCards().keySet())).get(cardNumber);
-
-        if (!developmentCardsVendor.getCards().get(dc)[slotNumber]) {
+        if (!vendorCard.isSlot(slotNumber)) {
             gameManager.setErrorObject("Error! You can not put that card in the depot!");
             return false;
         }
 
-        player.getDevelopmentSlot().addCard(dc, slotNumber);
+        player.getDevelopmentSlot().addCard(vendorCard.getCard(), slotNumber);
         DevelopmentCard[][] visibleCards = game.getVisibleCards();
         int r;
         int c = 0;
         loop:
         for (r = 0; r < 3; r++) {
             for (c = 0; c < 4; c++) {
-                if (dc.equals(visibleCards[r][c])) {
+                if (vendorCard.getCard().equals(visibleCards[r][c])) {
                     break loop;
                 }
             }
@@ -656,7 +656,7 @@ public class ActionManager {
 
 
         List<LeaderCard> specialAb = player.getCardsWithDiscountResourceAbility();
-        Map<Resource, Integer> cost = dc.getCost();
+        Map<Resource, Integer> cost = vendorCard.getCard().getCost();
 
         for (LeaderCard l : specialAb) {
             DiscountResource d = (DiscountResource) l.getSpecialAbility();

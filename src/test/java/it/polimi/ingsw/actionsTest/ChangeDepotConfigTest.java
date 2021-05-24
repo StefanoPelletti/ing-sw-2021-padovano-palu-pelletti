@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.middles.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
@@ -411,10 +412,10 @@ public class ChangeDepotConfigTest {
     public void validConfigNoExtraDepot() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(2, -1), Color.BLUE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SERVANT)));
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(2, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         p.getLeaderCards()[0].setEnable(true);
@@ -460,10 +461,10 @@ public class ChangeDepotConfigTest {
     public void validConfigNoChange() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(2, -1), Color.BLUE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SERVANT)));
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(2, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         Resource r0 = Resource.SHIELD;
@@ -568,10 +569,10 @@ public class ChangeDepotConfigTest {
     public void InvalidLeaderCard() {
         ArrayList<LeaderCard> cards = new ArrayList<>();
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.YELLOW, new Integer[]{2, -1}, Color.BLUE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(2, -1), Color.BLUE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SERVANT)));
         cards.add(new LeaderCard(5,
-                new CardRequirements(Map.of(Color.GREEN, new Integer[]{2, -1}, Color.PURPLE, new Integer[]{1, -1})),
+                new CardRequirements(Map.of(Color.GREEN, new ReqValue(2, -1), Color.PURPLE, new ReqValue(1, -1))),
                 new MarketResources(Resource.SHIELD)));
         p.associateLeaderCards(cards);
         p.getLeaderCards()[0].setEnable(true);

@@ -12,6 +12,7 @@ import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.middles.VendorCard;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 import it.polimi.ingsw.server.model.specialAbilities.Production;
 import it.polimi.ingsw.server.utils.A;
@@ -122,7 +123,7 @@ class Halo {
             return myPlayerRef.getLeaderCards();
     }
 
-    private static Map<DevelopmentCard, boolean[]> getVendorCards() {
+    private static List<VendorCard> getVendorCards() {
         if (local)
             return gameSRV.getDevelopmentCardsVendor().getCards();
         else
@@ -566,7 +567,7 @@ class Halo {
             try {
                 int cardNum = Integer.parseInt(textList.get(0));
                 int slotNum = Integer.parseInt(textList.get(1));
-                Map<DevelopmentCard, boolean[]> cards;
+                List<VendorCard> cards;
 
                 cards = Halo.getVendorCards();
 
@@ -578,8 +579,7 @@ class Halo {
                     System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
                     return false;
                 }
-                Object[] dcards = cards.keySet().toArray();
-                if (!cards.get((DevelopmentCard) dcards[cardNum - 1])[slotNum - 1]) {
+                if (!cards.get(cardNum-1).isSlot(slotNum-1)) {
                     System.out.println(A.RED + " > Error! You can't place that card in this slot" + A.RESET);
                     return false;
                 }

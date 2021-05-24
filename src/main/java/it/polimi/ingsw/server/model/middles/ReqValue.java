@@ -1,0 +1,26 @@
+package it.polimi.ingsw.server.model.middles;
+
+import it.polimi.ingsw.server.model.requirements.CardRequirements;
+
+import java.io.Serializable;
+
+public class ReqValue implements Serializable {
+    private final int reqNumCard;
+    private final int reqLvlCard;
+
+    public ReqValue(int reqNumCard, int reqLvlCard){
+        this.reqNumCard = reqNumCard;
+        this.reqLvlCard = reqLvlCard;
+    }
+
+    public int getReqNumCard() { return this.reqNumCard; }
+    public int getReqLvlCard() { return this.reqLvlCard; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof CardRequirements)) return false;
+        ReqValue o = (ReqValue) obj;
+        return (this.reqNumCard == o.reqNumCard && this.reqLvlCard == o.reqLvlCard);
+    }
+}
