@@ -19,6 +19,8 @@ public class PlayerSimplified {
     private int position;
     private LeaderCard[] leaderCards;
 
+
+
     public PlayerSimplified(int playerNumber) {
         this.vp = 0;
         this.playerNumber = playerNumber;

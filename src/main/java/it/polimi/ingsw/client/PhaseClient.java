@@ -7,7 +7,6 @@ import it.polimi.ingsw.networking.message.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;
-import it.polimi.ingsw.server.model.DevelopmentCard;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.Player;
@@ -80,6 +79,7 @@ class Halo {
     static ActionManager actionManager;
     static Player myPlayerRefSRV;
     static Game gameSRV;
+    static boolean reconnected = false;
 
     private Halo() {
     }
@@ -97,16 +97,26 @@ class Halo {
     }
 
     public static void sweep() {
-        game = null;
-        gameManager = null;
-        actionManager = null;
-        myPlayerRef = null;
-        myPlayerRefSRV = null;
+        //shared var
         myPlayerNumber = 0;
         myNickname = "";
         yourTurn = false;
         action = false;
+        triedAction = false;
+        local = false;
+
+
+        //online var
+        game = null;
+        myPlayerRef = null;
         gameSRV = null;
+        reconnected = false;
+
+
+        //local ref
+        gameManager = null;
+        actionManager = null;
+        myPlayerRefSRV = null;
     }
 
     private static LeaderCard getMyLeaderCard(int cardNumber) {
@@ -158,6 +168,7 @@ class Halo {
         System.out.println("                                   : gives the ability to reconnect to a lobby,  \n" +
                 "                                     if connection was lost. Nickname must match \n" +
                 "                                     the previously used one. ");
+        System.out.println("=> " + A.CYAN + "local" + A.RESET + "                           : starts a local game without using the internet");
     }
 
     public static void printActions() {
@@ -251,13 +262,13 @@ class Halo {
 
     public static String printPlayers() {
         StringBuilder result = new StringBuilder();
-        result.append(A.GREEN + " > Showing players name - number" + A.RESET);
+        result.append(A.GREEN + " > Showing players as 'name - number'" + A.RESET);
         if (local) {
             for (Player p : Halo.gameSRV.getPlayerList())
-                result.append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
+                result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
         } else {
             for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
-                result.append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
+                result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
         }
         return result.toString();
     }
@@ -336,6 +347,7 @@ class Halo {
     }
 
     private static Resource convertStringToResource(String resource) {
+        resource = resource.toLowerCase();
         if (resource.equals("servant")) return Resource.SERVANT;
         if (resource.equals("coin")) return Resource.COIN;
         if (resource.equals("shield")) return Resource.SHIELD;
@@ -813,7 +825,7 @@ class Halo {
             if (!checkResource(textList, 1, true))
                 System.out.println(A.RED + " > That is not possible in shelf 1. Try again." + A.RESET);
             else {
-                shelf1 = convertStringToResource(textList.get(0).toLowerCase());
+                shelf1 = convertStringToResource(textList.get(0));
                 break;
             }
         }
@@ -826,8 +838,8 @@ class Halo {
             if (!checkResource(textList, 2, true))
                 System.out.println(A.RED + " > That is not possible in shelf 2. Try again." + A.RESET);
             else {
-                shelf2[0] = convertStringToResource(textList.get(0).toLowerCase());
-                shelf2[1] = convertStringToResource(textList.get(1).toLowerCase());
+                shelf2[0] = convertStringToResource(textList.get(0));
+                shelf2[1] = convertStringToResource(textList.get(1));
                 break;
             }
         }
@@ -840,9 +852,9 @@ class Halo {
             if (!Halo.checkResource(textList, 3, true))
                 System.out.println(A.RED + " > That is not possible in shelf 3. Try again." + A.RESET);
             else {
-                shelf3[0] = convertStringToResource(textList.get(0).toLowerCase());
-                shelf3[1] = convertStringToResource(textList.get(1).toLowerCase());
-                shelf3[2] = convertStringToResource(textList.get(2).toLowerCase());
+                shelf3[0] = convertStringToResource(textList.get(0));
+                shelf3[1] = convertStringToResource(textList.get(1));
+                shelf3[2] = convertStringToResource(textList.get(2));
                 break;
             }
         }
@@ -1121,7 +1133,7 @@ class Halo {
         } else return null;
 
         try {
-            return new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard);
+            return new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard-1);
         } catch (IllegalArgumentException e) {
             System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
@@ -1162,7 +1174,7 @@ class Halo {
         } else return null;
 
         try {
-            return new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate);
+            return new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate-1);
         } catch (IllegalArgumentException e) {
             System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
@@ -1479,6 +1491,7 @@ class MenuPhase {
                 Halo.myNickname = msg.getNickname();
                 Halo.solo = false;
                 Halo.defaultAddress = ip;
+                Halo.reconnected = true;
                 return Phase.ONLINE_PHASE;
             } else if (message.getMessageType() == MessageType.MSG_ERROR) {
                 MSG_ERROR msg = (MSG_ERROR) message;
@@ -1516,6 +1529,7 @@ class MenuPhase {
                 Halo.myNickname = msg.getAssignedNickname();
                 Halo.solo = false;
                 Halo.defaultAddress = ip;
+                Halo.reconnected = false;
                 return Phase.ONLINE_PHASE;
             } else if (message.getMessageType() == MessageType.MSG_ERROR) {
                 MSG_ERROR msg = (MSG_ERROR) message;
@@ -1552,6 +1566,7 @@ class MenuPhase {
                 Halo.myNickname = nickname;
                 Halo.solo = solo;
                 Halo.defaultAddress = ip;
+                Halo.reconnected = false;
                 return Phase.ONLINE_PHASE;
             } else if (message.getMessageType() == MessageType.MSG_ERROR) {
                 MSG_ERROR msg = (MSG_ERROR) message;

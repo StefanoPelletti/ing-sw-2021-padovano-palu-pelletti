@@ -70,6 +70,6 @@ public class LeaderCard implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.vp, this.requirement, this.specialAbility);
+        return Objects.hash(this.vp, this.requirement, this.specialAbility, this.enabled);
     }
 }

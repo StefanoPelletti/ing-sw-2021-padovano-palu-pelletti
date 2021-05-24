@@ -40,7 +40,7 @@ public class Power implements Serializable {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("   POWER: ").append("\n");
-        result.append("    input: ").append(input).append("\n");
+        result.append("    input : ").append(input).append("\n");
         result.append("    output: ").append(output.toString()).append("\n");
         return result.toString();
     }

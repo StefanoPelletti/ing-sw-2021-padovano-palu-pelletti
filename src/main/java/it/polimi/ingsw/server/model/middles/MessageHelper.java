@@ -31,7 +31,7 @@ public class MessageHelper extends ModelObservable {
     public synchronized void setNotificationMessage(String nickname, Message message) {
         switch (message.getMessageType()) {
             case MSG_ACTION_ACTIVATE_LEADERCARD:
-                helperMessage = nickname + " activated his leadercard number " + ((MSG_ACTION_ACTIVATE_LEADERCARD) message).getCardNumber() + 1;
+                helperMessage = nickname + " activated his leadercard number " + (((MSG_ACTION_ACTIVATE_LEADERCARD) message).getCardNumber() + 1);
                 break;
             case MSG_INIT_CHOOSE_LEADERCARDS:
                 helperMessage = nickname + " has chosen his leadercards.";
@@ -41,7 +41,7 @@ public class MessageHelper extends ModelObservable {
                 helperMessage = nickname + " has chosen an initial resource: " + r1;
                 break;
             case MSG_ACTION_DISCARD_LEADERCARD:
-                helperMessage = nickname + " has discarded his leadercard number " + ((MSG_ACTION_DISCARD_LEADERCARD) message).getCardNumber() + 1;
+                helperMessage = nickname + " has discarded his leadercard number " + (((MSG_ACTION_DISCARD_LEADERCARD) message).getCardNumber() + 1);
                 break;
             case MSG_ACTION_CHANGE_DEPOT_CONFIG:
                 helperMessage = nickname + " has changed the configuration of his depot";
