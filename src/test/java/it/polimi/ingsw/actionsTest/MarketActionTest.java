@@ -1004,7 +1004,7 @@ public class MarketActionTest {
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(8, c.messages.size());
-        assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 1).count());
+        assertEquals(1, g.getPlayerList().stream().filter(x -> x.getPosition() == 1).count());
         assertSame(g.getMarketHelper().getCurrentResource(), Resource.STONE);
         c.emptyQueue();
 
@@ -1015,7 +1015,7 @@ public class MarketActionTest {
         assertEquals(3, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_Player).count());
         assertEquals(1, c.messages.stream().filter(x -> x.getMessageType() == MessageType.MSG_UPD_MarketHelper).count());
         assertEquals(8, c.messages.size());
-        assertEquals(3, g.getPlayerList().stream().filter(x -> x.getPosition() == 2).count());
+        assertEquals(1, g.getPlayerList().stream().filter(x -> x.getPosition() == 2).count());
         c.emptyQueue();
     }
 

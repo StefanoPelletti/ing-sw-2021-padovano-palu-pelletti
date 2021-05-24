@@ -574,7 +574,7 @@ class Halo {
                     System.out.println(A.RED + " > That's not a possible card!" + A.RESET);
                     return false;
                 }
-                if (slotNum < 0 || slotNum > 2) {
+                if (slotNum < 1 || slotNum > 3) {
                     System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
                     return false;
                 }

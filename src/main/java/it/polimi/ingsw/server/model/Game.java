@@ -176,6 +176,8 @@ public class Game extends ModelObservable {
         player.setInitialStartingResources();
         if (playerNumber == 1)
             firstPlayer = player;
+        if (playerNumber == 3 || playerNumber == 4)
+            player.setPosition(1);
         playerList.add(player);
         return true;
     }
