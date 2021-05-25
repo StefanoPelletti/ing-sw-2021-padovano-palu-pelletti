@@ -279,4 +279,11 @@ public class DevelopmentCardsDeckTest {
         assertEquals(card1.hashCode(), card2.hashCode());
         assertNotEquals(card1.hashCode(), card3.hashCode());
     }
+
+    @Test
+    public void toStringFormat()
+    {
+        System.out.println(d.toString());
+        assertTrue(true);
+    }
 }

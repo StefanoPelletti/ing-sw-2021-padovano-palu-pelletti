@@ -159,7 +159,15 @@ public class LeaderCardsDeckTest {
 
     @Test
     public void toStringFormat() {
-        System.out.println(deck.getCards().get(0));
+        LeaderCard l1=new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.STONE));
+        LeaderCard l2=new LeaderCard(2,
+                new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SERVANT));
+        l2.setEnabled(true);
+        System.out.println(l1);
+        System.out.println(l2);
         assertTrue(true);
     }
 }

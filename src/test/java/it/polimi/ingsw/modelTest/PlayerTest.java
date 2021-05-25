@@ -239,4 +239,27 @@ public class PlayerTest {
         assertEquals(1, resources.get(Resource.STONE));
         assertEquals(3, resources.get(Resource.SERVANT));
     }
+
+    @Test
+    public void equalsTest()
+    {
+        Player p = new Player("First",1);
+        Player p2 = new Player("First",1);
+        Player p3 = new Player("First",2);
+
+        assertEquals(p,p2);
+        assertNotEquals(p,p3);
+    }
+
+    @Test
+    public void hashEqualsTest()
+    {
+        Player p = new Player("First",1);
+        Player p2 = new Player("First",1);
+        Player p3 = new Player("Second",2);
+
+        p3.getStrongbox().addResource(Resource.SHIELD,1);
+        assertEquals(p.hashCode(), p2.hashCode());
+        assertNotEquals(p.hashCode(), p3.hashCode());
+    }
 }

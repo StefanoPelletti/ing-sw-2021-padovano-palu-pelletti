@@ -244,28 +244,14 @@ public class Player extends ModelObservable {
         if (obj == this) return true;
         if (!(obj instanceof Player)) return false;
         Player o = (Player) obj;
-        return (this.nickname.equals(o.nickname));
+        return (this.nickname.equals(o.nickname) && this.playerNumber==o.playerNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.nickname, this.position);
+        return Objects.hash(this.nickname, this.playerNumber);
     }
 
-    @Deprecated
-    public boolean deepEquals(Object obj) {
-        if (obj == this) return true;
-        if (!(obj instanceof Player)) return false;
-        Player o = (Player) obj;
-        return (this.nickname.equals(o.nickname) &&
-                this.vp == o.vp &&
-                this.position == o.position &&
-                this.playerNumber == o.playerNumber &&
-                Arrays.equals(this.leaderCards, o.leaderCards) &&
-                this.strongbox.equals(o.strongbox) &&
-                this.warehouseDepot.equals(o.warehouseDepot) &&
-                this.developmentSlot.equals(o.developmentSlot));
-    }
 
     private void notifyMovement() {
         this.notifyObservers(new MSG_NOTIFICATION(this.nickname + " has advanced on the Faith Track! Now at position: " + this.position));
