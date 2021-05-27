@@ -9,23 +9,30 @@ public class MainMenuV2 {
     CardLayout cl;
     JFrame mainFrame;
     JPanel cardPanel;
+
+//shared objects
     JLabel topLabel;
-
     JLabel updateLabel;
-
+//card 1
     JButton onlineMultiButton;
     JButton localButton;
     JButton optionsButton;
     JButton quitButton;
-
+//card 2
     JTextField ipAddressField;
     JTextField portAddressField;
     JTextField nicknameField;
     JButton applyOptionsButton;
     JButton backOptionsButton;
+//card 3
+    JButton createLobby;
+    JButton joinLobby;
+    JButton reconnectLobby;
+    JButton backOnlineButton;
 
-    final String MENU = "Main Menu";
-    final String OPTIONS = "Options";
+    final static String MENU = "Main Menu";
+    final static String OPTIONS = "Options";
+    final static String ONLINE = "Online Game";
 
     public static void main(String[] args)
     {
@@ -110,6 +117,8 @@ public class MainMenuV2 {
         optionsButton.addActionListener(optionsButtonListener);
         applyOptionsButton.addActionListener(applyButtonListener);
         quitButton.addActionListener(quitButtonListener);
+        onlineMultiButton.addActionListener(onlineGameButtonActionListener);
+        backOnlineButton.addActionListener(backOnlineButtonListener);
 
         int x = mainFrame.getWidth();
         int y = mainFrame.getHeight();
@@ -127,9 +136,12 @@ public class MainMenuV2 {
 
         GridBagConstraints c = new GridBagConstraints();
 
-        //card 1
+        /*
+            card 1: Main Menu things.
+
+         */
         JPanel card1 = new JPanel(new GridBagLayout());
-        onlineMultiButton = new JButton(" Online Game ");
+        onlineMultiButton = new JButton("Online Game");
         onlineMultiButton.setPreferredSize(new Dimension(150, 40));
         c = new GridBagConstraints();
         c.gridx=0;
@@ -139,7 +151,7 @@ public class MainMenuV2 {
         c.insets = new Insets(80,0,5,0);
         card1.add(onlineMultiButton, c);
 
-        localButton = new JButton( " Local Game ");
+        localButton = new JButton( "Local Game");
         localButton.setPreferredSize(new Dimension(150, 40));
         c = new GridBagConstraints();
         c.gridx=0;
@@ -149,7 +161,7 @@ public class MainMenuV2 {
         c.insets = new Insets(5,0,5,0);
         card1.add(localButton, c);
 
-        quitButton = new JButton(" Quit " );
+        quitButton = new JButton("Quit" );
         quitButton.setPreferredSize(new Dimension(130, 30));
         c = new GridBagConstraints();
         c.gridx=0;
@@ -159,7 +171,7 @@ public class MainMenuV2 {
         c.anchor=GridBagConstraints.LAST_LINE_START;
         card1.add(quitButton, c);
 
-        optionsButton = new JButton( " Options ");
+        optionsButton = new JButton( "Options");
         optionsButton.setPreferredSize(new Dimension(130, 30));
         c = new GridBagConstraints();
         c.gridx=1;
@@ -171,7 +183,10 @@ public class MainMenuV2 {
 
         cardPanel.add(card1, MENU);
 
-        //card 2
+        /*
+            card 2: options
+
+         */
         JPanel card2 = new JPanel(new GridBagLayout());
 
         JLabel ipLabel = new JLabel();
@@ -240,7 +255,7 @@ public class MainMenuV2 {
         c.insets = new Insets(3,3,5,15);
         card2.add(nicknameField,c);
 
-        backOptionsButton = new JButton( " Back ");
+        backOptionsButton = new JButton( "Back");
         backOptionsButton.setPreferredSize(new Dimension(130, 30));
         c=new GridBagConstraints();
         c.gridx=0;
@@ -251,7 +266,7 @@ public class MainMenuV2 {
         c.anchor=GridBagConstraints.LAST_LINE_START;
         card2.add(backOptionsButton,c);
 
-        applyOptionsButton = new JButton(" Apply ");
+        applyOptionsButton = new JButton("Apply");
         applyOptionsButton.setPreferredSize(new Dimension(130, 30));
         c=new GridBagConstraints();
         c.gridx=1;
@@ -264,10 +279,70 @@ public class MainMenuV2 {
 
         cardPanel.add(card2, OPTIONS);
 
+        /*
+            card 3: online game
+
+         */
+
+        JPanel card3 = new JPanel(new GridBagLayout());
+
+        createLobby = new JButton("Create a new Lobby");
+        createLobby.setPreferredSize(new Dimension(180, 40));
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=0;
+        c.weighty = 0.01;
+        c.anchor=GridBagConstraints.PAGE_START;
+        c.insets = new Insets(80,0,5,0);
+        card3.add(createLobby, c);
+
+        joinLobby = new JButton( "Join an existing Lobby");
+        joinLobby.setPreferredSize(new Dimension(180, 40));
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=1;
+        c.weighty = 0.01;
+        c.anchor=GridBagConstraints.PAGE_START;
+        c.insets = new Insets(5,0,5,0);
+        card3.add(joinLobby, c);
+
+        reconnectLobby = new JButton( "Reconnect to a game");
+        reconnectLobby.setPreferredSize(new Dimension(180, 40));
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=2;
+        c.weighty = 0.01;
+        c.anchor=GridBagConstraints.PAGE_START;
+        c.insets = new Insets(5,0,5,0);
+        card3.add(reconnectLobby, c);
+
+        backOnlineButton = new JButton("Back" );
+        backOnlineButton.setPreferredSize(new Dimension(130, 30));
+        c = new GridBagConstraints();
+        c.gridx=0;
+        c.gridy=3;
+        c.weighty = 0.8;
+        c.insets = new Insets(100,10,6,180);
+        c.anchor=GridBagConstraints.LAST_LINE_START;
+        card3.add(backOnlineButton, c);
+
+        cardPanel.add(card3, ONLINE);
         return cardPanel;
     }
 
 //ACTION LISTENERS
+ActionListener backOnlineButtonListener = e -> {
+    cl.show(cardPanel, MENU);
+    topLabel.setText(" welcome "+Ark.nickname);
+    updateLabel.setText(" Please don't judge me ");
+};
+
+    ActionListener onlineGameButtonActionListener = e -> {
+         cl.show(cardPanel, ONLINE);
+         topLabel.setText(" Online Game ");
+         updateLabel.setText("Is this Requiem?");
+    };
+
     ActionListener backOptionsButtonListener = e -> {
         cl.show(cardPanel, MENU);
         topLabel.setText(" welcome "+Ark.nickname);
@@ -275,6 +350,7 @@ public class MainMenuV2 {
 
     ActionListener optionsButtonListener = e -> {
         cl.show(cardPanel, OPTIONS);
+        topLabel.setText(" Settings ");
     };
 
     ActionListener applyButtonListener = e -> {
