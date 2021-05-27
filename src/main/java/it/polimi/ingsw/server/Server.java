@@ -7,21 +7,25 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerApp {
+public class Server implements Runnable {
+    final int port;
+
+    public Server(int port) {
+        this.port = port;
+    }
+
     public static void main(String[] args) {
-        final int port = 43210;
-        long openedConnections = 0;
+        (new Server(43210)).run();
+    }
+
+    public void run() {
         Socket socket;
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(this.port)) {
             System.out.println("Server online, listening on: " + InetAddress.getLocalHost().getHostAddress() + ":" + serverSocket.getLocalPort());
-            while (openedConnections <= 1000000L) {
+            while (true) {
                 socket = serverSocket.accept();
                 new Thread(new ClientHandler(socket)).start();
-
-                openedConnections++;
-                if (openedConnections == 1000000L)
-                    openedConnections = 0;
             }
         } catch (IOException e) {
             System.out.println("[SRV] ERROR: " + e.getMessage());

@@ -1,9 +1,8 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.networking.message.MSG_ERROR;
 import it.polimi.ingsw.networking.message.MSG_NOTIFICATION;
 import it.polimi.ingsw.networking.message.Message;
-import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Game;
 import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObserver;
 

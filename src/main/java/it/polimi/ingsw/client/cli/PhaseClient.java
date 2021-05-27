@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.cli;
 
 
 import it.polimi.ingsw.client.modelSimplified.GameSimplified;
@@ -26,10 +26,13 @@ import static it.polimi.ingsw.server.model.enumerators.Resource.FAITH;
 enum Phase {QUIT, MAIN_MENU, ONLINE_PHASE, LOCAL_PHASE, ERROR}
 
 
-public class PhaseClient {
+public class PhaseClient implements Runnable {
 
     public static void main(String[] args) {
+        (new PhaseClient()).run();
+    }
 
+    public void run() {
         System.out.println(A.YELLOW + " <<>> Welcome player." + A.RESET);
 
         Phase phase = Phase.MAIN_MENU;
@@ -54,6 +57,8 @@ public class PhaseClient {
             }
         }
     }
+
+
 }
 
 class Halo {
