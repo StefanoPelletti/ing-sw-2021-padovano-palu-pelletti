@@ -27,8 +27,8 @@ public class Lobby {
     /**
      * Constructs a new Lobby with the specified capacity and number.
      * Initializes the lobby as not deleted and not started.
-     * @param lobbyNumber the lobby number
-     * @param lobbyMaxPlayers the capacity of the lobby
+     * @param lobbyNumber The Lobby number.
+     * @param lobbyMaxPlayers The capacity of the Lobby.
      */
     public Lobby(int lobbyNumber, int lobbyMaxPlayers) {
         solo = (lobbyMaxPlayers == 1);
@@ -43,9 +43,9 @@ public class Lobby {
     }
 
     /**
-     * Checks if there's already a Lobby with the specified lobbyNumber
-     * @param lobbyNumber the number of the lobby to search
-     * @return true if there's already a Lobby with the same lobby number, false if there's none
+     * Checks if there's already a Lobby with the specified lobbyNumber.
+     * @param lobbyNumber The number of the lobby to search.
+     * @return True if there's already a Lobby with the same lobby number, False if there's none.
      */
     public static synchronized boolean checkLobbies(int lobbyNumber) {
         for (Lobby l : lobbies) {
@@ -55,9 +55,9 @@ public class Lobby {
     }
 
     /**
-     * Searches for the Lobby which has the specified lobbyNumber
-     * @param lobbyNumber the number of the lobby to search
-     * @return the Lobby reference with such lobbyNumber, or null if there's none
+     * Searches for the Lobby which has the specified lobbyNumber.
+     * @param lobbyNumber The number of the Lobby to search.
+     * @return The Lobby reference with such lobbyNumber, or null if there's none.
      */
     public static synchronized Lobby getLobby(int lobbyNumber) {
         for (Lobby lobby : lobbies) {
@@ -67,9 +67,9 @@ public class Lobby {
     }
 
     /**
-     * Adds the specified Lobby to the common Lobby list
-     * Starts a CountDownThread which will eliminate the Lobby after some time, if the Lobby has not been started yet
-     * @param lobby the lobby reference to be added
+     * Adds the specified Lobby to the static Lobby List.
+     * Starts a CountDownThread which will eliminate the Lobby after some time, if the Lobby has not been started yet.
+     * @param lobby The reference to the Lobby to be added.
      */
     public static synchronized void addLobby(Lobby lobby) {
         Lobby.lobbies.add(lobby);
@@ -77,36 +77,38 @@ public class Lobby {
     }
 
     /**
-     * Creates the CountDownThread thread specified in the method above (addLobby)
-     * The interval of time to deletion can be set here
-     * @param lobby the lobby reference
+     * Creates the CountDownThread Thread related to a specified Lobby.
+     * The interval of time to deletion can be set here.
+     * @param lobby The Lobby reference.
+     * @see #addLobby(Lobby), which invokes this method.
      */
     public static void createCountDownThread(Lobby lobby) {
         new Thread(new CountDownThread(lobby, 30)).start();
     }
 
     /**
-     * @return the common list of Lobbies
+     * Returns the static Lobby List.
+     * @return The static Lobby List.
      */
     public static synchronized List<Lobby> getLobbies() {
         return Lobby.lobbies;
     }
 
     /**
-     * removes the specified lobby from the common list of Lobbies
-     * @param lobby the lobby to remove
+     * Removes the specified Lobby from the static Lobby List.
+     * @param lobby The reference to the Lobby to remove from the static Lobby List.
      */
     public static synchronized void removeLobby(Lobby lobby) {
         Lobby.lobbies.remove(lobby);
     }
 
     /**
-     * Initialization of a specific Lobby object:
-     *   The started variable is set to true, which affects the CountDownThread behavior
-     *   The Controller and the Model are instantiated
-     *   The Players are shuffled, given a random number, and added to the model
-     *   The LeaderCardPicker is set up
-     *   Sets up the observer pattern (ClientHandler -> Model)
+     * Initializes a specific Lobby object.
+     * The started variable is set to true, which affects the CountDownThread behavior.
+     * The Controller and the Model are instantiated.
+     * The Players are shuffled, given a random number, and added to the Model.
+     * The LeaderCardPicker is set up.
+     * Sets up the observer pattern (ClientHandler -> Model).
      */
     public synchronized void init() {
         this.started = true;
@@ -134,9 +136,9 @@ public class Lobby {
     }
 
     /**
-     * Passes the specified Message from the ClientHandler to the ActionManager
-     * A message can only be passed if the receiving ClientHandler handles the currentPlayer
-     * @param message the message received from the client
+     * Passes the specified Message from the ClientHandler to the ActionManager.
+     * A message can only be passed if the receiving ClientHandler handles the currentPlayer.
+     * @param message The request message received by the ClientHandler from the Client.
      */
     public synchronized void onMessage(Message message) {
         synchronized (actionManager) {
@@ -145,18 +147,18 @@ public class Lobby {
     }
 
     /**
-     * Links a specified ClientHandler to this Lobby object
+     * Links a specified ClientHandler to this Lobby object.
      * Checks if another player in this Lobby has the same nickname as the given nickname,
-     *  in that case the method will add a progressive number after the specified nickname
-     * @param nickname the name of the Player associated with the ClientHandler
-     * @param socket the socket operated by the ClientHandler
-     * @param clientHandler the ClientHandler reference
+     * in that case the method will add a progressive number after the specified nickname.
+     * @param nickname The name of the Player associated with the ClientHandler.
+     * @param socket The socket operated by the ClientHandler.
+     * @param clientHandler The ClientHandler reference.
      * @return a String containing the new nickname:
      *    - nickname (not modified) if the player is the only one with such nickname
      *    - nickname (1) if there's already a player with such nickname
      *    - nickname (2) if there are already two players with such nickname
      *    - nickname (3) if there are already three players with such nickname
-     *    - null if this method gets called while the lobby is at full capacity
+     *    - null if this method gets called while the lobby is at full capacity.
      */
     public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
         if (this.lobbyMaxPlayers > nicknameList.size()) {
@@ -181,16 +183,16 @@ public class Lobby {
     }
 
     /**
-     * Adds a player, specified by his number, to the IdlePlayer list
-     * @param playerNumber the number of the player who's gone Idle/Disconnected
+     * Adds a player, specified by his number, to the IdlePlayer list.
+     * @param playerNumber The number of the player who's gone Idle/Disconnected.
      */
     public synchronized void addIdlePlayer(Integer playerNumber) {
         gameManager.addIdlePlayer(playerNumber);
     }
 
     /**
-     * Removes a player, specified by his number, from the IdlePlayer list
-     * @param playerNumber the number of the player who's not Idle/Disconnected anymore
+     * Removes a player, specified by his number, from the IdlePlayer list.
+     * @param playerNumber The number of the player who's not Idle/Disconnected anymore.
      */
     public void removeIdlePlayer(Integer playerNumber) {
         gameManager.removeIdlePlayer(playerNumber);
@@ -198,8 +200,8 @@ public class Lobby {
 
     /**
      * Disconnects a player, specified by his nickname, and consequentially
-     *  invokes the Controller method to do so
-     * @param nickname the nickname of the player who's gone Idle/Disconnected
+     * invokes the related Controller method disconnectPlayer().
+     * @param nickname The nickname of the player who's gone Idle/Disconnected.
      */
     public void disconnectPlayer(String nickname) {
         Player player = gameManager.getGame().getPlayer(nickname);
@@ -211,9 +213,9 @@ public class Lobby {
     }
 
     /**
-     * Searches for a ClientHandler which is in a pending-reconnection state and has the same nickname as the given one
-     * @param nickname the nickname of the player searched
-     * @return the ClientHandler reference if there's one in such state in this Lobby, or null if there's none
+     * Searches for a ClientHandler which is in a pending-reconnection state and has the same nickname as the given one.
+     * @param nickname The nickname of the player searched.
+     * @return The ClientHandler reference if there's one in such state in this Lobby, or null if there's none.
      */
     public synchronized ClientHandler findPendingClientHandler(String nickname) {
         Optional<ClientHandler> result = this.clientHandlers.stream().filter(ClientHandler::isPendingConnection).sorted(
@@ -222,22 +224,25 @@ public class Lobby {
     }
 
     /**
-     * @return the capacity of the Lobby
+     * Returns the capacity of the Lobby.
+     * @return The capacity of the Lobby.
      */
     public int getLobbyMaxPlayers() {
         return this.lobbyMaxPlayers;
     }
 
     /**
-     * @return the number of the Lobby
+     * Returns the number of the Lobby.
+     * @return The number of the Lobby.
      */
     public int getLobbyNumber() {
         return this.lobbyNumber;
     }
 
     /**
-     * @return the number of players actually connected to the lobby
-     * note: this method does not concerns the Idle/Disconnected players, they are still counted.
+     * Returns the number of players that have connected to the Lobby.
+     * Note that this method does not concern the Idle/Disconnected players, as they are still counted.
+     * @return The number of players that have connected to the Lobby.
      */
     public int getNumberOfPresentPlayers() {
         assert (this.socketList.size() == this.nicknameList.size());
@@ -245,54 +250,58 @@ public class Lobby {
     }
 
     /**
-     * Searches the number of a player who has the specified nickname
-     * @param nickname the nickname of the specified player
-     * @return the number of the player with the specified nickname
-     * note: this method is called by the ClientHandler, whose nicknames are surely present.
+     * Searches the number of a player who has the specified nickname.
+     * Note: this method is called by the ClientHandler, whose nicknames are surely present.
+     * @param nickname The nickname of the specified Player.
+     * @return The number of the player with the specified nickname.
      */
     public synchronized int whoIs(String nickname) {
         return gameManager.getGame().getPlayer(nickname).getPlayerNumber();
     }
 
     /**
-     * @return the number of the currentPlayer
+     * Return the number of the current Player.
+     * @return The number of the current Player.
      */
     public synchronized int currentPlayer() {
         return gameManager.getGame().getCurrentPlayerInt();
     }
 
     /**
-     * Generates a MSG_UPD_Full message containing the entire state of the Game
-     * @return the MSG_UPD_Full message
+     * Generates a MSG_UPD_Full message containing the entire current-state of the Game.
+     * @return A MSG_UPD_Full message.
      */
     public synchronized MSG_UPD_Full getFullModel() {
         return gameManager.getFullModel();
     }
 
     /**
-     * @return true if the Lobby is started (after init()), false otherwise
+     * Returns the started status of the Lobby.
+     * After a Lobby.init(), this will return True.
+     * @return True if the Lobby is started, False otherwise.
      */
     public synchronized boolean isStarted() {
         return this.started;
     }
 
     /**
-     * @return true if the Lobby has been deleted, false otherwise
+     * Returns the deleted status of the Lobby.
+     * @return True if the Lobby has been deleted, False otherwise.
      */
     public synchronized boolean isDeleted() {
         return this.deleted;
     }
 
     /**
-     * sets the deleted status of the Lobby
-     * @param deleted the value to set
+     * Sets the deleted status of the Lobby.
+     * @param deleted The boolean value to set.
      */
     public synchronized void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
     /**
-     * Wakes up all the ClientHandlers that are in pending-connection state
+     * Wakes up all the ClientHandlers that are in pending-connection state.
      */
     public synchronized void wakeUpAllPendingClientHandlers() {
         for (ClientHandler c : clientHandlers) {
@@ -304,22 +313,24 @@ public class Lobby {
     }
 
     /**
-     * @return true if the Game has ended, false if not
+     * Returns the GameOver status of the GameManager.
+     * @return True if the Game has ended, False otherwise.
      */
     public boolean isGameOver() {
         return gameManager.isGameOver();
     }
 
     /**
-     * Method used by a newly reconnected ClientHandler to notify other players that his player has reconnected to the Game
-     * @param nickname the nickname of the player who's reconnected to the Game
+     * Method used by a newly reconnected ClientHandler to notify other players that his player has reconnected to the Game.
+     * @param nickname The nickname of the player who's reconnected to the Game.
      */
     public void notifyReconnection(String nickname) {
         actionManager.notifyReconnection(nickname);
     }
 
     /**
-     * @return true if all players are Idle/Disconnected, false otherwise
+     * Returns the status of the IdlePlayers List.
+     * @return True if all players are Idle/Disconnected, False otherwise.
      */
     public boolean areAllPlayersIdle() {
         return gameManager.areAllPlayersIdle();

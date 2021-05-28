@@ -8,14 +8,14 @@ public class MSG_JOIN_LOBBY extends Message implements Serializable {
     private final int lobbyNumber;
 
     /**
-     * MSG_JOIN_LOBBY is sent by the Client to the ClientHandler
-     *  It requests the ClientHandler to join a Lobby with the specified number
-     * see the ClientHandler run() method, FIRST BLOCK, JOIN part
-     * @param nickname the name of the player trying to join the lobby
-     * @param lobbyNumber the number of the lobby to connect to
-     * @throws IllegalArgumentException if the message is build with:
+     * MSG_JOIN_LOBBY is sent by the Client to the ClientHandler.
+     * It requests the ClientHandler to join a Lobby with the specified number.
+     * See the ClientHandler run() method, FIRST BLOCK, JOIN part.
+     * @param nickname The name of the player trying to join the lobby.
+     * @param lobbyNumber The number of the lobby to connect to.
+     * @throws IllegalArgumentException If the message is build with:
      *      - lobbyNumber less than 0
-     *      - nickname is null
+     *      - nickname is null.
      */
     public MSG_JOIN_LOBBY(String nickname, int lobbyNumber) {
         super(MessageType.MSG_JOIN_LOBBY);

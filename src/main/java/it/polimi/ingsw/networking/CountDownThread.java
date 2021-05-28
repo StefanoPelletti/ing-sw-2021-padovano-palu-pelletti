@@ -5,9 +5,9 @@ public class CountDownThread implements Runnable {
     private final int time;
 
     /**
-     * Construct a object designed to destroy a specified Lobby after a specified amount of time, if such Lobby has not started yet
-     * @param lobby the lobby to check after a specified amount of time
-     * @param time the desired amount of time
+     * Construct a object designed to destroy a specified Lobby after a specified amount of time, if such Lobby has not started yet.
+     * @param lobby The reference to the Lobby that will be checked.
+     * @param time The desired amount of time in seconds.
      */
     public CountDownThread(Lobby lobby, int time) {
         this.lobby = lobby;

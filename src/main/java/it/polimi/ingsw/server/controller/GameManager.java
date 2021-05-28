@@ -241,7 +241,7 @@ public class GameManager {
 
 
     /**
-     * see model.Game.addAllObservers()
+     * @see #addAllObserver(ModelObserver)
      * @param observer the Observer that is being linked to all model objects
      */
     public void addAllObserver(ModelObserver observer) {

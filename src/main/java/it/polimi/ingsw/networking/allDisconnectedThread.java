@@ -4,9 +4,9 @@ public class allDisconnectedThread implements Runnable {
     private final Lobby lobby;
 
     /**
-     * Construct a object designed to destroy a specified Lobby in which there are no more active players
-     *  Wakes Up all pending-connection ClientHandlers, to interrupt them correctly
-     * @param lobby the specified lobby to destroy
+     * Construct a object designed to destroy a specified Lobby in which there are no more active players.
+     * Wakes up all pending-connection ClientHandlers to interrupt them correctly.
+     * @param lobby The reference to the Lobby to destroy.
      */
     public allDisconnectedThread(Lobby lobby) {
         this.lobby = lobby;

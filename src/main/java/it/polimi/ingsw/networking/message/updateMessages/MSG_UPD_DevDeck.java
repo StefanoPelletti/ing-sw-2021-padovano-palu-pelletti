@@ -11,10 +11,10 @@ public class MSG_UPD_DevDeck extends Message implements Serializable {
     private final DevelopmentCard[][] cards;
 
     /**
-     * MSG_UPD_DevDeck is sent by the ClientHandler to the Client
-     *  It is generated my a model.DevelopmentCardsDeck generateMessage()
-     * It contains the internal status of the DevelopmentCardsDeck, but just the Visible Cards
-     * @param cards a 3x4 matrix which represents the Visible Cards on the DevelopmentCardsDeck
+     * MSG_UPD_DevDeck is sent by the ClientHandler to the Client.
+     * It is generated my a model.DevelopmentCardsDeck generateMessage().
+     * It contains the internal status of the DevelopmentCardsDeck, but just the Visible Cards.
+     * @param cards A 3x4 matrix which represents the Visible Cards on the DevelopmentCardsDeck.
      */
     public MSG_UPD_DevDeck(DevelopmentCard[][] cards) {
         super(MessageType.MSG_UPD_DevDeck);
