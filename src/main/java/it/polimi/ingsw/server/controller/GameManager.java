@@ -21,9 +21,17 @@ public class GameManager {
     private final ArrayList<Integer> idlePlayers;
     private final int lobbyMaxPlayers;
 
-    private Boolean soloWinner; // if null: no one, if true: the player, if false: the Lorenzo
+    private Boolean soloWinner;
 
-
+    /**
+     * Constructor of the GameManager Controller object
+     * Instantiating this objects consequentially instantiate the entire Controller and the entire Model
+     * The GameManager is responsible for managing the turns, the currentPlayer, the lobbySize, and the Status,
+     *  even thou some fields are modified by the ActionManager actions.
+     * @param lobbyMaxPlayers the capacity of the Game this GameManager is managing.
+     * note: automatically detects if the Lobby is going to be a Solo lobby
+     * note: the Players must be added afterwards, as well as the Observer linkage
+     */
     public GameManager(int lobbyMaxPlayers) {
         this.game = new Game();
         this.faithTrackManager = new FaithTrackManager(this.game, this);
@@ -35,10 +43,17 @@ public class GameManager {
         this.game.changeStatus(Status.INIT_1);
     }
 
+    /**
+     * @return the currentPlayer reference
+     */
     public Player currentPlayer() {
         return game.getCurrentPlayer();
     }
 
+    /**
+     * Advances the Game flow by setting the nextPlayer or by ending the game
+     * @return true if the Game has not ended, false otherwise
+     */
     public boolean endTurn() {
         setNextPlayer();
 
@@ -58,6 +73,9 @@ public class GameManager {
         return true;
     }
 
+    /**
+     * Sets the next Player and advances the turn, if a cycle has been made
+     */
     public void setNextPlayer() {
         if (solo)
             game.setTurn(game.getTurn() + 1);
@@ -67,6 +85,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * Chooses the next Player based on the Connected Player
+     * If a player is present in the IdlePlayer list, it is skipped.
+     */
     private int getNextPlayer(int playerNumber) {
         if (playerNumber > lobbyMaxPlayers) {
             if (game.getStatus() == Status.INIT_1) game.changeStatus(Status.INIT_2);
@@ -80,48 +102,79 @@ public class GameManager {
         return playerNumber;
     }
 
-
+    /**
+     * used only in Solo mode
+     * @return null if there's no Solo mode winner yet,
+     *         true if the Player won
+     *         false if Lorenzo won
+     */
     public Boolean getSoloWinner() {
         return soloWinner;
     }
-
+    /**
+     * used only in Solo mode
+     * sets the corresponding value of the Solo Winner
+     * see getSoloWinner() above
+     */
     public void setSoloWinner(boolean value) {
         this.soloWinner = value;
     }
 
+    /**
+     * @return the current Status of the Game
+     */
     public Status getStatus() {
         return game.getStatus();
     }
 
+    /**
+     * changes the current Status of the Game
+     * @param status the new Status
+     */
     public void setStatus(Status status) {
         game.changeStatus(status);
     }
 
+    /**
+     * @return true if Status is GAME_OVER, false otherwise
+     */
     public boolean isGameOver() {
         return (getStatus() == Status.GAME_OVER);
     }
 
+    /**
+     * @return true if it is a Solo mode, false otherwise
+     */
     public boolean getSolo() {
         return solo;
     }
 
-    public int getLobbyMaxPlayers() {
-        return lobbyMaxPlayers;
-    }
-
+    /**
+     * @return the reference to the Game handled by this GameManager
+     */
     public Game getGame() {
         return game;
     }
 
+    /**
+     * @return the reference to the FaithTrackManager linked with this GameManager
+     */
     public FaithTrackManager getFaithTrackManager() {
         return faithTrackManager;
     }
 
+    /**
+     * @return the reference to the ActionManager linked with this GameManager
+     */
     public ActionManager getActionManager() {
         return actionManager;
     }
 
-
+    /**
+     * Broadcasts an Error Message using the model.middles.ErrorObject
+     * Its usage is best described in the Documentation file, Actions
+     * @param errorCause the cause of the error as notified by the ActionManager
+     */
     public void setErrorObject(String errorCause) {
         game.getErrorObject().setErrorMessage(errorCause);
         System.out.println(errorCause);
@@ -132,6 +185,15 @@ public class GameManager {
     // if it is a SOLO game, the leaderBoard will contain the player-score and Lorenzo
     //       Lorenzo could be the loser (points will be 1)
     //       Lorenzo could be the winner (points will be 2)
+
+    /**
+     * Calculates the scores of the Players at the end of the game,
+     *  loading the model.middles.LeaderBoard object with that data
+     * If it a Solo game, the leaderBoard will contain the Player-score and Lorenzo
+     *      Lorenzo could be the loser (his score will be 1)
+     *      Lorenzo could be the winner (his score will be 2)
+     * @return false, always
+     */
     public boolean endgame() {
         Leaderboard leaderBoard = game.getLeaderBoard();
         for (Player p : game.getPlayerList()) {
@@ -178,28 +240,57 @@ public class GameManager {
     }
 
 
+    /**
+     * see model.Game.addAllObservers()
+     * @param observer the Observer that is being linked to all model objects
+     */
     public void addAllObserver(ModelObserver observer) {
         game.addAllObservers(observer);
     }
 
-
-    //used in lobby or for disconnection
-    public void addIdlePlayer(Integer playerNumber) {
-        this.idlePlayers.add(playerNumber);
-    }
-
+    /**
+     * Resets the model.middles.ErrorObject from its error-state
+     * It is always called before doing an action
+     */
     public void resetErrorObject() {
         game.getErrorObject().setEnabled(false);
     }
 
+    //used in lobby or for disconnection
+    /**
+     * Adds a player, specified by his playerNumber, to the IdlePlayers list
+     * see Documentation file, DisconnectionReconnection, for better understanding
+     * the players present in this list will be skipped when choosing the next player
+     * @param playerNumber the number of the player who's being disconnected
+     */
+    public void addIdlePlayer(Integer playerNumber) {
+        this.idlePlayers.add(playerNumber);
+    }
+
+    /**
+     * Removes a player, specified by his playerNumber, from the IdlePlayers list
+     * see Documentation file, DisconnectionReconnection, for better understanding
+     * Doing so will allow the specified player to be selected while choosing the next player
+     * @param playerNumber the number of the player who's being reconnected
+     */
     public void removeIdlePlayer(Integer playerNumber) {
         this.idlePlayers.remove(playerNumber);
     }
 
+    /**
+     * @return true if all Players are Idle, false if at least one Player is still connected
+     */
     public boolean areAllPlayersIdle() {
         return (lobbyMaxPlayers == idlePlayers.size());
     }
 
+    /**
+     * generates a MSG_UPD_Full message containing messages from every possible model objects.
+     * It is used to update the Client Model to the latest status.
+     * Works by calling every model object generateMessage() method
+     * @return the MSG_UPD_Full message
+     * see MSG_UPD_Full message in networking.messages.updateMessages
+     */
     public MSG_UPD_Full getFullModel() {
         MSG_UPD_Full result = new MSG_UPD_Full();
 

@@ -14,21 +14,46 @@ public class FaithTrackManager {
     private final Game game;
     private final GameManager gameManager;
 
+    /**
+     * Constructs a FaithTrackManager which operates on the Player positions and the FaithTrack
+     * @param game a Game reference, extracted from the GameManager
+     * @param gameManager the GameManager reference
+     */
     public FaithTrackManager(Game game, GameManager gameManager) {
         this.faithTrack = game.getFaithTrack();
         this.gameManager = gameManager;
         this.game = game;
     }
 
-
+    /**
+     * Advances a specified Player on the FaithTrack
+     * see method advance() below for better understanding
+     * @param p the reference to the player
+     * @return the return value of advance() method
+     */
     public boolean advance(Player p) {
         return advance(p, false);
     }
 
+    /**
+     * Advances Lorenzo on the FaithTrack
+     * see method advance() below for better understanding
+     * @return the return value of advance() method
+     */
     public boolean advanceLorenzo() {
         return advance(null, true);
     }
 
+    /**
+     * Advances a Player (or Lorenzo) on the FaithTrack
+     * The methods assigns points based on the zones activated as specified by the Game's rules
+     * see FaithTrack object in the model for better understanding
+     * @param player the reference to the player advancing. Null if the parameter lorenzo is set to true
+     * @param lorenzo which is true if Lorenzo is moving, false otherwise
+     * @return true if the operation terminated correctly, false if
+     *      - lorenzo is false and the player reference is null or the player does not exist in this game
+     *      - the referenced player/Lorenzo position returns an error value (-1)
+     */
     public boolean advance(Player player, boolean lorenzo) {
         Player p;
         List<Player> players;
@@ -109,7 +134,13 @@ public class FaithTrackManager {
         return true;
     }
 
-
+    /**
+     * Advances all players except the specified one.
+     * In Solo mode advances Lorenzo.
+     * It is used when a player discards a resource in the market action.
+     * @param player the Player reference which stays still
+     * @return true if the operation terminated correctly, false if the player reference is false or it does not exist in the game
+     */
     public boolean advanceAllExcept(Player player) {
         if (player == null) return false;
         List<Player> players = game.getPlayerList();
@@ -128,7 +159,12 @@ public class FaithTrackManager {
         return true;
     }
 
-
+    /**
+     * Generates a String containing the points awarded to the Players for activating a Zone.
+     * Points are awarded based on position, see FaithTrack model object for better understanding
+     * @param players the list of Players playing the Game
+     * @return a List of points awarded to the corresponding players.
+     */
     private String returnAddedPoints(List<Player> players) {
         StringBuilder message = new StringBuilder();
         for (Player p : players) {
