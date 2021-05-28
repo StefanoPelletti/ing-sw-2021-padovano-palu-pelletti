@@ -14,6 +14,9 @@ public class DevelopmentSlot extends ModelObservable {
     private final DevelopmentCard[] onTop;
     private int numOfCards;
 
+    /**
+     * Constructor of the DevelopmentSlot
+     */
     public DevelopmentSlot() {
         cards = new DevelopmentCard[3][3];
         onTop = new DevelopmentCard[3];
@@ -27,6 +30,11 @@ public class DevelopmentSlot extends ModelObservable {
         }
     }
 
+    /**
+     * Receives
+     * @param cards the grid of all the cards in the DevSlot
+     * @return a string that represents the DevSlot.
+     */
     public static String toString(DevelopmentCard[][] cards) {
         StringBuilder result = new StringBuilder();
 
@@ -92,14 +100,22 @@ public class DevelopmentSlot extends ModelObservable {
         return result.toString();
     }
 
-    public boolean addCard(DevelopmentCard newCard, int selectedDeck) {
+    /**
+     * Given:
+     * @param newCard the card that the user wants to buy from the DevDeck
+     * @param selectedSlot the slot where the user wants to put the card
+     * @return true if the card is added correctly, false if:
+     *   - the stack is full
+     *   - the level is not right
+     */
+    public boolean addCard(DevelopmentCard newCard, int selectedSlot) {
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
-        if (onTop[selectedDeck] == null)
+        if (onTop[selectedSlot] == null)
             cardLevel = 0;
         else
-            cardLevel = onTop[selectedDeck].getLevel();
+            cardLevel = onTop[selectedSlot].getLevel();
 
         if (cardLevel == 3) //then this stack is full
         {
@@ -110,8 +126,8 @@ public class DevelopmentSlot extends ModelObservable {
                 return false;
             } else // ( newCardLevel == cardLevel +1 ) aka: the level is ok and you can add!
             {
-                cards[selectedDeck][cardLevel] = newCard;
-                onTop[selectedDeck] = newCard;
+                cards[selectedSlot][cardLevel] = newCard;
+                onTop[selectedSlot] = newCard;
                 numOfCards++;
                 notifyObservers();
                 return true;
@@ -120,18 +136,25 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     //decks are 0 1 2
-    public boolean validateNewCard(DevelopmentCard newCard, int selectedDeck) {
+
+    /**
+     * Given:
+     * @param newCard a card that the user wants
+     * @param selectedSlot a slot where he wants to put the new card
+     * @return checks if the level of the new card is equal to that of the last card in the selected slot (if any) + 1.
+     * If so returns true, otherwise returns false.
+     */
+    public boolean validateNewCard(DevelopmentCard newCard, int selectedSlot) {
         if (newCard == null) {
             return false;
         }
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
-
-        if (onTop[selectedDeck] == null)
+        if (onTop[selectedSlot] == null)
             cardLevel = 0;
         else
-            cardLevel = onTop[selectedDeck].getLevel();
+            cardLevel = onTop[selectedSlot].getLevel();
 
         if (cardLevel == 3) //then this stack is full
         {
@@ -141,6 +164,9 @@ public class DevelopmentSlot extends ModelObservable {
         }
     }
 
+    /**
+     * @return a new grid of all the cards in the DevSlot.
+     */
     public DevelopmentCard[][] getAllCards() {
         DevelopmentCard[][] tempDeck = new DevelopmentCard[3][3];
 
@@ -150,6 +176,9 @@ public class DevelopmentSlot extends ModelObservable {
         return tempDeck;
     }
 
+    /**
+     * @return a new list of the cards in the DevSlot.
+     */
     public List<DevelopmentCard> getCards() {
         List<DevelopmentCard> result = new ArrayList<>();
         for (int n = 0; n < 3; n++) {
@@ -160,6 +189,9 @@ public class DevelopmentSlot extends ModelObservable {
         return result;
     }
 
+    /**
+     * @return a list of the top cards in the DevSlot (the cards that the user can actually use and see).
+     */
     public List<DevelopmentCard> getTopCards() {
         List<DevelopmentCard> list = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -170,23 +202,38 @@ public class DevelopmentSlot extends ModelObservable {
         return list;
     }
 
+    /**
+     * @return an array of the top cards in the DevSlot (the cards that the user can actually use and see).
+     */
     public DevelopmentCard[] getOnTop() {
         return onTop.clone();
     }
 
+    /**
+     * @return the number of all the cards in the DevSlot.
+     */
     public int getNumOfCards() {
         return numOfCards;
     }
 
     @Override
+    /**
+     * Calls the static toString above passing the grid of cards.
+     */
     public String toString() {
         return DevelopmentSlot.toString(this.cards);
     }
 
+    /**
+     * notifies the observers by sending a message that contains the actual internal status of the DevSlot.
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     * @return the actual message passed by the notifyObservers() method that contains the status of the DevSlot.
+     */
     public MSG_UPD_DevSlot generateMessage() {
         return new MSG_UPD_DevSlot(cards);
     }

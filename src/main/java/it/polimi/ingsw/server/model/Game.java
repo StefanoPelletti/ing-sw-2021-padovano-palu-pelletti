@@ -67,14 +67,14 @@ public class Game extends ModelObservable {
         return this.turn;
     }
 
+    public int getBlackCrossPosition() {
+        return this.blackCrossPosition;
+    }
+
     //SETTERS
     public void setTurn(int turn) {
         this.turn = turn;
         notifyObservers();
-    }
-
-    public int getBlackCrossPosition() {
-        return this.blackCrossPosition;
     }
 
     public void setBlackCrossPosition(int blackCrossPosition) {
@@ -140,25 +140,46 @@ public class Game extends ModelObservable {
     }
 
     //GETTERS NON BASIC
+    /**
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return getPlayer(currentPlayer);
     }
 
+    /**
+     * Sets the current player and notifies the observers that the current player has changed.
+     * @param currentPlayer the current player
+     */
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
         notifyObservers();
     }
 
+    /**
+     * Given:
+     * @param nickname the nickname of a player
+     * @return the player
+     */
     public Player getPlayer(String nickname) {
         Optional<Player> result = playerList.stream().filter(p -> p.getNickname().equals(nickname)).findFirst();
         return result.orElse(null);
     }
 
+    /**
+     * Given:
+     * @param playerNumber the number of a player
+     * @return the player
+     */
     public Player getPlayer(int playerNumber) {
         Optional<Player> result = playerList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();
         return result.orElse(null);
     }
 
+    /**
+     * Changes the status of the game. If the status is LAST TURN then notifies the observers.
+     * @param status the status of the game.
+     */
     public void changeStatus(Status status) {
         if (status == Status.LAST_TURN) {
             Message m = new MSG_NOTIFICATION("LAST TURN!");
@@ -167,8 +188,16 @@ public class Game extends ModelObservable {
         this.status = status;
     }
 
-
     //METHODS
+
+    /**
+     * Given:
+     * @param nickname a nickname for the new player
+     * @param playerNumber a number for the new player
+     * @return false if the nickname already exists, true if the player is added correctly.
+     * Also, the player receives his initial cards and resources and the position is initialized.
+     * If the player is the number 1, he is the first player.
+     */
     public boolean addPlayer(String nickname, int playerNumber) {
         if (getPlayer(nickname) != null) return false;
         Player player = new Player(nickname, playerNumber);
@@ -184,6 +213,10 @@ public class Game extends ModelObservable {
         return true;
     }
 
+    /**
+     * It's a method used by the Observer pattern. It links the observer to all the objects in the model.
+     * @param observer
+     */
     public void addAllObservers(ModelObserver observer) {
         this.addObserver(observer);
         faithTrack.addObserver(observer);
@@ -202,7 +235,6 @@ public class Game extends ModelObservable {
                 extraDepot.addObserver(observer);
             }
         }
-
         for (Player player : this.playerList) {
             player.addObserver(observer);
             player.getWarehouseDepot().addObserver(observer);
@@ -211,14 +243,26 @@ public class Game extends ModelObservable {
         }
     }
 
+    /**
+     * Given
+     * @param nickname nickname of a player
+     * @return true if the player is correctly removed.
+     */
     public boolean removePlayer(String nickname) {
         return playerList.removeIf(x -> (x.getNickname()).equals(nickname));
     }
 
+    /**
+     * Modifies the messageHelper which notifies all the observers.
+     * @param message
+     */
     public void broadcastMessage(String message) {
         messageHelper.setNewMessage(message);
     }
 
+    /**
+     * @return a list of 4 cards presented to the player at the beginning of the game.
+     */
     public List<LeaderCard> getCurrentPlayerStartingCards() {
         return this.getCurrentPlayer().getStartingCards();
     }
@@ -255,6 +299,9 @@ public class Game extends ModelObservable {
         resourcePicker.setNumOfResources(value);
     }
 
+    /**
+     * @return true if one of the middles is enabled.
+     */
     public boolean isMiddleActive() {
         return (this.leaderCardsPicker.isEnabled() ||
                 this.resourcePicker.isEnabled() ||
@@ -299,10 +346,18 @@ public class Game extends ModelObservable {
     }
 
     //OBSERVABLE
+
+    /**
+     * notifies the observers by sending a message that contains the actual internal status of the Game.
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return the actual message passed by the notifyObservers() method that contains the status of the Game (the turn, the currentPlayer and the blackCrossPosition).
+     */
     public MSG_UPD_Game generateMessage() {
         return new MSG_UPD_Game(
                 this.turn,

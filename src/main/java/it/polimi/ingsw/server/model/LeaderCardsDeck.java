@@ -19,6 +19,9 @@ public class LeaderCardsDeck {
     private final List<LeaderCard> deck;
     private int index;
 
+    /**
+     * Constructor of the LeaderCardsDeck. All the 16 LeaderCards are initialized here. The deck is also shuffled at the end of the constructor.
+     */
     public LeaderCardsDeck() {
         index = 0;
         deck = new ArrayList<>();
@@ -103,6 +106,9 @@ public class LeaderCardsDeck {
         shuffle();
     }
 
+    /**
+     * Shuffles all the LeaderCards.
+     */
     public void shuffle() {
         Collections.shuffle(deck);
         index = 0;
@@ -112,8 +118,9 @@ public class LeaderCardsDeck {
         return new ArrayList<>(deck);
     }
 
-    // pickFourCards extracts the next 4 cards from a fixed stack.
-// becomes cyclical if called more than 4 times without shuffling
+    /**
+     * @return the next 4 cards from a fixed stack. Becomes cyclical if called more than 4 times without shuffling.
+     */
     public synchronized List<LeaderCard> pickFourCards() {
         List<LeaderCard> cards = new ArrayList<>();
         for (int i = 0; i < 4; i++) {

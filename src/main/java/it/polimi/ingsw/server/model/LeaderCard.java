@@ -13,6 +13,12 @@ public class LeaderCard implements Serializable {
     private final SpecialAbility specialAbility;
     private Boolean enabled;
 
+    /**
+     * Constructor of a LeaderCard.
+     * @param vp
+     * @param requirement
+     * @param specialAbility
+     */
     public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility) {
         this.vp = vp;
         this.requirement = requirement;

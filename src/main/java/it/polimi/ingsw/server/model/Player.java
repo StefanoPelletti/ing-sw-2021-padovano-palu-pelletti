@@ -26,6 +26,11 @@ public class Player extends ModelObservable {
     private List<LeaderCard> startingCards;
     private int startingResources;
 
+    /**
+     * Constructor of the Player class.
+     * @param nickname a nickname for the player
+     * @param playerNumber a number for the player.
+     */
     public Player(String nickname, int playerNumber) {
         this.nickname = nickname;
         this.vp = 0;
@@ -50,6 +55,11 @@ public class Player extends ModelObservable {
         return this.startingResources;
     }
 
+    /**
+     * Sets the startingResources for the player:
+     *   - 1 resource if the player is the second or third
+     *   - 2 resources if the player is the fourth.
+     */
     public void setInitialStartingResources() {
         this.startingResources = 0;
         if (this.playerNumber == 2 || this.playerNumber == 3)
@@ -116,6 +126,11 @@ public class Player extends ModelObservable {
         this.playerNumber = playerNumber;
     }
 
+    /**
+     * Sets the LeaderCard to true if it has been activated or to null if it has been discarded.
+     * @param cardNumber the number of the card
+     * @param enable the status of the LeaderCard.
+     */
     public void setLeaderCards(int cardNumber, boolean enable) {
         if (enable)
             leaderCards[cardNumber].setEnabled(true);
@@ -143,12 +158,19 @@ public class Player extends ModelObservable {
         return this.developmentSlot;
     }
 
+    /**
+     * Associates the LeaderCards to the player.
+     * @param cards leaderCards.
+     */
     public void associateLeaderCards(List<LeaderCard> cards) {
         leaderCards[0] = cards.get(0);
         leaderCards[1] = cards.get(1);
         notifyObservers();
     }
 
+    /**
+     * @return the number of the resources that the player owns in his depot, extraDepots and strongbox.
+     */
     public int getTotal() {
         int result = warehouseDepot.getTotal();
         result += strongbox.getTotal();
@@ -159,6 +181,9 @@ public class Player extends ModelObservable {
         return result;
     }
 
+    /**
+     * @return a map of the resources that the player owns in his depot, extraDepots and strongbox.
+     */
     public Map<Resource, Integer> getResources() {
         Map<Resource, Integer> resources = this.warehouseDepot.getResources();
         Set<Resource> possibleResources = resources.keySet();
@@ -175,6 +200,9 @@ public class Player extends ModelObservable {
         return resources;
     }
 
+    /**
+     * @return a map of the resources in the player's depot and extraDepots.
+     */
     public Map<Resource, Integer> getDepotAndExtraDepotResources() {
         Map<Resource, Integer> result;
         result = this.warehouseDepot.getResources();
@@ -187,6 +215,9 @@ public class Player extends ModelObservable {
         return result;
     }
 
+    /**
+     * @return the LeaderCards with a DiscountResourceAbility.
+     */
     public List<LeaderCard> getCardsWithDiscountResourceAbility() {
         List<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isDiscountResource() && leaderCards[0].isEnabled())
@@ -196,6 +227,9 @@ public class Player extends ModelObservable {
         return result;
     }
 
+    /**
+     * @return the LeaderCards with an ExtraDepotAbility.
+     */
     public List<LeaderCard> getCardsWithExtraDepotAbility() {
         List<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isExtraDepot() && leaderCards[0].isEnabled())
@@ -205,6 +239,9 @@ public class Player extends ModelObservable {
         return result;
     }
 
+    /**
+     * @return the LeaderCards with a ProductionAbility.
+     */
     public List<LeaderCard> getCardsWithProductionAbility() {
         List<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isProduction() && leaderCards[0].isEnabled())
@@ -214,6 +251,9 @@ public class Player extends ModelObservable {
         return result;
     }
 
+    /**
+     * @return the LeaderCards with a MarketResourceAbility.
+     */
     public List<LeaderCard> getCardsWithMarketResourceAbility() {
         List<LeaderCard> result = new ArrayList<>();
         if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isMarketResource() && leaderCards[0].isEnabled())
@@ -257,10 +297,16 @@ public class Player extends ModelObservable {
         this.notifyObservers(new MSG_NOTIFICATION(this.nickname + " has advanced on the Faith Track! Now at position: " + this.position));
     }
 
+    /**
+     * notifies the observers by sending a message that contains the actual internal status of the Player.
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     * @return the actual message passed by the notifyObservers() method that contains the status of the Player.
+     */
     public MSG_UPD_Player generateMessage() {
         return new MSG_UPD_Player(
                 vp,
