@@ -11,11 +11,20 @@ public class ResourcePicker extends ModelObservable {
     private boolean enabled;
     private int numOfResources;
 
+    /**
+     * CONSTRUCTOR
+     */
     public ResourcePicker() {
         this.enabled = false;
         this.numOfResources = 0;
     }
 
+    /**
+     *
+     * @param enabled if the ResourcePicker is enabled
+     * @param numOfResources the number of resources available for the players
+     * @return a String representing the current state of a ResourcePicker
+     */
     public static String toString(boolean enabled, int numOfResources) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append(A.RED + " RESOURCE PICKER IS NOT ENABLED! " + A.RESET).toString();
@@ -36,6 +45,11 @@ public class ResourcePicker extends ModelObservable {
         return enabled;
     }
 
+    /**
+     * Sets the ResourcePicker active or disabled
+     * Also notifies observers
+     * @param enabled the boolean value to set
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         notifyObservers();
@@ -45,6 +59,11 @@ public class ResourcePicker extends ModelObservable {
         return numOfResources;
     }
 
+    /**
+     * Sets given number of resources
+     * Also notifies the observers
+     * @param numOfResources the available numOfResources for a player
+     */
     public void setNumOfResources(int numOfResources) {
         this.numOfResources = numOfResources;
         if (enabled) {
@@ -52,6 +71,10 @@ public class ResourcePicker extends ModelObservable {
         }
     }
 
+    /**
+     * Decrements the number of resources that a player must choose
+     * Also notifies the observers
+     */
     public void decNumOfResources() {
         this.numOfResources--;
         if (enabled && this.numOfResources != 0) {
@@ -64,10 +87,18 @@ public class ResourcePicker extends ModelObservable {
         return ResourcePicker.toString(this.enabled, this.numOfResources);
     }
 
+    /**
+     * Creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_ResourcePicker representing the current state of the ResourcePicker
+     */
     public MSG_UPD_ResourcePicker generateMessage() {
         return new MSG_UPD_ResourcePicker(
                 this.enabled,

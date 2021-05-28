@@ -8,6 +8,9 @@ public class ErrorObject extends ModelObservable {
     private boolean enabled;
     private String errorMessage;
 
+    /**
+     * CONSTRUCTOR
+     */
     public ErrorObject() {
         this.enabled = false;
         this.errorMessage = "";
@@ -17,6 +20,11 @@ public class ErrorObject extends ModelObservable {
         return enabled;
     }
 
+    /**
+     * Sets the ErrorObject active or disabled
+     * Also notifies observers
+     * @param enabled the boolean value to set
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         if (!enabled)
@@ -33,10 +41,18 @@ public class ErrorObject extends ModelObservable {
         this.errorMessage = errorMessage;
     }
 
+    /**
+     * Creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_DevCardsVendor representing the current state of the DevelopmentCardsVendor
+     */
     public MSG_ERROR generateMessage() {
         return new MSG_ERROR(this.errorMessage);
     }

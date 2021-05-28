@@ -12,11 +12,22 @@ public class Leaderboard extends ModelObservable {
     private boolean enabled;
     private Map<String, Integer> board;
 
+    /**
+     * CONSTRUCTOR
+     */
     public Leaderboard() {
         this.enabled = false;
         this.board = null;
     }
 
+    /**
+     *
+     * @param enabled true if the LeaderBoard is enabled
+     * @param leaderboard the leaderboard at the end of a game
+     * @param thisPlayer the player which receives the result
+     * @param solo true if the game is in solo mode
+     * @return a String with the result, personalized in base of the type of game (multiplayer or solo) and the player
+     */
     public static String toResult(boolean enabled, Map<String, Integer> leaderboard, String thisPlayer, boolean solo) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append("Empty LeaderboardSimplified.").toString();
@@ -70,6 +81,11 @@ public class Leaderboard extends ModelObservable {
         return this.enabled;
     }
 
+    /**
+     * Sets the LeaderBoard active or disabled
+     * Also notifies observers
+     * @param enabled the boolean value to set
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         if (!enabled)
@@ -78,19 +94,12 @@ public class Leaderboard extends ModelObservable {
         notifyObservers(new MSG_Stop());
     }
 
-    public Map<String, Integer> getLeaderboard() {
-        if (this.board == null)
-            return null;
-        else
-            return new TreeMap<>(this.board);
-    }
-
-    public void putScore(String nickname, Integer score) {
-        if (this.board == null)
-            board = new TreeMap<>();
-        board.put(nickname, score);
-    }
-
+    /**
+     * If absent, the player is added with the given score.
+     * If present, the previous score of the player is summed with the given quantity
+     * @param nickname the name of player associated with the score
+     * @param score the score of the player
+     */
     public void addScore(String nickname, Integer score) {
         if (this.board == null) {
             board = new TreeMap<>();
@@ -108,10 +117,18 @@ public class Leaderboard extends ModelObservable {
         return Leaderboard.toResult(this.enabled, this.board, thisPlayer, solo);
     }
 
+    /**
+     * Creates a message and notifies the observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_LeaderBoard representing the current state of the LeaderBoard
+     */
     public MSG_UPD_LeaderBoard generateMessage() {
         return new MSG_UPD_LeaderBoard(
                 this.enabled,

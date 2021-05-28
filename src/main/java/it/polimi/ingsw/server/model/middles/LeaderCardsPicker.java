@@ -12,11 +12,20 @@ public class LeaderCardsPicker extends ModelObservable {
     private boolean enabled;
     private List<LeaderCard> cards;
 
+    /**
+     * CONSTRUCTOR
+     */
     public LeaderCardsPicker() {
         this.enabled = false;
         this.cards = null;
     }
 
+    /**
+     *
+     * @param enabled true if the LeaderCardsPicker is enabled
+     * @param cards a List of cards of the LeaderCardsPicker
+     * @return a String representing the current state of the LeaderCardsPicker
+     */
     public static String toString(boolean enabled, List<LeaderCard> cards) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append(A.RED + " LEADERCARD PICKER IS NOT ENABLED!" + A.RESET).toString();
@@ -36,6 +45,11 @@ public class LeaderCardsPicker extends ModelObservable {
         return this.enabled;
     }
 
+    /**
+     * Sets the LeaderCardsPicker active or disabled
+     * Also notifies observers
+     * @param enabled the boolean value to set
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         notifyObservers();
@@ -57,10 +71,18 @@ public class LeaderCardsPicker extends ModelObservable {
         return LeaderCardsPicker.toString(this.enabled, this.cards);
     }
 
+    /**
+     * Creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_LeaderCardsPicker representing the current state of the LeaderCardsPicker
+     */
     public MSG_UPD_LeaderCardsPicker generateMessage() {
         return new MSG_UPD_LeaderCardsPicker(
                 this.enabled,

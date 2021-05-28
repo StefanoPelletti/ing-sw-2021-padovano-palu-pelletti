@@ -8,26 +8,49 @@ import it.polimi.ingsw.server.utils.ModelObservable;
 public class MessageHelper extends ModelObservable {
     private String helperMessage;
 
+    /**
+     * CONSTRUCTOR
+     */
     public MessageHelper() {
         this.helperMessage = "";
     }
 
-    public synchronized void setLorenzoNotificationMessage(int number) {
-        if (number == 0) helperMessage = "Lorenzo destroyed two cards on the devCardDeck!";
-        if (number == 1) helperMessage = "Lorenzo gained one faithPoint and shuffled the ActionToken Stack!";
-        if (number == 2) helperMessage = "Lorenzo gained two faithPoints!";
+    /**
+     * Used only in solo mode
+     * Saves what Lorenzo did in his action to forward it to the player
+     * Also notifies the observers
+     * @param action the action that Lorenzo did
+     */
+    public synchronized void setLorenzoNotificationMessage(int action) {
+        if (action == 0) helperMessage = "Lorenzo destroyed two cards on the devCardDeck!";
+        if (action == 1) helperMessage = "Lorenzo gained one faithPoint and shuffled the ActionToken Stack!";
+        if (action == 2) helperMessage = "Lorenzo gained two faithPoints!";
         notifyObservers();
     }
 
+    /**
+     * Called at the end of an action by a player, generates a MSG_UPD_End and notifies the observers
+     */
     public synchronized void setUpdateEnd() {
         notifyObservers(new MSG_UPD_End());
     }
 
+    /**
+     * Saves a generic message to forward to the players
+     * Also notifies the observers
+     * @param message the message to forward to players
+     */
     public synchronized void setNewMessage(String message) {
         helperMessage = message;
         notifyObservers();
     }
 
+    /**
+     * Saves an action notification to forward to the players
+     * Also notifies the observers
+     * @param nickname the player who did the action
+     * @param message the action of the player
+     */
     public synchronized void setNotificationMessage(String nickname, Message message) {
         switch (message.getMessageType()) {
             case MSG_ACTION_ACTIVATE_LEADERCARD:
@@ -50,15 +73,15 @@ public class MessageHelper extends ModelObservable {
                 MSG_ACTION_ACTIVATE_PRODUCTION msg = (MSG_ACTION_ACTIVATE_PRODUCTION) message;
                 helperMessage = nickname + " activated production. Here's what he chose to activate:\n";
                 if (msg.isBasicProduction()) {
-                    helperMessage += "Basic power\n";
+                    helperMessage += "Basic power\n   input | output  : "+msg.getBasicInput()+" | "+msg.getBasicOutput();
                 }
                 boolean[] choices = msg.getStandardProduction();
                 if (choices[0]) helperMessage += "Standard production of the card visible in his devSlot 1\n";
                 if (choices[1]) helperMessage += "Standard production of the card visible in his devSlot 2\n";
                 if (choices[2]) helperMessage += "Standard production of the card visible in his devSlot 3\n";
                 choices = msg.getLeaderProduction();
-                if (choices[0]) helperMessage += "Leader Card production of his leaderCard 1\n";
-                if (choices[1]) helperMessage += "Leader Card production of his leaderCard 2\n";
+                if (choices[0]) helperMessage += "Leader Card production of his leaderCard 1, he got a "+msg.getLeaderOutput1();
+                if (choices[1]) helperMessage += "Leader Card production of his leaderCard 2, he got a "+msg.getLeaderOutput2();
                 break;
             case MSG_ACTION_GET_MARKET_RESOURCES:
                 helperMessage = nickname + " has decided to go to the market";
@@ -81,10 +104,18 @@ public class MessageHelper extends ModelObservable {
         notifyObservers();
     }
 
+    /**
+     * Creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_MarketHelper representing the current state of the LeaderCardsPicker
+     */
     public MSG_NOTIFICATION generateMessage() {
         return new MSG_NOTIFICATION(this.helperMessage);
     }

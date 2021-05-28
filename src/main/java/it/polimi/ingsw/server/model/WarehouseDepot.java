@@ -17,6 +17,13 @@ public class WarehouseDepot extends ModelObservable {
     private final Resource[] shelf3;
     private Resource shelf1;
 
+    /**
+     * CONSTRUCTOR
+     * Creates an empty WarehouseDepot with 3 shelves (3 arrays), all filled with Resource.NONE
+     * Shelf1: Resource.NONE (size 1)
+     * Shelf2: Resource.NONE Resource.NONE (size 2)
+     * Shelf3: Resource.NONE Resource.NONE Resource.NONE (size 3)
+     */
     public WarehouseDepot() {
         this.shelf1 = Resource.NONE;
         this.shelf2 = new Resource[2];
@@ -27,7 +34,19 @@ public class WarehouseDepot extends ModelObservable {
         }
     }
 
-    //returns true if the rules for the depot are met by the given configuration
+    /**
+     * Given 3 shelves (respectively of sizes 1, 2 and 3),
+     * @param shelf1 first shelf of the depot
+     * @param shelf2 second shelf of the depot
+     * @param shelf3 third shelf of the depot
+     * @return true iff all the rules for a valid warehouseDepot are met:
+     *      - not null parameters or elements of the arrays shelf2 and shelf3
+     *      - shelf2 array must be of size 2
+     *      - shelf3 array must be of size 3
+     *      - admitted values for the elements of the shelves are: Resource.NONE, Resource.SHIELD, Resource.STONE, Resource.COIN, Resource.SERVANT
+     *      - in a valid configuration, a shelf can not contain 2 different resources, both not being Resource.NONE (represents the empty space in a depot)
+     *      - no common resources are admitted between 2 shelves, except for Resource.NONE
+     */
     public static boolean validateNewConfig(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
         return shelf1 != null && shelf2 != null && shelf3 != null
                 && (shelf2.length == 2 && shelf3.length == 3)
@@ -39,6 +58,13 @@ public class WarehouseDepot extends ModelObservable {
                 && (Arrays.stream(shelf3).filter(r -> r != Resource.NONE).distinct().count() <= 1);
     }
 
+    /**
+     * Given 3 shelves (respectively of sizes 1, 2 and 3)
+     * @param shelf1 first shelf of the depot
+     * @param shelf2 second shelf of the depot
+     * @param shelf3 third shelf of the depot
+     * @return a String representing the current state of the WarehouseDepot
+     */
     public static String toString(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
         StringBuilder result = new StringBuilder();
         result.append("               WAREHOUSE DEPOT:").append("\n");
@@ -50,7 +76,16 @@ public class WarehouseDepot extends ModelObservable {
         return result.toString();
     }
 
-    //sets the given configuration if valid
+    /**
+     * Given 3 shelves (respectively of sizes 1, 2 and 3),
+     * @param shelf1 first shelf of the depot
+     * @param shelf2 second shelf of the depot
+     * @param shelf3 third shelf of the depot
+     * @return true iff the parameters forms a valid configuration of the depot.
+     *         If the configuration of the depot is valid, copies the elements of the parameters in the attributes
+     *         If the configuration of the depot is valid, notifies the observers
+     * @see #validateNewConfig(Resource, Resource[], Resource[])
+     */
     public boolean setConfig(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
         if (!validateNewConfig(shelf1, shelf2, shelf3)) return false;
         this.shelf1 = shelf1;
@@ -62,6 +97,10 @@ public class WarehouseDepot extends ModelObservable {
         return true;
     }
 
+    /**
+     *
+     * @return a map of the resources contained in the depot, Resource.NONE excluded
+     */
     public Map<Resource, Integer> getResources() {
         Map<Resource, Integer> result = new HashMap<>();
         Resource r2;
@@ -82,6 +121,10 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
+    /**
+     *
+     * @return the amount of resources contained in the depot, Resource.NONE excluded
+     */
     public int getTotal() {
         int result = 0;
         if (this.shelf1 != Resource.NONE) result++;
@@ -92,7 +135,13 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
-    //used when the player buys a devCard or activates production
+    /**
+     * Given a resource to delete from the WarehouseDepot,
+     * @param resource the resource to consume
+     * @return true iff there is a resource of the same type of the parameter in the depot.
+     *         if the resource is found, it is replaced with a Resource.NONE
+     *         if the resource is consumed, notifies observers
+     */
     public boolean consume(Resource resource) {
         if (this.shelf1 == resource) {
             this.shelf1 = Resource.NONE;
@@ -115,7 +164,14 @@ public class WarehouseDepot extends ModelObservable {
         return false;
     }
 
-    //tries to add the given resource to the current configuration
+    /**
+     * Given a resource to add in the depot
+     * @param resource the resource to add
+     * @return true iff resource is added in the WarehouseDepot
+     *         resource is added in the first place available (following the rules) in the shelves, starting from this.shelf1, replacing a Resource.NONE
+     *         if resource is added, notifies observers
+     * @see #validateNewConfig(Resource, Resource[], Resource[])
+     */
     public boolean add(Resource resource) {
         if (!this.isAddable(resource)) return false;
         boolean found = false;
@@ -148,7 +204,12 @@ public class WarehouseDepot extends ModelObservable {
         return true;
     }
 
-    //checks if the given resource is addable in any position in the depot
+    /**
+     * Checks if a resource is addable in the WarehouseDepot, following the rules for a valid configuration
+     * @param resource the resource to check if it is addable
+     * @return true iff the resource is addable in the current configuration of the depot
+     * @see #validateNewConfig(Resource, Resource[], Resource[])
+     */
     public boolean isAddable(Resource resource) {
         Resource[] tmpShelf2 = this.getShelf2(), tmpShelf3 = this.getShelf3();
 
@@ -177,6 +238,10 @@ public class WarehouseDepot extends ModelObservable {
         return this.shelf1;
     }
 
+    /**
+     *
+     * @return 1 if shelf1 is not empty, else return 0
+     */
     public int getShelf1ResourceNumber() {
         if (shelf1 != Resource.NONE) return 1;
         return 0;
@@ -186,6 +251,10 @@ public class WarehouseDepot extends ModelObservable {
         return this.shelf2.clone();
     }
 
+    /**
+     *
+     * @return the number of not Resource.NONE elements in shelf2
+     */
     public int getShelf2ResourceNumber() {
         int result = 0;
         if (shelf2[0] != Resource.NONE) result++;
@@ -197,6 +266,10 @@ public class WarehouseDepot extends ModelObservable {
         return this.shelf3.clone();
     }
 
+    /**
+     *
+     * @return the number of not Resource.NONE elements in shelf3
+     */
     public int getShelf3ResourceNumber() {
         int result = 0;
         if (shelf3[0] != Resource.NONE) result++;
@@ -205,6 +278,12 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
+    /**
+     *
+     * @param r1 row to swap with r2
+     * @param r2 row to swap with r1
+     * @return a new WarehouseDepot with the rows r1 and r2 swapped
+     */
     public WarehouseDepot getSwapPreview(int r1, int r2) {
         WarehouseDepot result = new WarehouseDepot();
         result.setConfig(this.shelf1, new Resource[]{this.shelf2[0], this.shelf2[1]}, new Resource[]{this.shelf3[0], this.shelf3[1], this.shelf3[2]});
@@ -212,6 +291,14 @@ public class WarehouseDepot extends ModelObservable {
         return result;
     }
 
+    /**
+     *
+     * @param r1 row to swap with r2
+     * @param r2 row to swap with r1
+     * @return true iff the rows r1 and r2 are swapped
+     *         the rows are swapped iff the consequent configuration is valid
+     *         if the rows are swapped, notifies observers
+     */
     public boolean swapRow(int r1, int r2) {
         if (r1 <= 0 || r1 >= 4) return false;
         if (r2 <= 0 || r2 >= 4) return false;
@@ -330,10 +417,18 @@ public class WarehouseDepot extends ModelObservable {
         return Objects.hash(this.shelf1, Arrays.hashCode(this.shelf2), Arrays.hashCode(this.shelf3));
     }
 
+    /**
+     * creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_WarehouseDepot containing the current state of the WarehouseDepot
+     */
     public MSG_UPD_WarehouseDepot generateMessage() {
         return new MSG_UPD_WarehouseDepot(
                 shelf1,

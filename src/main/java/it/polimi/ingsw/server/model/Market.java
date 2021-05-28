@@ -14,8 +14,16 @@ public class Market extends ModelObservable {
     private MarketMarble[][] grid;
     private MarketMarble slideMarble;
 
-    //4 white, 2 blue, 2 grey, 2 yellow, 2 purple, 1 red
-
+    /**
+     * CONSTRUCTOR
+     * Creates randomly a matrix of MarketMarbles and the slideMarble:
+     *     - 4 white marbles
+     *     - 2 blue marbles
+     *     - 2 grey marbles
+     *     - 2 yellow marbles
+     *     - 2 purple marbles
+     *     - 1 red marble
+     */
     public Market() {
         grid = new MarketMarble[3][4];
 
@@ -43,6 +51,12 @@ public class Market extends ModelObservable {
         shuffle();
     }
 
+    /**
+     *
+     * @param grid the grid of the Market
+     * @param slideMarble the slideMarble of the market
+     * @return a String representing the current state of the Market
+     */
     public static String toString(MarketMarble[][] grid, MarketMarble slideMarble) {
         StringBuilder result = new StringBuilder();
         result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
@@ -55,6 +69,10 @@ public class Market extends ModelObservable {
         return result.toString();
     }
 
+    /**
+     * Shuffles the MarketMarbles of the Market, slideMarble included
+     * Also notifies observers
+     */
     public void shuffle() {
         Collections.shuffle(internalList);
         int tmp = 1;
@@ -68,6 +86,15 @@ public class Market extends ModelObservable {
         notifyObservers();
     }
 
+    /**
+     * Pushes a row of the grid:
+     *     - SlideMarble replaces the last position of the row (starting from the right)
+     *     - Every Marble of the row is shifted left
+     *     - The first Marble in the row becomes the new SlideMarble
+     * Also notifies the observers
+     * @param row the row of the Market to push
+     * @return a List of the Marbles in the row (before the push)
+     */
     public List<MarketMarble> pushRow(int row) //row must be between 0 and 2 (included) (or refactored)
     {
         if (row < 0 || row > 2) return null;
@@ -83,6 +110,11 @@ public class Market extends ModelObservable {
         return result;
     }
 
+    /**
+     *
+     * @param row the row of Market to get
+     * @return a List of the Marbles in the row
+     */
     public List<MarketMarble> getRow(int row) {
         if (row < 0 || row > 2) return null;
         List<MarketMarble> result = new ArrayList<>();
@@ -91,6 +123,15 @@ public class Market extends ModelObservable {
         return result;
     }
 
+    /**
+     * Pushes a column of the grid:
+     *     - SlideMarble replaces the last position of the column (starting from the bottom)
+     *     - Every Marble of the column is shifted up
+     *     - The first Marble in the column becomes the new SlideMarble
+     * Also notifies the observers
+     * @param column the column of the Market to push
+     * @return a List of the Marbles in the column (before the push)
+     */
     public List<MarketMarble> pushColumn(int column) {
         if (column < 0 || column > 3) return null;
         List<MarketMarble> result = getColumn(column);
@@ -105,6 +146,11 @@ public class Market extends ModelObservable {
         return result;
     }
 
+    /**
+     *
+     * @param column the column of Market to get
+     * @return a List of the Marbles in the column
+     */
     public List<MarketMarble> getColumn(int column) {
         if (column < 0 || column > 3) return null;
         List<MarketMarble> result = new ArrayList<>();
@@ -125,7 +171,6 @@ public class Market extends ModelObservable {
         return result;
     }
 
-    //used only for testing, does not notify the observers
     public void setGrid(MarketMarble[][] grid, MarketMarble slideMarble) {
         this.grid = grid;
         this.slideMarble = slideMarble;
@@ -136,10 +181,18 @@ public class Market extends ModelObservable {
         return Market.toString(this.grid, this.slideMarble);
     }
 
+    /**
+     * creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_Market containing the current state of the Market
+     */
     public MSG_UPD_Market generateMessage() {
         return new MSG_UPD_Market(
                 slideMarble,

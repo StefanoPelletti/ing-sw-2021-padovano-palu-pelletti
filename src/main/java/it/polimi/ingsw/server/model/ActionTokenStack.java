@@ -12,6 +12,13 @@ import java.util.Collections;
 public class ActionTokenStack {
     private final ArrayList<ActionToken> stack;
 
+    /**
+     * CONSTRUCTOR
+     * Creates a Stack of ActionToken:
+     *     - 4 RemoverToken, one for every Color (blue, yellow, green, purple)
+     *     - 1 Forward2Token
+     *     - 1 ForwardAndShuffleToken
+     */
     public ActionTokenStack() {
         this.stack = new ArrayList<>();
         this.stack.add(new RemoverToken(Color.BLUE));
@@ -23,10 +30,17 @@ public class ActionTokenStack {
         this.shuffle();
     }
 
+    /**
+     * Shuffles the stack of tokens
+     */
     public void shuffle() {
         Collections.shuffle(stack);
     }
 
+    /**
+     *
+     * @return the first ActionToken of the stack, that is then put at the end of the stack
+     */
     public ActionToken pickFirst() {
         ActionToken result = stack.get(0);
         for (int i = 0; i < stack.size() - 1; i++) {

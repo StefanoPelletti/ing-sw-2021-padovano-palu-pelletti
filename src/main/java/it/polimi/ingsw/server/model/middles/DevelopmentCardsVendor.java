@@ -12,11 +12,20 @@ public class DevelopmentCardsVendor extends ModelObservable {
     private boolean enabled;
     private List<VendorCard> vendorCards;
 
+    /**
+     * CONSTRUCTOR
+     */
     public DevelopmentCardsVendor() {
         this.enabled = false;
         vendorCards = null;
     }
 
+    /**
+     *
+     * @param enabled if the DevelopmentCardsVendor is enabled
+     * @param cards the cards of the DevelopmentCardsVendor
+     * @return a String representing the current state of the DevelopmentCardsVendor
+     */
     public static String toString(boolean enabled, List<VendorCard> cards) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append(A.RED + " VENDOR IS NOT ENABLED!" + A.RESET).toString();
@@ -36,6 +45,11 @@ public class DevelopmentCardsVendor extends ModelObservable {
         return enabled;
     }
 
+    /**
+     * Sets the DevelopmentCardsVendor active or disabled
+     * Also notifies observers
+     * @param enabled the boolean value to set
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
         if (!enabled)
@@ -56,10 +70,18 @@ public class DevelopmentCardsVendor extends ModelObservable {
         return DevelopmentCardsVendor.toString(this.enabled, this.vendorCards);
     }
 
+    /**
+     * Creates a message and notifies observers
+     * @see #generateMessage()
+     */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
+    /**
+     *
+     * @return a MSG_UPD_DevCardsVendor representing the current state of the DevelopmentCardsVendor
+     */
     public MSG_UPD_DevCardsVendor generateMessage() {
         return new MSG_UPD_DevCardsVendor(
                 this.enabled,
