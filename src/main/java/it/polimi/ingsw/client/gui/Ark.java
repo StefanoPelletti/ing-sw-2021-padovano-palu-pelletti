@@ -10,7 +10,7 @@ public class Ark {
     static String defaultAddress = "localhost";
     static int defaultPort = 43210;
     static String nickname = System.getProperty("user.name");
-    static int playerNumber;
+    static int myPlayerNumber;
 
     static Socket socket;
     static OutputStream outputStream;
@@ -18,4 +18,14 @@ public class Ark {
     static InputStream inputStream;
     static ObjectInputStream objectInputStream;
 
+
+    public static void sweep() {
+        //shared var
+        myPlayerNumber = 0;
+
+        //online var
+
+        //local ref
+
+    }
 }

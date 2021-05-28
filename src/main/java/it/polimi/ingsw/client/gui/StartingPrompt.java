@@ -7,8 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class StartingPrompt {
-    JFrame mainFrame;
+public class StartingPrompt extends JFrame{
+    //JFrame this;
+    Dimension frameDimension;
 
     JButton confirm_Button;
     JButton quit_Button;
@@ -23,10 +24,9 @@ public class StartingPrompt {
     }
 
     public StartingPrompt() {
-        mainFrame = new JFrame("MdR Launcher");
+        super("MdR Launcher");
         GridBagConstraints c = new GridBagConstraints();
-        mainFrame.setLayout(new GridBagLayout());
-
+        this.setLayout(new GridBagLayout());
         /*
 
         +-------------------------------+
@@ -40,9 +40,9 @@ public class StartingPrompt {
         +  +      radio3             +  +
         +  +-------------------------+  +
         +-------------------------------+
-        +  +-------------------------+  +
+        +  +------------+------------+  +
         +  +     button1+button2     +  +
-        +  +-------------------------+  +
+        +  +------------+------------+  +
         +-------------------------------+
 
          */
@@ -58,7 +58,7 @@ public class StartingPrompt {
         c.gridy = 0;
         c.gridwidth = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
-        mainFrame.add(topLabel, c);
+        this.add(topLabel, c);
 
         //RADIO BUTTONS PANEL
         JPanel midPanel = new JPanel();
@@ -99,7 +99,7 @@ public class StartingPrompt {
         c.gridy = 1;
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.LINE_START;
-        mainFrame.add(midPanel, c);
+        this.add(midPanel, c);
 
         //BOTTOM PANEL
         JPanel botPanel = new JPanel(new GridBagLayout());
@@ -128,19 +128,26 @@ public class StartingPrompt {
         c.gridy = 2;
         c.gridwidth = 2;
         c.insets = new Insets(20, 0, 15, 0);
-        mainFrame.add(botPanel, c);
+        this.add(botPanel, c);
 
 
         //PROMPT
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setLocationRelativeTo(null);
-        //mainFrame.setResizable(false);
-        mainFrame.pack();
-        int x = mainFrame.getWidth();
-        int y = mainFrame.getHeight();
-        mainFrame.setMinimumSize(new Dimension(x, y));
-        mainFrame.setVisible(true);
 
+        //operation flags
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //mainFrame.setResizable(false);
+
+        //pack to generate the result
+        this.pack();
+
+
+        //operation must be done after pack
+        frameDimension = new Dimension(this.getWidth(), this.getHeight());
+        this.setMinimumSize(frameDimension);
+        this.setLocationRelativeTo(null);
+        System.out.println("w: "+this.getContentPane().getWidth()+"p h:"+this.getContentPane().getHeight()+"p");
+        //always last action
+        this.setVisible(true);
 
         //ACTION LISTENERS
         confirm_Button.addActionListener(confirm_ButtonActionListener);
@@ -151,22 +158,26 @@ public class StartingPrompt {
     //ACTION LISTENER
     ActionListener confirm_ButtonActionListener = e -> {
         if (clientGUI_radioButton.isSelected()) {
-            new MainMenuV2();
-            mainFrame.dispose();
+            new MainMenu();
+            this.dispose();
         } else if (clientCLI_radioButton.isSelected()) {
-            JOptionPane.showMessageDialog(mainFrame, " Client in CLI started! \n Check your JAVA Console!");
+            JOptionPane.showMessageDialog(this, " Client in CLI started! \n Check your JAVA Console!");
 
             PhaseClient client = new PhaseClient();
-            mainFrame.dispose();
+            this.dispose();
             client.run();
         } else if (server_radioButton.isSelected()) {
-            JOptionPane.showMessageDialog(mainFrame, " Server Started! \n Check your JAVA Console!");
+            JOptionPane.showMessageDialog(this, " Server Started! \n Check your JAVA Console!");
 
             Server server = new Server(43210);
-            mainFrame.dispose();
+            this.dispose();
             server.run();
         }
     };
 
-    ActionListener quit_ButtonActionListener = e -> mainFrame.dispose();
+    ActionListener quit_ButtonActionListener = e -> this.dispose();
+
+
+    //OTHER METHODS
+
 }
