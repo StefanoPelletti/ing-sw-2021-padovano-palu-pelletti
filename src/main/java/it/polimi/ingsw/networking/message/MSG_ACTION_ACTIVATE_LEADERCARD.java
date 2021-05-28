@@ -6,7 +6,13 @@ public class MSG_ACTION_ACTIVATE_LEADERCARD extends Message implements Serializa
 
     private final int cardNumber;
 
-    //cardNumber must be 0 or 1
+    /**
+     * MSG_ACTION_ACTIVATE_LEADERCARD is sent by the Client to the ClientHandler
+     *  It requests the ClientHandler to perform the Controller activateLeaderCard() method
+     * Contains a number representing the card to discard
+     * @param cardNumber the desired card number
+     * @throws IllegalArgumentException if cardNumber is not 0 or 1
+     */
     public MSG_ACTION_ACTIVATE_LEADERCARD(int cardNumber) {
         super(MessageType.MSG_ACTION_ACTIVATE_LEADERCARD);
 

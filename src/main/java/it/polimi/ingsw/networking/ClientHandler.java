@@ -27,6 +27,10 @@ public class ClientHandler implements Runnable, ModelObserver {
     private Boolean pendingConnection;
     private Phase phase;
 
+    /**
+     * Construct a new ClientHandler which manages a specified socket
+     * @param clientSocket the socket corresponding to a Client to handle
+     */
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.lobby = null;
@@ -38,6 +42,19 @@ public class ClientHandler implements Runnable, ModelObserver {
         this.pendingConnection = false;
     }
 
+    /**
+     * Execution Body of the ClientHandler:
+     *  FIRST BLOCK: unwraps the request of the newly connected player. Possible requests:
+     *    CREATE, JOIN, REJOIN -> the ClientHandler acts as requested
+     *    Anything else -> the ClientHandler closes the connection
+     *  SECOND BLOCK: checks if the Lobby has been destroyed by a CountDownTimer
+     *  THIRD BLOCK: MAIN RUN, a Finite State Machine
+     *    Starting State: GIVE_MODEL: updates the Client with a current-state Full Model
+     *    LISTEN_CLIENT: listens for a Client Request. The Request is then passed to the Lobby.
+     *    DISCONNECTED: the ClientHandler executes the disconnected procedure
+     *    TIME_OUT: enters in this state if a TimeOut condition has been met
+     *    Ending State: GAME_OVER: executes the termination procedure.
+     */
     public void run() {
         try {
             outputStream = clientSocket.getOutputStream();
@@ -211,6 +228,12 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * Sends the Client a message containing the current-state Full Model
+     * @return the next Phase,
+     *     - LISTEN_CLIENT if the message has been sent without errors,
+     *     - DISCONNECTED if an error occurred
+     */
     private Phase giveModel() {
         try {
             send(lobby.getFullModel());
@@ -222,6 +245,12 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * Waits for a request from the Client
+     *  In case the player handled is the currentPlayer, the request is passed to the lobby and the ClientHandler listens for a new request
+     *  There may be exceptions on the socket, which determine the next state
+     * @return GAME_OVER is the Game is ended, or DISCONNECTED if a network error occurred
+     */
     private Phase listenClient() {
         System.out.println("[T " + Thread.currentThread().getName() + "] - " + this.nickname + " - Listening player ");
         while (true) {
@@ -243,7 +272,10 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
-
+    /**
+     * This method is called when not all players joined the lobby in time.
+     *  Notifies the handled player of such event. Correctly interrupts the waiting Client.
+     */
     private void timeOut() {
         System.out.println("[T " + Thread.currentThread().getName() + "] - " + " timeOut of the Lobby. Disconnection.");
         try {
@@ -254,7 +286,9 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
-
+    /**
+     * Closes the streams handled, if any error occurred or the Game is terminated.
+     */
     private void closeStreams() {
         try {
             if (!this.clientSocket.isClosed())
@@ -268,7 +302,12 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
-
+    /**
+     * Sends a specified message to the handled Client.
+     * @param message the message to send to the client
+     * @throws IOException if any error occurred during the message send
+     * note: uses reset() and flush() to send the message
+     */
     public void send(Message message) throws IOException {
         if (!pendingConnection) {
             synchronized (outputLock) {
@@ -279,14 +318,33 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * @return the nickname of the player handled by this ClientHandler
+     */
     public String getNickname() {
         return this.nickname;
     }
 
+    /**
+     * @return true if the ClientHandler is in a pending-connection state, false otherwise
+     */
     public Boolean isPendingConnection() {
         return pendingConnection;
     }
 
+    /**
+     * Disconnection procedure executed by the ClientHandler when a network error has occurred.
+     *  Sets the ClientHandler in a pending-connection state.
+     *  Inserts the player handled in the IdlePlayer list
+     *  IF the lobby has no more active players, destroy the lobby
+     *  ELSE Waits for a WakeUp
+     *  After a WakeUp, the ClientHandler sends a current-state of the Game Model.
+     *  Removes the player from the IdlePlayer list, and sets to false the pending-connection state.
+     * @return the next Phase
+     *    - GAME_OVER if the Game has ended
+     *    - DISCONNECTED if a network error has occurred while sending the Full Model
+     *    - LISTEN_CLIENT if everything went well
+     */
     private Phase disconnect() {
         System.out.println("[T " + Thread.currentThread().getName() + "] - " + "An error has occurred and the ClientHandler will be disconnected");
         closeStreams();
@@ -325,6 +383,17 @@ public class ClientHandler implements Runnable, ModelObserver {
         return Phase.LISTEN_CLIENT;
     }
 
+    /**
+     * This method is called by an external ClientHandler to a pending-connection ClientHandler.
+     *  The external ClientHandler gives all its streams and socket to the pending-connection ClientHandler.
+     *  Consequentially Wakes up the pending-connection ClientHandler
+     * @param socket the socket managed by the external ClientHandler
+     * @param inputStream the input stream associated with the above socket
+     * @param objectInputStream the object stream associated with the above input stream
+     * @param outputStream the output stream associated with the above socket
+     * @param objectOutputStream the object stream associated with the the above output stream
+     * @see this.wakeUp();
+     */
     public void substituteStreams(Socket socket, InputStream inputStream, ObjectInputStream objectInputStream,
                                   OutputStream outputStream, ObjectOutputStream objectOutputStream) {
         this.clientSocket = socket;
@@ -335,17 +404,12 @@ public class ClientHandler implements Runnable, ModelObserver {
 
         System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " exploded, going into dead state ");
         wakeUp();
-        /*
-        synchronized (this.pendingConnection) {
-            this.pendingConnection=false;
-            this.pendingConnection.notify();
-        }
-
-         */
-
         System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " reconnected to lobby ");
     }
 
+    /**
+     * Wakes up a pending-connection ClientHandler
+     */
     public void wakeUp() {
         synchronized (this.pendingLock) {
             this.pendingConnection = false;
@@ -354,17 +418,12 @@ public class ClientHandler implements Runnable, ModelObserver {
     }
 
 
-    public void updateX(Message message) {
-        try {
-            send(message);
-        } catch (IOException e) {
-            System.out.println(this.nickname + " failed to send message: " + message.getMessageType());
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Used in the Observer Pattern, forwards a specified message to the Client
+     *  If the specified message is a MSG_Stop, interrupts the ClientHandler which will then go into a GAME_OVER condition
+     * @param message the message to send to the handled Client
+     */
     @Override
-    //@experimental
     public void update(Message message) {
         try {
             if (message.getMessageType() == MessageType.MSG_Stop) {

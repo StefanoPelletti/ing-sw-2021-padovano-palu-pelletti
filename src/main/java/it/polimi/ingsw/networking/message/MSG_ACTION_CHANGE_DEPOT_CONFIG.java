@@ -12,6 +12,22 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
     private final int firstExtraDepot;
     private final int secondExtraDepot;
 
+    /**
+     * MSG_ACTION_CHANGE_DEPOT_CONFIG is sent by the Client the ClientHandler
+     *  It requests the ClientHandler to perform the Controller changeDepotConfig() method
+     * Contains the new configuration of the warehouse depot requested by the player
+     * @param slot1 the first shelf of the depot
+     * @param slot2 the second shelf of the depot
+     * @param slot3 the third shelf of the depot
+     * @param firstExtraDepot the eventual first ExtraDepot number of resources
+     * @param secondExtraDepot the eventual second ExtraDepot number of resources
+     * @throws IllegalArgumentException if the message is built with:
+     *      - slot1 not COIN, SERVANT, SHIELD, STONE or NONE
+     *      - slot2 is null or slot3 is null
+     *      - firstExtraDepot is not between -1 and 2 (included)
+     *      - secondExtraDepot is not between -1 and 2 (included)
+     * note: if the player has no ExtraDepot, the corresponding value should be -1
+     */
     public MSG_ACTION_CHANGE_DEPOT_CONFIG(Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot) {
         super(MessageType.MSG_ACTION_CHANGE_DEPOT_CONFIG);
 

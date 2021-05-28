@@ -7,6 +7,17 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Seria
     private final int cardNumber;
     private final int slotNumber;
 
+    /**
+     * MSG_ACTION_CHOOSE_DEVELOPMENT_CARD is sent by the Client to the ClientHandler
+     *  It requests the ClientHandler to perform the Controller chooseDevelopmentCard() method
+     * Contains the number of the card chosen, and the number of the slot to place the card in
+     * @param cardNumber the desired card to buy
+     * @param slotNumber the desired slot to place the above card
+     * @throws IllegalArgumentException if the message is built with:
+     *      - cardNumber less than -1
+     *      - slotNumber not between 0 and 2 (included)
+     * note: if cardNumber and slotNumber are both -1, it means the player wants to cancel the buyDevelopmentCard action
+     */
     public MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(int cardNumber, int slotNumber) {
         super(MessageType.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD);
 

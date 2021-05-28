@@ -6,6 +6,13 @@ public class MSG_ACTION_DISCARD_LEADERCARD extends Message implements Serializab
 
     private final int cardNumber;
 
+    /**
+     * MSG_ACTION_DISCARD_LEADERCARD is sent by the Client to the ClientHandler
+     *  It requests the ClientHandler to perform the Controller discardLeaderCard() method
+     * Contains a number representing the card to discard
+     * @param cardNumber the desired card number
+     * @throws IllegalArgumentException if cardNumber is not 0 or 1
+     */
     public MSG_ACTION_DISCARD_LEADERCARD(int cardNumber) {
         super(MessageType.MSG_ACTION_DISCARD_LEADERCARD);
 
