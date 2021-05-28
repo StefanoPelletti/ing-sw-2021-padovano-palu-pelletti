@@ -132,7 +132,6 @@ public class StartingPrompt extends JFrame{
 
 
         //PROMPT
-
         //operation flags
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //mainFrame.setResizable(false);
