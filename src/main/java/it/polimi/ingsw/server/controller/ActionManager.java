@@ -28,6 +28,9 @@ public class ActionManager {
     private final Game game;
     private final MessageHelper messageHelper;
 
+    /**
+     * CONSTRUCTOR
+     */
     public ActionManager(GameManager gameManager, FaithTrackManager faithTrackManager, Game game) {
         this.gameManager = gameManager;
         this.faithTrackManager = faithTrackManager;
@@ -35,6 +38,11 @@ public class ActionManager {
         this.messageHelper = game.getMessageHelper();
     }
 
+    /**
+     * Based on the type of message, calls the method that deals the action the player wants to perform
+     * If the called method has returned true, sends a message to notify the players that the action is concluded, so they not expect other messages related to the performed action
+     * @param message the message that a player sent to the server, it is the action that he wants to perform
+     */
     public void onMessage(Message message) {
         gameManager.resetErrorObject();
         Player player = gameManager.currentPlayer();
@@ -81,6 +89,27 @@ public class ActionManager {
         if (result) messageHelper.setUpdateEnd();
     }
 
+    /**
+     * For the given player, associates two leaderCards contained in the LeaderCardsPicker, using the two indexes in the message
+     *
+     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model
+     * ERRORS:
+     *      - the message has invalid values in its fields: the indexes are not between 1 and 4
+     *      - the message contains two indexes that have the same value
+     *      - the method is invoked while LeaderCardsPicker middle-object was not enabled
+     *
+     * If the association of cards is correct:
+     *      - if the game is in solo mode, the initialization phase is over and standard turns begin
+     *      - if the game is in multiplayer and the player is not the last, 4 new LeaderCards are offered to the next player
+     *      - if the game is in multiplayer and the player is the last, the initial resources are offered to the players or the standard turn begins
+     *
+     * @param player the player who wants to perform the action
+     * @param message the message that the player sent
+     * @return true iff the resource are associated to the player without errors
+     *
+     * @see MSG_INIT_CHOOSE_LEADERCARDS
+     * @see LeaderCardsPicker
+     */
     public boolean chooseLeaderCard(Player player, MSG_INIT_CHOOSE_LEADERCARDS message) {
         int firstCard = message.getFirstCard();
         int secondCard = message.getSecondCard();
@@ -126,9 +155,7 @@ public class ActionManager {
             {
                 leaderCardsPicker.setEnabled(false);
                 if (player.isDisconnectedBeforeResource()) {
-                    if (player.getPlayerNumber() == 1) {
-                    } else  //he has to choose even the resources, without the game going forward
-                    {
+                    if (player.getPlayerNumber() != 1) {
                         resourcePicker.setNumOfResources(player.getStartingResources());
                         resourcePicker.setEnabled(true);
                     }
@@ -138,6 +165,25 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     * Only in Multiplayer Mode
+     * For the given player, add the resource contained in the message in his depot
+     *
+     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model
+     * ERRORS:
+     *      - the message has invalid values in its fields: the resource is not among the permitted values Resource.STONE, Resource.SERVANT, Resource.SHIELD, Resource.COIN
+     *      - the method is invoked while LeaderCardsPicker middle-object was not enabled
+     *
+     * If the resource is added:
+     *      - if the player is not the last, prepare the ResourcePicker for the next player, which must choose his initial resources
+     *      - if the player is the last one, standard turns begin
+     *
+     * @param player the player who wants to perform the action
+     * @param message the message that the player sent
+     * @return true iff the resource is added to the depot of the player without errors
+     * @see MSG_INIT_CHOOSE_RESOURCE
+     * @see ResourcePicker
+     */
     public boolean chooseResource(Player player, MSG_INIT_CHOOSE_RESOURCE message) {
         Resource resource = message.getResource();
 
@@ -180,6 +226,12 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @param message
+     * @return
+     */
     public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARD message) {
         int cardNumber = message.getCardNumber();
 
@@ -245,6 +297,12 @@ public class ActionManager {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param message
+     * @return
+     */
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message) {
         int cardNumber = message.getCardNumber();
 
@@ -424,6 +482,12 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @param message
+     * @return
+     */
     public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
         Resource slot1 = message.getSlot1();
         Resource[] slot2 = message.getSlot2();
@@ -524,6 +588,11 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @return
+     */
     public boolean buyDevelopmentCard(Player player) {
         DevelopmentCard[][] possibleCards = game.getVisibleCards();
         List<VendorCard> finalCards = new ArrayList<>();
@@ -611,6 +680,12 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @param message
+     * @return
+     */
     public boolean chooseDevelopmentCard(Player player, MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message) {
         int cardNumber = message.getCardNumber();
         int slotNumber = message.getSlotNumber();
@@ -698,6 +773,12 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @param message
+     * @return
+     */
     public boolean getMarketResources(Player player, MSG_ACTION_GET_MARKET_RESOURCES message) {
         MarketHelper marketHelper = game.getMarketHelper();
         boolean column = message.getColumn();
@@ -763,6 +844,12 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @param message
+     * @return
+     */
     public boolean newChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message) {
         MarketHelper marketHelper = game.getMarketHelper();
         int choice = message.getChoice();
@@ -874,6 +961,12 @@ public class ActionManager {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param notify
+     * @return
+     */
     public boolean endTurn(Player player, boolean notify) {
         player.resetPermittedAction();
         if (notify)
@@ -938,6 +1031,9 @@ public class ActionManager {
         return result;
     }
 
+    /**
+     *
+     */
     private void lorenzoMove() {
         ActionToken token = game.pickFirstActionToken();
         if (token.isRemover()) {
@@ -959,6 +1055,11 @@ public class ActionManager {
     }
 
     //--------------------   Helper methods   --------------------//
+
+    /**
+     *
+     * @param player
+     */
     public void setNextResourceOptions(Player player) {
         MarketHelper marketHelper = game.getMarketHelper();
         Resource resource = marketHelper.getCurrentResource();
@@ -1019,6 +1120,11 @@ public class ActionManager {
             marketHelper.setEnabled(true);
     }
 
+    /**
+     *
+     * @param player
+     * @param cost
+     */
     public void consumeResources(Player player, Map<Resource, Integer> cost) {
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
         List<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
@@ -1048,6 +1154,11 @@ public class ActionManager {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param currentPlayerNumber
+     */
     public void disconnectPlayer(Player player, int currentPlayerNumber) {
         messageHelper.setNewMessage(" " + player.getNickname() + " has crashed! ");
         if (game.isLeaderCardsPickerEnabled()) {
@@ -1082,6 +1193,10 @@ public class ActionManager {
         }
     }
 
+    /**
+     *
+     * @param nickname
+     */
     public void notifyReconnection(String nickname) {
         messageHelper.setNewMessage(nickname + " has reconnected!");
     }
