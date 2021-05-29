@@ -44,16 +44,16 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Execution Body of the ClientHandler:
-     *  FIRST BLOCK: unwraps the request of the newly connected player. Possible requests:
-     *    - CREATE, JOIN, REJOIN -> the ClientHandler acts as requested
-     *    - Anything else -> the ClientHandler closes the connection.
+     *  FIRST BLOCK: unwraps the request of the newly connected player. Possible requests: <ul>
+     * <li> CREATE, JOIN, REJOIN -> the ClientHandler acts as requested
+     * <li> Anything else -> the ClientHandler closes the connection. </ul>
      *  SECOND BLOCK: checks if the Lobby has been destroyed by a CountDownTimer.
-     *  THIRD BLOCK: MAIN RUN, a Finite State Machine:
-     *    - Starting State: GIVE_MODEL: updates the Client with a current-state Full Model
-     *    - LISTEN_CLIENT: listens for a Client Request. The Request is then passed to the Lobby
-     *    - DISCONNECTED: the ClientHandler executes the disconnected procedure
-     *    - TIME_OUT: enters in this state if a TimeOut condition has been met
-     *    - Ending State: GAME_OVER: executes the termination procedure
+     *  THIRD BLOCK: MAIN RUN, a Finite State Machine: <ul>
+     * <li> Starting State: GIVE_MODEL: updates the Client with a current-state Full Model
+     * <li> LISTEN_CLIENT: listens for a Client Request. The Request is then passed to the Lobby
+     * <li> DISCONNECTED: the ClientHandler executes the disconnected procedure
+     * <li> TIME_OUT: enters in this state if a TimeOut condition has been met
+     * <li> Ending State: GAME_OVER: executes the termination procedure
      */
     public void run() {
         try {
@@ -230,9 +230,9 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Sends the Client a message containing the current-state Full Model.
-     * @return the next Phase:
-     *     - LISTEN_CLIENT if the message has been sent without errors,
-     *     - DISCONNECTED if an error occurred.
+     * @return the next Phase: <ul>
+     * <li> LISTEN_CLIENT if the message has been sent without errors,
+     * <li> DISCONNECTED if an error occurred.
      */
     private Phase giveModel() {
         try {
@@ -343,10 +343,10 @@ public class ClientHandler implements Runnable, ModelObserver {
      * ELSE Waits for a WakeUp.
      *  After a WakeUp, the ClientHandler sends a current-state of the Game Model.
      *  Removes the player from the IdlePlayer list, and sets to false the pending-connection state.
-     * @return the next Phase:
-     *    - GAME_OVER if the Game has ended
-     *    - DISCONNECTED if a network error has occurred while sending the Full Model
-     *    - LISTEN_CLIENT if everything went well.
+     * @return the next Phase: <ul>
+     * <li> GAME_OVER if the Game has ended
+     * <li> DISCONNECTED if a network error has occurred while sending the Full Model
+     * <li> LISTEN_CLIENT if everything went well.
      */
     private Phase disconnect() {
         System.out.println("[T " + Thread.currentThread().getName() + "] - " + "An error has occurred and the ClientHandler will be disconnected");

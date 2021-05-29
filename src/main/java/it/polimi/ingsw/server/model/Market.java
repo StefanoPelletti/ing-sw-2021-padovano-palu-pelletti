@@ -17,12 +17,13 @@ public class Market extends ModelObservable {
     /**
      * CONSTRUCTOR
      * Creates randomly a matrix of MarketMarbles and the slideMarble:
-     *     - 4 white marbles
-     *     - 2 blue marbles
-     *     - 2 grey marbles
-     *     - 2 yellow marbles
-     *     - 2 purple marbles
-     *     - 1 red marble
+     * <ul>
+     * <li> 4 white marbles
+     * <li> 2 blue marbles
+     * <li> 2 grey marbles
+     * <li> 2 yellow marbles
+     * <li> 2 purple marbles
+     * <li> 1 red marble
      */
     public Market() {
         grid = new MarketMarble[3][4];
@@ -89,9 +90,11 @@ public class Market extends ModelObservable {
 
     /**
      * Pushes a row of the grid:
-     *     - SlideMarble replaces the last position of the row (starting from the right)
-     *     - Every Marble of the row is shifted left
-     *     - The first Marble in the row becomes the new SlideMarble.
+     * <ul>
+     * <li> SlideMarble replaces the last position of the row (starting from the right)
+     * <li> Every Marble of the row is shifted left
+     * <li> The first Marble in the row becomes the new SlideMarble.
+     * </ul>
      * Also notifies the observers.
      * @param row The row of the Market to push.
      * @return A List of the Marbles in the row (before the push), or null if an incorrect row value was inserted.
@@ -127,9 +130,11 @@ public class Market extends ModelObservable {
 
     /**
      * Pushes a column of the grid:
-     *     - SlideMarble replaces the last position of the column (starting from the bottom)
-     *     - Every Marble of the column is shifted up
-     *     - The first Marble in the column becomes the new SlideMarble.
+     * <ul>
+     * <li> SlideMarble replaces the last position of the column (starting from the bottom)
+     * <li> Every Marble of the column is shifted up
+     * <li> The first Marble in the column becomes the new SlideMarble
+     * </ul>
      * Also notifies the observers.
      * @param column The column of the Market to push.
      * @return A List of the Marbles in the column (before the push), or null if an incorrect column value was inserted.

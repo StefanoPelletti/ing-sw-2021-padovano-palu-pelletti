@@ -257,7 +257,7 @@ public class Game extends ModelObservable {
 
     /**
      * Modifies the messageHelper which notifies all the observers.
-     * @param message
+     * @param message The message being forwarded to the observers.
      */
     public void broadcastMessage(String message) {
         messageHelper.setNewMessage(message);
@@ -303,7 +303,8 @@ public class Game extends ModelObservable {
     }
 
     /**
-     * @return true if one of the middles is enabled.
+     * Returns True if any of the Middle Objects are enabled.
+     * @return True if any of the Middle Objects are enabled, False otherwise.
      */
     public boolean isMiddleActive() {
         return (this.leaderCardsPicker.isEnabled() ||
@@ -351,15 +352,16 @@ public class Game extends ModelObservable {
     //OBSERVABLE
 
     /**
-     * notifies the observers by sending a message that contains the actual internal status of the Game.
+     * Creates a message using generateMessage() and notifies observers.
+     * @see #generateMessage()
      */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
     /**
-     *
-     * @return the actual message passed by the notifyObservers() method that contains the status of the Game (the turn, the currentPlayer and the blackCrossPosition).
+     * Returns a MSG_UPD_Game representing the current state of the Game.
+     * @return A MSG_UPD_Game representing the current state of the Game.
      */
     public MSG_UPD_Game generateMessage() {
         return new MSG_UPD_Game(

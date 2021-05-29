@@ -105,9 +105,10 @@ public class DevelopmentSlot extends ModelObservable {
      * @param newCard The card that is being placed.
      * @param selectedSlot The slot where the user wants to put the card.
      * @return True if the card is added correctly, False if:
-     *   - the stack is full
-     *   - the level is not right
-     *   -
+     * <ul>
+     * <li> the stack is full
+     * <li> the level is not right
+     * <li> parameters are not correct
      */
     public boolean addCard(DevelopmentCard newCard, int selectedSlot) {
         if(selectedSlot < 0 || selectedSlot > 2) return false;

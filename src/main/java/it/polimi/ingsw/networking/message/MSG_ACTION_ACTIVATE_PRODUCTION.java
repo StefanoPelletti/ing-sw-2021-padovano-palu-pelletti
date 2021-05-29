@@ -27,11 +27,11 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
      * @param basicOutput A Resource representing the output of the basic production. Not used if basicProduction is false.
      * @param leaderOutput1 A Resource representing the output of the first Leader Card. Not used if leaderProduction[0] is false.
      * @param leaderOutput2 A Resource representing the output of the second Leader Card. Not used if leaderProduction[1] is false.
-     * @throws IllegalArgumentException If the message is built with:
-     *      - standardProduction array is null or leaderProduction is null
-     *      - if basicProduction is true and ( basicInput is null or it does not contain 2 resources )
-     *      - if leaderProduction[0] is true and leaderOutput1 is null
-     *      - if leaderProduction[1] is true and leaderOutput2 is null.
+     * @throws IllegalArgumentException If the message is built with: <ul>
+     * <li> standardProduction array is null or leaderProduction is null
+     * <li> if basicProduction is true and ( basicInput is null or it does not contain 2 resources )
+     * <li> if leaderProduction[0] is true and leaderOutput1 is null
+     * <li> if leaderProduction[1] is true and leaderOutput2 is null.
      */
     public MSG_ACTION_ACTIVATE_PRODUCTION(boolean[] standardProduction, boolean basicProduction, boolean[] leaderProduction,
                                           List<Resource> basicInput,

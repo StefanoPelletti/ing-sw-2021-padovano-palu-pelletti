@@ -62,9 +62,11 @@ public class Player extends ModelObservable {
     }
 
     /**
-     * Sets the startingResources for the player:
-     *   - 1 resource if the player is the second or third
-     *   - 2 resources if the player is the fourth.
+     * Sets the startingResources for the Player
+     * <ul>
+     * <li> 0 if the Player is the first
+     * <li> 1 if the Player is second or third
+     * <li> 2 if the Player is the fourth
      */
     public void setInitialStartingResources() {
         this.startingResources = 0;

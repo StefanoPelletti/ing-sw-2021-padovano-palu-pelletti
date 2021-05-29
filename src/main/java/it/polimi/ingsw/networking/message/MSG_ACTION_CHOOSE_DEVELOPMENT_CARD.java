@@ -14,9 +14,9 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Seria
      * Note: if cardNumber and slotNumber are both -1, it means the player wants to cancel the buyDevelopmentCard action.
      * @param cardNumber The desired card to buy.
      * @param slotNumber The desired slot to place the above card.
-     * @throws IllegalArgumentException If the message is built with:
-     *      - cardNumber less than -1
-     *      - slotNumber not between 0 and 2 (included).
+     * @throws IllegalArgumentException If the message is built with: <ul>
+     * <li> cardNumber less than -1
+     * <li> slotNumber not between 0 and 2 (included).
 
      */
     public MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(int cardNumber, int slotNumber) {

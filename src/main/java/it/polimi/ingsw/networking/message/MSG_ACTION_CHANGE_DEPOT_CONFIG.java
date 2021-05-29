@@ -22,12 +22,11 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
      * @param slot3 The third shelf of the depot.
      * @param firstExtraDepot The eventual first ExtraDepot number of resources.
      * @param secondExtraDepot The eventual second ExtraDepot number of resources.
-     * @throws IllegalArgumentException If the message is built with:
-     *      - slot1 not COIN, SERVANT, SHIELD, STONE or NONE
-     *      - slot2 is null or slot3 is null
-     *      - firstExtraDepot is not between -1 and 2 (included)
-     *      - secondExtraDepot is not between -1 and 2 (included).
-
+     * @throws IllegalArgumentException If the message is built with: <ul>
+     * <li> slot1 not COIN, SERVANT, SHIELD, STONE or NONE
+     * <li> slot2 is null or slot3 is null
+     * <li> firstExtraDepot is not between -1 and 2 (included)
+     * <li> secondExtraDepot is not between -1 and 2 (included).
      */
     public MSG_ACTION_CHANGE_DEPOT_CONFIG(Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot) {
         super(MessageType.MSG_ACTION_CHANGE_DEPOT_CONFIG);

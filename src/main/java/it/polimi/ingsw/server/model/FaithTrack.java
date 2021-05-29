@@ -25,10 +25,11 @@ public class FaithTrack extends ModelObservable {
      * Gets the position of the player and calls the other method.
      * @param player The Player reference.
      * @return A number for all the zones:
-     *   - 0 would not activate anything
-     *   - 1 would activate the first zone (zone 1)
-     *   - 2 would activate the second zone (zone 2)
-     *   - 3 would activate the third zone (zone 3).
+     * <ul>
+     * <li> 0 would not activate anything
+     * <li> 1 would activate the first zone (zone 1)
+     * <li> 2 would activate the second zone (zone 2)
+     * <li> 3 would activate the third zone (zone 3).
      * @see #doesActivateZone(int)
      */
     public int doesActivateZone(Player player) {
@@ -76,10 +77,11 @@ public class FaithTrack extends ModelObservable {
      * When a zone has been activated this method calculates the Victory Points.
      * @param player The Player reference.
      * @return The number of points given by each zone:
-     *   - 0 if the player was outside the activated zone
-     *   - 2 if the player was inside the first zone
-     *   - 3 if the player was inside the second zone.
-     *   - 4 if the player was inside the third zone.
+     * <ul>
+     * <li> 0 if the player was outside the activated zone
+     * <li> 2 if the player was inside the first zone
+     * <li> 3 if the player was inside the second zone.
+     * <li> 4 if the player was inside the third zone.
      */
     public int calculateVP(Player player) {
         int p = player.getPosition();

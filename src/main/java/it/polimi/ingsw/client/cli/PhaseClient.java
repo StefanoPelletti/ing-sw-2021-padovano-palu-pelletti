@@ -473,11 +473,11 @@ class Halo {
      * A valid Action command should be a number between 0 and 8 (included), and should not select a main move.
      * @param textList A List of String.
      * @return True if the textList is a valid Action command,
-     *         False in any other case:
-     *           - the textList contains more than one word (only the number is expected).
-     *           - the only word is not a number.
-     *           - the number is not between 0 and 8 (included).
-     *           - the number corresponded to a main move, while a main move was already performed.
+     *         False in any other case: <ul>
+     * <li> the textList contains more than one word (only the number is expected).
+     * <li> the only word is not a number.
+     * <li> the number is not between 0 and 8 (included).
+     * <li> the number corresponded to a main move, while a main move was already performed.
      */
     public static boolean checkAction(List<String> textList) {
         if (textList.size() > 1) {
@@ -519,12 +519,12 @@ class Halo {
      * Note: in Local Mode, only the third one is permitted.
      * @param textList A List of String.
      * @return True if the textList is a valid Show command,
-     *         False in any other case:
-     *           - (if local) the textList contains more than two Strings
-     *           - (if online) the textList does not contain 2, 3 or 4 Strings
-     *           - (in case 2) the nickname is referring to a non-existing player
-     *           - (in case 1) the 'i' is not a number, or it is not a valid present player number
-     *           - (globally) the 'item' word does not match the permitted ones
+     *         False in any other case: <ul>
+     * <li> (if local) the textList contains more than two Strings
+     * <li> (if online) the textList does not contain 2, 3 or 4 Strings
+     * <li> (in case 2) the nickname is referring to a non-existing player
+     * <li> (in case 1) the 'i' is not a number, or it is not a valid present player number
+     * <li> (globally) the 'item' word does not match the permitted ones
      */
     public static boolean checkShowCommand(List<String> textList) {
         String[] allowedKeySoloArr = {"players", "market", "depot", "strongbox", "devslot", "devdeck", "faithtrack", "myvp", "leadercards", "turn"};

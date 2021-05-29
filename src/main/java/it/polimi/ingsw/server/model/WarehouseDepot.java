@@ -36,12 +36,13 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Given 3 shelves (respectively of sizes 1, 2 and 3), validates that the following rules are met:
-     *      - not null parameters or elements of the arrays shelf2 and shelf3
-     *      - shelf2 array must be of size 2
-     *      - shelf3 array must be of size 3
-     *      - admitted values for the elements of the shelves are: Resource.NONE, Resource.SHIELD, Resource.STONE, Resource.COIN, Resource.SERVANT
-     *      - in a valid configuration, a shelf can not contain 2 different resources, both not being Resource.NONE (represents the empty space in a depot)
-     *      - no common resources are admitted between 2 shelves, except for Resource.NONE.
+     * <ul>
+     * <li> not null parameters or elements of the arrays shelf2 and shelf3
+     * <li> shelf2 array must be of size 2
+     * <li> shelf3 array must be of size 3
+     * <li> admitted values for the elements of the shelves are: Resource.NONE, Resource.SHIELD, Resource.STONE, Resource.COIN, Resource.SERVANT
+     * <li> in a valid configuration, a shelf can not contain 2 different resources, both not being Resource.NONE (represents the empty space in a depot)
+     * <li> no common resources are admitted between 2 shelves, except for Resource.NONE
      * @param shelf1 First shelf of the depot.
      * @param shelf2 Second shelf of the depot.
      * @param shelf3 Third shelf of the depot.

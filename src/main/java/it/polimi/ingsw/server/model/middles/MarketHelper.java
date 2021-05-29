@@ -136,14 +136,16 @@ public class MarketHelper extends ModelObservable {
 
     /**
      * Sets the possible choices for the current resource:
-     *     - 0: put in the WarehouseDepot
-     *     - 1: put in extra depot
-     *     - 2: discard the resource, always possible
-     *     - 3: swap rows 1 and 2 of the WarehouseDepot
-     *     - 4: swap rows 1 and 3 of the WarehouseDepot
-     *     - 5: swap rows 2 and 3 of the WarehouseDepot
-     *     - 6: skip the current resource (forward in the list)
-     *     - 7: skip the current resource (backward in the list).
+     * <ul>
+     * <li> 0: put in the WarehouseDepot OR convert in ExtraResource 1, if possible
+     * <li> 1: put in extra depot OR convert in ExtraResource 2, if possible
+     * <li> 2: discard the resource, always possible
+     * <li> 3: swap rows 1 and 2 of the WarehouseDepot
+     * <li> 4: swap rows 1 and 3 of the WarehouseDepot
+     * <li> 5: swap rows 2 and 3 of the WarehouseDepot
+     * <li> 6: skip the current resource (forward in the list)
+     * <li> 7: skip the current resource (backward in the list).
+     * </ul>
      * Also notifies the observers.
      * @param choices The possible choices for the current resource.
      */

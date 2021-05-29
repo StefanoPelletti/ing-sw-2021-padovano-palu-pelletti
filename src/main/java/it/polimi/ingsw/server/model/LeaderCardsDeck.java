@@ -20,7 +20,8 @@ public class LeaderCardsDeck {
     private int index;
 
     /**
-     * Constructor of the LeaderCardsDeck. All the 16 LeaderCards are initialized here. The deck is also shuffled at the end of the constructor.
+     * Constructor of the LeaderCardsDeck.
+     * All the 16 LeaderCards are initialized here. The deck is also shuffled at the end of the constructor.
      */
     public LeaderCardsDeck() {
         index = 0;

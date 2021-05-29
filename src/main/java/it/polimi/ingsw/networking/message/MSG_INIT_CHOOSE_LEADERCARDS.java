@@ -12,10 +12,10 @@ public class MSG_INIT_CHOOSE_LEADERCARDS extends Message implements Serializable
      * Contains two integers representing two cards, and is operated by the middles.LeaderCardsPicker object.
      * @param firstCard The number of the first card chosen.
      * @param secondCard The number of the second card chosen.
-     * @throws IllegalArgumentException If the message is built with:
-     *      - firstCard is not between 0 and 3 (included)
-     *      - secondCard is not between 0 and 3 (included)
-     *      - firstCard is the same as secondCard.
+     * @throws IllegalArgumentException If the message is built with: <ul>
+     * <li> firstCard is not between 0 and 3 (included)
+     * <li> secondCard is not between 0 and 3 (included)
+     * <li> firstCard is the same as secondCard.
      */
     public MSG_INIT_CHOOSE_LEADERCARDS(int firstCard, int secondCard) {
         super(MessageType.MSG_INIT_CHOOSE_LEADERCARDS);

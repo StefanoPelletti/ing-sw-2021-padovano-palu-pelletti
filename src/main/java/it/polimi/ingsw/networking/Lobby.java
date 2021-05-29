@@ -154,11 +154,12 @@ public class Lobby {
      * @param socket The socket operated by the ClientHandler.
      * @param clientHandler The ClientHandler reference.
      * @return a String containing the new nickname:
-     *    - nickname (not modified) if the player is the only one with such nickname
-     *    - nickname (1) if there's already a player with such nickname
-     *    - nickname (2) if there are already two players with such nickname
-     *    - nickname (3) if there are already three players with such nickname
-     *    - null if this method gets called while the lobby is at full capacity.
+     * <ul>
+     * <li> nickname (not modified) if the player is the only one with such nickname
+     * <li> nickname (1) if there's already a player with such nickname
+     * <li> nickname (2) if there are already two players with such nickname
+     * <li> nickname (3) if there are already three players with such nickname
+     * <li> null if this method gets called while the lobby is at full capacity.
      */
     public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
         if (this.lobbyMaxPlayers > nicknameList.size()) {

@@ -13,9 +13,9 @@ public class MSG_ACTION_GET_MARKET_RESOURCES extends Message implements Serializ
      * Contains a boolean representing the choice of row/column and the corresponding number.
      * @param column True if a column was chosen, False if a row was chosen.
      * @param number The corresponding number of column/row.
-     * @throws IllegalArgumentException If the message is built with:
-     *      - column chosen and number not between 0 and 3 (included)
-     *      - row chosen and number not between 0 and 2 (included).
+     * @throws IllegalArgumentException If the message is built with: <ul>
+     * <li> column chosen and number not between 0 and 3 (included)
+     * <li> row chosen and number not between 0 and 2 (included).
      */
     public MSG_ACTION_GET_MARKET_RESOURCES(boolean column, int number) {
         super(MessageType.MSG_ACTION_GET_MARKET_RESOURCES);

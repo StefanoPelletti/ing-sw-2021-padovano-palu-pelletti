@@ -50,9 +50,9 @@ public class FaithTrackManager {
      * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
      * @param player The reference to the Player advancing. Null if the parameter lorenzo is set to True.
      * @param lorenzo True if Lorenzo is moving, False otherwise.
-     * @return True if the operation terminated correctly, False if:
-     *      - lorenzo is false and (the player reference is null or the player does not exist in this game)
-     *      - the referenced player/Lorenzo position returns an error value (-1).
+     * @return True if the operation terminated correctly, False if: <ul>
+     * <li> lorenzo is false and (the player reference is null or the player does not exist in this game)
+     * <li> the referenced player/Lorenzo position returns an error value (-1).
      */
     public boolean advance(Player player, boolean lorenzo) {
         Player p;

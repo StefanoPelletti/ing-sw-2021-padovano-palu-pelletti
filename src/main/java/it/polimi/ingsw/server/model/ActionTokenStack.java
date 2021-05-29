@@ -15,9 +15,10 @@ public class ActionTokenStack {
     /**
      * CONSTRUCTOR
      * Creates a Stack of ActionToken:
-     *     - 4 RemoverToken, one for every Color (blue, yellow, green, purple)
-     *     - 1 Forward2Token
-     *     - 1 ForwardAndShuffleToken
+     * <ul>
+     * <li> 4 RemoverToken, one for every Color (blue, yellow, green, purple)
+     * <li> 1 Forward2Token
+     * <li> 1 ForwardAndShuffleToken
      */
     public ActionTokenStack() {
         this.stack = new ArrayList<>();
