@@ -15,6 +15,11 @@ public class RedMarble implements MarketMarble, Serializable {
         color = Color.RED;
     }
 
+    /**
+     * This method throws a RedMarbleException. It does not add a FAITH in the given List.
+     * @param ignored Formally a List of Resource.
+     * @throws RedMarbleException Always throws this exception.
+     */
     public void addResource(List<Resource> ignored) {
         throw new RedMarbleException("Red Marble detected!");
     }

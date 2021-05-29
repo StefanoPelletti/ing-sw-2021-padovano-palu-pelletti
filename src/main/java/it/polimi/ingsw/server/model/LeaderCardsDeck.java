@@ -119,7 +119,8 @@ public class LeaderCardsDeck {
     }
 
     /**
-     * @return the next 4 cards from a fixed stack. Becomes cyclical if called more than 4 times without shuffling.
+     * Returns the next 4 cards available. Becomes cyclical if called more than 4 times without shuffling.
+     * @return The next 4 cards available. Becomes cyclical if called more than 4 times without shuffling.
      */
     public synchronized List<LeaderCard> pickFourCards() {
         List<LeaderCard> cards = new ArrayList<>();

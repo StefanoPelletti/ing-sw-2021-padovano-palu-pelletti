@@ -15,6 +15,10 @@ public class PurpleMarble implements MarketMarble, Serializable {
         color = Color.PURPLE;
     }
 
+    /**
+     * Adds a SERVANT to the given Resource List.
+     * @param resourceList The Resource List.
+     */
     public void addResource(List<Resource> resourceList) {
         resourceList.add(Resource.SERVANT);
     }

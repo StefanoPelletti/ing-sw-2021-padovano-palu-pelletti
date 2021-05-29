@@ -16,12 +16,12 @@ public class DevelopmentCard implements Serializable {
     private final Power power;
 
     /**
-     * Construct of the DevelopmentCard. It initializes a new card by receiving:
-     * @param level the level of the card
-     * @param color the color of the card
-     * @param vp the victory points of the card
-     * @param cost the cost of the card
-     * @param power the power of the card
+     * Construct a DevelopmentCard. It initializes a new card by receiving:
+     * @param level The level of the card.
+     * @param color The color of the card.
+     * @param vp The victory points of the card.
+     * @param cost The cost of the card.
+     * @param power The power of the card.
      */
     public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power) {
         this.level = level;
@@ -56,8 +56,8 @@ public class DevelopmentCard implements Serializable {
     }
 
     /**
-     * used to check if the parameters are correct
-     * @return
+     * Used to check if the parameters are correct, following the standard game rules.
+     * @return True if the card has coherent values.
      */
     public boolean internalCheck() {
         if (level < 1 || level > 3) return false;

@@ -14,7 +14,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Constructor of the FaithTrack.
-     * @param game game reference
+     * @param game The Game reference.
      */
     public FaithTrack(Game game) {
         this.game = game;
@@ -23,12 +23,13 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Gets the position of the player and calls the other method.
-     * @param player player reference
-     * @return a number for all the zones:
+     * @param player The Player reference.
+     * @return A number for all the zones:
      *   - 0 would not activate anything
      *   - 1 would activate the first zone (zone 1)
      *   - 2 would activate the second zone (zone 2)
-     *   - 3 would activate the third zone (zone 3)
+     *   - 3 would activate the third zone (zone 3).
+     * @see #doesActivateZone(int)
      */
     public int doesActivateZone(Player player) {
         int p = player.getPosition() + 1;
@@ -36,9 +37,9 @@ public class FaithTrack extends ModelObservable {
     }
 
     /**
-     * Overload of the previous method. It is used to know what would happen in a specific position of the FaithTrack
-     * @param p position of the player
-     * @return the number for the zone
+     * This method is used to know what would happen in a specific position of the FaithTrack if a Player advances.
+     * @param p A specific position of a Player (or even Lorenzo).
+     * @return The number for the zone if one would activate, 0 if no zone would be activated, -1 if the position is greater than 24 (impossible).
      */
     public int doesActivateZone(int p) {
         if (p > 24) return -1;
@@ -50,8 +51,8 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Increments the position of the player by 1.
-     * @param player player reference
-     * @return true if the player advanced, false if the position of the player is the last one.
+     * @param player The Player reference.
+     * @return True if the player advanced, False if the position of the player is the last one.
      */
     public boolean advance(Player player) {
         if (player.getPosition() == 24) return false;
@@ -61,7 +62,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Increments the position of Lorenzo by 1.
-     * @return true if Lorenzo advanced, false if its position is the last one.
+     * @return True if Lorenzo advanced, False if its position is the last one.
      */
     public boolean advanceLorenzo() {
         if (game.getBlackCrossPosition() == 24) {
@@ -73,12 +74,12 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * When a zone has been activated this method calculates the Victory Points.
-     * @param player player reference
-     * @return the number of points for each zone:
-     *   - 0 if it has not been activated any zone
-     *   - 2 if the first zone has been activated
-     *   - 3 if the second zone has been activated
-     *   - 4 if the third zone has been activated.
+     * @param player The Player reference.
+     * @return The number of points given by each zone:
+     *   - 0 if the player was outside the activated zone
+     *   - 2 if the player was inside the first zone
+     *   - 3 if the player was inside the second zone.
+     *   - 4 if the player was inside the third zone.
      */
     public int calculateVP(Player player) {
         int p = player.getPosition();
@@ -89,21 +90,29 @@ public class FaithTrack extends ModelObservable {
     }
 
     /**
-     * Given:
-     * @param pos a zone
-     * @param activated true or false
-     * Sets the zone to true or false, according to the value of activated
+     * Sets the specified zone to True or False, according to the value of activated.
+     * Also notifies its observers.
+     * @param zoneNumber The number of the zone.
+     * @param activated True if the zone if being activated.
      */
-    public void setZones(int pos, Boolean activated) {
-        zones[pos] = activated;
+    public void setZones(int zoneNumber, Boolean activated) {
+        zones[zoneNumber] = activated;
         notifyObservers();
     }
 
+    /**
+     * Sets all the zones back to False.
+     * Also notifies observers.
+     */
     public void resetZones() {
         zones[0] = zones[1] = zones[2] = false;
         notifyObservers();
     }
 
+    /**
+     * Returns a new 3-cell boolean array containing the current status of the zones.
+     * @return A new 3-cell boolean array containing the current status of the zones.
+     */
     public boolean[] getZones() {
         boolean[] result = new boolean[3];
         System.arraycopy(zones, 0, result, 0, 3);
@@ -115,13 +124,15 @@ public class FaithTrack extends ModelObservable {
     }
 
     /**
-     * Receives:
-     * @param solo
-     * @param zones
-     * @param simplified
-     * @param game
-     * @param gameSimplified
-     * @return a string that represents the FaithTrack (the position of all the players). It can be the FaithTrackSimplified, the normal FaithTrack (called in the local mode) or the FaithTrack for single player.
+     * Returns a String that represents the current status of FaithTrack, with the zones and the position of the Players.
+     * Can work in Solo mode, if specified by the solo parameter.
+     * A FaithTrack or a FaithTrackSimplified may use this shared method by passing their internal values.
+     * @param solo True if the Game is in Solo mode.
+     * @param zones The internal values of the FaithTrack zones.
+     * @param simplified True if this method is called by a FaithTrackSimplified, False if this method is called by a FaithTrack.
+     * @param game The reference to the Game, if simplified was False.
+     * @param gameSimplified The reference to the GameSimplified, if simplified was True.
+     * @return A String representing the current status of the FaithTrack.
      */
     public static String toString(boolean solo, boolean[] zones, boolean simplified, Game game, GameSimplified gameSimplified) {
         StringBuilder result = new StringBuilder();

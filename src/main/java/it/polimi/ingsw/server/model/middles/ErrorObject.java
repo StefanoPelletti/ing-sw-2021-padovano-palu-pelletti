@@ -21,9 +21,10 @@ public class ErrorObject extends ModelObservable {
     }
 
     /**
-     * Sets the ErrorObject active or disabled
-     * Also notifies observers
-     * @param enabled the boolean value to set
+     * Sets the ErrorObject enabled or disabled.
+     * If the ErrorObject is being set to enabled, it will notify its observers.
+     * If the ErrorObject is being set to disabled, it will reset the error Message and will not notify the observers.
+     * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -37,12 +38,17 @@ public class ErrorObject extends ModelObservable {
         return errorMessage;
     }
 
+    /**
+     * Sets the ErrorObject message that will be forwarded to the observers when a setEnable(true) is invoked.
+     * @param errorMessage The error message.
+     * @see #setEnabled(boolean)
+     */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
     /**
-     * Creates a message and notifies observers
+     * Creates a message using generateMessage() and notifies observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -50,8 +56,8 @@ public class ErrorObject extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_DevCardsVendor representing the current state of the DevelopmentCardsVendor
+     * Returns a MSG_ERROR representing the current state of the ErrorObject.
+     * @return A MSG_ERROR representing the current state of the ErrorObject.
      */
     public MSG_ERROR generateMessage() {
         return new MSG_ERROR(this.errorMessage);

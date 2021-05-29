@@ -31,9 +31,10 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     /**
-     * Receives
-     * @param cards the grid of all the cards in the DevSlot
-     * @return a string that represents the DevSlot.
+     * Returns a representation of the current state of a given DevelopmentSlot.
+     * A DevelopmentSlot or a DevelopmentSlotSimplified may use this shared method by passing their internal values.
+     * @param cards The grid of all the cards in the DevSlot.
+     * @return A String that represents the DevSlot.
      */
     public static String toString(DevelopmentCard[][] cards) {
         StringBuilder result = new StringBuilder();
@@ -58,7 +59,6 @@ public class DevelopmentSlot extends ModelObservable {
         }
         for (int i = 0; i < 3; i++) {
             if (cards[0][i] != onTop[0]) {
-                //FIXME check comment below
                 assert cards[0][i] != null; //getVP was signaling possible nullPointerException, please check
                 result.append("VP of underneath cards: ").append(cards[0][i].getVp()).append("\n");
             } else {
@@ -101,14 +101,18 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     /**
-     * Given:
-     * @param newCard the card that the user wants to buy from the DevDeck
-     * @param selectedSlot the slot where the user wants to put the card
-     * @return true if the card is added correctly, false if:
+     * Tries to add a DevelopmentCard in this DevelopmentSlot.
+     * @param newCard The card that is being placed.
+     * @param selectedSlot The slot where the user wants to put the card.
+     * @return True if the card is added correctly, False if:
      *   - the stack is full
      *   - the level is not right
+     *   -
      */
     public boolean addCard(DevelopmentCard newCard, int selectedSlot) {
+        if(selectedSlot < 0 || selectedSlot > 2) return false;
+        if(newCard == null) return false;
+
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
@@ -135,19 +139,16 @@ public class DevelopmentSlot extends ModelObservable {
         }
     }
 
-    //decks are 0 1 2
-
     /**
-     * Given:
-     * @param newCard a card that the user wants
-     * @param selectedSlot a slot where he wants to put the new card
-     * @return checks if the level of the new card is equal to that of the last card in the selected slot (if any) + 1.
-     * If so returns true, otherwise returns false.
+     * Checks if a DevelopmentCard is addable in this DevelopmentSlot, without adding it.
+     * @param newCard A card that is being tested.
+     * @param selectedSlot A slot where the card is being tried at.
+     * @return True if the card is addable, False otherwise.
      */
     public boolean validateNewCard(DevelopmentCard newCard, int selectedSlot) {
-        if (newCard == null) {
-            return false;
-        }
+        if(selectedSlot < 0 || selectedSlot > 2) return false;
+        if (newCard == null) { return false; }
+
         int newCardLevel = newCard.getLevel();
         int cardLevel;
 
@@ -165,7 +166,8 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     /**
-     * @return a new grid of all the cards in the DevSlot.
+     * Returns a new DevelopmentCard matrix of all the DevelopmentCards present in the DevSlot.
+     * @return A new DevelopmentCard matrix of all the DevelopmentCards present in the DevSlot.
      */
     public DevelopmentCard[][] getAllCards() {
         DevelopmentCard[][] tempDeck = new DevelopmentCard[3][3];
@@ -177,7 +179,8 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     /**
-     * @return a new list of the cards in the DevSlot.
+     * Returns a new List containing all the DevelopmentCards present in the DevSlot.
+     * @return A new List containing all the DevelopmentCards present in the DevSlot.
      */
     public List<DevelopmentCard> getCards() {
         List<DevelopmentCard> result = new ArrayList<>();
@@ -190,7 +193,9 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     /**
-     * @return a list of the top cards in the DevSlot (the cards that the user can actually use and see).
+     * Return a new List containing all the DevelopmentCards that are on top of the stacks.
+     * The card on top are the ones usable in the Production Action.
+     * @return A new List containing all the DevelopmentCards that are on top of the stacks.
      */
     public List<DevelopmentCard> getTopCards() {
         List<DevelopmentCard> list = new ArrayList<>();
@@ -203,14 +208,16 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
     /**
-     * @return an array of the top cards in the DevSlot (the cards that the user can actually use and see).
+     * Returns an array of the top cards in the DevSlot (the cards that the user can actually use and see).
+     * @return An array of the top cards in the DevSlot (the cards that the user can actually use and see).
      */
     public DevelopmentCard[] getOnTop() {
         return onTop.clone();
     }
 
     /**
-     * @return the number of all the cards in the DevSlot.
+     * Returns the amount of the cards in the DevSlot.
+     * @return The amount of the cards in the DevSlot.
      */
     public int getNumOfCards() {
         return numOfCards;
@@ -218,21 +225,24 @@ public class DevelopmentSlot extends ModelObservable {
 
     @Override
     /**
-     * Calls the static toString above passing the grid of cards.
+     * Calls the static toString() passing its internal values.
+     * @see #toString(DevelopmentCard[][])
      */
     public String toString() {
         return DevelopmentSlot.toString(this.cards);
     }
 
     /**
-     * notifies the observers by sending a message that contains the actual internal status of the DevSlot.
+     * Creates a message using generateMessage() and notifies observers.
+     * @see #generateMessage()
      */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
     /**
-     * @return the actual message passed by the notifyObservers() method that contains the status of the DevSlot.
+     * Returns a MSG_UPD_DevSlot representing the current state of the DevelopmentSlot.
+     * @return A MSG_UPD_DevSlot representing the current state of the DevelopmentSlot.
      */
     public MSG_UPD_DevSlot generateMessage() {
         return new MSG_UPD_DevSlot(cards);

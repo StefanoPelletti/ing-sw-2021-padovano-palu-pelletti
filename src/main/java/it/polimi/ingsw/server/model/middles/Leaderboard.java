@@ -21,12 +21,13 @@ public class Leaderboard extends ModelObservable {
     }
 
     /**
-     *
-     * @param enabled true if the LeaderBoard is enabled
-     * @param leaderboard the leaderboard at the end of a game
-     * @param thisPlayer the player which receives the result
-     * @param solo true if the game is in solo mode
-     * @return a String with the result, personalized in base of the type of game (multiplayer or solo) and the player
+     * Returns the Leaderboard status, with a prompt that tells a specified Player if he won, lost, or tied.
+     * This method also works in Solo mode by specifying it.
+     * @param enabled True if the LeaderBoard is enabled.
+     * @param leaderboard The leaderboard at the end of a game.
+     * @param thisPlayer The player which receives the result.
+     * @param solo The if the game is in Solo mode.
+     * @return A String with the result, personalized in base of the type of game (multiplayer or Solo) and the player.
      */
     public static String toResult(boolean enabled, Map<String, Integer> leaderboard, String thisPlayer, boolean solo) {
         StringBuilder result = new StringBuilder();
@@ -82,9 +83,10 @@ public class Leaderboard extends ModelObservable {
     }
 
     /**
-     * Sets the LeaderBoard active or disabled
-     * Also notifies observers
-     * @param enabled the boolean value to set
+     * Sets the LeaderBoard enabled or disabled.
+     * If the LeaderBoard is being set to enabled, it will notify its observers with two message, a MSG_UPD_LeaderBoard followed by a MSG_Stop.
+     * The LeaderBoard is not thought to be used after the Game has ended.
+     * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -96,9 +98,9 @@ public class Leaderboard extends ModelObservable {
 
     /**
      * If absent, the player is added with the given score.
-     * If present, the previous score of the player is summed with the given quantity
-     * @param nickname the name of player associated with the score
-     * @param score the score of the player
+     * If present, the previous score of the player is summed with the given quantity.
+     * @param nickname The name of player associated with the score.
+     * @param score The score of the player.
      */
     public void addScore(String nickname, Integer score) {
         if (this.board == null) {
@@ -118,7 +120,7 @@ public class Leaderboard extends ModelObservable {
     }
 
     /**
-     * Creates a message and notifies the observers
+     * Creates a message using generateMessage() and notifies the observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -126,8 +128,8 @@ public class Leaderboard extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_LeaderBoard representing the current state of the LeaderBoard
+     * Returns a MSG_UPD_LeaderBoard representing the current state of the LeaderBoard.
+     * @return A MSG_UPD_LeaderBoard representing the current state of the LeaderBoard.
      */
     public MSG_UPD_LeaderBoard generateMessage() {
         return new MSG_UPD_LeaderBoard(

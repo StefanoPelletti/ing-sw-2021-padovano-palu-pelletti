@@ -26,13 +26,14 @@ public class MarketHelper extends ModelObservable {
     }
 
     /**
-     *
-     * @param enabled true if the MarketHelper is enabled
-     * @param resources a List of resources that must be placed by the player, after a Market Action
-     * @param currentResource the position in resources, represents the current resource
-     * @param choices the choices valid for the current resource
-     * @param extraResourceChoices the extra choices valid for the current resource (used only when the current resource is a Resource.EXTRA)
-     * @return a String representing the current state of the Market Helper
+     * The static toString() shows the user a list of possible choices to resolve a Resource grabbed from the Market.
+     * A MarketHelper or a MarketHelperSimplified may use this shared method by passing their internal values.
+     * @param enabled True if the MarketHelper is enabled.
+     * @param resources A List of Resource that must be placed by the player, after a Market Action.
+     * @param currentResource The position in resources, represents the current resource.
+     * @param choices The choices valid for the current resource.
+     * @param extraResourceChoices The extra choices valid for the current resource (used only when the current resource is a Resource.EXTRA).
+     * @return A String representing the current state of the Market Helper.
      */
     public static String toString(boolean enabled, List<Resource> resources, int currentResource, boolean[] choices, Resource[] extraResourceChoices) {
         StringBuilder result = new StringBuilder();
@@ -92,9 +93,9 @@ public class MarketHelper extends ModelObservable {
     }
 
     /**
-     * Sets the MerketHelper active or disabled
-     * Also notifies observers
-     * @param enabled the boolean value to set
+     * Sets the MerketHelper active or disabled.
+     * Also notifies observers.
+     * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -106,9 +107,9 @@ public class MarketHelper extends ModelObservable {
     }
 
     /**
-     * Called at the beginning of a Market Action
-     * Also notifies the observers
-     * @param newResources the resources that must be placed or discarded by the player
+     * Called at the beginning of a Market Action.
+     * Also notifies the observers.
+     * @param newResources The resources that must be placed or discarded by the player.
      */
     public void setResources(List<Resource> newResources) {
         this.resources = newResources;
@@ -142,9 +143,9 @@ public class MarketHelper extends ModelObservable {
      *     - 4: swap rows 1 and 3 of the WarehouseDepot
      *     - 5: swap rows 2 and 3 of the WarehouseDepot
      *     - 6: skip the current resource (forward in the list)
-     *     - 7: skip the current resource (backward in the list)
-     * Also notifies the observers
-     * @param choices the possible choices for the current resource
+     *     - 7: skip the current resource (backward in the list).
+     * Also notifies the observers.
+     * @param choices The possible choices for the current resource.
      */
     public void setChoices(boolean[] choices) {
         this.choices = choices;
@@ -158,7 +159,7 @@ public class MarketHelper extends ModelObservable {
     }
 
     /**
-     * Creates a message and notifies observers
+     * Creates a message using generateMessage() and notifies observers
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -166,8 +167,8 @@ public class MarketHelper extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_MarketHelper representing the current state of the LeaderCardsPicker
+     * Returns a MSG_UPD_MarketHelper representing the current state of the MarketHelper.
+     * @return a MSG_UPD_MarketHelper representing the current state of the MarketHelper
      */
     public MSG_UPD_MarketHelper generateMessage() {
         return new MSG_UPD_MarketHelper(

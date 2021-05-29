@@ -21,10 +21,12 @@ public class LeaderCardsPicker extends ModelObservable {
     }
 
     /**
-     *
-     * @param enabled true if the LeaderCardsPicker is enabled
-     * @param cards a List of cards of the LeaderCardsPicker
-     * @return a String representing the current state of the LeaderCardsPicker
+     * Returns a String containing the 4 Leader Cards that the LeaderCardsPicker has to offer.
+     * A LeaderCardsPicker or a LeaderCardsPickerSimplified may use this shared method by passing their internal values.
+     * Note: see Player.getStartingLeaderCards().
+     * @param enabled True if the LeaderCardsPicker is enabled
+     * @param cards A List of Leader Cards.
+     * @return A String containing the 4 Leader Cards that the LeaderCardsPicker has to offer.
      */
     public static String toString(boolean enabled, List<LeaderCard> cards) {
         StringBuilder result = new StringBuilder();
@@ -46,9 +48,9 @@ public class LeaderCardsPicker extends ModelObservable {
     }
 
     /**
-     * Sets the LeaderCardsPicker active or disabled
-     * Also notifies observers
-     * @param enabled the boolean value to set
+     * Sets the LeaderCardsPicker active or disabled.
+     * Also notifies observers.
+     * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -72,7 +74,7 @@ public class LeaderCardsPicker extends ModelObservable {
     }
 
     /**
-     * Creates a message and notifies observers
+     * Creates a message generateMessage() and notifies observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -80,8 +82,8 @@ public class LeaderCardsPicker extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_LeaderCardsPicker representing the current state of the LeaderCardsPicker
+     * Returns a MSG_UPD_LeaderCardsPicker representing the current state of the LeaderCardsPicker.
+     * @return A MSG_UPD_LeaderCardsPicker representing the current state of the LeaderCardsPicker.
      */
     public MSG_UPD_LeaderCardsPicker generateMessage() {
         return new MSG_UPD_LeaderCardsPicker(

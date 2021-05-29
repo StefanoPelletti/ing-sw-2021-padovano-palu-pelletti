@@ -31,15 +31,15 @@ public class ActionTokenStack {
     }
 
     /**
-     * Shuffles the stack of tokens
+     * Shuffles the stack of ActionTokens.
      */
     public void shuffle() {
         Collections.shuffle(stack);
     }
 
     /**
-     *
-     * @return the first ActionToken of the stack, that is then put at the end of the stack
+     * Returns the first ActionToken of the stack, which is then placed at the end of the stack.
+     * @return The first ActionToken of the stack, which is then placed at the end of the stack.
      */
     public ActionToken pickFirst() {
         ActionToken result = stack.get(0);

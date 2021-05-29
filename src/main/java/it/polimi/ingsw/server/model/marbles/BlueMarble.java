@@ -14,6 +14,11 @@ public class BlueMarble implements MarketMarble, Serializable {
         color = Color.BLUE;
     }
 
+    /**
+     * Adds a SHIELD to the given Resource List.
+     *
+     * @param resourceList The Resource List.
+     */
     public void addResource(List<Resource> resourceList) {
         resourceList.add(Resource.SHIELD);
     }

@@ -14,6 +14,10 @@ public class GreyMarble implements MarketMarble, Serializable {
         color = Color.GREY;
     }
 
+    /**
+     * Adds a STONE to the given Resource List.
+     * @param resourceList The Resource List.
+     */
     public void addResource(List<Resource> resourceList) {
         resourceList.add(Resource.STONE);
     }

@@ -15,9 +15,9 @@ public class LeaderCard implements Serializable {
 
     /**
      * Constructor of a LeaderCard.
-     * @param vp
-     * @param requirement
-     * @param specialAbility
+     * @param vp The victory points of this card.
+     * @param requirement The requirement object of this card.
+     * @param specialAbility The special ability object of this card.
      */
     public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility) {
         this.vp = vp;

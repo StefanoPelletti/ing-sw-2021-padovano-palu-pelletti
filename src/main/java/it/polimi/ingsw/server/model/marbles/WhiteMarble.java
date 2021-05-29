@@ -14,6 +14,10 @@ public class WhiteMarble implements MarketMarble, Serializable {
         color = Color.WHITE;
     }
 
+    /**
+     * Adds a EXTRA Resource to the given Resource List.
+     * @param resourceList The Resource List.
+     */
     public void addResource(List<Resource> resourceList) {
         resourceList.add(Resource.EXTRA);
     }

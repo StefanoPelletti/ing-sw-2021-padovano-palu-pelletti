@@ -141,7 +141,8 @@ public class Game extends ModelObservable {
 
     //GETTERS NON BASIC
     /**
-     * @return the current player
+     * Returns the reference of the current Player.
+     * @return The reference of the current Player.
      */
     public Player getCurrentPlayer() {
         return getPlayer(currentPlayer);
@@ -149,7 +150,7 @@ public class Game extends ModelObservable {
 
     /**
      * Sets the current player and notifies the observers that the current player has changed.
-     * @param currentPlayer the current player
+     * @param currentPlayer The number of the current player.
      */
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
@@ -157,9 +158,9 @@ public class Game extends ModelObservable {
     }
 
     /**
-     * Given:
-     * @param nickname the nickname of a player
-     * @return the player
+     * Returns the reference of a Player specified by his nickname.
+     * @param nickname The nickname of a Player.
+     * @return The Player reference if it was found, null otherwise.
      */
     public Player getPlayer(String nickname) {
         Optional<Player> result = playerList.stream().filter(p -> p.getNickname().equals(nickname)).findFirst();
@@ -167,9 +168,9 @@ public class Game extends ModelObservable {
     }
 
     /**
-     * Given:
-     * @param playerNumber the number of a player
-     * @return the player
+     * Returns the reference of a Player specified by his player number.
+     * @param playerNumber The number of a Player.
+     * @return The Player reference if it was found, null otherwise.
      */
     public Player getPlayer(int playerNumber) {
         Optional<Player> result = playerList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();
@@ -177,8 +178,9 @@ public class Game extends ModelObservable {
     }
 
     /**
-     * Changes the status of the game. If the status is LAST TURN then notifies the observers.
-     * @param status the status of the game.
+     * Changes the status of the game.
+     * If the status is LAST TURN then notifies the observers.
+     * @param status The new status of the Game.
      */
     public void changeStatus(Status status) {
         if (status == Status.LAST_TURN) {
@@ -191,12 +193,13 @@ public class Game extends ModelObservable {
     //METHODS
 
     /**
-     * Given:
-     * @param nickname a nickname for the new player
-     * @param playerNumber a number for the new player
-     * @return false if the nickname already exists, true if the player is added correctly.
-     * Also, the player receives his initial cards and resources and the position is initialized.
-     * If the player is the number 1, he is the first player.
+     * Tries to add a new Player to the Game.
+     * The Player is set his initial Leader Cards and initial Resources.
+     * If the Player is the third or the fourth, his position will be 1 instead of 0.
+     * If the Player is the first, his reference is saved in firstPlayer.
+     * @param nickname The nickname for the new Player.
+     * @param playerNumber The number for the new Player.
+     * @return False if the nickname already exists, True if the player is added correctly.
      */
     public boolean addPlayer(String nickname, int playerNumber) {
         if (getPlayer(nickname) != null) return false;
@@ -214,8 +217,8 @@ public class Game extends ModelObservable {
     }
 
     /**
-     * It's a method used by the Observer pattern. It links the observer to all the objects in the model.
-     * @param observer
+     * It's a method used by the Observer pattern. It links the observer to all the objects in the Model.
+     * @param observer The ModelObserver being added.
      */
     public void addAllObservers(ModelObserver observer) {
         this.addObserver(observer);

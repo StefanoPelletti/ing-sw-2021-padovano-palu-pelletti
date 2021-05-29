@@ -11,10 +11,10 @@ public class VendorCard implements Serializable {
 
     /**
      * CONSTRUCTOR
-     * @param card the card eligible for a sell to the player who asked to buy a card
-     * @param slot1 true iff card can be placed in slot 1 of the player
-     * @param slot2 true iff card can be placed in slot 2 of the player
-     * @param slot3 true iff card can be placed in slot 3 of the player
+     * @param card The card eligible for a sell to the player who asked to buy a card.
+     * @param slot1 True if and only if card can be placed in slot 1 of the player.
+     * @param slot2 True if and only if card can be placed in slot 2 of the player.
+     * @param slot3 True if and only if card can be placed in slot 3 of the player.
      */
     public VendorCard(DevelopmentCard card, boolean slot1, boolean slot2, boolean slot3) {
         this.card = card;

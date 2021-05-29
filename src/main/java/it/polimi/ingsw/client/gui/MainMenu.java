@@ -127,7 +127,7 @@ public class MainMenu {
         mainFrame.pack();
         frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
         mainFrame.setMinimumSize(frameDimension);
-        bottom_Update_Label.setText("w: " + frameDimension.width + "p h:" + frameDimension.height + "p");
+        System.out.println("w: " + mainFrame.getContentPane().getWidth() + "p h:" + mainFrame.getContentPane().getHeight() + "p");
 
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);

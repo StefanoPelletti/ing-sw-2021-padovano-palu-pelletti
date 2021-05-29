@@ -21,10 +21,11 @@ public class DevelopmentCardsVendor extends ModelObservable {
     }
 
     /**
-     *
-     * @param enabled if the DevelopmentCardsVendor is enabled
-     * @param cards the cards of the DevelopmentCardsVendor
-     * @return a String representing the current state of the DevelopmentCardsVendor
+     * Returns the representation of the current state of a given DevelopmentCardVendor.
+     * A DevelopmentCardsVendor or a DevelopmentCardsVendorSimplified may use this shared method by passing their internal values.
+     * @param enabled True if the DevelopmentCardsVendor is enabled.
+     * @param cards The cards of the DevelopmentCardsVendor.
+     * @return A String representing the current state of the DevelopmentCardsVendor.
      */
     public static String toString(boolean enabled, List<VendorCard> cards) {
         StringBuilder result = new StringBuilder();
@@ -46,9 +47,12 @@ public class DevelopmentCardsVendor extends ModelObservable {
     }
 
     /**
-     * Sets the DevelopmentCardsVendor active or disabled
-     * Also notifies observers
-     * @param enabled the boolean value to set
+     * Sets the DevelopmentCardsVendor enabled or disabled.
+     * If the DevelopmentCardsVendor is being set to enabled, it will notify its observers.
+     * If the DevelopmentCardsVendor is being set to disabled, it will disband the internal List of VendorCards and notify its observers.
+     * This method should be used only after the usage of setCards().
+     * @param enabled The boolean value to set.
+     * @see #setCards(List)
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -61,6 +65,12 @@ public class DevelopmentCardsVendor extends ModelObservable {
         return vendorCards;
     }
 
+    /**
+     * Sets the VendorCards that will be shown to the user.
+     * To notify, the DevelopmentCardsVendor must be set to enabled.
+     * @param cards The List of VendorCards.
+     * @see #setEnabled(boolean)
+     */
     public void setCards(List<VendorCard> cards) {
         this.vendorCards = cards;
     }
@@ -71,7 +81,7 @@ public class DevelopmentCardsVendor extends ModelObservable {
     }
 
     /**
-     * Creates a message and notifies observers
+     * Creates a message using generateMessage() and notifies observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -79,8 +89,8 @@ public class DevelopmentCardsVendor extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_DevCardsVendor representing the current state of the DevelopmentCardsVendor
+     * Returns a MSG_UPD_DevCardsVendor representing the current state of the DevelopmentCardsVendor.
+     * @return A MSG_UPD_DevCardsVendor representing the current state of the DevelopmentCardsVendor.
      */
     public MSG_UPD_DevCardsVendor generateMessage() {
         return new MSG_UPD_DevCardsVendor(

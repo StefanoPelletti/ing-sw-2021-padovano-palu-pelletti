@@ -311,9 +311,11 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * Given:
-     * @param cards a grid of the top cards (the ones the are visible) of the DevelopmentCardsDeck
-     * @return a string the represents the current state of the DevelopmentCardsDeck.
+     * Returns a representation of the current state of a given DevelopmentCardsDeck.
+     * A DevelopmentCardsDeck or a DevelopmentCardsDeckSimplified may use this shared method by passing their internal values.
+     * It only shows the Visible Cards.
+     * @param cards A grid of the top cards (the ones the are visible) of DevelopmentCards.
+     * @return A String the represents the current state of the DevelopmentCardsDeck.
      */
     public static String toString(DevelopmentCard[][] cards) {
         StringBuilder result = new StringBuilder(" DEVELOPMENT DECK, ALL THE VISIBLE CARDS: ");
@@ -346,8 +348,8 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * shuffles individually all the 12 small decks of 4 cards in the DevelopmentCardsDeck, so that it does not mix the colors or the levels of the cards.
-     * NOTE: it should not be called after a card is removed, because it would shuffle a null element.
+     * Shuffle individually all the 12 small decks of 4 cards in the DevelopmentCardsDeck, so that it does not mix the colors nor the levels of the cards.
+     * Note: it should not be called after a card is removed, because it would shuffle a null element.
      */
     public void shuffle() {
         for (int r = 0; r < 3; r++) {
@@ -363,12 +365,15 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * Given
-     * @param row a row of the DevelopmentCardsDeck
-     * @param column a column of the DevelopmentCardsDeck
-     * @return the card that the user wants to buy, after removing it from the small deck in which it is in.
+     * Removes a specified Card from the DevelopmentCardsDeck and returns it.
+     * Also notifies the observers.
+     * @param row A row of the DevelopmentCardsDeck.
+     * @param column A column of the DevelopmentCardsDeck.
+     * @return The card that that is being removed, or null if the selected deck was empty or the row and column parameters were out of bounds.
      */
     public DevelopmentCard removeCard(int row, int column) {
+        if( row < 0 || row > 2) return null;
+        if( column < 0 || column > 3) return null;
         DevelopmentCard card = null;
         for (int i = 3; i >= 0; i--) {
             if (cards[row][column][i] != null) {
@@ -382,9 +387,10 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * It is used in the solo mode with Lorenzo. It removes 2 cards of a column starting from the bottom.
-     * @param column a column of the DevelopmentCardsDeck
-     * @return true if the cards are removed correctly, false if the column is < 0 or > 3
+     * It is used in the Solo mode with Lorenzo. It removes 2 cards of a column starting from the bottom (level 1 to level 3).
+     * Also notifies the observers.
+     * @param column A column of the DevelopmentCardsDeck.
+     * @return True if the cards are removed correctly, False if the column is < 0 or > 3.
      */
     public boolean removeCard(int column) {
         if (column < 0 || column > 3) return false;
@@ -405,7 +411,8 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * @return all the cards on top (that the user can see) of the DevelopmentCardsDeck.
+     * Returns a DevelopmentCard matrix containing all the Visible Cards of the DevelopmentCardsDeck.
+     * @return A DevelopmentCard matrix containing all the Visible Cards of the DevelopmentCardsDeck.
      */
     public DevelopmentCard[][] getVisible() {
 
@@ -431,10 +438,10 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * Given:
-     * @param row a row of the DevelopmentCardsDeck
-     * @param column a column of the DevelopmentCardsDeck
-     * @return the stack of 4 cards in that position.
+     * Returns a DevelopmentCard array containing all the DevelopmentCards from a specified deck.
+     * @param row A row of the DevelopmentCardsDeck.
+     * @param column A column of the DevelopmentCardsDeck.
+     * @return A DevelopmentCard[] stack of 4 cards in that position, or null if the parameters were out of bounds.
      */
     public DevelopmentCard[] getStack(int row, int column) {
         if (row < 0 || row > 2 || column < 0 || column > 3) return null;
@@ -444,8 +451,8 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * Used in solo mode, checks if a column is destroyed.
-     * @return true if the column has been destroyed.
+     * Used in Solo mode, checks if a column is destroyed.
+     * @return True if the column has been destroyed, False otherwise.
      */
     public boolean isOneColumnDestroyed() {
         boolean result;
@@ -466,8 +473,8 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * sets the grid.
-     * @param grid a grid of DevelopmentCards
+     * Sets a custom grid.
+     * @param grid A grid of DevelopmentCards.
      */
     public void setGrid(DevelopmentCard[][][] grid) {
         this.cards = grid;
@@ -475,22 +482,24 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     @Override
     /**
-     * Calls the toString() method above.
+     * Calls the static toString() method.
+     * @see #toString(DevelopmentCard[][])
      */
     public String toString() {
         return DevelopmentCardsDeck.toString(getVisible());
     }
 
     /**
-     * notifies the observers by sending a message that contains the actual internal status of the DevelopmentCardsDeck.
+     * Creates a message using generateMessage() and notifies observers.
+     * @see #generateMessage()
      */
     private void notifyObservers() {
         this.notifyObservers(generateMessage());
     }
 
     /**
-     *
-     * @return the actual message passed by the notifyObservers() method. The update message contains all the visible cards.
+     * Returns a MSG_UPD_DevDeck representing the current state of the DevelopmentCardsDeck.
+     * @return A MSG_UPD_DevDeck representing the current state of the DevelopmentCardsDeck.
      */
     public MSG_UPD_DevDeck generateMessage() {
         return new MSG_UPD_DevDeck(

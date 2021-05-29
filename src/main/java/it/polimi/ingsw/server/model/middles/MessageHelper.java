@@ -16,9 +16,9 @@ public class MessageHelper extends ModelObservable {
     }
 
     /**
-     * Used only in solo mode
-     * Saves what Lorenzo did in his action to forward it to the player
-     * Also notifies the observers
+     * Used only in Solo mode.
+     * Saves what Lorenzo did in his action to forward it to the player.
+     * Also notifies the observers.
      * @param action the action that Lorenzo did
      */
     public synchronized void setLorenzoNotificationMessage(int action) {
@@ -29,16 +29,16 @@ public class MessageHelper extends ModelObservable {
     }
 
     /**
-     * Called at the end of an action by a player, generates a MSG_UPD_End and notifies the observers
+     * Called at the end of an action by a player, generates a MSG_UPD_End and notifies the observers.
      */
     public synchronized void setUpdateEnd() {
         notifyObservers(new MSG_UPD_End());
     }
 
     /**
-     * Saves a generic message to forward to the players
-     * Also notifies the observers
-     * @param message the message to forward to players
+     * Saves a generic message to forward to the players.
+     * Also notifies the observers.
+     * @param message The message to forward to players.
      */
     public synchronized void setNewMessage(String message) {
         helperMessage = message;
@@ -46,10 +46,10 @@ public class MessageHelper extends ModelObservable {
     }
 
     /**
-     * Saves an action notification to forward to the players
-     * Also notifies the observers
-     * @param nickname the player who did the action
-     * @param message the action of the player
+     * Saves an action notification to forward to the players.
+     * Also notifies the observers.
+     * @param nickname The player who did the action.
+     * @param message The action of the player.
      */
     public synchronized void setNotificationMessage(String nickname, Message message) {
         switch (message.getMessageType()) {
@@ -105,7 +105,7 @@ public class MessageHelper extends ModelObservable {
     }
 
     /**
-     * Creates a message and notifies observers
+     * Creates a message using generateMessage() and notifies observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -113,8 +113,8 @@ public class MessageHelper extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_MarketHelper representing the current state of the LeaderCardsPicker
+     * Returns a MSG_NOTIFICATION containing the message String previously set.
+     * @return A MSG_NOTIFICATION containing the message String previously set.
      */
     public MSG_NOTIFICATION generateMessage() {
         return new MSG_NOTIFICATION(this.helperMessage);

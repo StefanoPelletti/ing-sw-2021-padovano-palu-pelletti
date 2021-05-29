@@ -20,10 +20,11 @@ public class ResourcePicker extends ModelObservable {
     }
 
     /**
-     *
-     * @param enabled if the ResourcePicker is enabled
-     * @param numOfResources the number of resources available for the players
-     * @return a String representing the current state of a ResourcePicker
+     * Returns the amount of Resource and a related list the user should choose from.
+     * A ResourcePicker or a ResourcePickerSimplified may use this shared method by passing their internal values.
+     * @param enabled True if the ResourcePicker is enabled.
+     * @param numOfResources The number of resources available for the player.
+     * @return A String representing the current state of a ResourcePicker.
      */
     public static String toString(boolean enabled, int numOfResources) {
         StringBuilder result = new StringBuilder();
@@ -46,9 +47,11 @@ public class ResourcePicker extends ModelObservable {
     }
 
     /**
-     * Sets the ResourcePicker active or disabled
-     * Also notifies observers
-     * @param enabled the boolean value to set
+     * Sets the ResourcePicker active or disabled.
+     * Also notifies observers.
+     * This method should be used only after the usage of setNumOfResources().
+     * @param enabled The boolean value to set.
+     * @see #setNumOfResources(int)
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -60,9 +63,10 @@ public class ResourcePicker extends ModelObservable {
     }
 
     /**
-     * Sets given number of resources
-     * Also notifies the observers
-     * @param numOfResources the available numOfResources for a player
+     * Sets the ResourcePicker amount of Resources.
+     * To notify, the ResourcePicker must be set to enabled.
+     * @param numOfResources The amount of available numOfResources for a player.
+     * @see #setEnabled(boolean)
      */
     public void setNumOfResources(int numOfResources) {
         this.numOfResources = numOfResources;
@@ -72,8 +76,8 @@ public class ResourcePicker extends ModelObservable {
     }
 
     /**
-     * Decrements the number of resources that a player must choose
-     * Also notifies the observers
+     * Decrements the number of resources that a player must choose.
+     * Notifies the observers if the ResourcePicker is still enabled and the amount of resource it not zero.
      */
     public void decNumOfResources() {
         this.numOfResources--;
@@ -88,7 +92,7 @@ public class ResourcePicker extends ModelObservable {
     }
 
     /**
-     * Creates a message and notifies observers
+     * Creates a message using generateMessage() and notifies observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -96,8 +100,8 @@ public class ResourcePicker extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_ResourcePicker representing the current state of the ResourcePicker
+     * Returns a MSG_UPD_ResourcePicker representing the current state of the ResourcePicker.
+     * @return A MSG_UPD_ResourcePicker representing the current state of the ResourcePicker.
      */
     public MSG_UPD_ResourcePicker generateMessage() {
         return new MSG_UPD_ResourcePicker(

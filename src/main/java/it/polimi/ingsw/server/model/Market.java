@@ -52,10 +52,11 @@ public class Market extends ModelObservable {
     }
 
     /**
-     *
-     * @param grid the grid of the Market
-     * @param slideMarble the slideMarble of the market
-     * @return a String representing the current state of the Market
+     * Returns the representation of the current state of a given Market.
+     * A Market or a MarketSimplified may use this shared method by passing their internal values.
+     * @param grid The MarketMarble[][] grid of the Market.
+     * @param slideMarble The slideMarble of the Market.
+     * @return A String representing the current state of the Market.
      */
     public static String toString(MarketMarble[][] grid, MarketMarble slideMarble) {
         StringBuilder result = new StringBuilder();
@@ -70,8 +71,8 @@ public class Market extends ModelObservable {
     }
 
     /**
-     * Shuffles the MarketMarbles of the Market, slideMarble included
-     * Also notifies observers
+     * Shuffles the MarketMarbles of the Market, slideMarble included.
+     * Also notifies observers.
      */
     public void shuffle() {
         Collections.shuffle(internalList);
@@ -90,12 +91,13 @@ public class Market extends ModelObservable {
      * Pushes a row of the grid:
      *     - SlideMarble replaces the last position of the row (starting from the right)
      *     - Every Marble of the row is shifted left
-     *     - The first Marble in the row becomes the new SlideMarble
-     * Also notifies the observers
-     * @param row the row of the Market to push
-     * @return a List of the Marbles in the row (before the push)
+     *     - The first Marble in the row becomes the new SlideMarble.
+     * Also notifies the observers.
+     * @param row The row of the Market to push.
+     * @return A List of the Marbles in the row (before the push), or null if an incorrect row value was inserted.
+     * @see #getRow(int)
      */
-    public List<MarketMarble> pushRow(int row) //row must be between 0 and 2 (included) (or refactored)
+    public List<MarketMarble> pushRow(int row)
     {
         if (row < 0 || row > 2) return null;
         List<MarketMarble> result = getRow(row);
@@ -111,9 +113,9 @@ public class Market extends ModelObservable {
     }
 
     /**
-     *
-     * @param row the row of Market to get
-     * @return a List of the Marbles in the row
+     * Returns A List of the Marbles in a specified row.
+     * @param row The row of Market to get.
+     * @return A List of the Marbles in the specified row, or null if an incorrect row value was inserted.
      */
     public List<MarketMarble> getRow(int row) {
         if (row < 0 || row > 2) return null;
@@ -127,10 +129,10 @@ public class Market extends ModelObservable {
      * Pushes a column of the grid:
      *     - SlideMarble replaces the last position of the column (starting from the bottom)
      *     - Every Marble of the column is shifted up
-     *     - The first Marble in the column becomes the new SlideMarble
-     * Also notifies the observers
-     * @param column the column of the Market to push
-     * @return a List of the Marbles in the column (before the push)
+     *     - The first Marble in the column becomes the new SlideMarble.
+     * Also notifies the observers.
+     * @param column The column of the Market to push.
+     * @return A List of the Marbles in the column (before the push), or null if an incorrect column value was inserted.
      */
     public List<MarketMarble> pushColumn(int column) {
         if (column < 0 || column > 3) return null;
@@ -147,9 +149,9 @@ public class Market extends ModelObservable {
     }
 
     /**
-     *
-     * @param column the column of Market to get
-     * @return a List of the Marbles in the column
+     * Returns A List of the Marbles in a specified column.
+     * @param column The column of Market to get.
+     * @return A List of the Marbles in the specified column, or null if an incorrect column value was inserted.
      */
     public List<MarketMarble> getColumn(int column) {
         if (column < 0 || column > 3) return null;
@@ -171,6 +173,12 @@ public class Market extends ModelObservable {
         return result;
     }
 
+    /**
+     * Replaces the current grid and SlideMarble with custom ones.
+     * May break game rules, willingly.
+     * @param grid The new MarketMarble[][] matrix.
+     * @param slideMarble The new SlideMarble.
+     */
     public void setGrid(MarketMarble[][] grid, MarketMarble slideMarble) {
         this.grid = grid;
         this.slideMarble = slideMarble;
@@ -182,7 +190,7 @@ public class Market extends ModelObservable {
     }
 
     /**
-     * creates a message and notifies observers
+     * Creates a message using generateMessage() and notifies observers.
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -190,8 +198,8 @@ public class Market extends ModelObservable {
     }
 
     /**
-     *
-     * @return a MSG_UPD_Market containing the current state of the Market
+     * Returns a MSG_UPD_Market representing the current state of the Market.
+     * @return A MSG_UPD_Market representing the current state of the Market.
      */
     public MSG_UPD_Market generateMessage() {
         return new MSG_UPD_Market(

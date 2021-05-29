@@ -14,6 +14,10 @@ public class YellowMarble implements MarketMarble, Serializable {
         color = Color.YELLOW;
     }
 
+    /**
+     * Adds a COIN to the given Resource List.
+     * @param resourceList The Resource List.
+     */
     public void addResource(List<Resource> resourceList) {
         resourceList.add(Resource.COIN);
     }
