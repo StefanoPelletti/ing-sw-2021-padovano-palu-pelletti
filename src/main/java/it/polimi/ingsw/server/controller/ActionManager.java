@@ -39,9 +39,9 @@ public class ActionManager {
     }
 
     /**
-     * Based on the type of message, calls the method that deals the action the player wants to perform
-     * If the called method has returned true, sends a message to notify the players that the action is concluded, so they not expect other messages related to the performed action
-     * @param message the message that a player sent to the server, it is the action that he wants to perform
+     * Based on the type of message, it calls the method that deals the action the player wants to perform.
+     * If the called method has returned true, it sends a message to notify the players that the action is concluded, so they do not expect other messages related to the performed action.
+     * @param message The message that a player sent to the server, it is the action that he wants to perform
      */
     public void onMessage(Message message) {
         gameManager.resetErrorObject();
@@ -83,29 +83,30 @@ public class ActionManager {
                 result = this.endTurn(player, true);
                 break;
             default:
-                System.out.println(" SRV: help I don't know what they sent me.");
+                System.out.println(" The message is not recognized.");
         }
 
         if (result) messageHelper.setUpdateEnd();
     }
 
     /**
-     * For the given player, associates two leaderCards contained in the LeaderCardsPicker, using the two indexes in the message
-     *
-     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model
+     * For the given player, it associates two leaderCards contained in the LeaderCardsPicker, using the two indexes in the message.
+     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model.
      * ERRORS:
-     *      - the message has invalid values in its fields: the indexes are not between 1 and 4
-     *      - the message contains two indexes that have the same value
-     *      - the method is invoked while LeaderCardsPicker middle-object was not enabled
-     *
+     * <ul>
+     *      <li> the message has invalid values in its fields: the indexes are not between 1 and 4. </li>
+     *      <li> the message contains two indexes that have the same value. </li>
+     *      <li> the method is invoked while LeaderCardsPicker middle-object was not enabled. </li>
+     * </ul>
      * If the association of cards is correct:
-     *      - if the game is in solo mode, the initialization phase is over and standard turns begin
-     *      - if the game is in multiplayer and the player is not the last, 4 new LeaderCards are offered to the next player
-     *      - if the game is in multiplayer and the player is the last, the initial resources are offered to the players or the standard turn begins
-     *
-     * @param player the player who wants to perform the action
-     * @param message the message that the player sent
-     * @return true iff the resource are associated to the player without errors
+     * <ul>
+     *      <li> if the game is in solo mode, the initialization phase is over and standard turns begin. </li>
+     *      <li> if the game is in multiplayer and the player is not the last, 4 new LeaderCards are offered to the next player. </li>
+     *      <li> if the game is in multiplayer and the player is the last, the initial resources are offered to the players or the standard turn begins. </li>
+     * </ul>
+     * @param player The player who wants to perform the action
+     * @param message The message that the player sent
+     * @return true iff the resources are associated to the player without errors
      *
      * @see MSG_INIT_CHOOSE_LEADERCARDS
      * @see LeaderCardsPicker
@@ -166,21 +167,23 @@ public class ActionManager {
     }
 
     /**
-     * Only in Multiplayer Mode
-     * For the given player, add the resource contained in the message in his depot
+     * Only in Multiplayer Mode.
+     * For the given player, it adds the resource contained in the message in his depot.
      *
-     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model
+     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model.
      * ERRORS:
-     *      - the message has invalid values in its fields: the resource is not among the permitted values Resource.STONE, Resource.SERVANT, Resource.SHIELD, Resource.COIN
-     *      - the method is invoked while LeaderCardsPicker middle-object was not enabled
-     *
+     * <ul>
+     *      <li> the message has invalid values in its fields: the resource is not among the permitted values Resource.STONE, Resource.SERVANT, Resource.SHIELD, Resource.COIN. </li>
+     *      <li> the method is invoked while LeaderCardsPicker middle-object was not enabled. </li>
+     * </ul>
      * If the resource is added:
-     *      - if the player is not the last, prepare the ResourcePicker for the next player, which must choose his initial resources
-     *      - if the player is the last one, standard turns begin
-     *
-     * @param player the player who wants to perform the action
-     * @param message the message that the player sent
-     * @return true iff the resource is added to the depot of the player without errors
+     * <ul>
+     *      <li> if the player is not the last, prepare the ResourcePicker for the next player, which must choose his initial resources. </li>
+     *      <li> if the player is the last one, standard turns begin. </li>
+     * </ul>
+     * @param player The player who wants to perform the action.
+     * @param message The message that the player sent.
+     * @return true iff the resource is added to the depot of the player without errors.
      * @see MSG_INIT_CHOOSE_RESOURCE
      * @see ResourcePicker
      */
@@ -227,10 +230,21 @@ public class ActionManager {
     }
 
     /**
+     * For the given player, it checks if the leaderCard that has been passed can be activated by controlling the resources or the cards owned.
+     * If the requirements are all fulfilled then it activates the leaderCard and notifies the player.
      *
-     * @param player
-     * @param message
-     * @return
+     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model.
+     * ERRORS:
+     * <ul>
+     *     <li> the message did not contain cardNumber as 0 or 1. </li>
+     *     <li> the selected leaderCard was discarded. </li>
+     *     <li> the selected leaderCard was already enabled. </li>
+     *     <li> the resources for the activation are not enough (ResourceRequirement). </li>
+     *     <li> the cards owned are not enough or are not the ones needed (CardRequirement). </li>
+     * </ul>
+     * @param player The player that wants to activate the specified leaderCards.
+     * @param message The message that the player sent.
+     * @return true iff the leaderCard has been activated correctly.
      */
     public boolean activateLeaderCard(Player player, MSG_ACTION_ACTIVATE_LEADERCARD message) {
         int cardNumber = message.getCardNumber();
@@ -298,10 +312,17 @@ public class ActionManager {
     }
 
     /**
-     *
-     * @param player
-     * @param message
-     * @return
+     * For the given player, it checks if the leaderCard that has been passed is already discarded, if not, it discards it, otherwise it notifies an error.
+     * ERRORS:
+     * <ul>
+     *     <li> The cardNumber in the message is not a 0 or a 1. </li>
+     *     <li> The leaderCard is already discarded. </li>
+     *     <li> The leaderCard has been enabled and can't be discarded anymore. </li>
+     * </ul>
+     * If the leaderCard is discarded correctly, it moves the player's position on the FaithTrack by one.
+     * @param player The player that wants to discard the specified leaderCard.
+     * @param message The message that the player sent.
+     * @return true iff the leaderCard has been discarded correctly and the player has advanced on the FaithTrack.
      */
     public boolean discardLeaderCard(Player player, MSG_ACTION_DISCARD_LEADERCARD message) {
         int cardNumber = message.getCardNumber();
@@ -327,6 +348,29 @@ public class ActionManager {
         return true;
     }
 
+    /**
+     * For the given player, it checks if the selected type of productions can be done, if not it notifies an error (see below).
+     * If the player can do all the selected productions, it gets the costs for the standard production, the basic production and the leader production.
+     * It then checks if the player has enough resources for everything, if so it sets a main action as done, notifies all the players and removes the resources from depot and strongbox.
+     * If the player has not enough resources it gives an error message.
+     * Finally, the produced resources are added in the strongbox and the faith points are added (the player advances on the Faith Track).
+     *
+     * ERRORS:
+     * <ul>
+     *     <li> one of the parameters 'standardproduction' or 'leaderproduction' is null. </li>
+     *     <li> baseProduction is true but basicInput is null or not 2. </li>
+     *     <li> one of the two leaderCards is being used for the production but the output is null (not specified). </li>
+     *     <li> the player has already done a main action. </li>
+     *     <li> the leaderCard selected (first or second) has been discarded or is not enabled or its power is not production. </li>
+     *     <li> the player has chosen a slot with no cards. </li>
+     *     <li> the resource for the basic production can't be produced because it is not valid. </li>
+     *     <li> the resource for the leaderCard production can't be produced because it is not valid. </li>
+     *     <li> the player as not enough resources for all the selected productions. </li>
+     * </ul>
+     * @param player The player that wants to activate the production.
+     * @param message The message that the player sent.
+     * @return true iff the production has been done correctly.
+     */
     public boolean activateProduction(Player player, MSG_ACTION_ACTIVATE_PRODUCTION message) {
         Map<Resource, Integer> initialResources = player.getResources();
         boolean[] standardProduction = message.getStandardProduction();
@@ -483,10 +527,24 @@ public class ActionManager {
     }
 
     /**
-     *
-     * @param player
-     * @param message
-     * @return
+     * For the given player, it checks if the new configuration of the resources owned is valid, if so it swaps the resources and notifies the other players.
+     * If not, it gives one of the errors below.
+     * ERRORS:
+     * <ul>
+     *      <li> the resource in the first slot is not a valid resource. </li>
+     *      <li> the second and third slot are null. </li>
+     *      <li> the extra depot leaderCards are not enabled or the number of resources that the player has tried to put in them is not valid. </li>
+     *      <li> the player has tried to put resources in a leaderCard that has not an extra depot ability. </li>
+     *      <li> the configuration for a slot (any of the three) is not valid. </li>
+     *      <li> the configuration for an extra depot (any of the two) is not valid. </li>
+     *      <li> the number of resources of the new configuration do not match the one for the previous configuration. </li>
+     * </ul>
+     * NOTE: if the configuration is the same as the one before it just returns true (no notifications for the players).
+     * NOTE: for the errors related to the slots:
+     *       @see WarehouseDepot
+     * @param player The player who wants to change the configuration of the resources.
+     * @param message The message that the player has sent.
+     * @return true iff the configuration has changed correctly or if it is the same as before.
      */
     public boolean changeDepotConfig(Player player, MSG_ACTION_CHANGE_DEPOT_CONFIG message) {
         Resource slot1 = message.getSlot1();
@@ -589,9 +647,22 @@ public class ActionManager {
     }
 
     /**
+     * For the given player, it takes all the cards on top of the development deck and puts them in a list of cards that can be bought.
+     * It then checks which ones can be bought by the player (it does so by taking all the resources of the player and comparing them with the ones required for each card, considering also the discount ability of the enabled leaderCards).
+     * The ones that cannot be bought are removed from the list.
+     * After this, it checks for each of the remaining cards if they can be placed in one of the player's slots.
+     * If so, it adds the cards in a list of possible cards with the slots they can be put in.
+     * The final list is the one with just the cards that can be bought and placed in one of the player's slots.
+     * Finally, it notifies all the players, puts the card in the developmentCardVendor and enables it.
      *
-     * @param player
-     * @return
+     * ERRORS:
+     * <ul>
+     *     <li> the player has already done a main action. </li>
+     *     <li> the player cannot buy any card. </li>
+     *     <li> the card cannot be placed in any slot. </li>
+     * </ul>
+     * @param player the player who wants to buy a card.
+     * @return true iff the player can buy at least one card.
      */
     public boolean buyDevelopmentCard(Player player) {
         DevelopmentCard[][] possibleCards = game.getVisibleCards();
@@ -681,9 +752,22 @@ public class ActionManager {
     }
 
     /**
+     * For the given player, it adds the chosen card in the chosen slot.
+     * It then removes the card from the development card deck and the resources used to buy that card, considering also the Discount Abilities of that player.
+     * Then, it notifies all the players that a card has been bought and sets the developmentCardVendor to disabled.
+     * NOTE: if the card bought is the 7th for that player, it changes the game status accordingly to the game mode.
      *
-     * @param player
-     * @param message
+     * ERRORS:
+     * <ul>
+     *     <li> if the cardNumber and the slot number are -1 the user did not buy any card. </li>
+     *     <li> the cardNumber is not valid. </li>
+     *     <li> the slotNumber is not valid. </li>
+     *     <li> the number of the card selected is too high. </li>
+     *     <li> the player tried to put a card in a not-valid slot. </li>
+     *     <li> the card was not present. </li>
+     * </ul>
+     * @param player The player that has chosen a card to buy.
+     * @param message The message that the player has sent.
      * @return
      */
     public boolean chooseDevelopmentCard(Player player, MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message) {
@@ -708,7 +792,7 @@ public class ActionManager {
         }
 
 //VALIDATION
-        if (!developmentCardsVendor.isEnabled()) //how the hell did he get in here?
+        if (!developmentCardsVendor.isEnabled())
         {
             gameManager.setErrorObject("Error! The method chooseDevelopmentCard was somehow invoked without developmentCardsVendor middle-object enabled!");
             return false;
@@ -722,7 +806,7 @@ public class ActionManager {
         VendorCard vendorCard = developmentCardsVendor.getCards().get(cardNumber);
 
         if (!vendorCard.isSlot(slotNumber)) {
-            gameManager.setErrorObject("Error! You can not put that card in the depot!");
+            gameManager.setErrorObject("Error! You cannot put that card in that slot!");
             return false;
         }
 
@@ -1120,11 +1204,7 @@ public class ActionManager {
             marketHelper.setEnabled(true);
     }
 
-    /**
-     *
-     * @param player
-     * @param cost
-     */
+
     public void consumeResources(Player player, Map<Resource, Integer> cost) {
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
         List<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();

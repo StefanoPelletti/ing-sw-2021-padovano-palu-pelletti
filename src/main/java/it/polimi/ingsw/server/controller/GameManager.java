@@ -28,8 +28,8 @@ public class GameManager {
      * Instantiating this objects consequentially instantiate the entire Controller and the entire Model.
      * The GameManager is responsible for managing the turns, the currentPlayer, the lobbySize, and the Status,
      *  even thou some fields are modified by the ActionManager actions.
-     * note: automatically detects if the Lobby is going to be a Solo lobby.
-     * note: the Players must be added afterwards, as well as the Observer linkage.
+     * NOTE: automatically detects if the Lobby is going to be a Solo lobby.
+     * NOTE: the Players must be added afterwards, as well as the Observer linkage.
      * @param lobbyMaxPlayers the capacity of the Game this GameManager is managing.
      */
     public GameManager(int lobbyMaxPlayers) {
@@ -190,7 +190,7 @@ public class GameManager {
 
     /**
      * Calculates the scores of the Players at the end of the game,
-     *  loading the model.middles.LeaderBoard object with that data.
+     * loading the model.middles.LeaderBoard object with that data.
      * If it a Solo game, the leaderBoard will contain the Player-score and Lorenzo:
      *      Lorenzo could be the loser (his score will be 1) or
      *      Lorenzo could be the winner (his score will be 2)
