@@ -135,16 +135,23 @@ public class MarketHelper extends ModelObservable {
     }
 
     /**
-     * Sets the possible choices for the current resource:
+     * Sets the possible choices for the current resource.
+     * If the current resource is a normal resource (not Resource.EXTRA):
      * <ul>
-     * <li> 0: put in the WarehouseDepot OR convert in ExtraResource 1, if possible
-     * <li> 1: put in extra depot OR convert in ExtraResource 2, if possible
-     * <li> 2: discard the resource, always possible
-     * <li> 3: swap rows 1 and 2 of the WarehouseDepot
-     * <li> 4: swap rows 1 and 3 of the WarehouseDepot
-     * <li> 5: swap rows 2 and 3 of the WarehouseDepot
-     * <li> 6: skip the current resource (forward in the list)
-     * <li> 7: skip the current resource (backward in the list).
+     * <li> 0: put in the WarehouseDepot OR convert in ExtraResource 1, if possible.</li>
+     * <li> 1: put in extra depot OR convert in ExtraResource 2, if possible.</li>
+     * <li> 2: discard the resource, always possible.</li>
+     * <li> 3: swap rows 1 and 2 of the WarehouseDepot.</li>
+     * <li> 4: swap rows 1 and 3 of the WarehouseDepot.</li>
+     * <li> 5: swap rows 2 and 3 of the WarehouseDepot.</li>
+     * <li> 6: skip the current resource (forward in the list).</li>
+     * <li> 7: skip the current resource (backward in the list).</li>
+     * </ul>
+     * If the current resource is a Resource.EXTRA, possible if the player has 2 leader cards with the MarketResources ability, the choices 0 and 1 are different:
+     * <ul>
+     * <li> 0: convert the resource in the resource given by the player's Leader Card 1.</li>
+     * <li> 1: convert the resource in the resource given by the player's Leader Card 2.</li>
+     * <li> the other choices remain the same as above</li>
      * </ul>
      * Also notifies the observers.
      * @param choices The possible choices for the current resource.

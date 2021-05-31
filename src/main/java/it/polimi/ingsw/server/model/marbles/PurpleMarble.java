@@ -28,6 +28,10 @@ public class PurpleMarble implements MarketMarble, Serializable {
         return "" + A.PURPLE + color + A.RESET + " Marble  ";
     }
 
+    /**
+     * Returns the Color of this Marble in an abbreviated form, colored in a proper manner.
+     * @return A Colored String containing the Initial of the Color of this Marble.
+     */
     public String toAbbreviation() {
         return A.PURPLE + color.toAbbreviation() + A.RESET;
     }

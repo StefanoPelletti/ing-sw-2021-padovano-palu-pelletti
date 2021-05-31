@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ModelObservable {
-    private final ArrayList<ModelObserver> observers;
+    private final List<ModelObserver> observers;
 
     public ModelObservable() {
         observers = new ArrayList<>();
@@ -14,10 +14,6 @@ public abstract class ModelObservable {
 
     public void addObserver(ModelObserver observer) {
         observers.add(observer);
-    }
-
-    public void removeObserver(ModelObserver observer) {
-        observers.remove(observer);
     }
 
     public List<ModelObserver> getObservers() {

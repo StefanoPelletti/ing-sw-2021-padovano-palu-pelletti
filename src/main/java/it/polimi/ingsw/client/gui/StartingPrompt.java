@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.cli.PhaseClient;
-import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.networking.Server;
 
 import javax.swing.*;
 import java.awt.*;

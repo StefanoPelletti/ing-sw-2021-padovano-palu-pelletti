@@ -83,7 +83,7 @@ public class ActionManager {
                 result = this.endTurn(player, true);
                 break;
             default:
-                System.out.println(" The message is not recognized.");
+                System.out.println(" SRV: help I don't know what they sent me.");
         }
 
         if (result) messageHelper.setUpdateEnd();
@@ -424,7 +424,7 @@ public class ActionManager {
         DevelopmentCard[] top = player.getDevelopmentSlot().getOnTop();
         for (int i = 0; i < 3; i++) {
             if (top[i] == null && standardProduction[i]) {
-                gameManager.setErrorObject("You cannot produce with that standard resources!");
+                gameManager.setErrorObject("You chose a slot with no cards!");
                 return false;
             }
         }
@@ -473,9 +473,9 @@ public class ActionManager {
         //getting cost for base Production
         if (baseProduction) {
             for (Resource r : basicInput) {
-                requiredResources.put(r, requiredResources.get(r) + 1);
+                requiredResources.merge(r, 1, Integer::sum);
             }
-            newResources.put(basicOutput, newResources.get(basicOutput) + 1);
+            newResources.merge(basicOutput, 1, Integer::sum);
         }
 
         //getting cost for leader Production
@@ -667,7 +667,6 @@ public class ActionManager {
     public boolean buyDevelopmentCard(Player player) {
         DevelopmentCard[][] possibleCards = game.getVisibleCards();
         List<VendorCard> finalCards = new ArrayList<>();
-        //Map<DevelopmentCard, boolean[]> finalCards = new HashMap<>();
 
         if (player.getAction()) {
             gameManager.setErrorObject("Error! You already performed a very powerful action!");
@@ -739,7 +738,7 @@ public class ActionManager {
             }
         }
 
-        if (finalCards.size() == 0) {
+        if (finalCards.isEmpty()) {
             gameManager.setErrorObject("Error! You cannot place the cards in any slot!");
             return false;
         }
@@ -793,7 +792,7 @@ public class ActionManager {
         }
 
 //VALIDATION
-        if (!developmentCardsVendor.isEnabled())
+        if (!developmentCardsVendor.isEnabled()) //how the hell did he get in here?
         {
             gameManager.setErrorObject("Error! The method chooseDevelopmentCard was somehow invoked without developmentCardsVendor middle-object enabled!");
             return false;
@@ -807,7 +806,7 @@ public class ActionManager {
         VendorCard vendorCard = developmentCardsVendor.getCards().get(cardNumber);
 
         if (!vendorCard.isSlot(slotNumber)) {
-            gameManager.setErrorObject("Error! You cannot put that card in that slot!");
+            gameManager.setErrorObject("Error! You can not put that card in the slot!");
             return false;
         }
 
@@ -875,8 +874,8 @@ public class ActionManager {
      * </ul>
      * NOTE: if the player has one MarketResource Ability, it converts every EXTRA Market Marble in the specified resource, if the player has no MarketResource Abilities it removes the Marble.
      * NOTE: the case where the player has two MarketResource Abilities is dealt in the SetNextResourceOption method.
-     *          @see @SetNextResourceOption
-     * @param player The player who wants to go to the market.
+     *          @see #setNextResourceOptions(Player)
+     * @param player The reference to the Current Player.
      * @param message The message that the player sent.
      * @return iff all the resources have been added to a list.
      */
@@ -946,10 +945,35 @@ public class ActionManager {
     }
 
     /**
+     * Performs a specific action the Current Player chose in the MarketHelper.
+     * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model.
+     * ERRORS:
+     * <ul>
+     *     <li>the integer contained in the message (the decision of the player) is not between (included) 1 and 8</li>
+     *     <li>the method was invoked when the MarketHelper was not enabled</li>
+     *     <li>the choice of the player is not permitted by the server</li>
+     * </ul>
+     * If the resource is normal (not Resource.EXTRA), the action is based on the decision of the player (an integer in the message):
+     * <ul>
+     *     <li>0: put in depot </li>
+     *     <li>1: put in extra depot</li>
+     *     <li>2: discard the resource</li>
+     *     <li>3: swap rows 1 and 2 of the WarehouseDepot</li>
+     *     <li>4: swap rows 1 and 3 of the WarehouseDepot</li>
+     *     <li>5: swap rows 2 and 3 of the WarehouseDepot</li>
+     *     <li>6: skip the resource forward</li>
+     *     <li>7: skip the resource backward</li>
+     * </ul>
+     * If the resource is not normal (Resource.EXTRA, the player has 2 Leader Cards with MarketResources ability):
+     * <ul>
+     *     <li>0: convert the resource in the one given by the Leader Card 1 of the player</li>
+     *     <li>1: convert the resource in the one given by the Leader Card 2 of the player</li>
+     * </ul>
+     *If no error occurs, notifies the players
      *
-     * @param player
-     * @param message
-     * @return
+     * @param player The reference to the Current Player.
+     * @param message The Message coming from the Player.
+     * @return True if the action terminated successful, False if there was any kind of Error.
      */
     public boolean newChoiceMarket(Player player, MSG_ACTION_MARKET_CHOICE message) {
         MarketHelper marketHelper = game.getMarketHelper();
@@ -1221,7 +1245,18 @@ public class ActionManager {
             marketHelper.setEnabled(true);
     }
 
-
+    /**
+     * Consumes a map of resources from the WarehouseDepot, ExtraDepots and strongbox of the given player.
+     * It assumes that is possible to consume all the resources in the given map.
+     * For each resource to consume:
+     * <ul>
+     *      <li> tries to consume it from the depot. If it is not found there,</li>
+     *      <li> tries to consume it from the extraDepots. If it is not found there,</li>
+     *      <li> consumes the resource (and all the remaining resources of the same type in the map) from the strongbox.</li>
+     * </ul>
+     * @param player The player who pays the cost.
+     * @param cost The map containing the resources and the relative quantity to consume.
+     */
     public void consumeResources(Player player, Map<Resource, Integer> cost) {
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
         List<LeaderCard> extraDepotLeaderCards = player.getCardsWithExtraDepotAbility();
@@ -1252,9 +1287,12 @@ public class ActionManager {
     }
 
     /**
-     *
-     * @param player
-     * @param currentPlayerNumber
+     * Disconnects the specified Player.
+     * Notifies the observers that such Player has crashed.
+     * Eventually saves his status, if he was still choosing LeaderCards or Initial Resources.
+     * If the Player was the currentPlayer, advances the Game normally.
+     * @param player The reference of the Player who just crashed.
+     * @param currentPlayerNumber The number of the current Player.
      */
     public void disconnectPlayer(Player player, int currentPlayerNumber) {
         messageHelper.setNewMessage(" " + player.getNickname() + " has crashed! ");

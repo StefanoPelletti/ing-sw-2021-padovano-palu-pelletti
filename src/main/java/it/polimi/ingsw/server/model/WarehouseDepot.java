@@ -116,9 +116,9 @@ public class WarehouseDepot extends ModelObservable {
         r2 = Arrays.stream(this.shelf2).filter(r -> r != Resource.NONE).findFirst().orElse(Resource.NONE);
         r3 = Arrays.stream(this.shelf3).filter(r -> r != Resource.NONE).findFirst().orElse(Resource.NONE);
         if (r2 != Resource.NONE)
-            result.put(r2, (int) Arrays.stream(this.shelf2).filter(r -> r != Resource.NONE).count());
+            result.put(r2, getShelf2ResourceNumber());
         if (r3 != Resource.NONE)
-            result.put(r3, (int) Arrays.stream(this.shelf3).filter(r -> r != Resource.NONE).count());
+            result.put(r3, getShelf3ResourceNumber());
         return result;
     }
 

@@ -3,6 +3,7 @@ package it.polimi.ingsw.server.model.middles;
 import it.polimi.ingsw.networking.message.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_End;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 public class MessageHelper extends ModelObservable {
@@ -73,15 +74,15 @@ public class MessageHelper extends ModelObservable {
                 MSG_ACTION_ACTIVATE_PRODUCTION msg = (MSG_ACTION_ACTIVATE_PRODUCTION) message;
                 helperMessage = nickname + " activated production. Here's what he chose to activate:\n";
                 if (msg.isBasicProduction()) {
-                    helperMessage += "Basic power\n   input | output  : "+msg.getBasicInput()+" | "+msg.getBasicOutput();
+                    helperMessage += "Basic power\n   input -> output  : "+ A.RESET + msg.getBasicInput() +" -> "+ msg.getBasicOutput() + "\n";
                 }
                 boolean[] choices = msg.getStandardProduction();
-                if (choices[0]) helperMessage += "Standard production of the card visible in his devSlot 1\n";
+                if (choices[0]) helperMessage += A.YELLOW + "Standard production of the card visible in his devSlot 1\n";
                 if (choices[1]) helperMessage += "Standard production of the card visible in his devSlot 2\n";
                 if (choices[2]) helperMessage += "Standard production of the card visible in his devSlot 3\n";
                 choices = msg.getLeaderProduction();
-                if (choices[0]) helperMessage += "Leader Card production of his leaderCard 1, he got a "+msg.getLeaderOutput1();
-                if (choices[1]) helperMessage += "Leader Card production of his leaderCard 2, he got a "+msg.getLeaderOutput2();
+                if (choices[0]) helperMessage += "Leader Card production of his leaderCard 1, he got a "+ A.RESET +msg.getLeaderOutput1();
+                if (choices[1]) helperMessage += A.YELLOW + "Leader Card production of his leaderCard 2, he got a "+msg.getLeaderOutput2();
                 break;
             case MSG_ACTION_GET_MARKET_RESOURCES:
                 helperMessage = nickname + " has decided to go to the market";

@@ -1,6 +1,4 @@
-package it.polimi.ingsw.server;
-
-import it.polimi.ingsw.networking.ClientHandler;
+package it.polimi.ingsw.networking;
 
 import java.io.IOException;
 import java.net.InetAddress;
