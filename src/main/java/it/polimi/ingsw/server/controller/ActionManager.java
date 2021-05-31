@@ -755,7 +755,7 @@ public class ActionManager {
      * For the given player, it adds the chosen card in the chosen slot.
      * It then removes the card from the development card deck and the resources used to buy that card, considering also the Discount Abilities of that player.
      * Then, it notifies all the players that a card has been bought and sets the developmentCardVendor to disabled.
-     * NOTE: if the card bought is the 7th for that player, it changes the game status accordingly to the game mode.
+     * Finally, it saves that a main action has been done.
      *
      * ERRORS:
      * <ul>
@@ -766,9 +766,10 @@ public class ActionManager {
      *     <li> the player tried to put a card in a not-valid slot. </li>
      *     <li> the card was not present. </li>
      * </ul>
+     * NOTE: if the card bought is the 7th for that player, it changes the game status accordingly to the game mode.
      * @param player The player that has chosen a card to buy.
      * @param message The message that the player has sent.
-     * @return
+     * @return iff the card has been bought and placed and all the resources have been removed.
      */
     public boolean chooseDevelopmentCard(Player player, MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message) {
         int cardNumber = message.getCardNumber();
@@ -858,10 +859,26 @@ public class ActionManager {
     }
 
     /**
+     * For the given player, it checks if the player has selected a row or a column of the market to push and then pushes it.
+     * It then notifies all the players.
+     * After pushing a row or a column, it adds all the resources in a list of MarketMarble (and makes the player advance if the marble is red).
+     * Finally, it saves that a main action has been done, then checks if the list of resources is empty, if so, it just returns true.
+     * If not, it adds the resources in the marketHelper and calls the SetNextResourceOption method.
      *
-     * @param player
-     * @param message
-     * @return
+     *
+     * ERRORS:
+     * <ul>
+     *     <li> the player has chosen a column but the number is not correct. </li>
+     *     <li> the player has chosen a row but the number is not correct. </li>
+     *     <li> the player has already done a main action. </li>
+     *     <li> this method was invoked with the marketHelper enabled. </li>
+     * </ul>
+     * NOTE: if the player has one MarketResource Ability, it converts every EXTRA Market Marble in the specified resource, if the player has no MarketResource Abilities it removes the Marble.
+     * NOTE: the case where the player has two MarketResource Abilities is dealt in the SetNextResourceOption method.
+     *          @see @SetNextResourceOption
+     * @param player The player who wants to go to the market.
+     * @param message The message that the player sent.
+     * @return iff all the resources have been added to a list.
      */
     public boolean getMarketResources(Player player, MSG_ACTION_GET_MARKET_RESOURCES message) {
         MarketHelper marketHelper = game.getMarketHelper();
@@ -881,7 +898,7 @@ public class ActionManager {
         }
 //VALIDATION
         if (player.getAction()) {
-            gameManager.setErrorObject("Error! You already performed a very powerful action");
+            gameManager.setErrorObject("Error! You already performed a main action");
             return false;
         }
 
