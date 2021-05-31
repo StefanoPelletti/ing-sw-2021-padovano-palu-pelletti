@@ -135,7 +135,7 @@ public class ActionManager {
             return false;
         }
 //VALIDATION
-        if (!leaderCardsPicker.isEnabled()) //how the h did he get in here?
+        if (!leaderCardsPicker.isEnabled())
         {
             gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsPicker middle-object was not enabled!");
             return false;
@@ -335,7 +335,7 @@ public class ActionManager {
 
 //MESSAGE VALIDATION    //impossible to test
         if (cardNumber != 0 && cardNumber != 1) {
-            gameManager.setErrorObject("Error! Message not well formatted: cardNumber != 0 1 ");
+            gameManager.setErrorObject("Error! Message not well formatted: cardNumber is not a 0 or a 1. ");
             return false; //impossible?  cannot build a message like that // still a layer of defense.
         }
 //VALIDATION
@@ -391,7 +391,7 @@ public class ActionManager {
 
 //MESSAGE VALIDATION    //impossible to test
         if (standardProduction == null || leaderProduction == null) {
-            gameManager.setErrorObject("Error! Message not well formatted: standardproduction or leaderproduction == null");
+            gameManager.setErrorObject("Error! Message not well formatted: standardProduction or leaderProduction == null");
             return false;
         }
         if (baseProduction && (basicInput == null || basicInput.size() != 2)) {
@@ -408,7 +408,7 @@ public class ActionManager {
         }
 //VALIDATION
         if (player.getAction()) {
-            gameManager.setErrorObject("Error! You already performed a very powerful action");
+            gameManager.setErrorObject("Error! You already performed a main action");
             return false;
         }
 
@@ -442,11 +442,11 @@ public class ActionManager {
         }
 
         if (leaderProduction[0] && Arrays.stream(possibleResources).noneMatch(r -> r == message.getLeaderOutput1())) {
-            gameManager.setErrorObject("You cannot produce that resource with that a Leader Cards!");
+            gameManager.setErrorObject("You cannot produce that resource with that Leader Cards!");
             return false;
         }
         if (leaderProduction[1] && Arrays.stream(possibleResources).noneMatch(r -> r == message.getLeaderOutput2())) {
-            gameManager.setErrorObject("You cannot produce that resource with that a Leader Cards!");
+            gameManager.setErrorObject("You cannot produce that resource with that Leader Cards!");
             return false;
         }
 
@@ -678,7 +678,7 @@ public class ActionManager {
         List<VendorCard> finalCards = new ArrayList<>();
 
         if (player.getAction()) {
-            gameManager.setErrorObject("Error! You already performed a very powerful action!");
+            gameManager.setErrorObject("Error! You already performed a main action!");
             return false;
         }
 
@@ -778,7 +778,7 @@ public class ActionManager {
      * NOTE: if the card bought is the 7th for that player, it changes the game status accordingly to the game mode.
       @param player The reference of the Current Player.
      * @param message The message that the player has sent.
-     * @return iff the card has been bought and placed and all the resources have been removed.
+     * @return True if and only if the card has been bought and placed and all the resources have been removed.
      */
     public boolean chooseDevelopmentCard(Player player, MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message) {
         int cardNumber = message.getCardNumber();
@@ -875,7 +875,6 @@ public class ActionManager {
      * Finally, it saves that a main action has been done, then checks if the list of resources is empty, if so, it just returns true.
      * If not, it adds the resources in the marketHelper and calls the SetNextResourceOption method.
      *
-     *
      * ERRORS:
      * <ul>
      *     <li> the player has chosen a column but the number is not correct. </li>
@@ -888,7 +887,7 @@ public class ActionManager {
      *          @see #setNextResourceOptions(Player)
      * @param player The reference to the Current Player.
      * @param message The message that the player sent.
-     * @return iff all the resources have been added to a list.
+     * @return True if and only if no error occurred.
      */
     public boolean getMarketResources(Player player, MSG_ACTION_GET_MARKET_RESOURCES message) {
         MarketHelper marketHelper = game.getMarketHelper();
