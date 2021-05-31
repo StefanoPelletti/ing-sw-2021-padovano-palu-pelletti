@@ -16,14 +16,30 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         this.number = 0;
     }
 
+    /**
+     * Returns the type of Resource contained in this ExtraDepot Card.
+     * @return The type of Resource contained in this ExtraDepot Card.
+     */
     public Resource getResourceType() {
         return resource;
     }
 
+    /**
+     * Returns the number of Resources contained in this ExtraDepot Card.
+     * @return The number of Resources contained in this ExtraDepot Card.
+     */
     public int getNumber() {
         return number;
     }
 
+    /**
+     * Tries to add the specified amount of Resource, compatible with the Resource that this Card operates with.
+     * The type of Resource is unique to this Leader Card.
+     * Also notifies observers.
+     * @param numAdd The amount of Resource to be add.
+     * @return True if the amount of Resources were added successfully, False otherwise.
+     * @see #getResourceType()
+     */
     public boolean addResource(int numAdd) {
         if (numAdd > 2 || numAdd <= 0) return false;
         if (numAdd == 2 && number != 0) return false;
@@ -33,6 +49,14 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
         return true;
     }
 
+    /**
+     * Tries to set the specified amount of Resource, compatible with the Resource that this Card operates with.
+     * The type of Resource is unique to this Leader Card.
+     * Also notifies observers.
+     * @param num The new amount of Resource to be set.
+     * @return True if the amount of Resources were set successfully, False otherwise.
+     * @see #getResourceType()
+     */
     public boolean setResource(int num) {
         if (num > 2 || num < 0) return false;
         number = num;

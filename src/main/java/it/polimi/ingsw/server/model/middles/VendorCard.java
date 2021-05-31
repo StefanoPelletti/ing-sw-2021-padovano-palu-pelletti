@@ -23,22 +23,43 @@ public class VendorCard implements Serializable {
         this.slot3 = slot3;
     }
 
+    /**
+     * Returns the Development Card which can be placed in some slot.
+     * @return A Development Card.
+     */
     public DevelopmentCard getCard() {
         return card;
     }
 
+    /**
+     * Returns True if this Card can be placed in the first Development Slot, False otherwise.
+     * @return True if this Card can be placed in the first Development Slot, False otherwise.
+     */
     public boolean isSlot1() {
         return slot1;
     }
 
+    /**
+     * Returns True if this Card can be placed in the second Development Slot, False otherwise.
+     * @return True if this Card can be placed in the second Development Slot, False otherwise.
+     */
     public boolean isSlot2() {
         return slot2;
     }
 
+    /**
+     * Returns True if this Card can be placed in the third Development Slot, False otherwise.
+     * @return True if this Card can be placed in the third Development Slot, False otherwise.
+     */
     public boolean isSlot3() {
         return slot3;
     }
 
+    /**
+     * Returns True if this Card can be placed in the specified Development Slot, False otherwise.
+     * @param slot The number of the Slot being tested.
+     * @return True if this Card can be placed in the selected slot, False otherwise.
+     */
     public boolean isSlot(int slot){
         switch (slot) {
             case 0:

@@ -23,6 +23,10 @@ public class PurpleMarble implements MarketMarble, Serializable {
         resourceList.add(Resource.SERVANT);
     }
 
+    /**
+     * Returns the Color of this Marble, colored in a proper manner.
+     * @return A Colored String representing this Marble.
+     */
     @Override
     public String toString() {
         return "" + A.PURPLE + color + A.RESET + " Marble  ";

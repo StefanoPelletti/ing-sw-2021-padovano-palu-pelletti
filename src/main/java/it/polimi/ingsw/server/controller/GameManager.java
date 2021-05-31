@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.model.middles.Leaderboard;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 import it.polimi.ingsw.server.utils.ModelObserver;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class GameManager {
@@ -18,7 +19,7 @@ public class GameManager {
     private final FaithTrackManager faithTrackManager;
     private final ActionManager actionManager;
     private final boolean solo;
-    private final ArrayList<Integer> idlePlayers;
+    private final List<Integer> idlePlayers;
     private final int lobbyMaxPlayers;
 
     private Boolean soloWinner;

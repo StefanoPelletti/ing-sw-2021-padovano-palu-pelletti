@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class Game extends ModelObservable {
     private final ActionTokenStack actionTokenStack;
-    private final ArrayList<Player> playerList;
+    private final List<Player> playerList;
     private final LeaderCardsDeck leaderCardsDeck;
     private final Market market;
     private final FaithTrack faithTrack;

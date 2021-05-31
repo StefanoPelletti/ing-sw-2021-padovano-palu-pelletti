@@ -12,6 +12,10 @@ public class MarketResources implements SpecialAbility, Serializable {
         this.resource = resource;
     }
 
+    /**
+     * Returns the type of Resource this Card converts White Marbles into.
+     * @return The type of Resource this Card converts White Marbles into.
+     */
     public Resource getConvertedResource() {
         return resource;
     }

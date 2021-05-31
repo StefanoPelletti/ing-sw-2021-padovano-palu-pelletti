@@ -14,10 +14,19 @@ public enum Color implements Serializable {
         this.abbreviation = abbreviation;
     }
 
+    /**
+     * Returns the abbreviation for this Color.
+     * The returning String contains the Initial of this Color.
+     * @return A String containing the Initial of this Color.
+     */
     public String toAbbreviation() {
         return abbreviation;
     }
 
+    /**
+     * Returns the Enumerator Value, Colored in a proper manner.
+     * @return A Colored String.
+     */
     @Override
     public String toString() {
         switch (this) {

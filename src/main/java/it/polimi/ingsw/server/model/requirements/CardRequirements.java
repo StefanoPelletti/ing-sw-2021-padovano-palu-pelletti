@@ -31,6 +31,10 @@ public class CardRequirements implements Requirement, Serializable {
         return requirements.keySet();
     }
 
+    /**
+     * Returns a String representing the Card Requirements.
+     * @return A String representing the Card Requirements.
+     */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

@@ -56,6 +56,10 @@ public class RemoverToken implements ActionToken {
         return false;
     }
 
+    /**
+     * Returns the assigned Color of this Remover Token.
+     * @return The Color that was assigned to this Remover Token.
+     */
     public Color getColor() {
         return this.color;
     }

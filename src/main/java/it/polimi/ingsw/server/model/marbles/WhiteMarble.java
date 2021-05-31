@@ -22,11 +22,19 @@ public class WhiteMarble implements MarketMarble, Serializable {
         resourceList.add(Resource.EXTRA);
     }
 
+    /**
+     * Returns the Color of this Marble, colored in a proper manner.
+     * @return A Colored String representing this Marble.
+     */
     @Override
     public String toString() {
         return A.RESET + "" + A.UL + "" + color + A.RESET + " Marble  ";
     }
 
+    /**
+     * Returns the Color of this Marble in an abbreviated form, colored in a proper manner.
+     * @return A Colored String containing the Initial of the Color of this Marble.
+     */
     public String toAbbreviation() {
         return color.toAbbreviation();
     }

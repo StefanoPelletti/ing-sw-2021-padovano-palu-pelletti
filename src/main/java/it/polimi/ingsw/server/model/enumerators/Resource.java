@@ -7,6 +7,10 @@ import java.io.Serializable;
 public enum Resource implements Serializable {
     SHIELD, COIN, SERVANT, STONE, NONE, EXTRA, FAITH;
 
+    /**
+     * Returns the Enumerator Value, Colored in a proper manner.
+     * @return A Colored String.
+     */
     @Override
     public String toString() {
         switch (this) {

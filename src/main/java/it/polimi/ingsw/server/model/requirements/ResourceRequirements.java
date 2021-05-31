@@ -26,6 +26,10 @@ public class ResourceRequirements implements Requirement, Serializable {
         return true;
     }
 
+    /**
+     * Returns a String representing the Resource Requirements.
+     * @return A String representing the Resource Requirements.
+     */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -43,12 +47,6 @@ public class ResourceRequirements implements Requirement, Serializable {
         }
         return result.toString();
 
-        /*
-         Requirement:
-          You need 2 resources, in this way:
-           STONE: 2
-           SHIELD: 1
-         */
     }
 
     @Override

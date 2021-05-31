@@ -7,10 +7,11 @@ import it.polimi.ingsw.server.model.actionTokens.RemoverToken;
 import it.polimi.ingsw.server.model.enumerators.Color;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 
 public class ActionTokenStack {
-    private final ArrayList<ActionToken> stack;
+    private final List<ActionToken> stack;
 
     /**
      * CONSTRUCTOR
