@@ -67,7 +67,7 @@ public class MainMenu {
 
         mainFrame.pack();
         //frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
-        frameDimension = new Dimension(1280,962);
+        frameDimension = new Dimension(1290,980);
         mainFrame.setMinimumSize(frameDimension);
         mainFrame.setResizable(false);
         System.out.println("w: " + frameDimension.getWidth() + "p h:" + frameDimension.getHeight() + "p");

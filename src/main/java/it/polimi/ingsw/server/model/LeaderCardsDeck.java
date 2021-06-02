@@ -29,7 +29,9 @@ public class LeaderCardsDeck {
 
         deck.add(new LeaderCard(2,
                 new CardRequirements(Map.of(Color.YELLOW, new ReqValue(1, -1), Color.GREEN, new ReqValue(1, -1))),
-                new DiscountResource(Resource.SERVANT)));
+                new DiscountResource(Resource.SERVANT)
+                , "resources/cardsFront/LFRONT (1).png", "resources/cardsBack/BACK (1).png"
+                ));
 
         deck.add(new LeaderCard(2,
                 new CardRequirements(Map.of(Color.BLUE, new ReqValue(1, -1), Color.PURPLE, new ReqValue(1, -1))),

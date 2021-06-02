@@ -15,6 +15,9 @@ public class DevelopmentCard implements Serializable {
     private final int vp;
     private final Power power;
 
+    private final String frontPath; //PUT FINAL
+    private final String backPath; //PUT FINAL
+
     /**
      * Construct a DevelopmentCard. It initializes a new card by receiving:
      * @param level The level of the card.
@@ -23,12 +26,28 @@ public class DevelopmentCard implements Serializable {
      * @param cost The cost of the card.
      * @param power The power of the card.
      */
+    public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power,
+                           String frontPath, String backPath) {
+        this.level = level;
+        this.color = color;
+        this.cost = cost;
+        this.vp = vp;
+        this.power = power;
+
+        this.frontPath = frontPath;
+        this.backPath = backPath;
+    }
+
+    //DESTROY THIS THING AFTER SISTEMING TUTT
     public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power) {
         this.level = level;
         this.color = color;
         this.cost = cost;
         this.vp = vp;
         this.power = power;
+
+        this.frontPath = "";
+        this.backPath = "";
     }
 
     public Map<Resource, Integer> getCost() {
@@ -46,6 +65,10 @@ public class DevelopmentCard implements Serializable {
     public int getVp() {
         return vp;
     }
+
+    public String getFrontPath() { return this.frontPath; }
+
+    public String getBackPath() { return this.backPath; }
 
     public Map<Resource, Integer> getPowerInput() {
         return power.getInput();

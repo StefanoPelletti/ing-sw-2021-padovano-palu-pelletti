@@ -40,7 +40,7 @@ public class StartingPrompt {
 
 
         //operation must be done after pack
-        frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
+        frameDimension = new Dimension(493, 304);
         mainFrame.setMinimumSize(frameDimension);
         mainFrame.setLocationRelativeTo(null);
         System.out.println("w: "+mainFrame.getContentPane().getWidth()+"p h:"+mainFrame.getContentPane().getHeight()+"p");
@@ -87,13 +87,6 @@ public class StartingPrompt {
                 image = ImageIO.read(new File("resources/images/BackgroundPrompt1.png"));
             } catch (IOException e) {}
 
-            String fonts[] =
-                    GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-
-            for ( int i = 0; i < fonts.length; i++ )
-            {
-                System.out.println(fonts[i]);
-            }
 
             GridBagConstraints c = new GridBagConstraints();
             this.setLayout(new GridBagLayout());

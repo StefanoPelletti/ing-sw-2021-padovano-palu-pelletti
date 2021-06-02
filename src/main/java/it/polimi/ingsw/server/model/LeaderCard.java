@@ -13,17 +13,35 @@ public class LeaderCard implements Serializable {
     private final SpecialAbility specialAbility;
     private Boolean enabled;
 
+    private final String frontPath;
+    private final String backPath;
+
     /**
      * Constructor of a LeaderCard.
      * @param vp The victory points of this card.
      * @param requirement The requirement object of this card.
      * @param specialAbility The special ability object of this card.
      */
+    public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility,
+                      String frontPath, String backPath) {
+        this.vp = vp;
+        this.requirement = requirement;
+        this.specialAbility = specialAbility;
+        this.enabled = false;
+
+        this.frontPath = frontPath;
+        this.backPath = backPath;
+    }
+
+    //DELETE THIS
     public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility) {
         this.vp = vp;
         this.requirement = requirement;
         this.specialAbility = specialAbility;
         this.enabled = false;
+
+        this.frontPath = "";
+        this.backPath = "";
     }
 
     public int getVp() {
@@ -37,6 +55,10 @@ public class LeaderCard implements Serializable {
     public SpecialAbility getSpecialAbility() {
         return specialAbility;
     }
+
+    public String getFrontPath() { return this.frontPath; }
+
+    public String getBackPath() { return this.backPath; }
 
     public boolean isEnabled() {
         return enabled;
