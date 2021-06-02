@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Market extends ModelObservable {
-    private final ArrayList<MarketMarble> internalList;
+    private final List<MarketMarble> internalList;
     private MarketMarble[][] grid;
     private MarketMarble slideMarble;
 

@@ -15,10 +15,10 @@ public class Lobby {
     private static final List<Lobby> lobbies = new ArrayList<>();
     private final int lobbyNumber;
     private final int lobbyMaxPlayers;
-    List<Socket> socketList;
+    private final boolean solo;
+    List<Socket> socketList; //this may as well be removed.
     List<String> nicknameList;
     List<ClientHandler> clientHandlers;
-    boolean solo;
     private GameManager gameManager;
     private ActionManager actionManager;
     private boolean started;
