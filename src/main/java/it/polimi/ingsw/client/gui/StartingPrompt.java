@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class StartingPrompt {
+public class StartingPrompt implements Runnable {
     JFrame mainFrame;
     Dimension frameDimension;
 
@@ -21,10 +21,17 @@ public class StartingPrompt {
     JRadioButton clientCLI_radioButton;
     JRadioButton server_radioButton;
 
+    //fonts
+    static final String TIMES = "Times New Roman";
+    static final String PAP = "Papyrus";
 
     public static void main(String[] args) {
-        new StartingPrompt();
+        SwingUtilities.invokeLater(new StartingPrompt());
     }
+
+    public void run() { }
+
+
 
     public StartingPrompt() {
         mainFrame = new JFrame("MdR Launcher");
@@ -43,7 +50,6 @@ public class StartingPrompt {
         frameDimension = new Dimension(493, 304);
         mainFrame.setMinimumSize(frameDimension);
         mainFrame.setLocationRelativeTo(null);
-        System.out.println("w: "+mainFrame.getContentPane().getWidth()+"p h:"+mainFrame.getContentPane().getHeight()+"p");
         //always last action
         mainFrame.setVisible(true);
 
@@ -51,31 +57,6 @@ public class StartingPrompt {
         confirm_Button.addActionListener(confirm_ButtonActionListener);
         quit_Button.addActionListener(quit_ButtonActionListener);
     }
-
-
-    //ACTION LISTENER
-    ActionListener confirm_ButtonActionListener = e -> {
-        if (clientGUI_radioButton.isSelected()) {
-            new MainMenu();
-            mainFrame.dispose();
-        } else if (clientCLI_radioButton.isSelected()) {
-            JOptionPane.showMessageDialog(mainFrame, " Client in CLI started! \n Check your JAVA Console!");
-
-            PhaseClient client = new PhaseClient();
-            mainFrame.dispose();
-            client.run();
-        } else if (server_radioButton.isSelected()) {
-            JOptionPane.showMessageDialog(mainFrame, " Server Started! \n Check your JAVA Console!");
-
-            Server server = new Server(43210);
-            mainFrame.dispose();
-            server.run();
-        }
-    };
-
-    ActionListener quit_ButtonActionListener = e -> mainFrame.dispose();
-
-
 
     //CUSTOM CONTENT PANE
     class mainPanel extends JPanel {
@@ -94,7 +75,7 @@ public class StartingPrompt {
 
             //TOP LABEL
             JLabel topLabel = new JLabel();
-            topLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 26));
+            topLabel.setFont(new Font(PAP, Font.BOLD, 26));
             topLabel.setHorizontalAlignment(SwingConstants.CENTER);
             topLabel.setText("Please select something");
             c.insets = new Insets(40, 90, 20, 90);
@@ -109,7 +90,7 @@ public class StartingPrompt {
             //RADIO BUTTONS
 
             clientGUI_radioButton = new JRadioButton("  Start GUI    ", true);
-            clientGUI_radioButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+            clientGUI_radioButton.setFont(new Font(TIMES, Font.PLAIN, 18));
             clientGUI_radioButton.setSize(100, 80);
             clientGUI_radioButton.setOpaque(false);
             c = new GridBagConstraints();
@@ -123,7 +104,7 @@ public class StartingPrompt {
             this.add(clientGUI_radioButton, c);
 
             clientCLI_radioButton = new JRadioButton("  Start CLI    ");
-            clientCLI_radioButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+            clientCLI_radioButton.setFont(new Font(TIMES, Font.PLAIN, 18));
             clientCLI_radioButton.setSize(100, 80);
             clientCLI_radioButton.setOpaque(false);
             c = new GridBagConstraints();
@@ -137,7 +118,7 @@ public class StartingPrompt {
             this.add(clientCLI_radioButton, c);
 
             server_radioButton = new JRadioButton("  Start Server ");
-            server_radioButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+            server_radioButton.setFont(new Font(TIMES, Font.PLAIN, 18));
             server_radioButton.setSize(100, 80);
             server_radioButton.setOpaque(false);
             c = new GridBagConstraints();
@@ -158,8 +139,9 @@ public class StartingPrompt {
             //BOTTOM BUTTONS
 
             confirm_Button = new JButton("Confirm");
-            confirm_Button.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+            confirm_Button.setFont(new Font(PAP, Font.BOLD, 20));
             confirm_Button.setPreferredSize(new Dimension(120, 40));
+            confirm_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.insets = new Insets(20, 5, 15, 5);
             c.gridx = 0;
@@ -170,8 +152,9 @@ public class StartingPrompt {
             this.add(confirm_Button, c);
 
             quit_Button = new JButton("Quit");
-            quit_Button.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+            quit_Button.setFont(new Font(PAP, Font.BOLD, 20));
             quit_Button.setPreferredSize(new Dimension(120, 40));
+            quit_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.insets = new Insets(20, 5, 15, 5);
             c.gridx = 1;
@@ -188,4 +171,27 @@ public class StartingPrompt {
             g.drawImage(image, 0, 0, this);
         }
     }
+
+
+    //ACTION LISTENER
+    ActionListener confirm_ButtonActionListener = e -> {
+        if (clientGUI_radioButton.isSelected()) {
+            SwingUtilities.invokeLater(new MainMenu());
+            mainFrame.dispose();
+        } else if (clientCLI_radioButton.isSelected()) {
+            JOptionPane.showMessageDialog(mainFrame, " Client in CLI started! \n Check your JAVA Console!");
+
+            PhaseClient client = new PhaseClient();
+            mainFrame.dispose();
+            client.run();
+        } else if (server_radioButton.isSelected()) {
+            JOptionPane.showMessageDialog(mainFrame, " Server Started! \n Check your JAVA Console!");
+
+            Server server = new Server(43210);
+            mainFrame.dispose();
+            server.run();
+        }
+    };
+
+    ActionListener quit_ButtonActionListener = e -> mainFrame.dispose();
 }
