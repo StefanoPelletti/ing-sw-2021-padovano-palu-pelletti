@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -29,7 +28,7 @@ public class StartingPrompt {
 
     public StartingPrompt() {
         mainFrame = new JFrame("MdR Launcher");
-        mainFrame.setContentPane(new StartingPromptPane());
+        mainFrame.setContentPane(new mainPanel());
 
         //PROMPT
         //operation flags
@@ -79,15 +78,22 @@ public class StartingPrompt {
 
 
     //CUSTOM CONTENT PANE
-    class StartingPromptPane extends JPanel {
+    class mainPanel extends JPanel {
 
-        private Image img;
+        private Image image;
 
-        public StartingPromptPane() {
+        public mainPanel() {
             try {
-                img = ImageIO.read(new File("resources/images/BackgroundPrompt.jpg"));
+                image = ImageIO.read(new File("resources/images/BackgroundPrompt1.png"));
             } catch (IOException e) {}
 
+            String fonts[] =
+                    GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
+            for ( int i = 0; i < fonts.length; i++ )
+            {
+                System.out.println(fonts[i]);
+            }
 
             GridBagConstraints c = new GridBagConstraints();
             this.setLayout(new GridBagLayout());
@@ -95,10 +101,10 @@ public class StartingPrompt {
 
             //TOP LABEL
             JLabel topLabel = new JLabel();
-            topLabel.setFont(new Font("Apple Chancery", Font.BOLD | Font.ITALIC, 26));
+            topLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 26));
             topLabel.setHorizontalAlignment(SwingConstants.CENTER);
             topLabel.setText("Please select something");
-            c.insets = new Insets(20, 30, 20, 150);
+            c.insets = new Insets(40, 90, 20, 90);
             c.gridx = 0;
             c.gridy = 0;
             c.weightx = 1;
@@ -110,7 +116,7 @@ public class StartingPrompt {
             //RADIO BUTTONS
 
             clientGUI_radioButton = new JRadioButton("  Start GUI    ", true);
-            clientGUI_radioButton.setFont(new Font("Apple Chancery", Font.PLAIN, 18));
+            clientGUI_radioButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
             clientGUI_radioButton.setSize(100, 80);
             clientGUI_radioButton.setOpaque(false);
             c = new GridBagConstraints();
@@ -124,7 +130,7 @@ public class StartingPrompt {
             this.add(clientGUI_radioButton, c);
 
             clientCLI_radioButton = new JRadioButton("  Start CLI    ");
-            clientCLI_radioButton.setFont(new Font("Apple Chancery", Font.PLAIN, 18));
+            clientCLI_radioButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
             clientCLI_radioButton.setSize(100, 80);
             clientCLI_radioButton.setOpaque(false);
             c = new GridBagConstraints();
@@ -138,7 +144,7 @@ public class StartingPrompt {
             this.add(clientCLI_radioButton, c);
 
             server_radioButton = new JRadioButton("  Start Server ");
-            server_radioButton.setFont(new Font("Apple Chancery", Font.PLAIN, 18));
+            server_radioButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
             server_radioButton.setSize(100, 80);
             server_radioButton.setOpaque(false);
             c = new GridBagConstraints();
@@ -159,7 +165,7 @@ public class StartingPrompt {
             //BOTTOM BUTTONS
 
             confirm_Button = new JButton("Confirm");
-            confirm_Button.setFont(new Font("Apple Chancery", Font.PLAIN, 20));
+            confirm_Button.setFont(new Font("Times New Roman", Font.PLAIN, 20));
             confirm_Button.setPreferredSize(new Dimension(120, 40));
             c = new GridBagConstraints();
             c.insets = new Insets(20, 5, 15, 5);
@@ -171,7 +177,7 @@ public class StartingPrompt {
             this.add(confirm_Button, c);
 
             quit_Button = new JButton("Quit");
-            quit_Button.setFont(new Font("Apple Chancery", Font.PLAIN, 20));
+            quit_Button.setFont(new Font("Times New Roman", Font.PLAIN, 20));
             quit_Button.setPreferredSize(new Dimension(120, 40));
             c = new GridBagConstraints();
             c.insets = new Insets(20, 5, 15, 5);
@@ -186,7 +192,7 @@ public class StartingPrompt {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.drawImage(img, 0, 0, this);
+            g.drawImage(image, 0, 0, this);
         }
     }
 }
