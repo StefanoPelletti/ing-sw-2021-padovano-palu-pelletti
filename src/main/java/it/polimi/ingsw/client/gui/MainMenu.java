@@ -103,7 +103,7 @@ public class MainMenu implements Runnable {
         //frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
         frameDimension = new Dimension(1290, 980);
         mainFrame.setMinimumSize(frameDimension);
-        mainFrame.setResizable(false);
+        mainFrame.setResizable(true);
         System.out.println("w: " + frameDimension.getWidth() + "p h:" + frameDimension.getHeight() + "p");
 
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

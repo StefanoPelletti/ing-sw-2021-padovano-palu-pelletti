@@ -22,289 +22,337 @@ public class DevelopmentCardsDeck extends ModelObservable {
         cards[0][0][0] = new DevelopmentCard(3, Color.GREEN, 12,
                 Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
                 new Power(Map.of(Resource.STONE, 1),
-                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1))
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1)),
+                "resources/cardsFront/DFRONT (46).png", "resources/cardsBack/BACK (10)"
         );
 
         cards[0][0][1] = new DevelopmentCard(3, Color.GREEN, 11,
                 Map.of(Resource.SHIELD, 7),
                 new Power(Map.of(Resource.SERVANT, 1),
-                        Map.of(Resource.COIN, 1, Resource.FAITH, 3))
+                        Map.of(Resource.COIN, 1, Resource.FAITH, 3)),
+                "resources/cardsFront/DFRONT (42).png", "resources/cardsBack/BACK (10)"
         );
 
         cards[0][0][2] = new DevelopmentCard(3, Color.GREEN, 10,
                 Map.of(Resource.SHIELD, 5, Resource.SERVANT, 2),
                 new Power(Map.of(Resource.COIN, 1, Resource.SERVANT, 1),
-                        Map.of(Resource.SHIELD, 2, Resource.STONE, 2, Resource.FAITH, 1))
+                        Map.of(Resource.SHIELD, 2, Resource.STONE, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (38).png", "resources/cardsBack/BACK (10)"
         );
 
         cards[0][0][3] = new DevelopmentCard(3, Color.GREEN, 9,
                 Map.of(Resource.SHIELD, 6),
                 new Power(Map.of(Resource.COIN, 2),
-                        Map.of(Resource.STONE, 3, Resource.FAITH, 2))
+                        Map.of(Resource.STONE, 3, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (34).png", "resources/cardsBack/BACK (10)"
         );
 
         cards[0][1][0] = new DevelopmentCard(3, Color.BLUE, 12,
                 Map.of(Resource.COIN, 4, Resource.STONE, 4),
                 new Power(Map.of(Resource.SERVANT, 1),
-                        Map.of(Resource.COIN, 1, Resource.SHIELD, 3))
+                        Map.of(Resource.COIN, 1, Resource.SHIELD, 3)),
+                "resources/cardsFront/DFRONT (48).png", "resources/cardsBack/BACK (12)"
         );
 
         cards[0][1][1] = new DevelopmentCard(3, Color.BLUE, 11,
                 Map.of(Resource.COIN, 7),
                 new Power(Map.of(Resource.STONE, 1),
-                        Map.of(Resource.SHIELD, 1, Resource.FAITH, 3))
+                        Map.of(Resource.SHIELD, 1, Resource.FAITH, 3)),
+                "resources/cardsFront/DFRONT (44).png", "resources/cardsBack/BACK (12)"
         );
 
         cards[0][1][2] = new DevelopmentCard(3, Color.BLUE, 10,
                 Map.of(Resource.COIN, 5, Resource.STONE, 2),
                 new Power(Map.of(Resource.COIN, 1, Resource.SHIELD, 1),
-                        Map.of(Resource.SERVANT, 2, Resource.STONE, 2, Resource.FAITH, 1))
+                        Map.of(Resource.SERVANT, 2, Resource.STONE, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (40).png", "resources/cardsBack/BACK (12)"
         );
 
         cards[0][1][3] = new DevelopmentCard(3, Color.BLUE, 9,
                 Map.of(Resource.COIN, 6),
                 new Power(Map.of(Resource.SERVANT, 2),
-                        Map.of(Resource.SHIELD, 3, Resource.FAITH, 2))
+                        Map.of(Resource.SHIELD, 3, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (36).png", "resources/cardsBack/BACK (12)"
         );
 
         cards[0][2][0] = new DevelopmentCard(3, Color.YELLOW, 12,
                 Map.of(Resource.STONE, 4, Resource.SERVANT, 4),
                 new Power(Map.of(Resource.SHIELD, 1),
-                        Map.of(Resource.STONE, 1, Resource.SERVANT, 3))
+                        Map.of(Resource.STONE, 1, Resource.SERVANT, 3)),
+                "resources/cardsFront/DFRONT (1).png", "resources/cardsBack/BACK (13)"
         );
 
         cards[0][2][1] = new DevelopmentCard(3, Color.YELLOW, 11,
                 Map.of(Resource.STONE, 7),
                 new Power(Map.of(Resource.SHIELD, 1),
-                        Map.of(Resource.SERVANT, 1, Resource.FAITH, 3))
+                        Map.of(Resource.SERVANT, 1, Resource.FAITH, 3)),
+                "resources/cardsFront/DFRONT (45).png", "resources/cardsBack/BACK (13)"
         );
 
         cards[0][2][2] = new DevelopmentCard(3, Color.YELLOW, 10,
                 Map.of(Resource.STONE, 5, Resource.SERVANT, 2),
                 new Power(Map.of(Resource.STONE, 1, Resource.SERVANT, 1),
-                        Map.of(Resource.COIN, 2, Resource.SHIELD, 2, Resource.FAITH, 1))
+                        Map.of(Resource.COIN, 2, Resource.SHIELD, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (41).png", "resources/cardsBack/BACK (13)"
         );
 
         cards[0][2][3] = new DevelopmentCard(3, Color.YELLOW, 9,
                 Map.of(Resource.STONE, 6),
                 new Power(Map.of(Resource.SHIELD, 2),
-                        Map.of(Resource.SERVANT, 3, Resource.FAITH, 2))
+                        Map.of(Resource.SERVANT, 3, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (37).png", "resources/cardsBack/BACK (13)"
         );
 
         cards[0][3][0] = new DevelopmentCard(3, Color.PURPLE, 12,
                 Map.of(Resource.SERVANT, 4, Resource.SHIELD, 4),
                 new Power(Map.of(Resource.COIN, 1),
-                        Map.of(Resource.STONE, 3, Resource.SERVANT, 1))
+                        Map.of(Resource.STONE, 3, Resource.SERVANT, 1)),
+                "resources/cardsFront/DFRONT (47).png", "resources/cardsBack/BACK (11)"
         );
 
         cards[0][3][1] = new DevelopmentCard(3, Color.PURPLE, 11,
                 Map.of(Resource.SERVANT, 7),
                 new Power(Map.of(Resource.COIN, 1),
-                        Map.of(Resource.STONE, 1, Resource.FAITH, 3))
+                        Map.of(Resource.STONE, 1, Resource.FAITH, 3)),
+                "resources/cardsFront/DFRONT (43).png", "resources/cardsBack/BACK (11)"
         );
 
         cards[0][3][2] = new DevelopmentCard(3, Color.PURPLE, 10,
                 Map.of(Resource.SERVANT, 5, Resource.COIN, 2),
                 new Power(Map.of(Resource.STONE, 1, Resource.SHIELD, 1),
-                        Map.of(Resource.COIN, 2, Resource.SERVANT, 2, Resource.FAITH, 1))
+                        Map.of(Resource.COIN, 2, Resource.SERVANT, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (39).png", "resources/cardsBack/BACK (11)"
         );
 
         cards[0][3][3] = new DevelopmentCard(3, Color.PURPLE, 9,
                 Map.of(Resource.SERVANT, 6),
                 new Power(Map.of(Resource.STONE, 2),
-                        Map.of(Resource.COIN, 3, Resource.FAITH, 2))
+                        Map.of(Resource.COIN, 3, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (35).png", "resources/cardsBack/BACK (11)"
         );
 
         cards[1][0][0] = new DevelopmentCard(2, Color.GREEN, 8,
                 Map.of(Resource.SHIELD, 3, Resource.COIN, 3),
                 new Power(Map.of(Resource.COIN, 1),
-                        Map.of(Resource.SHIELD, 2, Resource.FAITH, 1))
+                        Map.of(Resource.SHIELD, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (30).png", "resources/cardsBack/BACK (6)"
         );
 
         cards[1][0][1] = new DevelopmentCard(2, Color.GREEN, 7,
                 Map.of(Resource.SHIELD, 5),
                 new Power(Map.of(Resource.COIN, 2),
-                        Map.of(Resource.STONE, 2, Resource.FAITH, 2))
+                        Map.of(Resource.STONE, 2, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (26).png", "resources/cardsBack/BACK (6)"
         );
 
         cards[1][0][2] = new DevelopmentCard(2, Color.GREEN, 6,
                 Map.of(Resource.SHIELD, 3, Resource.SERVANT, 2),
                 new Power(Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1),
-                        Map.of(Resource.STONE, 3))
+                        Map.of(Resource.STONE, 3)),
+                "resources/cardsFront/DFRONT (22).png", "resources/cardsBack/BACK (6)"
         );
 
         cards[1][0][3] = new DevelopmentCard(2, Color.GREEN, 5,
                 Map.of(Resource.SHIELD, 4),
                 new Power(Map.of(Resource.STONE, 1),
-                        Map.of(Resource.FAITH, 2))
+                        Map.of(Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (18).png", "resources/cardsBack/BACK (6)"
         );
 
         cards[1][1][0] = new DevelopmentCard(2, Color.BLUE, 8,
                 Map.of(Resource.COIN, 3, Resource.STONE, 3),
                 new Power(Map.of(Resource.SERVANT, 1),
-                        Map.of(Resource.STONE, 2, Resource.FAITH, 1))
+                        Map.of(Resource.STONE, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (32).png", "resources/cardsBack/BACK (8)"
         );
 
         cards[1][1][1] = new DevelopmentCard(2, Color.BLUE, 7,
                 Map.of(Resource.COIN, 5),
                 new Power(Map.of(Resource.SERVANT, 2),
-                        Map.of(Resource.SHIELD, 2, Resource.FAITH, 2))
+                        Map.of(Resource.SHIELD, 2, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (28).png", "resources/cardsBack/BACK (8)"
         );
 
         cards[1][1][2] = new DevelopmentCard(2, Color.BLUE, 6,
                 Map.of(Resource.COIN, 3, Resource.STONE, 2),
                 new Power(Map.of(Resource.COIN, 1, Resource.STONE, 1),
-                        Map.of(Resource.SERVANT, 3))
+                        Map.of(Resource.SERVANT, 3)),
+                "resources/cardsFront/DFRONT (24).png", "resources/cardsBack/BACK (8)"
         );
 
         cards[1][1][3] = new DevelopmentCard(2, Color.BLUE, 5,
                 Map.of(Resource.COIN, 4),
                 new Power(Map.of(Resource.SERVANT, 1),
-                        Map.of(Resource.FAITH, 2))
+                        Map.of(Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (20).png", "resources/cardsBack/BACK (8)"
         );
 
         cards[1][2][0] = new DevelopmentCard(2, Color.YELLOW, 8,
                 Map.of(Resource.STONE, 3, Resource.SERVANT, 3),
                 new Power(Map.of(Resource.SHIELD, 1),
-                        Map.of(Resource.COIN, 2, Resource.FAITH, 1))
+                        Map.of(Resource.COIN, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (33).png", "resources/cardsBack/BACK (9)"
         );
 
         cards[1][2][1] = new DevelopmentCard(2, Color.YELLOW, 7,
                 Map.of(Resource.STONE, 5),
                 new Power(Map.of(Resource.SHIELD, 2),
-                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 2))
+                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (29).png", "resources/cardsBack/BACK (9)"
         );
 
         cards[1][2][2] = new DevelopmentCard(2, Color.YELLOW, 6,
                 Map.of(Resource.STONE, 3, Resource.SHIELD, 2),
                 new Power(Map.of(Resource.STONE, 1, Resource.SHIELD, 1),
-                        Map.of(Resource.COIN, 3))
+                        Map.of(Resource.COIN, 3)),
+                "resources/cardsFront/DFRONT (25).png", "resources/cardsBack/BACK (9)"
         );
 
         cards[1][2][3] = new DevelopmentCard(2, Color.YELLOW, 5,
                 Map.of(Resource.STONE, 4),
                 new Power(Map.of(Resource.SHIELD, 1),
-                        Map.of(Resource.FAITH, 2))
+                        Map.of(Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (21).png", "resources/cardsBack/BACK (9)"
         );
 
         cards[1][3][0] = new DevelopmentCard(2, Color.PURPLE, 8,
                 Map.of(Resource.SERVANT, 3, Resource.SHIELD, 3),
                 new Power(Map.of(Resource.STONE, 1),
-                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 1))
+                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (31).png", "resources/cardsBack/BACK (7)"
         );
 
         cards[1][3][1] = new DevelopmentCard(2, Color.PURPLE, 7,
                 Map.of(Resource.SERVANT, 5),
                 new Power(Map.of(Resource.STONE, 2),
-                        Map.of(Resource.COIN, 2, Resource.FAITH, 2))
+                        Map.of(Resource.COIN, 2, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (27).png", "resources/cardsBack/BACK (7)"
         );
 
         cards[1][3][2] = new DevelopmentCard(2, Color.PURPLE, 6,
                 Map.of(Resource.SERVANT, 3, Resource.COIN, 2),
                 new Power(Map.of(Resource.COIN, 1, Resource.SERVANT, 1),
-                        Map.of(Resource.SHIELD, 3))
+                        Map.of(Resource.SHIELD, 3)),
+                "resources/cardsFront/DFRONT (23).png", "resources/cardsBack/BACK (7)"
         );
 
         cards[1][3][3] = new DevelopmentCard(2, Color.PURPLE, 5,
                 Map.of(Resource.SERVANT, 4),
                 new Power(Map.of(Resource.COIN, 1),
-                        Map.of(Resource.FAITH, 2))
+                        Map.of(Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (19).png", "resources/cardsBack/BACK (7)"
         );
 
         cards[2][0][0] = new DevelopmentCard(1, Color.GREEN, 4,
                 Map.of(Resource.SHIELD, 2, Resource.COIN, 2),
                 new Power(Map.of(Resource.STONE, 1, Resource.SERVANT, 1),
-                        Map.of(Resource.COIN, 2, Resource.FAITH, 1))
+                        Map.of(Resource.COIN, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (14).png", "resources/cardsBack/BACK (2)"
         );
 
         cards[2][0][1] = new DevelopmentCard(1, Color.GREEN, 3,
                 Map.of(Resource.SHIELD, 3),
                 new Power(Map.of(Resource.SERVANT, 2),
-                        Map.of(Resource.COIN, 1, Resource.SHIELD, 1, Resource.STONE, 1))
+                        Map.of(Resource.COIN, 1, Resource.SHIELD, 1, Resource.STONE, 1)),
+                "resources/cardsFront/DFRONT (10).png", "resources/cardsBack/BACK (2)"
         );
 
         cards[2][0][2] = new DevelopmentCard(1, Color.GREEN, 2,
                 Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.STONE, 1),
                 new Power(Map.of(Resource.STONE, 1),
-                        Map.of(Resource.SERVANT, 1))
+                        Map.of(Resource.SERVANT, 1)),
+                "resources/cardsFront/DFRONT (6).png", "resources/cardsBack/BACK (2)"
         );
 
         cards[2][0][3] = new DevelopmentCard(1, Color.GREEN, 1,
                 Map.of(Resource.SHIELD, 2),
                 new Power(Map.of(Resource.COIN, 1),
-                        Map.of(Resource.FAITH, 1))
+                        Map.of(Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (2).png", "resources/cardsBack/BACK (2)"
         );
 
         cards[2][1][0] = new DevelopmentCard(1, Color.BLUE, 4,
                 Map.of(Resource.COIN, 2, Resource.SERVANT, 2),
                 new Power(Map.of(Resource.SHIELD, 1, Resource.STONE, 1),
-                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 1))
+                        Map.of(Resource.SERVANT, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (16).png", "resources/cardsBack/BACK (4)"
         );
 
         cards[2][1][1] = new DevelopmentCard(1, Color.BLUE, 3,
                 Map.of(Resource.COIN, 3),
                 new Power(Map.of(Resource.STONE, 2),
-                        Map.of(Resource.COIN, 1, Resource.SERVANT, 1, Resource.SHIELD, 1))
+                        Map.of(Resource.COIN, 1, Resource.SERVANT, 1, Resource.SHIELD, 1)),
+                "resources/cardsFront/DFRONT (12).png", "resources/cardsBack/BACK (4)"
         );
 
         cards[2][1][2] = new DevelopmentCard(1, Color.BLUE, 2,
                 Map.of(Resource.COIN, 1, Resource.SERVANT, 1, Resource.STONE, 1),
                 new Power(Map.of(Resource.SERVANT, 1),
-                        Map.of(Resource.STONE, 1))
+                        Map.of(Resource.STONE, 1)),
+                "resources/cardsFront/DFRONT (8).png", "resources/cardsBack/BACK (4)"
         );
 
         cards[2][1][3] = new DevelopmentCard(1, Color.BLUE, 1,
                 Map.of(Resource.COIN, 2),
                 new Power(Map.of(Resource.SHIELD, 1),
-                        Map.of(Resource.FAITH, 1))
+                        Map.of(Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (4).png", "resources/cardsBack/BACK (4)"
         );
 
         cards[2][2][0] = new DevelopmentCard(1, Color.YELLOW, 4,
                 Map.of(Resource.STONE, 2, Resource.SHIELD, 2),
                 new Power(Map.of(Resource.COIN, 1, Resource.SERVANT, 1),
-                        Map.of(Resource.SHIELD, 2, Resource.FAITH, 1))
+                        Map.of(Resource.SHIELD, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (17).png", "resources/cardsBack/BACK (5)"
         );
 
         cards[2][2][1] = new DevelopmentCard(1, Color.YELLOW, 3,
                 Map.of(Resource.STONE, 3),
                 new Power(Map.of(Resource.SHIELD, 2),
-                        Map.of(Resource.COIN, 1, Resource.SERVANT, 1, Resource.STONE, 1))
+                        Map.of(Resource.COIN, 1, Resource.SERVANT, 1, Resource.STONE, 1)),
+                "resources/cardsFront/DFRONT (13).png", "resources/cardsBack/BACK (5)"
         );
 
         cards[2][2][2] = new DevelopmentCard(1, Color.YELLOW, 2,
                 Map.of(Resource.SHIELD, 1, Resource.STONE, 1, Resource.COIN, 1),
                 new Power(Map.of(Resource.SHIELD, 1),
-                        Map.of(Resource.COIN, 1))
+                        Map.of(Resource.COIN, 1)),
+                "resources/cardsFront/DFRONT (9).png", "resources/cardsBack/BACK (5)"
         );
 
         cards[2][2][3] = new DevelopmentCard(1, Color.YELLOW, 1,
                 Map.of(Resource.STONE, 2),
                 new Power(Map.of(Resource.SERVANT, 1),
-                        Map.of(Resource.FAITH, 1))
+                        Map.of(Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (5).png", "resources/cardsBack/BACK (5)"
         );
 
         cards[2][3][0] = new DevelopmentCard(1, Color.PURPLE, 4,
                 Map.of(Resource.SERVANT, 2, Resource.STONE, 2),
                 new Power(Map.of(Resource.COIN, 1, Resource.SHIELD, 1),
-                        Map.of(Resource.STONE, 2, Resource.FAITH, 1))
+                        Map.of(Resource.STONE, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (15).png", "resources/cardsBack/BACK (3)"
         );
 
         cards[2][3][1] = new DevelopmentCard(1, Color.PURPLE, 3,
                 Map.of(Resource.SERVANT, 3),
                 new Power(Map.of(Resource.COIN, 2),
-                        Map.of(Resource.SERVANT, 1, Resource.SHIELD, 1, Resource.STONE, 1))
+                        Map.of(Resource.SERVANT, 1, Resource.SHIELD, 1, Resource.STONE, 1)),
+                "resources/cardsFront/DFRONT (11).png", "resources/cardsBack/BACK (3)"
         );
 
         cards[2][3][2] = new DevelopmentCard(1, Color.PURPLE, 2,
                 Map.of(Resource.SHIELD, 1, Resource.SERVANT, 1, Resource.COIN, 1),
                 new Power(Map.of(Resource.COIN, 1),
-                        Map.of(Resource.SHIELD, 1))
+                        Map.of(Resource.SHIELD, 1)),
+                "resources/cardsFront/DFRONT (7).png", "resources/cardsBack/BACK (3)"
         );
 
         cards[2][3][3] = new DevelopmentCard(1, Color.PURPLE, 1,
                 Map.of(Resource.SERVANT, 2),
                 new Power(Map.of(Resource.STONE, 1),
-                        Map.of(Resource.FAITH, 1))
+                        Map.of(Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (3).png", "resources/cardsBack/BACK (3)"
         );
 
         shuffle();

@@ -33,17 +33,6 @@ public class LeaderCard implements Serializable {
         this.backPath = backPath;
     }
 
-    //DELETE THIS
-    public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility) {
-        this.vp = vp;
-        this.requirement = requirement;
-        this.specialAbility = specialAbility;
-        this.enabled = false;
-
-        this.frontPath = "";
-        this.backPath = "";
-    }
-
     public int getVp() {
         return vp;
     }

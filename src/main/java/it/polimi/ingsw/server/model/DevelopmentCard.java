@@ -38,18 +38,6 @@ public class DevelopmentCard implements Serializable {
         this.backPath = backPath;
     }
 
-    //DESTROY THIS THING AFTER SISTEMING TUTT
-    public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power) {
-        this.level = level;
-        this.color = color;
-        this.cost = cost;
-        this.vp = vp;
-        this.power = power;
-
-        this.frontPath = "";
-        this.backPath = "";
-    }
-
     public Map<Resource, Integer> getCost() {
         return new HashMap<>(cost);
     }
