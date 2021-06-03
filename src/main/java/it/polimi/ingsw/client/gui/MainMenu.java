@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.gui;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,10 @@ public class MainMenu implements Runnable {
     JFrame mainFrame;
     JPanel cardPanel;
     Dimension frameDimension;
+
+    //test object (to be deleted)
+    Timer testTimer;
+
 
     //shared objects
     JLabel top_Update_Label;
@@ -37,19 +42,30 @@ public class MainMenu implements Runnable {
     JButton confirm_Create_Button;
     JButton settings_Create_Button;
     JButton back_Create_Button;
-    JLabel recapLabel1;
-    JLabel recapLabel2;
-    JLabel recapLabel3;
+    JLabel recap1_Create_Label;
+    JLabel recap2_Create_Label;
+    JLabel recap3_Create_Label;
     JSlider numberOfPlayersSlider;
     //card 5 (join card)
     JButton confirm_Join_Button;
     JButton settings_Join_Button;
     JButton back_Join_Button;
-    JLabel recapLabel4;
-    JLabel recapLabel5;
-    JLabel recapLabel6;
-    JTextField lobbyNumberField;
-
+    JLabel recap1_Join_Label;
+    JLabel recap2_Join_Label;
+    JLabel recap3_Join_Label;
+    JTextField lobbyNumber_Join_Field;
+    //card 6 (rejoin card)
+    JButton confirm_Rejoin_Button;
+    JButton settings_Rejoin_Button;
+    JButton back_Rejoin_Button;
+    JLabel recap1_Rejoin_Label;
+    JLabel recap2_Rejoin_Label;
+    JLabel recap3_Rejoin_Label;
+    JTextField lobbyNumber_Rejoin_Field;
+    //card 7 (loading screen)
+    JLabel progressLabel;
+    JProgressBar progressBar;
+    JButton back_Loading_Button;
 
     private String lastCard = MENU;
 
@@ -60,6 +76,7 @@ public class MainMenu implements Runnable {
     static final String CREATE = "Create Lobby";
     static final String JOIN = "Join Lobby";
     static final String REJOIN = "Reconnect to Lobby";
+    static final String LOADING = "Loading";
 
     static final int MIN = 1;
     static final int MAX = 4;
@@ -75,9 +92,9 @@ public class MainMenu implements Runnable {
 
     public void run() {
         //you can write here shortcuts, like going directly to the Settings and opening multiple frames
-        new MainMenu();
+        //only if called by the main, otherwise it must be empty
+        //new MainMenu();
         // cl.show(cardPanel, CREATE);
-        //  cl.show(mainFrame.getContentPane(), Settings);
     }
 
     public MainMenu() {
@@ -111,13 +128,20 @@ public class MainMenu implements Runnable {
         settings_Join_Button.addActionListener(settings_Join_Button_actionListener);
         back_Join_Button.addActionListener(back_Join_Button_actionListener);
 
+        //card 6 (rejoin)
+        confirm_Rejoin_Button.addActionListener(confirm_Rejoin_Button_actionListener);
+        settings_Rejoin_Button.addActionListener(settings_Rejoin_Button_actionListener);
+        back_Rejoin_Button.addActionListener(back_Rejoin_Button_actionListener);
+
+        //card 7 (loading screen)
+        back_Loading_Button.addActionListener(back_Loading_Button_actionListener);
+
 
         mainFrame.pack();
         //frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
         frameDimension = new Dimension(1290, 980);
         mainFrame.setMinimumSize(frameDimension);
         mainFrame.setResizable(false);
-        System.out.println("w: " + frameDimension.getWidth() + "p h:" + frameDimension.getHeight() + "p");
 
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setLocationRelativeTo(null);
@@ -212,6 +236,7 @@ public class MainMenu implements Runnable {
     private JPanel getCardMagic() {
         cardPanel = new JPanel();
         cardPanel.setLayout(cl);
+        cardPanel.setOpaque(false);
 
         cardPanel.add(getCard1(), MENU);
 
@@ -223,7 +248,10 @@ public class MainMenu implements Runnable {
 
         cardPanel.add(getCard5(), JOIN);
 
-        cardPanel.setOpaque(false);
+        cardPanel.add(getCard6(), REJOIN);
+
+        cardPanel.add(getCard7(), LOADING);
+
         return cardPanel;
     }
 
@@ -535,16 +563,16 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_END;
         card4.add(nameLabel, c);
 
-        recapLabel1 = new JLabel();
-        recapLabel1.setText(Ark.nickname);
-        recapLabel1.setFont(new Font(TIMES, Font.PLAIN, 18));
+        recap1_Create_Label = new JLabel();
+        recap1_Create_Label.setText(Ark.nickname);
+        recap1_Create_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
         c.weighty = 0.1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        card4.add(recapLabel1, c);
+        card4.add(recap1_Create_Label, c);
 
         JLabel addressLabel = new JLabel();
         addressLabel.setText("ip:");
@@ -557,16 +585,16 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_END;
         card4.add(addressLabel, c);
 
-        recapLabel2 = new JLabel();
-        recapLabel2.setText(Ark.defaultAddress);
-        recapLabel2.setFont(new Font(TIMES, Font.PLAIN, 18));
+        recap2_Create_Label = new JLabel();
+        recap2_Create_Label.setText(Ark.defaultAddress);
+        recap2_Create_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
         c.weighty = 0.1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        card4.add(recapLabel2, c);
+        card4.add(recap2_Create_Label, c);
 
         JLabel portLabel = new JLabel();
         portLabel.setText("port:");
@@ -579,16 +607,16 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_END;
         card4.add(portLabel, c);
 
-        recapLabel3 = new JLabel();
-        recapLabel3.setText("" + Ark.defaultPort);
-        recapLabel3.setFont(new Font(TIMES, Font.PLAIN, 18));
+        recap3_Create_Label = new JLabel();
+        recap3_Create_Label.setText("" + Ark.defaultPort);
+        recap3_Create_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 3;
         c.weighty = 0.1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        card4.add(recapLabel3, c);
+        card4.add(recap3_Create_Label, c);
 
         JLabel numberOfPlayersLabel = new JLabel();
         numberOfPlayersLabel.setText("number of players:");
@@ -705,16 +733,16 @@ public class MainMenu implements Runnable {
         card5.add(nameLabel, c);
 
 
-        recapLabel4 = new JLabel();
-        recapLabel4.setText(Ark.nickname);
-        recapLabel4.setFont(new Font(TIMES, Font.PLAIN, 18));
+        recap1_Join_Label = new JLabel();
+        recap1_Join_Label.setText(Ark.nickname);
+        recap1_Join_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
         c.weighty = 0.1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        card5.add(recapLabel4, c);
+        card5.add(recap1_Join_Label, c);
 
         JLabel addressLabel = new JLabel();
         addressLabel.setText("ip:");
@@ -727,16 +755,16 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_END;
         card5.add(addressLabel, c);
 
-        recapLabel5 = new JLabel();
-        recapLabel5.setText(Ark.defaultAddress);
-        recapLabel5.setFont(new Font(TIMES, Font.PLAIN, 18));
+        recap2_Join_Label = new JLabel();
+        recap2_Join_Label.setText(Ark.defaultAddress);
+        recap2_Join_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
         c.weighty = 0.1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        card5.add(recapLabel5, c);
+        card5.add(recap2_Join_Label, c);
 
         JLabel portLabel = new JLabel();
         portLabel.setText("port:");
@@ -749,16 +777,16 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_END;
         card5.add(portLabel, c);
 
-        recapLabel6 = new JLabel();
-        recapLabel6.setText("" + Ark.defaultPort);
-        recapLabel6.setFont(new Font(TIMES, Font.PLAIN, 18));
+        recap3_Join_Label = new JLabel();
+        recap3_Join_Label.setText("" + Ark.defaultPort);
+        recap3_Join_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 3;
         c.weighty = 0.1;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
-        card5.add(recapLabel6, c);
+        card5.add(recap3_Join_Label, c);
 
         JLabel lobbyNumberLabel = new JLabel();
         lobbyNumberLabel.setText("Lobby number:");
@@ -770,12 +798,12 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.FIRST_LINE_END;
         card5.add(lobbyNumberLabel, c);
 
-        lobbyNumberField = new JTextField(4);
-        lobbyNumberField.setText("343");
-        lobbyNumberField.setFont(new Font(TIMES, Font.PLAIN, 20));
-        lobbyNumberField.setHorizontalAlignment(SwingConstants.CENTER);
-        lobbyNumberField.setOpaque(false);
-        lobbyNumberField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        lobbyNumber_Join_Field = new JTextField(4);
+        lobbyNumber_Join_Field.setText("343");
+        lobbyNumber_Join_Field.setFont(new Font(TIMES, Font.PLAIN, 20));
+        lobbyNumber_Join_Field.setHorizontalAlignment(SwingConstants.CENTER);
+        lobbyNumber_Join_Field.setOpaque(false);
+        lobbyNumber_Join_Field.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         c = new GridBagConstraints();
          c.insets = new Insets(0, 0, 35, 0);
         c.anchor = GridBagConstraints.CENTER;
@@ -783,7 +811,7 @@ public class MainMenu implements Runnable {
         c.gridy = 4;
         c.weighty = 0.1;
         c.gridwidth = 1;
-        card5.add(lobbyNumberField, c);
+        card5.add(lobbyNumber_Join_Field, c);
 
         settings_Join_Button = new JButton("Settings");
         settings_Join_Button.setPreferredSize(new Dimension(120, 40));
@@ -838,15 +866,245 @@ public class MainMenu implements Runnable {
         return card5;
     }
 
+    private JPanel getCard6() {
+        GridBagConstraints c;
+         /*
+            card 6: rejoin
+
+         */
+        JPanel card6 = new JPanel(new GridBagLayout());
+        card6.setOpaque(false);
+
+        JLabel label = new JLabel();
+        label.setText(" Continue with these settings? ");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setFont(new Font(PAP, Font.BOLD, 20));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weighty = 0.1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.PAGE_END;
+        card6.add(label, c);
+
+        JLabel nameLabel = new JLabel();
+        nameLabel.setText("name:");
+        nameLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        card6.add(nameLabel, c);
+
+
+        recap1_Rejoin_Label = new JLabel();
+        recap1_Rejoin_Label.setText(Ark.nickname);
+        recap1_Rejoin_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card6.add(recap1_Rejoin_Label, c);
+
+        JLabel addressLabel = new JLabel();
+        addressLabel.setText("ip:");
+        addressLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        card6.add(addressLabel, c);
+
+        recap2_Rejoin_Label = new JLabel();
+        recap2_Rejoin_Label.setText(Ark.defaultAddress);
+        recap2_Rejoin_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card6.add(recap2_Rejoin_Label, c);
+
+        JLabel portLabel = new JLabel();
+        portLabel.setText("port:");
+        portLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        card6.add(portLabel, c);
+
+        recap3_Rejoin_Label = new JLabel();
+        recap3_Rejoin_Label.setText("" + Ark.defaultPort);
+        recap3_Rejoin_Label.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 3;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card6.add(recap3_Rejoin_Label, c);
+
+        JLabel lobbyNumberLabel = new JLabel();
+        lobbyNumberLabel.setText("Lobby number:");
+        lobbyNumberLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 4;
+        c.weighty = 0.1;
+        c.anchor = GridBagConstraints.FIRST_LINE_END;
+        card6.add(lobbyNumberLabel, c);
+
+        lobbyNumber_Rejoin_Field = new JTextField(4);
+        lobbyNumber_Rejoin_Field.setText("343");
+        lobbyNumber_Rejoin_Field.setFont(new Font(TIMES, Font.PLAIN, 20));
+        lobbyNumber_Rejoin_Field.setHorizontalAlignment(SwingConstants.CENTER);
+        lobbyNumber_Rejoin_Field.setOpaque(false);
+        lobbyNumber_Rejoin_Field.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        c = new GridBagConstraints();
+        c.insets = new Insets(0, 0, 35, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 1;
+        c.gridy = 4;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        card6.add(lobbyNumber_Rejoin_Field, c);
+
+        settings_Rejoin_Button = new JButton("Settings");
+        settings_Rejoin_Button.setPreferredSize(new Dimension(120, 40));
+        settings_Rejoin_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        settings_Rejoin_Button.setBackground(new Color(231, 210, 181));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 5;
+        c.weighty = 0.01;
+        c.gridwidth = 1;
+        c.insets = new Insets(15, 25, 0, 0);
+        c.anchor = GridBagConstraints.LINE_START;
+        card6.add(settings_Rejoin_Button, c);
+
+        confirm_Rejoin_Button = new JButton("Confirm");
+        confirm_Rejoin_Button.setPreferredSize(new Dimension(120, 40));
+        confirm_Rejoin_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        confirm_Rejoin_Button.setBackground(new Color(231, 210, 181));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 5;
+        c.weighty = 0.01;
+        c.gridwidth = 1;
+        c.insets = new Insets(15, 0, 0, 25);
+        c.anchor = GridBagConstraints.LINE_END;
+        card6.add(confirm_Rejoin_Button, c);
+
+
+        JLabel emptyLabel = new JLabel("");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 6;
+        c.weighty = 1;
+        c.gridwidth = 2;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(0, 160, 0, 160);
+        card6.add(emptyLabel, c);
+
+        back_Rejoin_Button = new JButton("Back");
+        back_Rejoin_Button.setPreferredSize(new Dimension(120, 40));
+        back_Rejoin_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        back_Rejoin_Button.setBackground(new Color(231, 210, 181));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 7;
+        c.weighty = 0.1;
+        c.insets = new Insets(4, 0, 0, 0);
+        c.anchor = GridBagConstraints.LAST_LINE_START;
+        card6.add(back_Rejoin_Button, c);
+
+        return card6;
+    }
+
+    private JPanel getCard7() {
+        GridBagConstraints c;
+         /*
+            card 6: rejoin
+
+         */
+        JPanel card7 = new JPanel(new GridBagLayout());
+        card7.setOpaque(false);
+
+        progressLabel = new JLabel();
+        progressLabel.setText("Initiating request");
+        progressLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        progressLabel.setFont(new Font(PAP, Font.BOLD, 24));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weighty = 0.5;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card7.add(progressLabel, c);
+
+        progressBar = new JProgressBar();
+        progressBar.setOrientation(JProgressBar.HORIZONTAL);
+        progressBar.setPreferredSize(new Dimension(200,20));
+        progressBar.setForeground(new Color(178, 49, 35));
+        progressBar.setOpaque(false);
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weighty = 0.5;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card7.add(progressBar, c);
+
+        JLabel emptyLabel = new JLabel("");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.weighty = 1;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(0, 160, 0, 160);
+        card7.add(emptyLabel, c);
+
+        back_Loading_Button = new JButton("Back");
+        back_Loading_Button.setPreferredSize(new Dimension(120, 40));
+        back_Loading_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        back_Loading_Button.setBackground(new Color(231, 210, 181));
+        back_Loading_Button.setEnabled(false);
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.weighty = 0.1;
+        c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.LAST_LINE_START;
+        card7.add(back_Loading_Button, c);
+
+        return card7;
+    }
+
     //HELPER METHODS (graphics)
     private void updateCreateRecapLabel() {
-        recapLabel1.setText(Ark.nickname);
-        recapLabel2.setText(Ark.defaultAddress);
-        recapLabel3.setText("" + Ark.defaultPort);
+        recap1_Create_Label.setText(Ark.nickname);
+        recap2_Create_Label.setText(Ark.defaultAddress);
+        recap3_Create_Label.setText("" + Ark.defaultPort);
 
-        recapLabel4.setText(Ark.nickname);
-        recapLabel5.setText(Ark.defaultAddress);
-        recapLabel6.setText("" + Ark.defaultPort);
+        recap1_Join_Label.setText(Ark.nickname);
+        recap2_Join_Label.setText(Ark.defaultAddress);
+        recap3_Join_Label.setText("" + Ark.defaultPort);
+
+        recap1_Rejoin_Label.setText(Ark.nickname);
+        recap2_Rejoin_Label.setText(Ark.defaultAddress);
+        recap3_Rejoin_Label.setText("" + Ark.defaultPort);
     }
 
     //HELPER METHODS (non graphic)
@@ -972,6 +1230,52 @@ public class MainMenu implements Runnable {
 
     //card 4 (create)
     ActionListener confirm_Create_Button_actionListener = e -> {
+        String nickname = Ark.nickname;
+        String ip = Ark.defaultAddress;
+        int port = Ark.defaultPort;
+        int lobbyMaxPlayers = numberOfPlayersSlider.getValue();
+
+        lastCard = CREATE;
+        cl.show(cardPanel, LOADING);
+        top_Update_Label.setText(LOADING);
+        bottom_Update_Label.setText("Sit tight");
+
+            // this is used just as an example
+        testTimer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(progressBar.getValue() == 0)
+                {
+                    progressBar.setValue(10);
+                    progressLabel.setText("contacting server");
+                }
+                else if(progressBar.getValue()==10)
+                {
+                    progressBar.setValue(20);
+                    progressLabel.setText("waiting for players to join");
+                    progressBar.setIndeterminate(true);
+                }
+                else if(progressBar.getValue()==20)
+                {
+                    progressBar.setValue(90);
+                    progressLabel.setText("initiating game");
+                    progressBar.setIndeterminate(false);
+                }
+                else if(progressBar.getValue()==90)
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("starting game");
+                }
+                else if(progressBar.getValue()==100)
+                {
+                    progressBar.setValue(0);
+                    progressLabel.setText("creating request");
+                    back_Loading_Button.setEnabled(true);
+                }
+            }
+        });
+
+        testTimer.start();
 
     };
 
@@ -991,6 +1295,23 @@ public class MainMenu implements Runnable {
 
     //card 5 (join)
     ActionListener confirm_Join_Button_actionListener = e -> {
+        int lobbyNumber;
+        try
+        {
+            lobbyNumber = Integer.parseInt(lobbyNumber_Join_Field.getText());
+            if(lobbyNumber < 0)
+                JOptionPane.showMessageDialog(mainFrame, "Lobby number must be positive");
+            if(lobbyNumber > 500)
+                JOptionPane.showMessageDialog(mainFrame, "Lobby number must be less than 500");
+        }
+        catch (NumberFormatException ex)
+        {
+            JOptionPane.showMessageDialog(mainFrame, "Lobby number must be a number");
+        }
+
+        String nickname = Ark.nickname;
+        String ip = Ark.defaultAddress;
+        int port = Ark.defaultPort;
 
     };
 
@@ -998,7 +1319,7 @@ public class MainMenu implements Runnable {
         cl.show(cardPanel, SETTINGS);
         lastCard = JOIN;
         top_Update_Label.setText(SETTINGS);
-        bottom_Update_Label.setText(" Is this Lorenzo? ");
+        bottom_Update_Label.setText("Is this Lorenzo?");
     };
 
     ActionListener back_Join_Button_actionListener = e -> {
@@ -1006,5 +1327,57 @@ public class MainMenu implements Runnable {
         lastCard = JOIN;
         top_Update_Label.setText(ONLINE);
         bottom_Update_Label.setText("Roger that");
+    };
+
+    //card 6 (rejoin)
+    ActionListener confirm_Rejoin_Button_actionListener = e -> {
+        int lobbyNumber;
+        try
+        {
+            lobbyNumber = Integer.parseInt(lobbyNumber_Join_Field.getText());
+            if(lobbyNumber < 0)
+                JOptionPane.showMessageDialog(mainFrame, "Lobby number must be positive");
+            if(lobbyNumber > 500)
+                JOptionPane.showMessageDialog(mainFrame, "Lobby number must be less than 500");
+        }
+        catch (NumberFormatException ex)
+        {
+            JOptionPane.showMessageDialog(mainFrame, "Lobby number must be a number");
+            return;
+        }
+
+        lastCard = REJOIN;
+        String nickname = Ark.nickname;
+        String ip = Ark.defaultAddress;
+        int port = Ark.defaultPort;
+
+    };
+
+    ActionListener settings_Rejoin_Button_actionListener = e -> {
+        cl.show(cardPanel, SETTINGS);
+        lastCard = REJOIN;
+        top_Update_Label.setText(SETTINGS);
+        bottom_Update_Label.setText("What now?");
+    };
+
+    ActionListener back_Rejoin_Button_actionListener = e -> {
+        cl.show(cardPanel, ONLINE);
+        lastCard = REJOIN;
+        top_Update_Label.setText(ONLINE);
+        bottom_Update_Label.setText("Aye aye");
+    };
+
+    //card 7 (loading screen)
+    ActionListener back_Loading_Button_actionListener = e -> {
+        cl.show(cardPanel,lastCard);
+        top_Update_Label.setText(lastCard);
+        bottom_Update_Label.setText("I'm sorry");
+        back_Loading_Button.setEnabled(false);
+
+        //test part
+        if(testTimer.isRunning())
+            testTimer.stop();
+        progressBar.setValue(0);
+        progressLabel.setText("Again here?");
     };
 }
