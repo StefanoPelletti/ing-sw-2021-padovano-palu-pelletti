@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -19,15 +20,17 @@ public class Board implements Runnable {
 
     //STATIC PANELS VARs
     JButton quit_Button;
-    JLabel turnLabel;
-    JLabel turnOf;
+    JLabel turnLabel, turnOf;
     JTextArea notificationsArea;
-    JLabel resource1;
+    JLabel leaderCardLabel1, leaderCardLabel2;
+    JLabel extraResource1_LeaderCard1_Label, extraResource2_LeaderCard1_Label;
+    JLabel extraResource1_LeaderCard2_Label, extraResource2_LeaderCard2_Label;
+    JLabel labelUnderLeaderCard1, labelUnderLeaderCard2;
 
 
 
     //CARDS
-    final static String BOARD = "Player Board";
+    static final String BOARD = "Player Board";
 
     //fonts
     static final String TIMES = "Times New Roman";
@@ -90,7 +93,6 @@ public class Board implements Runnable {
             c.gridheight = 1;
             this.add(new TopPanel(), c);
 
-
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 2;
@@ -98,16 +100,12 @@ public class Board implements Runnable {
             c.gridheight = 1;
             this.add(new BottomPanel(), c);
 
-
-
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
             c.gridwidth = 1;
             c.gridheight = 1;
             this.add(new CentralLeftPanel(), c);
-
-
 
             c = new GridBagConstraints();
             c.gridx = 2;
@@ -133,7 +131,7 @@ public class Board implements Runnable {
 
     class LeftPanel extends JPanel {
         public LeftPanel() {
-            GridBagConstraints c = new GridBagConstraints();
+            GridBagConstraints c;
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
             this.setBackground(new Color(215, 200, 145));
@@ -209,9 +207,15 @@ public class Board implements Runnable {
             notificationsArea.setBackground(new Color(222, 209, 156));
             notificationsArea.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
 
-            JScrollPane jScrollPane = new JScrollPane(notificationsArea);
-            jScrollPane.setPreferredSize(new Dimension(400,200));
-
+            JScrollPane scrollPane = new JScrollPane(notificationsArea);
+            scrollPane.setPreferredSize(new Dimension(400,200));
+            scrollPane.getVerticalScrollBar().setBackground(new Color(222, 209, 156));
+            scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+                @Override
+                protected void configureScrollBarColors() {
+                    this.thumbColor = new Color(178, 49, 35);
+                }
+            });
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 3;
@@ -219,7 +223,7 @@ public class Board implements Runnable {
             c.gridheight = 1;
             c.anchor = GridBagConstraints.PAGE_START;
             c.insets = new Insets(20,0, 0,0);
-            this.add(jScrollPane, c);
+            this.add(scrollPane, c);
 
             JPanel leaderCardsPanel = new JPanel(new GridBagLayout());
             leaderCardsPanel.setOpaque(false);
@@ -281,8 +285,9 @@ public class Board implements Runnable {
             leaderCardsPanel.add(leaderCardLabel2text2,c);
 
 
-            JLabel leaderCardLabel1 = new JLabel();
+            leaderCardLabel1 = new JLabel();
             leaderCardLabel1.setLayout(new GridBagLayout());
+            leaderCardLabel1.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
             ImageIcon t1 = new ImageIcon("resources/cardsFront/LFRONT (7).png");
             t1 = scaleImage(t1, 300,300);
             leaderCardLabel1.setIcon(t1);
@@ -295,29 +300,51 @@ public class Board implements Runnable {
             c.insets = new Insets(0,0, 0,0);
             leaderCardsPanel.add(leaderCardLabel1,c);
 
-            resource1 = new JLabel();
+            extraResource1_LeaderCard1_Label = new JLabel();
             ImageIcon tr1 = new ImageIcon(Resource.SHIELD.getPathLittle());
             tr1 = scaleImage(tr1, 50, 50);
-            resource1.setIcon(tr1);
+            extraResource1_LeaderCard1_Label.setIcon(tr1);
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 0;
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            c.insets = new Insets(210,5, 0,16);
-            leaderCardLabel1.add(resource1,c);
+            c.insets = new Insets(210,5, 0,11);
+            leaderCardLabel1.add(extraResource1_LeaderCard1_Label,c);
 
-            JLabel resource2 = new JLabel();
+            extraResource2_LeaderCard1_Label = new JLabel();
             ImageIcon tr2 = new ImageIcon(Resource.COIN.getPathLittle());
             tr2 = scaleImage(tr1, 50, 50);
-            resource2.setIcon(tr2);
+            extraResource2_LeaderCard1_Label.setIcon(tr2);
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 0;
             c.anchor = GridBagConstraints.FIRST_LINE_END;
-            c.insets = new Insets(210,16, 0,5);
-            leaderCardLabel1.add(resource2,c);
+            c.insets = new Insets(210,11, 0,5);
+            leaderCardLabel1.add(extraResource2_LeaderCard1_Label,c);
 
-            JLabel leaderCardLabel2 = new JLabel();
+            labelUnderLeaderCard1 = new JLabel("not picked");
+            labelUnderLeaderCard1.setOpaque(false);
+            labelUnderLeaderCard1.setHorizontalAlignment(SwingConstants.CENTER);
+            labelUnderLeaderCard1.setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 3;
+            c.anchor = GridBagConstraints.PAGE_START;
+            leaderCardsPanel.add(labelUnderLeaderCard1,c);
+
+            labelUnderLeaderCard2 = new JLabel("not picked");
+            labelUnderLeaderCard2.setOpaque(false);
+            labelUnderLeaderCard2.setHorizontalAlignment(SwingConstants.CENTER);
+            labelUnderLeaderCard2.setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 3;
+            c.anchor = GridBagConstraints.PAGE_START;
+            leaderCardsPanel.add(labelUnderLeaderCard2,c);
+
+            leaderCardLabel2 = new JLabel();
+            leaderCardLabel2.setLayout(new GridBagLayout());
+            leaderCardLabel2.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
             ImageIcon t2 = new ImageIcon("resources/cardsFront/LFRONT (12).png");
             t2 = scaleImage(t2, 300, 300);
             leaderCardLabel2.setIcon(t2);
@@ -329,6 +356,28 @@ public class Board implements Runnable {
             c.anchor = GridBagConstraints.PAGE_START;
             c.insets = new Insets(0,0, 0,0);
             leaderCardsPanel.add(leaderCardLabel2,c);
+
+            extraResource1_LeaderCard2_Label = new JLabel();
+            ImageIcon tr3 = new ImageIcon(Resource.SHIELD.getPathLittle());
+            tr3 = scaleImage(tr3, 50, 50);
+            //extraResource1_LeaderCard2_Label.setIcon(tr3);
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.insets = new Insets(210,5, 0,11);
+            leaderCardLabel2.add(extraResource1_LeaderCard2_Label,c);
+
+            extraResource2_LeaderCard2_Label = new JLabel();
+            ImageIcon tr4 = new ImageIcon(Resource.COIN.getPathLittle());
+            tr4 = scaleImage(tr4, 50, 50);
+            //extraResource2_LeaderCard2_Label.setIcon(tr4);
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 0;
+            c.anchor = GridBagConstraints.FIRST_LINE_END;
+            c.insets = new Insets(210,11, 0,5);
+            leaderCardLabel2.add(extraResource2_LeaderCard2_Label,c);
 
             JLabel spacer = new JLabel("");
             c = new GridBagConstraints();
@@ -474,6 +523,14 @@ public class Board implements Runnable {
         notificationsArea.setText(string+"\nword");
         ImageIcon t = new ImageIcon(Resource.COIN.getPathLittle());
         t = scaleImage(t, 50, 50);
-        resource1.setIcon(t);
+        extraResource1_LeaderCard1_Label.setIcon(t);
+        labelUnderLeaderCard1.setText("ENABLED!");
+        leaderCardLabel1.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+
+        labelUnderLeaderCard2.setText("DISCARDED!");
+        t = new ImageIcon("resources/cardsBack/BACK (1).png");
+        t = scaleImage(t, 300, 300);
+        leaderCardLabel2.setIcon(t);
+        leaderCardLabel2.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
     };
 }
