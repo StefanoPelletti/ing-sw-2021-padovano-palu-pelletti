@@ -3,7 +3,6 @@ package it.polimi.ingsw.client.gui;
 import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.networking.message.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
-import it.polimi.ingsw.server.utils.A;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,10 +20,6 @@ public class MainMenu implements Runnable {
     JFrame mainFrame;
     JPanel cardPanel;
     Dimension frameDimension;
-
-    //test object (to be deleted)
-    Timer testTimer;
-
 
     //shared objects
     JLabel top_Update_Label;
@@ -1345,57 +1340,6 @@ public class MainMenu implements Runnable {
             messageLabel.setText("please go back");
             back_Loading_Button.setEnabled(true);
         }
-
-        /*
-
-        // this is used just as an example
-        testTimer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(progressBar.getValue() == 0)
-                {
-                    progressBar.setValue(5);
-                    progressLabel.setText("contacting server");
-                    messageLabel.setText("forwarding message");
-                }else if(progressBar.getValue()==5)
-                {
-                    progressBar.setValue(10);
-                    messageLabel.setText("response received");
-                }
-                else if(progressBar.getValue()==10)
-                {
-                    progressBar.setValue(20);
-                    progressLabel.setText("waiting for players to join");
-                    messageLabel.setText("relax");
-                    progressBar.setIndeterminate(true);
-                }
-                else if(progressBar.getValue()==20)
-                {
-                    progressBar.setValue(90);
-                    progressLabel.setText("initiating game");
-                    messageLabel.setText("writing game");
-                    progressBar.setIndeterminate(false);
-                }
-                else if(progressBar.getValue()==90)
-                {
-                    progressBar.setValue(100);
-                    progressLabel.setText("starting game");
-                    messageLabel.setText("good luck");
-                }
-                else if(progressBar.getValue()==100)
-                {
-                    progressBar.setValue(0);
-                    progressLabel.setText("initiating request");
-                    messageLabel.setText("creating message");
-                    back_Loading_Button.setEnabled(true);
-                }
-            }
-        });
-
-        testTimer.start();
-
-
-         */
     };
 
     ActionListener settings_Create_Button_actionListener = e -> {
