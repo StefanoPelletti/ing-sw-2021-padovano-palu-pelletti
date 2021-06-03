@@ -1,12 +1,19 @@
 package it.polimi.ingsw.client.gui;
 
+import it.polimi.ingsw.client.modelSimplified.GameSimplified;
+import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
+import it.polimi.ingsw.server.utils.A;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.Arrays;
 
 public class MainMenu implements Runnable {
@@ -64,6 +71,7 @@ public class MainMenu implements Runnable {
     JTextField lobbyNumber_Rejoin_Field;
     //card 7 (loading screen)
     JLabel progressLabel;
+    JLabel messageLabel;
     JProgressBar progressBar;
     JButton back_Loading_Button;
 
@@ -87,18 +95,20 @@ public class MainMenu implements Runnable {
     static final String PAP = "Papyrus";
 
     public static void main(String[] args) {
+        // you can write here shortcuts, like going directly to the Settings and opening multiple frames
+        // only if called by the main, otherwise it must be empty
+        // new MainMenu();
+        // cl.show(cardPanel, CREATE);
         SwingUtilities.invokeLater(new MainMenu());
     }
 
+    @Override
     public void run() {
-        //you can write here shortcuts, like going directly to the Settings and opening multiple frames
-        //only if called by the main, otherwise it must be empty
-        //new MainMenu();
-        // cl.show(cardPanel, CREATE);
+        //method is empty to override Runnable interface method
     }
 
     public MainMenu() {
-        mainFrame = new JFrame(" Maestri del Rinascimento! GUI-edition! ");
+        mainFrame = new JFrame(" Masters of Renaissance, GUI-edition! ");
         mainFrame.setContentPane(new mainPanel());
 
         //ACTION LISTENERS assignment
@@ -156,8 +166,8 @@ public class MainMenu implements Runnable {
         public mainPanel() {
             try {
                 image = ImageIO.read(new File("resources/images/main_menu_bg.jpg"));
-            } catch (IOException e) {
             }
+            catch (IOException ignored) { }
 
             cl = new CardLayout();
             GridBagConstraints c;
@@ -181,7 +191,7 @@ public class MainMenu implements Runnable {
 
             top_Update_Label = new JLabel();
             top_Update_Label.setFont(new Font("Papyrus", Font.BOLD | Font.ITALIC, 36));
-            top_Update_Label.setText(" Welcome " + Ark.nickname + " ");
+            top_Update_Label.setText("Welcome " + Ark.nickname + " ");
             top_Update_Label.setHorizontalAlignment(SwingConstants.CENTER);
             c = new GridBagConstraints();
             c.gridx = 0;
@@ -1042,16 +1052,27 @@ public class MainMenu implements Runnable {
         card7.setOpaque(false);
 
         progressLabel = new JLabel();
-        progressLabel.setText("Initiating request");
+        progressLabel.setText("initiating request");
         progressLabel.setHorizontalAlignment(SwingConstants.CENTER);
         progressLabel.setFont(new Font(PAP, Font.BOLD, 24));
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.weighty = 0.5;
+        c.weighty = 0.2;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
         card7.add(progressLabel, c);
+
+        messageLabel = new JLabel("creating message");
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        messageLabel.setFont(new Font(PAP, Font.BOLD, 24));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weighty = 0.2;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card7.add(messageLabel, c);
 
         progressBar = new JProgressBar();
         progressBar.setOrientation(JProgressBar.HORIZONTAL);
@@ -1060,7 +1081,7 @@ public class MainMenu implements Runnable {
         progressBar.setOpaque(false);
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
         c.weighty = 0.5;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.CENTER;
@@ -1069,7 +1090,7 @@ public class MainMenu implements Runnable {
         JLabel emptyLabel = new JLabel("");
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.CENTER;
@@ -1083,7 +1104,7 @@ public class MainMenu implements Runnable {
         back_Loading_Button.setEnabled(false);
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 4;
         c.weighty = 0.1;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.LAST_LINE_START;
@@ -1136,6 +1157,7 @@ public class MainMenu implements Runnable {
         bottom_Update_Label.setText("Lorenzo, Lorenzo");
     };
 
+    //TODO
     ActionListener local_Menu_Button_actionListener = e -> {
 
         //load directly the game?
@@ -1146,6 +1168,7 @@ public class MainMenu implements Runnable {
         cl.show(cardPanel, SETTINGS);
         lastCard = MENU;
         top_Update_Label.setText(SETTINGS);
+        bottom_Update_Label.setText("First time here?");
     };
 
     ActionListener quit_Menu_Button_actionListener = e -> {
@@ -1155,7 +1178,7 @@ public class MainMenu implements Runnable {
     //card2 (settings)
     ActionListener back_Settings_Button_actionListener = e -> {
         if (lastCard.equals(MENU))
-            top_Update_Label.setText(" welcome " + Ark.nickname + " ");
+            top_Update_Label.setText("Welcome " + Ark.nickname + " ");
         else
             top_Update_Label.setText(lastCard);
         cl.show(cardPanel, lastCard);
@@ -1192,7 +1215,7 @@ public class MainMenu implements Runnable {
 
             bottom_Update_Label.setText("changes were saved!");
             if (lastCard.equals(MENU))
-                top_Update_Label.setText(" welcome " + Ark.nickname + " ");
+                top_Update_Label.setText("Welcome " + Ark.nickname + " ");
             else
                 top_Update_Label.setText(lastCard);
             cl.show(cardPanel, lastCard);
@@ -1224,52 +1247,146 @@ public class MainMenu implements Runnable {
     ActionListener back_Online_Button_actionListener = e -> {
         cl.show(cardPanel, MENU);
         lastCard = ONLINE;
-        top_Update_Label.setText(" welcome " + Ark.nickname + " ");
+        top_Update_Label.setText("Welcome " + Ark.nickname + " ");
         bottom_Update_Label.setText(" Please don't judge me ");
     };
 
     //card 4 (create)
     ActionListener confirm_Create_Button_actionListener = e -> {
         String nickname = Ark.nickname;
-        String ip = Ark.defaultAddress;
+        String address = Ark.defaultAddress;
         int port = Ark.defaultPort;
-        int lobbyMaxPlayers = numberOfPlayersSlider.getValue();
+        int numberOfPlayers = numberOfPlayersSlider.getValue();
+        boolean solo = numberOfPlayers==1;
 
         lastCard = CREATE;
         cl.show(cardPanel, LOADING);
         top_Update_Label.setText(LOADING);
         bottom_Update_Label.setText("Sit tight");
 
-            // this is used just as an example
+        try
+        {
+            Ark.socket = new Socket(address, port);
+
+            progressBar.setValue(15);
+            progressLabel.setText("connection established");
+            messageLabel.setText("sending the request");
+
+            Ark.outputStream = Ark.socket.getOutputStream();
+            Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
+            Ark.inputStream = Ark.socket.getInputStream();
+            Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
+
+            Message message = new MSG_CREATE_LOBBY(numberOfPlayers, nickname);
+
+            Ark.send(message);
+
+            messageLabel.setText("waiting for response");
+            message = (Message) Ark.objectInputStream.readObject();
+
+            if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
+                MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
+                Ark.solo = solo;
+                progressBar.setIndeterminate(true);
+                progressLabel.setText("waiting other players");
+                messageLabel.setText("Lobby Number is "+msg.getLobbyNumber());
+
+                message = (Message) Ark.objectInputStream.readObject();
+
+                if(message.getMessageType() == MessageType.MSG_UPD_Full)
+                {
+                    progressBar.setIndeterminate(false);
+                    progressBar.setValue(90);
+                    progressLabel.setText("players connected");
+                    messageLabel.setText("writing game");
+
+                    Ark.game = new GameSimplified();
+                    Ark.game.updateAll((MSG_UPD_Full) message);
+
+                    progressBar.setValue(100);
+                    progressLabel.setText("launching game");
+                    messageLabel.setText("good luck");
+
+                    SwingUtilities.invokeLater(new Board());
+                    mainFrame.dispose();
+                }
+                else if(message.getMessageType() == MessageType.MSG_ERROR)
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("error! message from the server:");
+                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                    back_Loading_Button.setEnabled(true);
+                }
+                else
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("received unexpected message");
+                    messageLabel.setText(""+message.getMessageType());
+                    back_Loading_Button.setEnabled(true);
+                }
+
+            } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                progressBar.setValue(100);
+                progressLabel.setText("error! message from the server:");
+                messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                back_Loading_Button.setEnabled(true);
+            }
+
+        } catch(IOException | ClassNotFoundException ex)
+        {
+            progressBar.setValue(100);
+            progressLabel.setText("a network error occurred!");
+            messageLabel.setText("please go back");
+            back_Loading_Button.setEnabled(true);
+        } catch (IllegalArgumentException ex)
+        {
+            progressBar.setValue(100);
+            progressLabel.setText("We failed to build the message");
+            messageLabel.setText("please go back");
+            back_Loading_Button.setEnabled(true);
+        }
+
+        /*
+
+        // this is used just as an example
         testTimer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(progressBar.getValue() == 0)
                 {
-                    progressBar.setValue(10);
+                    progressBar.setValue(5);
                     progressLabel.setText("contacting server");
+                    messageLabel.setText("forwarding message");
+                }else if(progressBar.getValue()==5)
+                {
+                    progressBar.setValue(10);
+                    messageLabel.setText("response received");
                 }
                 else if(progressBar.getValue()==10)
                 {
                     progressBar.setValue(20);
                     progressLabel.setText("waiting for players to join");
+                    messageLabel.setText("relax");
                     progressBar.setIndeterminate(true);
                 }
                 else if(progressBar.getValue()==20)
                 {
                     progressBar.setValue(90);
                     progressLabel.setText("initiating game");
+                    messageLabel.setText("writing game");
                     progressBar.setIndeterminate(false);
                 }
                 else if(progressBar.getValue()==90)
                 {
                     progressBar.setValue(100);
                     progressLabel.setText("starting game");
+                    messageLabel.setText("good luck");
                 }
                 else if(progressBar.getValue()==100)
                 {
                     progressBar.setValue(0);
-                    progressLabel.setText("creating request");
+                    progressLabel.setText("initiating request");
+                    messageLabel.setText("creating message");
                     back_Loading_Button.setEnabled(true);
                 }
             }
@@ -1277,6 +1394,8 @@ public class MainMenu implements Runnable {
 
         testTimer.start();
 
+
+         */
     };
 
     ActionListener settings_Create_Button_actionListener = e -> {
@@ -1307,11 +1426,104 @@ public class MainMenu implements Runnable {
         catch (NumberFormatException ex)
         {
             JOptionPane.showMessageDialog(mainFrame, "Lobby number must be a number");
+            return;
         }
 
         String nickname = Ark.nickname;
-        String ip = Ark.defaultAddress;
+        String address = Ark.defaultAddress;
         int port = Ark.defaultPort;
+        boolean solo = false;
+
+        lastCard = JOIN;
+        cl.show(cardPanel, LOADING);
+        top_Update_Label.setText(LOADING);
+        bottom_Update_Label.setText("Sit tight");
+
+        try
+        {
+            Ark.socket = new Socket(address, port);
+
+            progressBar.setValue(15);
+            progressLabel.setText("connection established");
+            messageLabel.setText("sending the request");
+
+            Ark.outputStream = Ark.socket.getOutputStream();
+            Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
+            Ark.inputStream = Ark.socket.getInputStream();
+            Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
+
+            Message message = new MSG_JOIN_LOBBY(nickname, lobbyNumber);
+
+            Ark.send(message);
+
+            messageLabel.setText("waiting for response");
+
+            message = (Message) Ark.objectInputStream.readObject();
+
+            if (message.getMessageType() == MessageType.MSG_OK_JOIN) {
+                MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
+
+                Ark.nickname = msg.getAssignedNickname();
+                Ark.solo = solo;
+
+                progressBar.setIndeterminate(true);
+                progressLabel.setText("waiting other players");
+                messageLabel.setText("you'll enter as: "+Ark.nickname+" ");
+
+                message = (Message) Ark.objectInputStream.readObject();
+
+                if(message.getMessageType() == MessageType.MSG_UPD_Full)
+                {
+                    progressBar.setIndeterminate(false);
+                    progressBar.setValue(90);
+                    progressLabel.setText("players connected");
+                    messageLabel.setText("writing game");
+
+                    Ark.game = new GameSimplified();
+                    Ark.game.updateAll((MSG_UPD_Full) message);
+
+                    progressBar.setValue(100);
+                    progressLabel.setText("launching game");
+                    messageLabel.setText("good luck");
+
+                    SwingUtilities.invokeLater(new Board());
+                    mainFrame.dispose();
+                }
+                else if(message.getMessageType() == MessageType.MSG_ERROR)
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("error! message from the server:");
+                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                    back_Loading_Button.setEnabled(true);
+                }
+                else
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("received unexpected message");
+                    messageLabel.setText(""+message.getMessageType());
+                    back_Loading_Button.setEnabled(true);
+                }
+
+            } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                progressBar.setValue(100);
+                progressLabel.setText("error! message from the server:");
+                messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                back_Loading_Button.setEnabled(true);
+            }
+
+        } catch(IOException | ClassNotFoundException ex)
+        {
+            progressBar.setValue(100);
+            progressLabel.setText("a network error occurred!");
+            messageLabel.setText("please go back");
+            back_Loading_Button.setEnabled(true);
+        } catch (IllegalArgumentException ex)
+        {
+            progressBar.setValue(100);
+            progressLabel.setText("We failed to build the message");
+            messageLabel.setText("please go back");
+            back_Loading_Button.setEnabled(true);
+        }
 
     };
 
@@ -1334,7 +1546,7 @@ public class MainMenu implements Runnable {
         int lobbyNumber;
         try
         {
-            lobbyNumber = Integer.parseInt(lobbyNumber_Join_Field.getText());
+            lobbyNumber = Integer.parseInt(lobbyNumber_Rejoin_Field.getText());
             if(lobbyNumber < 0)
                 JOptionPane.showMessageDialog(mainFrame, "Lobby number must be positive");
             if(lobbyNumber > 500)
@@ -1346,10 +1558,101 @@ public class MainMenu implements Runnable {
             return;
         }
 
-        lastCard = REJOIN;
         String nickname = Ark.nickname;
-        String ip = Ark.defaultAddress;
+        String address = Ark.defaultAddress;
         int port = Ark.defaultPort;
+        boolean solo = false;
+
+        lastCard = REJOIN;
+        cl.show(cardPanel, LOADING);
+        top_Update_Label.setText(LOADING);
+        bottom_Update_Label.setText("Sit tight");
+
+        try
+        {
+            Ark.socket = new Socket(address, port);
+
+            progressBar.setValue(15);
+            progressLabel.setText("connection established");
+            messageLabel.setText("sending the request");
+
+            Ark.outputStream = Ark.socket.getOutputStream();
+            Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
+            Ark.inputStream = Ark.socket.getInputStream();
+            Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
+
+            Message message = new MSG_REJOIN_LOBBY(nickname, lobbyNumber);
+
+            Ark.send(message);
+
+            messageLabel.setText("waiting for response");
+
+            message = (Message) Ark.objectInputStream.readObject();
+
+            if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
+                MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
+
+                Ark.nickname = msg.getNickname();
+                Ark.solo = solo;
+
+                progressBar.setIndeterminate(true);
+                progressLabel.setText("waiting other players");
+                messageLabel.setText("you'll enter as: "+Ark.nickname+" ");
+
+                message = (Message) Ark.objectInputStream.readObject();
+
+                if(message.getMessageType() == MessageType.MSG_UPD_Full)
+                {
+                    progressBar.setIndeterminate(false);
+                    progressBar.setValue(90);
+                    progressLabel.setText("players connected");
+                    messageLabel.setText("writing game");
+
+                    Ark.game = new GameSimplified();
+                    Ark.game.updateAll((MSG_UPD_Full) message);
+
+                    progressBar.setValue(100);
+                    progressLabel.setText("launching game");
+                    messageLabel.setText("good luck");
+
+                    SwingUtilities.invokeLater(new Board());
+                    mainFrame.dispose();
+                }
+                else if(message.getMessageType() == MessageType.MSG_ERROR)
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("error! message from the server:");
+                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                    back_Loading_Button.setEnabled(true);
+                }
+                else
+                {
+                    progressBar.setValue(100);
+                    progressLabel.setText("received unexpected message");
+                    messageLabel.setText(""+message.getMessageType());
+                    back_Loading_Button.setEnabled(true);
+                }
+
+            } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                progressBar.setValue(100);
+                progressLabel.setText("error! message from the server:");
+                messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                back_Loading_Button.setEnabled(true);
+            }
+
+        } catch(IOException | ClassNotFoundException ex)
+        {
+            progressBar.setValue(100);
+            progressLabel.setText("a network error occurred!");
+            messageLabel.setText("please go back");
+            back_Loading_Button.setEnabled(true);
+        } catch (IllegalArgumentException ex)
+        {
+            progressBar.setValue(100);
+            progressLabel.setText("We failed to build the message");
+            messageLabel.setText("please go back");
+            back_Loading_Button.setEnabled(true);
+        }
 
     };
 
@@ -1372,11 +1675,16 @@ public class MainMenu implements Runnable {
         cl.show(cardPanel,lastCard);
         top_Update_Label.setText(lastCard);
         bottom_Update_Label.setText("I'm sorry");
+        progressBar.setValue(0);
+        progressLabel.setText("initiating request");
+        messageLabel.setText("creating message");
         back_Loading_Button.setEnabled(false);
 
         //test part
+        /*
         if(testTimer.isRunning())
             testTimer.stop();
+        */
         progressBar.setValue(0);
         progressLabel.setText("Again here?");
     };

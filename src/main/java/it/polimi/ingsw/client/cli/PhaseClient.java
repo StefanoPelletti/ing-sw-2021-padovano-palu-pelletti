@@ -34,10 +34,10 @@ public class PhaseClient implements Runnable {
 
     /**
      * The Client is modelled as a Finite State Machine.
-     * Initial State is MAIN_MENU. The user can choose to:
-     *      > starts an online game, by creating, joining or rejoining a lobby (Phase ONLINE_PHASE),
-     *      > starts a local game (Phase LOCAL_PHASE),
-     *      > quit (Phase QUIT).
+     * Initial State is MAIN_MENU. The user can choose to: <ul>
+     * <li> tarts an online game, by creating, joining or rejoining a lobby (Phase ONLINE_PHASE),
+     * <li> starts a local game (Phase LOCAL_PHASE),
+     * <li> quit (Phase QUIT). </ul>
      *  If the Player encounters a network error, the Client goes first in ERROR Phase and then returns in MAIN_MENU.
      */
     public void run() {
@@ -702,7 +702,7 @@ class Halo {
      * @param first The number of the first (already) chosen Leader Card.
      * @return True if the user has typed in a valid value, not the same one as first, and between 1 and 4 (included),
      *         False otherwise.
-     * @see #chooseLeaderCards(List) for its usage.
+     * @see #chooseLeaderCards(List) the method that calls this function.
      */
     private static boolean checkLeaderCardPickerNumber(List<String> textList, int first) {
         if (textList.size() > 1) {
@@ -777,7 +777,7 @@ class Halo {
      * @param textList A List of String.
      * @return True if the user has correctly typed in a cardNumber and a slotNumber that were available in the Vendor cards,
      *         False if that combination was not valid, or the textList was not formatted as a pair of numbers.
-     * @see #chooseDevCard(List) for its usage.
+     * @see #chooseDevCard(List) the method that calls this function.
      */
     private static boolean checkNumberDevSlot(List<String> textList) {
         if (textList.size() == 2) {
@@ -860,7 +860,7 @@ class Halo {
      * @param resourceNonePermitted A boolean modifier that allows or denies the possibility to accept the Resource "NONE".
      * @return True if the user has correctly typed in the Resources as described above,
      *         False otherwise.
-     * @see #convertStringToResource(String) for afterwards usage.
+     * @see #convertStringToResource(String) the next method that will be used.
      */
     private static boolean checkResource(List<String> textList, int numberOfResources, boolean resourceNonePermitted) {
         if (textList.size() != numberOfResources) return false;
@@ -881,7 +881,7 @@ class Halo {
      * @param column True if the user has previously selected a column, and False if a row was selected.
      * @return True if the user has correctly typed in a number according to above,
      *         False otherwise.
-     * @see #getMarketChoices() for its usage.
+     * @see #getMarketChoices() the method that calls this function..
      */
     private static boolean checkNumberMarket(List<String> textList, boolean column) {
         if (textList.size() > 1) {
@@ -1451,7 +1451,7 @@ class Halo {
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message if the message was built accordingly to specification,
      *         or null if the message wasn't well formatted.
-     * @see #checkNumberDevSlot(List) for inner usage
+     * @see #checkNumberDevSlot(List)
      */
     public static MSG_ACTION_CHOOSE_DEVELOPMENT_CARD chooseDevCard(List<String> textList) {
         boolean quit = false;
@@ -1497,7 +1497,7 @@ class Halo {
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_MARKET_CHOICE message if the message was built accordingly to specification,
      *         or null if the message wasn't well formatted.
-     * @see #checkChoice(List) for inner usage
+     * @see #checkChoice(List)
      */
     public static MSG_ACTION_MARKET_CHOICE marketChoice(List<String> textList) {
         int choice;
@@ -1530,7 +1530,7 @@ class Halo {
      * @param textList A List of String.
      * @return A well formatted MSG_INIT_CHOOSE_RESOURCE message if the message was built accordingly to specification,
      *         or null if the message wasn't well formatted.
-     * @see #checkNumber1_2_3_4(List) for inner usage
+     * @see #checkNumber1_2_3_4(List)
      */
     public static MSG_INIT_CHOOSE_RESOURCE chooseResource(List<String> textList) {
         Resource resource = Resource.NONE;
@@ -1577,8 +1577,8 @@ class Halo {
      * @param textList A List of String.
      * @return A well formatted MSG_INIT_CHOOSE_RESOURCE message if the message was built accordingly to specification,
      *         or null if the message wasn't well formatted.
-     * @see #checkLeaderCardsNumber(List)  for first inner usage.
-     * @see #checkLeaderCardPickerNumber(List, int) for second inner usage.
+     * @see #checkLeaderCardsNumber(List)
+     * @see #checkLeaderCardPickerNumber(List, int)
      */
     public static MSG_INIT_CHOOSE_LEADERCARDS chooseLeaderCards(List<String> textList) {
         int first;
@@ -1620,8 +1620,8 @@ class Halo {
      * The asset is one of the allowed item to be shown.
      * @param key A String representing the item that is going to be shown.
      * @param playerNumber An int representing the number of the chosen Player.
-     * @see #checkShowCommand(List) to see a the List of allowed items.
-     * @see #showPlayerAsset(String, PlayerSimplified) for the function called by this one.
+     * @see #checkShowCommand(List) the method that contains a List of allowed items
+     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
      */
     public static void showPlayerAsset(String key, int playerNumber) {
         PlayerSimplified player = game.getPlayerRef(playerNumber);
@@ -1637,8 +1637,8 @@ class Halo {
      * The asset is one of the allowed item to be shown.
      * @param key A String representing the item that is going to be shown.
      * @param nickname A String representing the name of the chosen Player.
-     * @see #checkShowCommand(List) to see a the List of allowed items.
-     * @see #showPlayerAsset(String, PlayerSimplified) for the function called by this one.
+     * @see #checkShowCommand(List) the method that contains a List of allowed items
+     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
      */
     public static void showPlayerAsset(String key, String nickname) {
         PlayerSimplified player = game.getPlayerRef(nickname);
@@ -1654,8 +1654,8 @@ class Halo {
      * The asset is one of the allowed item to be shown.
      * @param key A String representing the item that is going to be shown.
      * @param player The reference to the PlayerSimplified.
-     * @see #checkShowCommand(List) to see a the List of allowed items.
-     * @see #showPlayerAsset(String, PlayerSimplified) for the function called by this one.
+     * @see #checkShowCommand(List) the method that contains a List of allowed items
+     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
      */
     private static void showPlayerAsset(String key, PlayerSimplified player) {
         switch (key.toLowerCase()) {
@@ -1692,6 +1692,12 @@ class Halo {
                 System.out.println(" Somehow I reached this default. Check sequence.");
                 System.out.println(key);
         }
+    }
+
+    public static void send(Message message) throws IOException {
+        Halo.objectOutputStream.reset();
+        Halo.objectOutputStream.writeObject(message);
+        Halo.objectOutputStream.flush();
     }
 }
 
@@ -1819,8 +1825,7 @@ class MenuPhase {
 
             try {
                 MSG_REJOIN_LOBBY m = new MSG_REJOIN_LOBBY(nickname, lobbyNumber);
-                Halo.objectOutputStream.writeObject(m);
-                Halo.objectOutputStream.flush();
+                Halo.send(m);
             } catch (IllegalArgumentException e) {
                 System.out.println(A.RED + " > The parameters for the join are not correct!" + A.RESET);
                 return Phase.MAIN_MENU;
@@ -1868,8 +1873,7 @@ class MenuPhase {
 
             try {
                 MSG_JOIN_LOBBY m = new MSG_JOIN_LOBBY(nickname, lobbyNumber);
-                Halo.objectOutputStream.writeObject(m);
-                Halo.objectOutputStream.flush();
+                Halo.send(m);
             } catch (IllegalArgumentException e) {
                 System.out.println(A.RED + " > The parameters for the join are not correct!" + A.RESET);
                 return Phase.MAIN_MENU;
@@ -1917,8 +1921,7 @@ class MenuPhase {
 
             try {
                 MSG_CREATE_LOBBY m = new MSG_CREATE_LOBBY(numberOfPlayers, nickname);
-                Halo.objectOutputStream.writeObject(m);
-                Halo.objectOutputStream.flush();
+                Halo.send(m);
             } catch (IllegalArgumentException e) {
                 System.out.println(A.RED + " > The parameters for the creation are not correct!" + A.RESET);
                 return Phase.MAIN_MENU;
@@ -2152,32 +2155,28 @@ class OnlinePhase {
                         if (Halo.game.isLeaderCardsPickerEnabled()) {
                             message = Halo.chooseLeaderCards(textList);
                             if (message != null) {
-                                Halo.objectOutputStream.writeObject(message);
-                                Halo.objectOutputStream.flush();
+                                Halo.send(message);
                             }
                         }
 //RESOURCE ROUTINE
                         else if (Halo.game.isResourcePickerEnabled()) {
                             message = Halo.chooseResource(textList);
                             if (message != null) {
-                                Halo.objectOutputStream.writeObject(message);
-                                Halo.objectOutputStream.flush();
+                                Halo.send(message);
                             }
                         }
 //MARKETHELPER ROUTINE
                         else if (Halo.game.isMarketHelperEnabled()) {
                             message = Halo.marketChoice(textList);
                             if (message != null) {
-                                Halo.objectOutputStream.writeObject(message);
-                                Halo.objectOutputStream.flush();
+                                Halo.send(message);
                             }
                         }
 //VENDOR ROUTINE
                         else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                             message = Halo.chooseDevCard(textList);
                             if (message != null) {
-                                Halo.objectOutputStream.writeObject(message);
-                                Halo.objectOutputStream.flush();
+                                Halo.send(message);
                             }
                         }
                         execute = false;
@@ -2226,8 +2225,7 @@ class OnlinePhase {
                                             case 1: {
                                                 message = Halo.activateLeaderCard(textList);
                                                 if (message != null) {
-                                                    Halo.objectOutputStream.writeObject(message);
-                                                    Halo.objectOutputStream.flush();
+                                                    Halo.send(message);
                                                 }
                                                 break actionLoop;
                                             }
@@ -2235,8 +2233,7 @@ class OnlinePhase {
                                             case 2: {
                                                 message = Halo.discardLeaderCard(textList);
                                                 if (message != null) {
-                                                    Halo.objectOutputStream.writeObject(message);
-                                                    Halo.objectOutputStream.flush();
+                                                    Halo.send(message);
                                                 }
                                                 break actionLoop;
                                             }
@@ -2244,8 +2241,7 @@ class OnlinePhase {
                                             case 3: {
                                                 message = Halo.activateProduction(textList);
                                                 if (message != null) {
-                                                    Halo.objectOutputStream.writeObject(message);
-                                                    Halo.objectOutputStream.flush();
+                                                    Halo.send(message);
                                                 }
                                                 break actionLoop;
                                             }
@@ -2253,38 +2249,34 @@ class OnlinePhase {
                                             case 4: {
                                                 message = Halo.changeDepotConfig(textList);
                                                 if (message != null) {
-                                                    Halo.objectOutputStream.writeObject(message);
-                                                    Halo.objectOutputStream.flush();
+                                                    Halo.send(message);
                                                 }
                                                 break actionLoop;
                                             }
 //ACTION BUY CARD
                                             case 5: {
                                                 System.out.println(" > Asking the Vendor which cards we can buy...");
-                                                MSG_ACTION_BUY_DEVELOPMENT_CARD msgToSend5 = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
-                                                Halo.objectOutputStream.writeObject(msgToSend5);
-                                                Halo.objectOutputStream.flush();
+                                                message = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
+                                                Halo.send(message);
                                                 break actionLoop;
                                             }
 //ACTION GET MARKET RESOURCES
                                             case 6: {
                                                 message = Halo.getMarketResources(textList);
                                                 if (message != null) {
-                                                    Halo.objectOutputStream.writeObject(message);
-                                                    Halo.objectOutputStream.flush();
+                                                    Halo.send(message);
                                                 }
                                                 break actionLoop;
                                             }
-//ACTION BUY DEV CARDS
+//ACTION END TURN
                                             case 7: {
                                                 /*if(!Halo.action){
                                                     System.out.println("You must do a main action before ending the turn");
                                                     break actionLoop;
                                                 }*/
                                                 System.out.println(" > Ending the Turn...");
-                                                MSG_ACTION_ENDTURN msgToSend7 = new MSG_ACTION_ENDTURN();
-                                                Halo.objectOutputStream.writeObject(msgToSend7);
-                                                Halo.objectOutputStream.flush();
+                                                message = new MSG_ACTION_ENDTURN();
+                                                Halo.send(message);
                                                 break actionLoop;
                                             }
 //GO BACK

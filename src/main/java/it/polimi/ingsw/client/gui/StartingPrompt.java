@@ -49,7 +49,7 @@ public class StartingPrompt implements Runnable {
         //operation must be done after pack
         frameDimension = new Dimension(493, 304);
         mainFrame.setMinimumSize(frameDimension);
-        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setLocationRelativeTo(null); //this must be done after setting the minimum size
         //always last action
         mainFrame.setVisible(true);
 

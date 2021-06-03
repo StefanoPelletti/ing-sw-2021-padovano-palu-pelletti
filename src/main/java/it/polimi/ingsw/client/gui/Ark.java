@@ -1,9 +1,10 @@
 package it.polimi.ingsw.client.gui;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import it.polimi.ingsw.client.modelSimplified.GameSimplified;
+import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
+import it.polimi.ingsw.networking.message.Message;
+
+import java.io.*;
 import java.net.Socket;
 
 public class Ark {
@@ -18,6 +19,10 @@ public class Ark {
     static InputStream inputStream;
     static ObjectInputStream objectInputStream;
 
+    static GameSimplified game;
+    static PlayerSimplified myPlayerRef;
+    static String myNickname;
+    static boolean solo;
 
     public static void sweep() {
         //shared var
@@ -27,5 +32,11 @@ public class Ark {
 
         //local ref
 
+    }
+
+    public static void send(Message message) throws IOException {
+        Ark.objectOutputStream.reset();
+        Ark.objectOutputStream.writeObject(message);
+        Ark.objectOutputStream.flush();
     }
 }
