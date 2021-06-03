@@ -41,6 +41,14 @@ public class MainMenu implements Runnable {
     JLabel recapLabel2;
     JLabel recapLabel3;
     JSlider numberOfPlayersSlider;
+    //card 5 (join card)
+    JButton confirm_Join_Button;
+    JButton settings_Join_Button;
+    JButton back_Join_Button;
+    JLabel recapLabel4;
+    JLabel recapLabel5;
+    JLabel recapLabel6;
+    JTextField lobbyNumberField;
 
 
     private String lastCard = MENU;
@@ -67,7 +75,7 @@ public class MainMenu implements Runnable {
 
     public void run() {
         //you can write here shortcuts, like going directly to the Settings and opening multiple frames
-
+        new MainMenu();
         // cl.show(cardPanel, CREATE);
         //  cl.show(mainFrame.getContentPane(), Settings);
     }
@@ -98,12 +106,17 @@ public class MainMenu implements Runnable {
         settings_Create_Button.addActionListener(settings_Create_Button_actionListener);
         back_Create_Button.addActionListener(back_Create_Button_actionListener);
 
+        //card 5 (join)
+        confirm_Join_Button.addActionListener(confirm_Join_Button_actionListener);
+        settings_Join_Button.addActionListener(settings_Join_Button_actionListener);
+        back_Join_Button.addActionListener(back_Join_Button_actionListener);
+
 
         mainFrame.pack();
         //frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
         frameDimension = new Dimension(1290, 980);
         mainFrame.setMinimumSize(frameDimension);
-        mainFrame.setResizable(true);
+        mainFrame.setResizable(false);
         System.out.println("w: " + frameDimension.getWidth() + "p h:" + frameDimension.getHeight() + "p");
 
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -208,6 +221,8 @@ public class MainMenu implements Runnable {
 
         cardPanel.add(getCard4(), CREATE);
 
+        cardPanel.add(getCard5(), JOIN);
+
         cardPanel.setOpaque(false);
         return cardPanel;
     }
@@ -219,6 +234,8 @@ public class MainMenu implements Runnable {
 
          */
         JPanel card1 = new JPanel(new GridBagLayout());
+        card1.setOpaque(false);
+
         online_Menu_Button = new JButton(ONLINE);
         online_Menu_Button.setPreferredSize(new Dimension(200, 50));
         online_Menu_Button.setFont(new Font(PAP, Font.BOLD, 20));
@@ -243,8 +260,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(5, 0, 5, 0);
         card1.add(local_Menu_Button, c);
 
-        JLabel emptyLabelc1 = new JLabel();
-        emptyLabelc1.setText("");
+        JLabel emptyLabel = new JLabel();
+        emptyLabel.setText("");
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 2;
@@ -252,7 +269,7 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 160, 0, 160);
         c.gridwidth = 2;
         c.weighty = 1;
-        card1.add(emptyLabelc1, c);
+        card1.add(emptyLabel, c);
 
         quit_Menu_Button = new JButton("Quit");
         quit_Menu_Button.setPreferredSize(new Dimension(120, 40));
@@ -290,6 +307,7 @@ public class MainMenu implements Runnable {
 
          */
         JPanel card2 = new JPanel(new GridBagLayout());
+        card2.setOpaque(false);
 
         JLabel ipLabel = new JLabel();
         ipLabel.setText("current IP is:");
@@ -305,6 +323,7 @@ public class MainMenu implements Runnable {
 
         ipAddress_Settings_Field = new JTextField(10);
         ipAddress_Settings_Field.setText(Ark.defaultAddress);
+        ipAddress_Settings_Field.setHorizontalAlignment(SwingConstants.CENTER);
         ipAddress_Settings_Field.setFont(new Font(TIMES, Font.PLAIN, 20));
         ipAddress_Settings_Field.setOpaque(false);
         ipAddress_Settings_Field.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -331,6 +350,7 @@ public class MainMenu implements Runnable {
 
         port_Settings_Field = new JTextField(10);
         port_Settings_Field.setText("" + Ark.defaultPort);
+        port_Settings_Field.setHorizontalAlignment(SwingConstants.CENTER);
         port_Settings_Field.setFont(new Font(TIMES, Font.PLAIN, 20));
         port_Settings_Field.setOpaque(false);
         port_Settings_Field.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -357,6 +377,7 @@ public class MainMenu implements Runnable {
 
         nickname_Settings_Field = new JTextField(10);
         nickname_Settings_Field.setText("" + Ark.nickname);
+        nickname_Settings_Field.setHorizontalAlignment(SwingConstants.CENTER);
         nickname_Settings_Field.setFont(new Font(TIMES, Font.PLAIN, 20));
         nickname_Settings_Field.setOpaque(false);
         nickname_Settings_Field.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -369,8 +390,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 3, 5, 15);
         card2.add(nickname_Settings_Field, c);
 
-        JLabel emptyLabelc2 = new JLabel();
-        emptyLabelc2.setText("");
+        JLabel emptyLabel = new JLabel();
+        emptyLabel.setText("");
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 3;
@@ -378,7 +399,7 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 160, 0, 160);
         c.gridwidth = 2;
         c.weighty = 1;
-        card2.add(emptyLabelc2, c);
+        card2.add(emptyLabel, c);
 
         back_Settings_Button = new JButton("Back");
         back_Settings_Button.setPreferredSize(new Dimension(120, 40));
@@ -418,6 +439,7 @@ public class MainMenu implements Runnable {
          */
 
         JPanel card3 = new JPanel(new GridBagLayout());
+        card3.setOpaque(false);
 
         create_Online_Button = new JButton("Create a new Lobby");
         create_Online_Button.setPreferredSize(new Dimension(250, 50));
@@ -455,15 +477,15 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(5, 0, 0, 0);
         card3.add(rejoin_Online_Button, c);
 
-        JLabel emptyLabelc3 = new JLabel();
-        emptyLabelc3.setText("");
+        JLabel emptyLabel = new JLabel();
+        emptyLabel.setText("");
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 3;
         c.fill = GridBagConstraints.BOTH;
         c.insets = new Insets(0, 160, 0, 160);
         c.weighty = 1;
-        card3.add(emptyLabelc3, c);
+        card3.add(emptyLabel, c);
 
         back_Online_Button = new JButton("Back");
         back_Online_Button.setPreferredSize(new Dimension(120, 40));
@@ -488,6 +510,7 @@ public class MainMenu implements Runnable {
          */
 
         JPanel card4 = new JPanel(new GridBagLayout());
+        card4.setOpaque(false);
 
         JLabel label = new JLabel();
         label.setText(" Continue with these settings? ");
@@ -621,7 +644,7 @@ public class MainMenu implements Runnable {
         card4.add(confirm_Create_Button, c);
 
 
-        JLabel emptyLabel4 = new JLabel("");
+        JLabel emptyLabel = new JLabel("");
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 6;
@@ -630,7 +653,7 @@ public class MainMenu implements Runnable {
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.CENTER;
         c.insets = new Insets(0, 160, 0, 160);
-        card4.add(emptyLabel4, c);
+        card4.add(emptyLabel, c);
 
         back_Create_Button = new JButton("Back");
         back_Create_Button.setPreferredSize(new Dimension(120, 40));
@@ -650,12 +673,167 @@ public class MainMenu implements Runnable {
     }
 
     private JPanel getCard5() {
-        JPanel card5 = new JPanel();
         GridBagConstraints c;
-        /*
+         /*
             card 5: join
 
          */
+        JPanel card5 = new JPanel(new GridBagLayout());
+        card5.setOpaque(false);
+
+        JLabel label = new JLabel();
+        label.setText(" Continue with these settings? ");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setFont(new Font(PAP, Font.BOLD, 20));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weighty = 0.1;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.PAGE_END;
+        card5.add(label, c);
+
+        JLabel nameLabel = new JLabel();
+        nameLabel.setText("name:");
+        nameLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        card5.add(nameLabel, c);
+
+
+        recapLabel4 = new JLabel();
+        recapLabel4.setText(Ark.nickname);
+        recapLabel4.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card5.add(recapLabel4, c);
+
+        JLabel addressLabel = new JLabel();
+        addressLabel.setText("ip:");
+        addressLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        card5.add(addressLabel, c);
+
+        recapLabel5 = new JLabel();
+        recapLabel5.setText(Ark.defaultAddress);
+        recapLabel5.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card5.add(recapLabel5, c);
+
+        JLabel portLabel = new JLabel();
+        portLabel.setText("port:");
+        portLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        card5.add(portLabel, c);
+
+        recapLabel6 = new JLabel();
+        recapLabel6.setText("" + Ark.defaultPort);
+        recapLabel6.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 3;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
+        card5.add(recapLabel6, c);
+
+        JLabel lobbyNumberLabel = new JLabel();
+        lobbyNumberLabel.setText("Lobby number:");
+        lobbyNumberLabel.setFont(new Font(TIMES, Font.PLAIN, 18));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 4;
+        c.weighty = 0.1;
+        c.anchor = GridBagConstraints.FIRST_LINE_END;
+        card5.add(lobbyNumberLabel, c);
+
+        lobbyNumberField = new JTextField(4);
+        lobbyNumberField.setText("343");
+        lobbyNumberField.setFont(new Font(TIMES, Font.PLAIN, 20));
+        lobbyNumberField.setHorizontalAlignment(SwingConstants.CENTER);
+        lobbyNumberField.setOpaque(false);
+        lobbyNumberField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        c = new GridBagConstraints();
+         c.insets = new Insets(0, 0, 35, 0);
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 1;
+        c.gridy = 4;
+        c.weighty = 0.1;
+        c.gridwidth = 1;
+        card5.add(lobbyNumberField, c);
+
+        settings_Join_Button = new JButton("Settings");
+        settings_Join_Button.setPreferredSize(new Dimension(120, 40));
+        settings_Join_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        settings_Join_Button.setBackground(new Color(231, 210, 181));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 5;
+        c.weighty = 0.01;
+        c.gridwidth = 1;
+        c.insets = new Insets(15, 25, 0, 0);
+        c.anchor = GridBagConstraints.LINE_START;
+        card5.add(settings_Join_Button, c);
+
+        confirm_Join_Button = new JButton("Confirm");
+        confirm_Join_Button.setPreferredSize(new Dimension(120, 40));
+        confirm_Join_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        confirm_Join_Button.setBackground(new Color(231, 210, 181));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 5;
+        c.weighty = 0.01;
+        c.gridwidth = 1;
+        c.insets = new Insets(15, 0, 0, 25);
+        c.anchor = GridBagConstraints.LINE_END;
+        card5.add(confirm_Join_Button, c);
+
+
+        JLabel emptyLabel = new JLabel("");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 6;
+        c.weighty = 1;
+        c.gridwidth = 2;
+        c.fill = GridBagConstraints.BOTH;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(0, 160, 0, 160);
+        card5.add(emptyLabel, c);
+
+        back_Join_Button = new JButton("Back");
+        back_Join_Button.setPreferredSize(new Dimension(120, 40));
+        back_Join_Button.setFont(new Font(PAP, Font.BOLD, 20));
+        back_Join_Button.setBackground(new Color(231, 210, 181));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 7;
+        c.weighty = 0.1;
+        c.insets = new Insets(4, 0, 0, 0);
+        c.anchor = GridBagConstraints.LAST_LINE_START;
+        card5.add(back_Join_Button, c);
 
         return card5;
     }
@@ -665,6 +843,10 @@ public class MainMenu implements Runnable {
         recapLabel1.setText(Ark.nickname);
         recapLabel2.setText(Ark.defaultAddress);
         recapLabel3.setText("" + Ark.defaultPort);
+
+        recapLabel4.setText(Ark.nickname);
+        recapLabel5.setText(Ark.defaultAddress);
+        recapLabel6.setText("" + Ark.defaultPort);
     }
 
     //HELPER METHODS (non graphic)
@@ -807,5 +989,22 @@ public class MainMenu implements Runnable {
         bottom_Update_Label.setText("Ok");
     };
 
+    //card 5 (join)
+    ActionListener confirm_Join_Button_actionListener = e -> {
 
+    };
+
+    ActionListener settings_Join_Button_actionListener = e -> {
+        cl.show(cardPanel, SETTINGS);
+        lastCard = JOIN;
+        top_Update_Label.setText(SETTINGS);
+        bottom_Update_Label.setText(" Is this Lorenzo? ");
+    };
+
+    ActionListener back_Join_Button_actionListener = e -> {
+        cl.show(cardPanel, ONLINE);
+        lastCard = JOIN;
+        top_Update_Label.setText(ONLINE);
+        bottom_Update_Label.setText("Roger that");
+    };
 }

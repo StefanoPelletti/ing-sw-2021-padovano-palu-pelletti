@@ -25,6 +25,8 @@ public class DevelopmentCard implements Serializable {
      * @param vp The victory points of the card.
      * @param cost The cost of the card.
      * @param power The power of the card.
+     * @param frontPath The path to an Image that shows the Front of the Card.
+     * @param backPath The path to an Image that shows the Back of the Card.
      */
     public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power,
                            String frontPath, String backPath) {
@@ -36,6 +38,17 @@ public class DevelopmentCard implements Serializable {
 
         this.frontPath = frontPath;
         this.backPath = backPath;
+    }
+
+    public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power) {
+        this.level = level;
+        this.color = color;
+        this.cost = cost;
+        this.vp = vp;
+        this.power = power;
+
+        this.frontPath = "";
+        this.backPath = "";
     }
 
     public Map<Resource, Integer> getCost() {

@@ -21,6 +21,8 @@ public class LeaderCard implements Serializable {
      * @param vp The victory points of this card.
      * @param requirement The requirement object of this card.
      * @param specialAbility The special ability object of this card.
+     * @param frontPath The path to an Image that shows the Front of the Card.
+     * @param backPath The path to an Image that shows the Back of the Card.
      */
     public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility,
                       String frontPath, String backPath) {
@@ -31,6 +33,16 @@ public class LeaderCard implements Serializable {
 
         this.frontPath = frontPath;
         this.backPath = backPath;
+    }
+
+    public LeaderCard(int vp, Requirement requirement, SpecialAbility specialAbility) {
+        this.vp = vp;
+        this.requirement = requirement;
+        this.specialAbility = specialAbility;
+        this.enabled = false;
+
+        this.frontPath = "";
+        this.backPath = "";
     }
 
     public int getVp() {
