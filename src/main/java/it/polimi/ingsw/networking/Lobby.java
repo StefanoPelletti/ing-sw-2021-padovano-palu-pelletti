@@ -162,9 +162,10 @@ public class Lobby {
      * <li> null if this method gets called while the lobby is at full capacity.
      */
     public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
+        final int maxPlayerNameSize = 15;
         if (this.lobbyMaxPlayers > nicknameList.size()) {
-            if(nickname.length()>20)
-                nickname = nickname.substring(0,19);
+            if(nickname.length()>maxPlayerNameSize)
+                nickname = nickname.substring(0,maxPlayerNameSize-1);
 
             clientHandlers.add(clientHandler);
             socketList.add(socket);
