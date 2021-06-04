@@ -259,6 +259,8 @@ public class ClientHandler implements Runnable, ModelObserver {
                 message = (Message) objectInputStream.readObject();
 
                 if (playerNumber == lobby.currentPlayer()) {
+                    //TODO threadPool
+                    //lobby.onMessage(message);
                     new Thread(() -> lobby.onMessage(message)).start();
                 } else {
                     objectOutputStream.writeObject(new MSG_ERROR("not your Turn!"));
