@@ -1,12 +1,14 @@
 package it.polimi.ingsw.networking.message.updateMessages.playerUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 
-public class MSG_UPD_Extradepot extends Message implements Serializable {
+public class MSG_UPD_Extradepot extends UpdateMessage implements Serializable {
 
     private final Resource resource;
     private final int number;
@@ -33,5 +35,15 @@ public class MSG_UPD_Extradepot extends Message implements Serializable {
 
     public int getNumber() {
         return this.number;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateCurrentPlayerExtraDepot(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

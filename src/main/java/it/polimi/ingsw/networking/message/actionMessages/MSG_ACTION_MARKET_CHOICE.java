@@ -1,8 +1,11 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
+
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 
 import java.io.Serializable;
 
-public class MSG_ACTION_MARKET_CHOICE extends Message implements Serializable {
+public class MSG_ACTION_MARKET_CHOICE extends ActionMessage implements Serializable {
 
     private final int choice;
 
@@ -24,5 +27,10 @@ public class MSG_ACTION_MARKET_CHOICE extends Message implements Serializable {
 
     public int getChoice() {
         return choice;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.newChoiceMarket( actionManager.getGame().getCurrentPlayer(), this);
     }
 }

@@ -1,12 +1,14 @@
 package it.polimi.ingsw.networking.message.updateMessages.playerUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.DevelopmentCard;
 
 import java.io.Serializable;
 
-public class MSG_UPD_DevSlot extends Message implements Serializable {
+public class MSG_UPD_DevSlot extends UpdateMessage implements Serializable {
 
     private final DevelopmentCard[][] cards;
 
@@ -28,5 +30,15 @@ public class MSG_UPD_DevSlot extends Message implements Serializable {
 
     public DevelopmentCard[][] getCards() {
         return this.cards;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateCurrentPlayerDevSlot(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

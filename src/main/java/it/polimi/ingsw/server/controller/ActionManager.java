@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.controller;
 
-import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.networking.message.actionMessages.*;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.actionTokens.ActionToken;
 import it.polimi.ingsw.server.model.actionTokens.RemoverToken;
@@ -45,49 +45,10 @@ public class ActionManager {
      * If the selected method returns true, it sends a message to notify the Players that the action is concluded, so they do not expect other messages related to the performed action.
      * @param message The message that a player sent, it is the action that he wants to perform.
      */
-    public void onMessage(Message message) {
+    public void onMessage(ActionMessage message) {
         gameManager.resetErrorObject();
-        Player player = gameManager.currentPlayer();
-        boolean result = false;
-
-        switch (message.getMessageType()) {
-            case MSG_INIT_CHOOSE_LEADERCARDS:
-                result = this.chooseLeaderCard(player, (MSG_INIT_CHOOSE_LEADERCARDS) message);
-                break;
-            case MSG_INIT_CHOOSE_RESOURCE:
-                result = this.chooseResource(player, (MSG_INIT_CHOOSE_RESOURCE) message);
-                break;
-            case MSG_ACTION_ACTIVATE_LEADERCARD:
-                result = this.activateLeaderCard(player, (MSG_ACTION_ACTIVATE_LEADERCARD) message);
-                break;
-            case MSG_ACTION_DISCARD_LEADERCARD:
-                result = this.discardLeaderCard(player, (MSG_ACTION_DISCARD_LEADERCARD) message);
-                break;
-            case MSG_ACTION_CHANGE_DEPOT_CONFIG:
-                result = this.changeDepotConfig(player, (MSG_ACTION_CHANGE_DEPOT_CONFIG) message);
-                break;
-            case MSG_ACTION_ACTIVATE_PRODUCTION:
-                result = this.activateProduction(player, (MSG_ACTION_ACTIVATE_PRODUCTION) message);
-                break;
-            case MSG_ACTION_GET_MARKET_RESOURCES:
-                result = this.getMarketResources(player, (MSG_ACTION_GET_MARKET_RESOURCES) message);
-                break;
-            case MSG_ACTION_MARKET_CHOICE:
-                result = this.newChoiceMarket(player, (MSG_ACTION_MARKET_CHOICE) message);
-                break;
-            case MSG_ACTION_BUY_DEVELOPMENT_CARD:
-                result = this.buyDevelopmentCard(player);
-                break;
-            case MSG_ACTION_CHOOSE_DEVELOPMENT_CARD:
-                result = this.chooseDevelopmentCard(player, (MSG_ACTION_CHOOSE_DEVELOPMENT_CARD) message);
-                break;
-            case MSG_ACTION_ENDTURN:
-                result = this.endTurn(player, true);
-                break;
-            default:
-                System.out.println(" SRV: help I don't know what they sent me.");
-        }
-
+        boolean result;
+        result = message.execute(this);
         if (result) messageHelper.setUpdateEnd();
     }
 
@@ -1357,5 +1318,9 @@ public class ActionManager {
      */
     public void notifyReconnection(String nickname) {
         messageHelper.setNewMessage(nickname + " has reconnected!");
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

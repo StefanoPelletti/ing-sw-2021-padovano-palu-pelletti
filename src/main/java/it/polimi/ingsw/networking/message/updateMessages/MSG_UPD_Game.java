@@ -1,11 +1,12 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;
 
-public class MSG_UPD_Game extends Message implements Serializable {
+public class MSG_UPD_Game extends UpdateMessage implements Serializable {
 
     private final int turn;
     private final int currentPlayer;
@@ -37,5 +38,15 @@ public class MSG_UPD_Game extends Message implements Serializable {
 
     public int getBlackCrossPosition() {
         return blackCrossPosition;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateGame(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

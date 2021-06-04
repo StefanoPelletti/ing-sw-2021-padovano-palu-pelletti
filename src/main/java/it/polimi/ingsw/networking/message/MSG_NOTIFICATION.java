@@ -1,8 +1,11 @@
 package it.polimi.ingsw.networking.message;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
+
 import java.io.Serializable;
 
-public class MSG_NOTIFICATION extends Message implements Serializable {
+public class MSG_NOTIFICATION extends UpdateMessage implements Serializable {
 
     private final String message;
 
@@ -19,5 +22,15 @@ public class MSG_NOTIFICATION extends Message implements Serializable {
 
     public String getMessage() {
         return this.message;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.notify(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

@@ -1,8 +1,11 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
+
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 
 import java.io.Serializable;
 
-public class MSG_ACTION_GET_MARKET_RESOURCES extends Message implements Serializable {
+public class MSG_ACTION_GET_MARKET_RESOURCES extends ActionMessage implements Serializable {
 
     private final boolean column;
     private final int number;
@@ -35,5 +38,10 @@ public class MSG_ACTION_GET_MARKET_RESOURCES extends Message implements Serializ
 
     public int getNumber() {
         return this.number;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.getMarketResources( actionManager.getGame().getCurrentPlayer(), this);
     }
 }

@@ -1,12 +1,14 @@
 package it.polimi.ingsw.networking.message.updateMessages.playerUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 
-public class MSG_UPD_WarehouseDepot extends Message implements Serializable {
+public class MSG_UPD_WarehouseDepot extends UpdateMessage implements Serializable {
 
     private final Resource shelf1;
     private final Resource[] shelf2;
@@ -43,5 +45,15 @@ public class MSG_UPD_WarehouseDepot extends Message implements Serializable {
 
     public Resource[] getShelf3() {
         return shelf3;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateCurrentPlayerDepot(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

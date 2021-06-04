@@ -1,6 +1,11 @@
 package it.polimi.ingsw.networking;
 
 import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.networking.message.actionMessages.ActionMessage;
+import it.polimi.ingsw.networking.message.initMessages.InitMessage;
+import it.polimi.ingsw.networking.message.initMessages.MSG_CREATE_LOBBY;
+import it.polimi.ingsw.networking.message.initMessages.MSG_JOIN_LOBBY;
+import it.polimi.ingsw.networking.message.initMessages.MSG_REJOIN_LOBBY;
 import it.polimi.ingsw.server.utils.ModelObserver;
 
 import java.io.*;
@@ -62,133 +67,13 @@ public class ClientHandler implements Runnable, ModelObserver {
             inputStream = clientSocket.getInputStream();
             objectInputStream = new ObjectInputStream(inputStream);
 
-            Message message;
+            InitMessage message;
+            message = (InitMessage) objectInputStream.readObject();
+            if(!message.execute(this)) return;
 
-            message = (Message) objectInputStream.readObject();
-//LOBBY REJOIN-------------------------
-            if (message.getMessageType() == MessageType.MSG_REJOIN_LOBBY) {
-                MSG_REJOIN_LOBBY msg = (MSG_REJOIN_LOBBY) message;
-                int lobbyNumber = msg.getLobbyNumber();
-
-                String inputNickname = msg.getNickname();
-                this.nickname = inputNickname;
-
-                this.lobby = Lobby.getLobby(lobbyNumber);
-
-                if (this.lobby == null) {
-                    send(new MSG_ERROR("Lobby not found"));
-                    closeStreams();
-                    return;
-                }
-
-                ClientHandler handler = lobby.findPendingClientHandler(inputNickname);
-                if (handler == null) {
-                    send(new MSG_ERROR("Found no player that needs to reconnect with that nickname"));
-                    closeStreams();
-                    return;
-                }
-
-                send(new MSG_OK_REJOIN(handler.getNickname()));
-                handler.substituteStreams(this.clientSocket, this.inputStream, this.objectInputStream, this.outputStream, this.objectOutputStream);
-                System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " reconnected to lobby, giving up ");
-                return;
-            }
-//LOBBY CREATION-------------------------
-            else if (message.getMessageType() == MessageType.MSG_CREATE_LOBBY) {
-                MSG_CREATE_LOBBY msg = (MSG_CREATE_LOBBY) message;
-                String inputNickname = msg.getNickname();
-                this.nickname = inputNickname;
-                int numOfPlayers = msg.getNumOfPlayers();
-
-                boolean found = false;
-                int i;
-                int lobbyMaxSize = 50;
-
-                if (numOfPlayers < 1 || numOfPlayers > 4) {
-                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby with a wrong number of player");
-                    send(new MSG_ERROR("The number of players is not correct!"));
-                    closeStreams();
-                    return;
-                }
-                if (Lobby.getLobbies().size() >= lobbyMaxSize) {
-                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby, but the too many lobbies");
-                    send(new MSG_ERROR("Too many lobbies!"));
-                    closeStreams();
-                    return;
-                }
-
-                do {
-                    //i = random.nextInt(lobbyMaxSize);
-                    i = 0; //delete this when OK
-                    found = Lobby.checkLobbies(i);
-                } while (found);
-
-                this.lobby = new Lobby(i, numOfPlayers);
-                synchronized (lobby) {
-                    this.lobby.onJoin(inputNickname, this.clientSocket, this);
-
-                    Lobby.addLobby(this.lobby);
-
-                    System.out.println(inputNickname + " created lobby " + i);
-                    this.send(new MSG_OK_CREATE(i));
-
-                    if (msg.getNumOfPlayers() == 1) {
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Solo lobby detected and init " + i);
-                        lobby.init();
-                    } else {
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Created a lobby, waiting on lobby " + i);
-                        while (!lobby.isStarted()) lobby.wait();
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + i);
-                    }
-                }
-            }
-//LOBBY JOIN---------------------------
-            else if (message.getMessageType() == MessageType.MSG_JOIN_LOBBY) {
-                MSG_JOIN_LOBBY msg = (MSG_JOIN_LOBBY) message;
-                int lobbyNumber = msg.getLobbyNumber();
-                String inputNickname = msg.getNickname();
-
-                this.lobby = Lobby.getLobby(lobbyNumber);
-                if (this.lobby == null) {
-                    send(new MSG_ERROR("Lobby not found"));
-                    closeStreams();
-                    return;
-                }
-                synchronized (lobby) {
-                    this.nickname = this.lobby.onJoin(inputNickname, this.clientSocket, this);
-                    if (this.nickname != null) {
-                        send(new MSG_OK_JOIN(this.nickname));
-                        System.out.println(this.nickname + " joined lobby " + lobbyNumber);
-                    } else {
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " looked for a non existing lobby");
-                        send(new MSG_ERROR("Lobby full!"));
-                        closeStreams();
-                        return;
-                    }
-
-                    if (lobby.getNumberOfPresentPlayers() == lobby.getLobbyMaxPlayers()) {
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " reached full lobby, lobby init and notify() " + lobbyNumber);
-                        lobby.init();
-                        lobby.notifyAll();
-                    } else {
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " waiting on lobby " + lobbyNumber);
-                        while (!lobby.isStarted()) lobby.wait();
-                        System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + lobbyNumber);
-                    }
-
-                }
-            }
-//NON OPENING MESSAGE RECEIVED
-            else {
-                this.send(new MSG_ERROR("Huh?"));
-                closeStreams();
-                return;
-            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return;
-        } catch (InterruptedException i) {
-            Thread.currentThread().interrupt();
         }
 
 //all players connected, lobby init OR timeout
@@ -255,13 +140,13 @@ public class ClientHandler implements Runnable, ModelObserver {
         System.out.println("[T " + Thread.currentThread().getName() + "] - " + this.nickname + " - Listening player ");
         while (true) {
             try {
-                Message message;
-                message = (Message) objectInputStream.readObject();
+                ActionMessage message;
+                message = (ActionMessage) objectInputStream.readObject();
 
                 if (playerNumber == lobby.currentPlayer()) {
                     //TODO threadPool
                     //lobby.onMessage(message);
-                    new Thread(() -> lobby.onMessage(message)).start();
+                    lobby.onMessage(message);
                 } else {
                     objectOutputStream.writeObject(new MSG_ERROR("not your Turn!"));
                     objectOutputStream.flush();
@@ -439,6 +324,134 @@ public class ClientHandler implements Runnable, ModelObserver {
         } catch (IOException e) {
             System.out.println(this.nickname + " failed to send message: " + message.getMessageType());
             e.printStackTrace();
+        }
+    }
+
+    public boolean rejoinLobby(int lobbyNumber, String inputNickname){
+        this.nickname = inputNickname;
+        this.lobby = Lobby.getLobby(lobbyNumber);
+        try {
+            if (this.lobby == null) {
+                send(new MSG_ERROR("Lobby not found"));
+                closeStreams();
+                return false;
+            }
+
+            ClientHandler handler = lobby.findPendingClientHandler(inputNickname);
+            if (handler == null) {
+                send(new MSG_ERROR("Found no player that needs to reconnect with that nickname"));
+                closeStreams();
+                return false;
+            }
+
+            send(new MSG_OK_REJOIN(handler.getNickname()));
+            handler.substituteStreams(this.clientSocket, this.inputStream, this.objectInputStream, this.outputStream, this.objectOutputStream);
+            System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " reconnected to lobby, giving up ");
+            return false;
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean joinLobby(int lobbyNumber, String inputNickname ){
+        try {
+            this.lobby = Lobby.getLobby(lobbyNumber);
+            if (this.lobby == null) {
+                send(new MSG_ERROR("Lobby not found"));
+                closeStreams();
+                return false;
+            }
+            synchronized (lobby) {
+                this.nickname = this.lobby.onJoin(inputNickname, this.clientSocket, this);
+                if (this.nickname != null) {
+                    send(new MSG_OK_JOIN(this.nickname));
+                    System.out.println(this.nickname + " joined lobby " + lobbyNumber);
+                } else {
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " looked for a non existing lobby");
+                    send(new MSG_ERROR("Lobby full!"));
+                    closeStreams();
+                    return false;
+                }
+
+                if (lobby.getNumberOfPresentPlayers() == lobby.getLobbyMaxPlayers()) {
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " reached full lobby, lobby init and notify() " + lobbyNumber);
+                    lobby.init();
+                    lobby.notifyAll();
+                } else {
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " waiting on lobby " + lobbyNumber);
+                    while (!lobby.isStarted()) lobby.wait();
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + lobbyNumber);
+                }
+
+            }
+            return true;
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    public boolean createLobby(String inputNickname, int numOfPlayers){
+        this.nickname = inputNickname;
+
+        boolean found = false;
+        int i;
+        int lobbyMaxSize = 50;
+
+        try {
+            if (numOfPlayers < 1 || numOfPlayers > 4) {
+                System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby with a wrong number of player");
+                send(new MSG_ERROR("The number of players is not correct!"));
+                closeStreams();
+                return false;
+            }
+            if (Lobby.getLobbies().size() >= lobbyMaxSize) {
+                System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby, but the too many lobbies");
+                send(new MSG_ERROR("Too many lobbies!"));
+                closeStreams();
+                return false;
+            }
+
+            do {
+                //i = random.nextInt(lobbyMaxSize);
+                i = 0; //delete this when OK
+                found = Lobby.checkLobbies(i);
+            } while (found);
+
+            this.lobby = new Lobby(i, numOfPlayers);
+            synchronized (lobby) {
+                this.lobby.onJoin(inputNickname, this.clientSocket, this);
+
+                Lobby.addLobby(this.lobby);
+
+                System.out.println(inputNickname + " created lobby " + i);
+                this.send(new MSG_OK_CREATE(i));
+
+                if (numOfPlayers == 1) {
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Solo lobby detected and init " + i);
+                    lobby.init();
+                } else {
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Created a lobby, waiting on lobby " + i);
+                    while (!lobby.isStarted()) lobby.wait();
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + i);
+                }
+            }
+            return true;
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+            return false;
         }
     }
 }

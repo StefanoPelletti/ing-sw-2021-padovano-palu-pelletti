@@ -1,12 +1,13 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.model.marbles.MarketMarble;
 
 import java.io.Serializable;
 
-public class MSG_UPD_Market extends Message implements Serializable {
+public class MSG_UPD_Market extends UpdateMessage implements Serializable {
 
     private final MarketMarble[][] grid;
     private final MarketMarble slideMarble;
@@ -34,5 +35,15 @@ public class MSG_UPD_Market extends Message implements Serializable {
 
     public MarketMarble getSlideMarble() {
         return slideMarble;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateMarket(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

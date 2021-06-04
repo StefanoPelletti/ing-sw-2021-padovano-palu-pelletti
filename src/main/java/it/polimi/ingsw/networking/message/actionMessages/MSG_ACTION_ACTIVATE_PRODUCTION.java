@@ -1,12 +1,14 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
 
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializable {
+public class MSG_ACTION_ACTIVATE_PRODUCTION extends ActionMessage implements Serializable {
 
     private final boolean[] standardProduction; //refers to the DevelopmentSlot
     private final boolean basicProduction; //refers to the basic Development skill
@@ -85,5 +87,10 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends Message implements Serializa
 
     public Resource getLeaderOutput2() {
         return this.leaderOutput2;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.activateProduction( actionManager.getGame().getCurrentPlayer(), this);
     }
 }

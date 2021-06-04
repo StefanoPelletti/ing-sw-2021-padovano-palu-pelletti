@@ -1,12 +1,13 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.model.LeaderCard;
 
 import java.io.Serializable;
 
-public class MSG_UPD_Player extends Message implements Serializable {
+public class MSG_UPD_Player extends UpdateMessage implements Serializable {
 
     private final int vp;
     private final int playerNumber;
@@ -52,5 +53,15 @@ public class MSG_UPD_Player extends Message implements Serializable {
 
     public LeaderCard[] getLeaderCards() {
         return this.leaderCards;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updatePlayer(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

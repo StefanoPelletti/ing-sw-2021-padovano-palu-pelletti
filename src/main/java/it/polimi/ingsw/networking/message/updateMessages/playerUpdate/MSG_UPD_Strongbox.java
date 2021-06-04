@@ -1,14 +1,16 @@
 package it.polimi.ingsw.networking.message.updateMessages.playerUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MSG_UPD_Strongbox extends Message implements Serializable {
+public class MSG_UPD_Strongbox extends UpdateMessage implements Serializable {
 
     private final Map<Resource, Integer> resources;
 
@@ -27,5 +29,15 @@ public class MSG_UPD_Strongbox extends Message implements Serializable {
 
     public Map<Resource, Integer> getResources() {
         return this.resources;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateCurrentPlayerStrongbox(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

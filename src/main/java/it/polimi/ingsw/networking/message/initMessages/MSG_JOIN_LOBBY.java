@@ -1,8 +1,12 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.initMessages;
+
+import it.polimi.ingsw.networking.ClientHandler;
+import it.polimi.ingsw.networking.message.Message;
+import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;
 
-public class MSG_JOIN_LOBBY extends Message implements Serializable {
+public class MSG_JOIN_LOBBY extends InitMessage implements Serializable {
 
     private final String nickname;
     private final int lobbyNumber;
@@ -35,5 +39,10 @@ public class MSG_JOIN_LOBBY extends Message implements Serializable {
 
     public int getLobbyNumber() {
         return this.lobbyNumber;
+    }
+
+    @Override
+    public boolean execute(ClientHandler clientHandler) {
+        return clientHandler.joinLobby(this.lobbyNumber, this.nickname);
     }
 }
