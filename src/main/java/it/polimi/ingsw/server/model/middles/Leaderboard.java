@@ -20,64 +20,6 @@ public class Leaderboard extends ModelObservable {
         this.board = null;
     }
 
-    /**
-     * Returns the Leaderboard status, with a prompt that tells a specified Player if he won, lost, or tied.
-     * This method also works in Solo mode by specifying it.
-     * @param enabled True if the LeaderBoard is enabled.
-     * @param leaderboard The leaderboard at the end of a game.
-     * @param thisPlayer The player which receives the result.
-     * @param solo The if the game is in Solo mode.
-     * @return A String with the result, personalized in base of the type of game (multiplayer or Solo) and the player.
-     */
-    public static String toResult(boolean enabled, Map<String, Integer> leaderboard, String thisPlayer, boolean solo) {
-        StringBuilder result = new StringBuilder();
-        if (!enabled) return result.append("Empty LeaderboardSimplified.").toString();
-
-        result.append(A.CYAN + "      LEADERBOARD" + A.RESET).append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        boolean tie = false;
-        Integer maxValue = 0;
-        for (String nickname : leaderboard.keySet()) {
-            if (leaderboard.get(nickname) > maxValue) maxValue = leaderboard.get(nickname);
-        }
-        if (solo) {
-            String key = "Lorenzo";
-            if (leaderboard.get(key) == 1) //lorenzo Lost
-            {
-                result.append(" You just won. Happy now? ").append("\n");
-                result.append("\n").append(thisPlayer).append("    ");
-                result.append(" - ").append(leaderboard.get(thisPlayer)).append(" points");
-            }
-            if (leaderboard.get(key) == 2) //lorenzo won
-            {
-                result.append(" I mean, you lost. GG").append("\n");
-                result.append("\n").append(thisPlayer);
-                result.append("\t").append(leaderboard.get(thisPlayer));
-            }
-        } else {
-            if (leaderboard.get(thisPlayer).equals(maxValue)) {
-                for (String nickname : leaderboard.keySet()) {
-                    if (nickname.equals(thisPlayer))
-                        continue;
-                    if (maxValue.equals(leaderboard.get(nickname)))
-                        tie = true;
-                }
-                if (tie)
-                    result.append(" Extremely lucky guy, you Tied. ").append("\n");
-                else
-                    result.append(" You just won. Happy now? ").append("\n");
-            } else
-                result.append(" I mean, you lost. GG").append("\n");
-
-            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-            for (String nickname : leaderboard.keySet()) {
-                result.append("\n").append(nickname);
-                result.append("\t").append(leaderboard.get(nickname));
-            }
-        }
-        return result.toString();
-    }
-
     public boolean isEnabled() {
         return this.enabled;
     }
@@ -113,10 +55,6 @@ public class Leaderboard extends ModelObservable {
             } else
                 board.put(nickname, score);
         }
-    }
-
-    public String toResult(String thisPlayer, boolean solo) {
-        return Leaderboard.toResult(this.enabled, this.board, thisPlayer, solo);
     }
 
     /**

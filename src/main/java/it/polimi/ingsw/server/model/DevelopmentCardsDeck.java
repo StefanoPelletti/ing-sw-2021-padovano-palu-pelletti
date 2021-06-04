@@ -359,43 +359,6 @@ public class DevelopmentCardsDeck extends ModelObservable {
     }
 
     /**
-     * Returns a representation of the current state of a given DevelopmentCardsDeck.
-     * A DevelopmentCardsDeck or a DevelopmentCardsDeckSimplified may use this shared method by passing their internal values.
-     * It only shows the Visible Cards.
-     * @param cards A grid of the top cards (the ones the are visible) of DevelopmentCards.
-     * @return A String the represents the current state of the DevelopmentCardsDeck.
-     */
-    public static String toString(DevelopmentCard[][] cards) {
-        StringBuilder result = new StringBuilder(" DEVELOPMENT DECK, ALL THE VISIBLE CARDS: ");
-
-        for (int i = 0; i < 3; i++) {
-            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
-            result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
-            result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-            result.append("\n").append(" Row of Cards level ");
-            if(i==0) result.append(3);
-            if(i==1) result.append(2);
-            if(i==2) result.append(1);
-            for (int j = 0; j < 4; j++) {
-                result.append("\n").append("  Column of ");
-                if(j==0) result.append(A.GREEN+"GREEN"+A.RESET+" cards");
-                if(j==1) result.append(A.BLUE+"BLUE"+A.RESET+" cards");
-                if(j==2) result.append(A.YELLOW+"YELLOW"+A.RESET+" cards");
-                if(j==3) result.append(A.PURPLE +"PURPLE"+A.RESET+" cards");
-
-                if (cards[i][j] == null)
-                    result.append("\n").append(" X=====X Empty! X=====X");
-                else
-                    result.append("\n").append(cards[i][j].toString());
-            }
-        }
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET);
-        result.append("\n").append(A.CYAN + "     I     I     I     I     I     I     I     " + A.RESET);
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
-    }
-
-    /**
      * Shuffle individually all the 12 small decks of 4 cards in the DevelopmentCardsDeck, so that it does not mix the colors nor the levels of the cards.
      * Note: it should not be called after a card is removed, because it would shuffle a null element.
      */
@@ -528,14 +491,6 @@ public class DevelopmentCardsDeck extends ModelObservable {
         this.cards = grid;
     }
 
-    @Override
-    /**
-     * Calls the static toString() method.
-     * @see #toString(DevelopmentCard[][])
-     */
-    public String toString() {
-        return DevelopmentCardsDeck.toString(getVisible());
-    }
 
     /**
      * Creates a message using generateMessage() and notifies observers.

@@ -60,25 +60,6 @@ public class WarehouseDepot extends ModelObservable {
     }
 
     /**
-     * Returns the representation of the current state of a given WarehouseDepot.
-     * A WarehouseDepot or a WarehouseDepotSimplified may use this shared method by passing their internal values.
-     * @param shelf1 First shelf of the depot.
-     * @param shelf2 Second shelf of the depot.
-     * @param shelf3 Third shelf of the depot.
-     * @return A String representing the current state of the WarehouseDepot.
-     */
-    public static String toString(Resource shelf1, Resource[] shelf2, Resource[] shelf3) {
-        StringBuilder result = new StringBuilder();
-        result.append("               WAREHOUSE DEPOT:").append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        result.append(A.CYAN + "  Shelf 1:  " + A.RESET).append(shelf1).append("\n");
-        result.append(A.CYAN + "  Shelf 2:  " + A.RESET).append(shelf2[0]).append(" - ").append(shelf2[1]).append("\n");
-        result.append(A.CYAN + "  Shelf 3:  " + A.RESET).append(shelf3[0]).append(" - ").append(shelf3[1]).append(" - ").append(shelf3[2]).append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
-    }
-
-    /**
      * Tries to set a new configuration of the WarehouseDepot, using the validateNewConfig() method.
      * If the operation terminated successfully, notifies observers.
      * @param shelf1 First shelf of the depot.
@@ -396,11 +377,6 @@ public class WarehouseDepot extends ModelObservable {
         }
         notifyObservers();
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return WarehouseDepot.toString(this.shelf1, this.shelf2, this.shelf3);
     }
 
     @Override

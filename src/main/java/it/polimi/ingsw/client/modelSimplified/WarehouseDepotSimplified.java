@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.modelSimplified;
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.server.model.WarehouseDepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.utils.A;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -75,8 +76,19 @@ public class WarehouseDepotSimplified {
         this.shelf3[2] = newShelf3[2];
     }
 
+    /**
+     * Returns the representation of the current state of a given WarehouseDepot.
+     * @return A String representing the current state of the WarehouseDepot.
+     */
     @Override
     public String toString() {
-        return WarehouseDepot.toString(this.shelf1, this.shelf2, this.shelf3);
+        StringBuilder result = new StringBuilder();
+        result.append("               WAREHOUSE DEPOT:").append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append(A.CYAN + "  Shelf 1:  " + A.RESET).append(shelf1).append("\n");
+        result.append(A.CYAN + "  Shelf 2:  " + A.RESET).append(shelf2[0]).append(" - ").append(shelf2[1]).append("\n");
+        result.append(A.CYAN + "  Shelf 3:  " + A.RESET).append(shelf3[0]).append(" - ").append(shelf3[1]).append(" - ").append(shelf3[2]).append("\n");
+        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        return result.toString();
     }
 }

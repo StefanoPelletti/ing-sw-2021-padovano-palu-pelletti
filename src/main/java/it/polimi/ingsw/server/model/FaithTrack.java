@@ -121,63 +121,6 @@ public class FaithTrack extends ModelObservable {
         return result;
     }
 
-    public String toString(boolean solo) {
-        return FaithTrack.toString(solo, this.zones, false, this.game, null);
-    }
-
-    /**
-     * Returns a String that represents the current status of FaithTrack, with the zones and the position of the Players.
-     * Can work in Solo mode, if specified by the solo parameter.
-     * A FaithTrack or a FaithTrackSimplified may use this shared method by passing their internal values.
-     * @param solo True if the Game is in Solo mode.
-     * @param zones The internal values of the FaithTrack zones.
-     * @param simplified True if this method is called by a FaithTrackSimplified, False if this method is called by a FaithTrack.
-     * @param game The reference to the Game, if simplified was False.
-     * @param gameSimplified The reference to the GameSimplified, if simplified was True.
-     * @return A String representing the current status of the FaithTrack.
-     */
-    public static String toString(boolean solo, boolean[] zones, boolean simplified, Game game, GameSimplified gameSimplified) {
-        StringBuilder result = new StringBuilder();
-        List<PlayerSimplified> playerListSimplified;
-        List<Player> playerList;
-
-        result.append("                  FAITH TRACK: ").append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        if (simplified) {
-            playerListSimplified = gameSimplified.getPlayerList();
-            for (PlayerSimplified player : playerListSimplified) {
-                result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
-            }
-        } else {
-            playerList = game.getPlayerList();
-            for (Player player : playerList) {
-                result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
-            }
-        }
-
-        if (solo) {
-            if (simplified)
-                result.append("\n").append(" Lorenzo is at position: ").append(gameSimplified.getBlackCrossPosition()).append("\n");
-            else
-                result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
-        }
-
-        result.append("\n");
-        if (zones[2])
-            result.append("   Third and last zone has been activated!");
-        else {
-            if (zones[1])
-                result.append("   Second zone has been activated!");
-            else {
-                if (zones[0])
-                    result.append("   The First zone has been activated!");
-                else
-                    result.append("   No zone has been activated yet!");
-            }
-        }
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
-    }
 
     /**
      * notifies the observers by sending a message that contains the actual internal status of the FaithTrack.
