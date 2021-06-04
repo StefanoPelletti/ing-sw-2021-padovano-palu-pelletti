@@ -1221,7 +1221,7 @@ public class Board implements Runnable {
             newHeight = height;
             newWidth = (icon.getIconWidth() * newHeight) / icon.getIconHeight();
         }
-        return new ImageIcon(icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT));
+        return new ImageIcon(icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
     }
 
     //ACTION LISTENERS
