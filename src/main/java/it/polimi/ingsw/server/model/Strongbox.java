@@ -21,28 +21,6 @@ public class Strongbox extends ModelObservable {
     }
 
     /**
-     * Returns the representation of the current state of a given Strongbox.
-     * A Strongbox or a StrongboxSimplified may use this shared method by passing their internal values.
-     * @param resources The map of resource contained in a Strongbox.
-     * @return A String representing the current state of the Strongbox.
-     */
-    public static String toString(Map<Resource, Integer> resources) {
-        StringBuilder result = new StringBuilder();
-        result.append("      STRONGBOX").append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        if (resources.isEmpty()) {
-            result.append(" The Strongbox is empty. ").append("\n");
-        } else {
-            for (Resource r : resources.keySet()) {
-                result.append(resources.get(r)).append(" of ").append(r.toString());
-                result.append("\n");
-            }
-        }
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
-    }
-
-    /**
      * Tries do add a given quantity of a specified Resource in the Strongbox.
      * If the operation went well, notifies observers.
      * @param resource The resource to add in the strongbox
@@ -97,12 +75,6 @@ public class Strongbox extends ModelObservable {
      */
     public Integer getTotal() {
         return resources.values().stream().reduce(0, Integer::sum);
-    }
-
-
-    @Override
-    public String toString() {
-        return Strongbox.toString(this.resources);
     }
 
     /**

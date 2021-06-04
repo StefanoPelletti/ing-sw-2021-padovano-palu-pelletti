@@ -52,24 +52,6 @@ public class Market extends ModelObservable {
         shuffle();
     }
 
-    /**
-     * Returns the representation of the current state of a given Market.
-     * A Market or a MarketSimplified may use this shared method by passing their internal values.
-     * @param grid The MarketMarble[][] grid of the Market.
-     * @param slideMarble The slideMarble of the Market.
-     * @return A String representing the current state of the Market.
-     */
-    public static String toString(MarketMarble[][] grid, MarketMarble slideMarble) {
-        StringBuilder result = new StringBuilder();
-        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        result.append("                   MARKET!                ").append("\n");
-        result.append("      Marble on the Slide: ").append(slideMarble).append("\n").append("\n");
-        result.append("             [ ").append(grid[0][0].toAbbreviation()).append(" | ").append(grid[0][1].toAbbreviation()).append(" | ").append(grid[0][2].toAbbreviation()).append(" | ").append(grid[0][3].toAbbreviation()).append(" ]").append("\n");
-        result.append("             [ ").append(grid[1][0].toAbbreviation()).append(" | ").append(grid[1][1].toAbbreviation()).append(" | ").append(grid[1][2].toAbbreviation()).append(" | ").append(grid[1][3].toAbbreviation()).append(" ]").append("\n");
-        result.append("             [ ").append(grid[2][0].toAbbreviation()).append(" | ").append(grid[2][1].toAbbreviation()).append(" | ").append(grid[2][2].toAbbreviation()).append(" | ").append(grid[2][3].toAbbreviation()).append(" ]").append("\n");
-        result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        return result.toString();
-    }
 
     /**
      * Shuffles the MarketMarbles of the Market, slideMarble included.
@@ -187,11 +169,6 @@ public class Market extends ModelObservable {
     public void setGrid(MarketMarble[][] grid, MarketMarble slideMarble) {
         this.grid = grid;
         this.slideMarble = slideMarble;
-    }
-
-    @Override
-    public String toString() {
-        return Market.toString(this.grid, this.slideMarble);
     }
 
     /**

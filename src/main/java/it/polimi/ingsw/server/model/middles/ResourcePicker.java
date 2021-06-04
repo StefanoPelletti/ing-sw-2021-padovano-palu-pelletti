@@ -19,29 +19,6 @@ public class ResourcePicker extends ModelObservable {
         this.numOfResources = 0;
     }
 
-    /**
-     * Returns the amount of Resource and a related list the user should choose from.
-     * A ResourcePicker or a ResourcePickerSimplified may use this shared method by passing their internal values.
-     * @param enabled True if the ResourcePicker is enabled.
-     * @param numOfResources The number of resources available for the player.
-     * @return A String representing the current state of a ResourcePicker.
-     */
-    public static String toString(boolean enabled, int numOfResources) {
-        StringBuilder result = new StringBuilder();
-        if (!enabled) return result.append(A.RED + " RESOURCE PICKER IS NOT ENABLED! " + A.RESET).toString();
-
-        result.append(A.CYAN + " RESOURCE PICKER IS HERE TO HELP! " + A.RESET).append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-
-        result.append("  Number of resource to get: ").append(numOfResources).append("\n");
-        result.append("   1:  " + SHIELD);
-        result.append("   2:  " + COIN);
-        result.append("   3:  " + SERVANT);
-        result.append("   4:  " + STONE);
-
-        return result.toString();
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
@@ -84,11 +61,6 @@ public class ResourcePicker extends ModelObservable {
         if (enabled && this.numOfResources != 0) {
             notifyObservers();
         }
-    }
-
-    @Override
-    public String toString() {
-        return ResourcePicker.toString(this.enabled, this.numOfResources);
     }
 
     /**

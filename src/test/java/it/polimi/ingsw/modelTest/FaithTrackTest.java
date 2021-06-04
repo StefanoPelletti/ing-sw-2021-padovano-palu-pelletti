@@ -201,20 +201,4 @@ public class FaithTrackTest {
         assertFalse(faithTrack.advanceLorenzo());
         assertSame(game.getBlackCrossPosition(), 24);
     }
-
-    @Test
-    public void toStringFormat() {
-        Game game = new Game();
-        faithTrack = new FaithTrack(game);
-        faithTrack.setZones(0, true);
-        game.addPlayer("Primo", 1);
-        game.getPlayer(1).setPosition(4);
-        game.addPlayer("Secondo", 2);
-        game.getPlayer(2).setPosition(8);
-        game.addPlayer("Terzo", 3);
-        game.getPlayer(3).setPosition(11);
-
-        System.out.println(faithTrack.toString(false));
-        assertTrue(true);
-    }
 }

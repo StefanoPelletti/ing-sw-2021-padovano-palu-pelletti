@@ -20,29 +20,6 @@ public class LeaderCardsPicker extends ModelObservable {
         this.cards = null;
     }
 
-    /**
-     * Returns a String containing the 4 Leader Cards that the LeaderCardsPicker has to offer.
-     * A LeaderCardsPicker or a LeaderCardsPickerSimplified may use this shared method by passing their internal values.
-     * Note: see Player.getStartingLeaderCards().
-     * @param enabled True if the LeaderCardsPicker is enabled
-     * @param cards A List of Leader Cards.
-     * @return A String containing the 4 Leader Cards that the LeaderCardsPicker has to offer.
-     */
-    public static String toString(boolean enabled, List<LeaderCard> cards) {
-        StringBuilder result = new StringBuilder();
-        if (!enabled) return result.append(A.RED + " LEADERCARD PICKER IS NOT ENABLED!" + A.RESET).toString();
-
-        result.append(A.CYAN + " LEADERCARD PICKER IS HERE TO HELP! " + A.RESET).append("\n");
-        result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
-        result.append(" These are the cards: ").append("\n");
-        for (int i = 0; i < cards.size(); i++) {
-            result.append("\n\n").append(" Card number #").append(i + 1).append("\n");
-            result.append(cards.get(i).toString());
-        }
-
-        return result.toString();
-    }
-
     public boolean isEnabled() {
         return this.enabled;
     }
@@ -68,10 +45,6 @@ public class LeaderCardsPicker extends ModelObservable {
         }
     }
 
-    @Override
-    public String toString() {
-        return LeaderCardsPicker.toString(this.enabled, this.cards);
-    }
 
     /**
      * Creates a message generateMessage() and notifies observers.
