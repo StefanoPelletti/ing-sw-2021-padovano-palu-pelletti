@@ -14,19 +14,33 @@ public class StartingPoint {
             System.out.println("                      - gui                 : starts the graphic user interface");
             System.out.println("                      - cli                 : starts the command line interface");
             System.out.println("                      - server              : starts the server (mandatory for online games)");
+            System.out.println("                      - server <port>       : set a specific port number");
             return;
         }
 
         switch(args[0]) {
             case "cli":
-                new PhaseClient().run();
+                (new PhaseClient()).run();
                 break;
             case "gui":
-                new MainMenu();
+                (new MainMenu()).run();
                 break;
             case "server":
-                new Server(43210);
+                if(args.length==1)
+                    (new Server(43210)).run();
+                else
+                {
+                    try {
+                        int portNumber = Integer.parseInt(args[1]);
+                        (new Server(portNumber)).run();
+                    }
+                    catch (NumberFormatException e) {
+                        System.out.println("Invalid parameter specified");
+                    }
+                }
                 break;
+            default:
+                System.out.println("Invalid parameter specified");
         }
     }
 }

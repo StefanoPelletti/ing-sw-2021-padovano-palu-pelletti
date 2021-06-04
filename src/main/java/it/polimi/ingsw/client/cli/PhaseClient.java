@@ -111,11 +111,13 @@ class Halo {
      */
     public static void closeStreams() {
         try {
-            socket.close();
-            outputStream.close();
-            inputStream.close();
-            objectOutputStream.close();
-            objectInputStream.close();
+            if(socket != null && !socket.isClosed()) {
+                socket.close();
+                outputStream.close();
+                inputStream.close();
+                objectOutputStream.close();
+                objectInputStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,7 +148,6 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
      * @param cardNumber The desired card number.
      * @return The user's specified Leader Card.
      */
@@ -155,7 +156,6 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
      * @return Both of the user's Leader Cards as a LeaderCard[] array.
      */
     private static LeaderCard[] getBothMyLeaderCard() {
@@ -163,7 +163,6 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
      * @return A List containing the VendorCards exposed by the middle object DevelopmentCardsVendor.
      */
     private static List<VendorCard> getVendorCards() {
@@ -171,7 +170,6 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
      * @return A 8-cell boolean array containing the possible choices from the middle object MarketHelper.
      */
     private static boolean[] getMarketChoices() {

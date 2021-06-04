@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.URL;
 import java.util.Arrays;
 
 public class MainMenu implements Runnable {
@@ -163,7 +164,7 @@ public class MainMenu implements Runnable {
 
         public mainPanel() {
             try {
-                image = ImageIO.read(new File("resources/images/main_menu_bg.jpg"));
+                image = ImageIO.read(MainMenu.class.getClassLoader().getResourceAsStream("images/main_menu_bg.jpg"));
             }
             catch (IOException ignored) { }
 

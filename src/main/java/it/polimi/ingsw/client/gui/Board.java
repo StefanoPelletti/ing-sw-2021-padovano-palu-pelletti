@@ -7,6 +7,7 @@ import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.middles.Leaderboard;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
@@ -17,7 +18,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -488,13 +488,11 @@ public class Board implements Runnable {
                 c.insets = new Insets(0, 0, 0, 0);
                 leaderCardsPanel.add(leaderCardLabel2text2, c);
 
-
+                ImageIcon t;
                 leaderCardLabel1 = new JLabel();
                 leaderCardLabel1.setLayout(null);
                 leaderCardLabel1.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-                ImageIcon t1 = new ImageIcon("resources/cardsBack/BACK (1).png");
-                t1 = scaleImage(t1, 300);
-                leaderCardLabel1.setIcon(t1);
+
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 2;
@@ -512,7 +510,7 @@ public class Board implements Runnable {
                 extraResource2_LeaderCard1_Label.setBounds(115, 234, 50, 50);
                 leaderCardLabel1.add(extraResource2_LeaderCard1_Label);
 
-                labelUnderLeaderCard1 = new JLabel("not picked");
+                labelUnderLeaderCard1 = new JLabel();
                 labelUnderLeaderCard1.setOpaque(false);
                 labelUnderLeaderCard1.setHorizontalAlignment(SwingConstants.CENTER);
                 labelUnderLeaderCard1.setFont(new Font(PAP, Font.BOLD, 22));
@@ -522,12 +520,48 @@ public class Board implements Runnable {
                 c.anchor = GridBagConstraints.PAGE_START;
                 leaderCardsPanel.add(labelUnderLeaderCard1, c);
 
+                LeaderCard l1 = Ark.myPlayerRef.getLeaderCards()[0];
+                if(l1 != null) {
+                    t = scaleImage(new ImageIcon(l1.getFrontPath()), 300);
+                    if(l1.isEnabled()) {
+                        labelUnderLeaderCard1.setText("ENABLED!");
+                        leaderCardLabel1.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+                        if(l1.getSpecialAbility().isExtraDepot())
+                        {
+                            ExtraDepot depot = ((ExtraDepot) l1.getSpecialAbility());
+                            int num = depot.getNumber();
+                            Resource type = depot.getResourceType();
+
+                            ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()),50);
+                            ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()),50);
+                            switch (num)
+                            {
+                                case 0:
+                                    extraResource1_LeaderCard1_Label.setIcon(noneIcon);
+                                    extraResource1_LeaderCard2_Label.setIcon(noneIcon);
+                                    break;
+                                case 1:
+                                    extraResource1_LeaderCard1_Label.setIcon(presentIcon);
+                                    extraResource1_LeaderCard2_Label.setIcon(noneIcon);
+                                    break;
+                                case 2:
+                                    extraResource1_LeaderCard1_Label.setIcon(presentIcon);
+                                    extraResource1_LeaderCard2_Label.setIcon(presentIcon);
+                                    break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
+                    labelUnderLeaderCard1.setText("not present!");
+                }
+                leaderCardLabel1.setIcon(t);
+
                 leaderCardLabel2 = new JLabel();
                 leaderCardLabel2.setLayout(null);
                 leaderCardLabel2.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-                ImageIcon t2 = new ImageIcon("resources/cardsBack/BACK (1).png");
-                t2 = scaleImage(t2, 300);
-                leaderCardLabel2.setIcon(t2);
+
                 c = new GridBagConstraints();
                 c.gridx = 2;
                 c.gridy = 2;
@@ -545,7 +579,7 @@ public class Board implements Runnable {
                 extraResource2_LeaderCard2_Label.setBounds(115, 234, 50, 50);
                 leaderCardLabel2.add(extraResource2_LeaderCard2_Label, c);
 
-                labelUnderLeaderCard2 = new JLabel("not picked");
+                labelUnderLeaderCard2 = new JLabel();
                 labelUnderLeaderCard2.setOpaque(false);
                 labelUnderLeaderCard2.setHorizontalAlignment(SwingConstants.CENTER);
                 labelUnderLeaderCard2.setFont(new Font(PAP, Font.BOLD, 22));
@@ -554,6 +588,44 @@ public class Board implements Runnable {
                 c.gridy = 3;
                 c.anchor = GridBagConstraints.PAGE_START;
                 leaderCardsPanel.add(labelUnderLeaderCard2, c);
+
+                LeaderCard l2 = Ark.myPlayerRef.getLeaderCards()[1];
+                if(l2 != null) {
+                    t = scaleImage(new ImageIcon(l2.getFrontPath()), 300);
+                    if(l2.isEnabled()) {
+                        labelUnderLeaderCard2.setText("ENABLED!");
+                        leaderCardLabel2.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+                        if(l2.getSpecialAbility().isExtraDepot())
+                        {
+                            ExtraDepot depot = ((ExtraDepot) l2.getSpecialAbility());
+                            int num = depot.getNumber();
+                            Resource type = depot.getResourceType();
+
+                            ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()),50);
+                            ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()),50);
+                            switch (num)
+                            {
+                                case 0:
+                                    extraResource2_LeaderCard1_Label.setIcon(noneIcon);
+                                    extraResource2_LeaderCard2_Label.setIcon(noneIcon);
+                                    break;
+                                case 1:
+                                    extraResource2_LeaderCard1_Label.setIcon(presentIcon);
+                                    extraResource1_LeaderCard2_Label.setIcon(noneIcon);
+                                    break;
+                                case 2:
+                                    extraResource2_LeaderCard1_Label.setIcon(presentIcon);
+                                    extraResource2_LeaderCard2_Label.setIcon(presentIcon);
+                                    break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
+                    labelUnderLeaderCard2.setText("not present!");
+                }
+                leaderCardLabel2.setIcon(t);
 
                 JLabel spacer = new JLabel("");
                 c = new GridBagConstraints();
@@ -575,7 +647,7 @@ public class Board implements Runnable {
                 c.anchor = GridBagConstraints.PAGE_START;
                 c.insets = new Insets(10, 0, 0, 0);
                 this.add(leaderCardsPanel, c);
-            } //leaderCardsPanel
+            } //leaderCardsPanel //TODO make new class to add update method to update leaderCards/extradepots
 
             {
                 JPanel showButtonsPanel = new JPanel();

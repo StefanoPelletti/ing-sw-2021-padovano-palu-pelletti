@@ -9,8 +9,8 @@ public enum Resource implements Serializable {
     COIN("resources/punchboard/coin.png","resources/punchboard/coin2.png"),
     SERVANT("resources/punchboard/servant.png","resources/punchboard/servant2.png"),
     STONE("resources/punchboard/stone.png","resources/punchboard/stone2.png"),
-    NONE("",""),
-    EXTRA("",""),
+    NONE("resources/punchboard/none.png",""),
+    EXTRA("resources/punchboard/extra.png",""),
     FAITH("","");
 
 
