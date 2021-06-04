@@ -29,6 +29,8 @@ public class MarketSimplified {
         }
     }
 
+    public MarketMarble[][] getGrid() { return this.grid; }
+    public MarketMarble getSlideMarble() { return this.slideMarble; }
     @Override
     public String toString() {
         return Market.toString(this.grid, this.slideMarble);

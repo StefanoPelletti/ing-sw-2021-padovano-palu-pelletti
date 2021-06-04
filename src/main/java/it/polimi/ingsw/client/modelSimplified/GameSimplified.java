@@ -8,6 +8,7 @@ import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_De
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
+import it.polimi.ingsw.server.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,11 @@ public class GameSimplified {
         this.turn = newTurn;
         this.currentPlayer = newCurrentPlayer;
         this.blackCrossPosition = newBlackCrossPosition;
+    }
+
+    public PlayerSimplified getPlayer(int playerNumber) {
+        Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();
+        return result.orElse(null);
     }
 
     public void updateMarket(MSG_UPD_Market message) {

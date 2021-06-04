@@ -19,4 +19,8 @@ public class StrongboxSimplified {
     public String toString() {
         return Strongbox.toString(this.resources);
     }
+
+    public Integer getQuantity(Resource resource) {
+        return resources.get(resource);
+    }
 }

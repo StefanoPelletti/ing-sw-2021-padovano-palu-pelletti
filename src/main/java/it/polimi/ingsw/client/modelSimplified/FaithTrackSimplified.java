@@ -18,6 +18,7 @@ public class FaithTrackSimplified {
         System.arraycopy(newZones, 0, this.zones, 0, 3);
     }
 
+    public boolean[] getZones() { return this.zones; }
 
     public String toString(boolean solo) {
         return FaithTrack.toString(solo, this.zones, true, null, this.game);

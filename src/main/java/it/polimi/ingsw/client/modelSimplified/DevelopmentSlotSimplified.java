@@ -20,6 +20,8 @@ public class DevelopmentSlotSimplified {
         }
     }
 
+    public DevelopmentCard[][] getCards() { return this.cards; }
+
     @Override
     public String toString() {
         return DevelopmentSlot.toString(this.cards);

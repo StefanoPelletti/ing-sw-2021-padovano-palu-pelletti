@@ -18,6 +18,8 @@ public class DevelopmentCardsDeckSimplified {
         }
     }
 
+    public DevelopmentCard[][] getCards() { return this.cards; }
+
     @Override
     public String toString() {
         return DevelopmentCardsDeck.toString(this.cards);

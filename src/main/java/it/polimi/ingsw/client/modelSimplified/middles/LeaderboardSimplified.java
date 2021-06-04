@@ -22,6 +22,7 @@ public class LeaderboardSimplified {
         this.board = new TreeMap<>(newLeaderboard);
     }
 
+    public Map<String, Integer> getBoard() { return this.board; }
     public String toResult(String thisPlayer, boolean solo) {
         return Leaderboard.toResult(this.enabled, this.board, thisPlayer, solo);
     }

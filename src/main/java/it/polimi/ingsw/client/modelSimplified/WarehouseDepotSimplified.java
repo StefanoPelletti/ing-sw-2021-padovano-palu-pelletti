@@ -4,6 +4,10 @@ import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Wa
 import it.polimi.ingsw.server.model.WarehouseDepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class WarehouseDepotSimplified {
     private Resource shelf1;
     private Resource[] shelf2;
@@ -11,8 +15,47 @@ public class WarehouseDepotSimplified {
 
     public WarehouseDepotSimplified() {
         this.shelf1 = Resource.NONE;
-        this.shelf2 = null;
-        this.shelf3 = null;
+        this.shelf2 = new Resource[]{Resource.NONE, Resource.NONE};
+        this.shelf3 = new Resource[]{Resource.NONE, Resource.NONE, Resource.NONE};
+    }
+
+    public Resource getShelf1() { return this.shelf1; }
+    public Resource[] getShelf2() { return this.shelf2; }
+    public Resource[] getShelf3() { return this.shelf3; }
+
+    public Map<Resource, Integer> getResources() {
+        Map<Resource, Integer> result = new HashMap<>();
+        Resource r2;
+        Resource r3;
+        result.put(Resource.COIN, 0);
+        result.put(Resource.SERVANT, 0);
+        result.put(Resource.SHIELD, 0);
+        result.put(Resource.STONE, 0);
+        if (this.shelf1 != Resource.NONE) {
+            result.put(this.shelf1, 1);
+        }
+        r2 = Arrays.stream(this.shelf2).filter(r -> r != Resource.NONE).findFirst().orElse(Resource.NONE);
+        r3 = Arrays.stream(this.shelf3).filter(r -> r != Resource.NONE).findFirst().orElse(Resource.NONE);
+        if (r2 != Resource.NONE)
+            result.put(r2, getShelf2ResourceNumber());
+        if (r3 != Resource.NONE)
+            result.put(r3, getShelf3ResourceNumber());
+        return result;
+    }
+
+    public int getShelf2ResourceNumber() {
+        int result = 0;
+        if (shelf2[0] != Resource.NONE) result++;
+        if (shelf2[1] != Resource.NONE) result++;
+        return result;
+    }
+
+    public int getShelf3ResourceNumber() {
+        int result = 0;
+        if (shelf3[0] != Resource.NONE) result++;
+        if (shelf3[1] != Resource.NONE) result++;
+        if (shelf3[2] != Resource.NONE) result++;
+        return result;
     }
 
     public void update(MSG_UPD_WarehouseDepot message) {

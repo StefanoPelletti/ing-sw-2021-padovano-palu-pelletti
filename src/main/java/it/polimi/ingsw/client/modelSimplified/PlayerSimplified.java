@@ -9,6 +9,11 @@ import it.polimi.ingsw.server.model.LeaderCard;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class PlayerSimplified {
     private final StrongboxSimplified strongbox;
     private final WarehouseDepotSimplified warehouseDepot;
@@ -88,6 +93,31 @@ public class PlayerSimplified {
 
     public int getVp() {
         return vp;
+    }
+
+    public Map<Resource, Integer> getResources() {
+        Map<Resource, Integer> resources = this.warehouseDepot.getResources();
+        Set<Resource> possibleResources = resources.keySet();
+        for (Resource resource : possibleResources) {
+            if (this.strongbox.getQuantity(resource) != null) {
+                resources.merge(resource, this.strongbox.getQuantity(resource), Integer::sum);
+            }
+        }
+        for (LeaderCard l : this.getCardsWithExtraDepotAbility()) {
+            ExtraDepot depotAbility = (ExtraDepot) l.getSpecialAbility();
+            Resource extraResource = depotAbility.getResourceType();
+            resources.merge(extraResource, depotAbility.getNumber(), Integer::sum);
+        }
+        return resources;
+    }
+
+    public List<LeaderCard> getCardsWithExtraDepotAbility() {
+        List<LeaderCard> result = new ArrayList<>();
+        if (leaderCards[0] != null && leaderCards[0].getSpecialAbility().isExtraDepot() && leaderCards[0].isEnabled())
+            result.add(leaderCards[0]);
+        if (leaderCards[1] != null && leaderCards[1].getSpecialAbility().isExtraDepot() && leaderCards[1].isEnabled())
+            result.add(leaderCards[1]);
+        return result;
     }
 
     public LeaderCard[] getLeaderCards() {

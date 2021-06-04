@@ -75,29 +75,28 @@ public class Board implements Runnable {
         Ark.myPlayerNumber = 1;
         Ark.game = new GameSimplified();
 
-        GameManager gameManager = new GameManager(4);
-        Ark.actionManagerRef = gameManager.getActionManager();
-        Ark.gameSRV = gameManager.getGame();
-        Ark.gameSRV.addPlayer("A", 1);
-        Ark.myPlayerRefSRV = Ark.gameSRV.getPlayer(1);
-        Ark.gameSRV.addPlayer("B", 2);
-        Ark.gameSRV.addPlayer("C", 3);
-        Ark.gameSRV.addPlayer("D", 4);
-        Player A = Ark.gameSRV.getPlayer("A");
-        Player B = Ark.gameSRV.getPlayer("B");
-        Player C = Ark.gameSRV.getPlayer("C");
-        Player D = Ark.gameSRV.getPlayer("D");
-        Ark.gameSRV.setLeaderCardsPickerCards(new java.util.ArrayList<LeaderCard>());
-        gameManager.getFaithTrackManager().advance(A);
-        gameManager.getFaithTrackManager().advance(A);
+        Ark.gameManager = new GameManager(4);
+        Ark.actionManager = Ark.gameManager.getActionManager();
+        Game game = Ark.gameManager.getGame();
+        game.addPlayer("A", 1);
+        game.addPlayer("B", 2);
+        game.addPlayer("C", 3);
+        game.addPlayer("D", 4);
+        Player A = game.getPlayer("A");
+        Player B = game.getPlayer("B");
+        Player C = game.getPlayer("C");
+        Player D = game.getPlayer("D");
+        game.setLeaderCardsPickerCards(new java.util.ArrayList<LeaderCard>());
+        Ark.gameManager.getFaithTrackManager().advance(A);
+        Ark.gameManager.getFaithTrackManager().advance(A);
         for(int i=0; i<4; i++){
-            gameManager.getFaithTrackManager().advance(B);
+            Ark.gameManager.getFaithTrackManager().advance(B);
         }
         for(int i =0; i<6; i++){
-            gameManager.getFaithTrackManager().advance(C);
+            Ark.gameManager.getFaithTrackManager().advance(C);
         }
         for(int i =0; i<15; i++){
-            gameManager.getFaithTrackManager().advance(D);
+            Ark.gameManager.getFaithTrackManager().advance(D);
         }
 
         ArrayList<LeaderCard> list = new ArrayList<>();
@@ -132,7 +131,7 @@ public class Board implements Runnable {
         D.associateLeaderCards(list);
 
         B.getLeaderCards()[0].setEnabled(true);
-        Ark.actionManagerRef.discardLeaderCard(D, new MSG_ACTION_DISCARD_LEADERCARD(1));
+        Ark.actionManager.discardLeaderCard(D, new MSG_ACTION_DISCARD_LEADERCARD(1));
 
         A.getWarehouseDepot().add(Resource.SERVANT);
         A.getWarehouseDepot().add(Resource.COIN);
@@ -238,8 +237,10 @@ public class Board implements Runnable {
                 "resources/cardsFront/DFRONT (9).png", "resources/cardsBack/BACK (5)"
         ), 1);
 
-        MSG_UPD_Full message = gameManager.getFullModel();
+        Ark.game = new GameSimplified();
+        MSG_UPD_Full message = Ark.gameManager.getFullModel();
         Ark.game.updateAll(message);
+        Ark.myPlayerRef = Ark.game.getPlayerRef(1);
         SwingUtilities.invokeLater(new Board());
     }
 
@@ -782,10 +783,10 @@ public class Board implements Runnable {
 
                 java.util.List<JLabel> labelList = new ArrayList<>();
                 map = new HashMap<>();
-                for(int i = 0; i<Ark.gameSRV.getPlayerList().size(); i++) //for all players except the one me
+                for(int i = 0; i<Ark.game.getPlayerList().size(); i++) //for all players except the one me
                 {
-                    Player player = Ark.gameSRV.getPlayer(i+1);
-                    if(player.equals(Ark.myPlayerRefSRV))
+                    PlayerSimplified player = Ark.game.getPlayer(i+1);
+                    if(player.equals(Ark.myPlayerRef))
                         continue;
                     JPanel playerPanel = new JPanel(new GridBagLayout());
                     playerPanel.setOpaque(false);
@@ -863,7 +864,7 @@ public class Board implements Runnable {
                     playerPanel.add(servantLabel,c);
 
 
-                    showPlayerButton button = new showPlayerButton("show", player.getPlayerNumber());
+                    showPlayerButton button = new showPlayerButton("show", player.getNickname());
                     button.setFont(new Font(PAP, Font.BOLD, 20));
                     button.setMinimumSize(new Dimension(100,100));
                     button.setBackground(new Color(231, 210, 181));
@@ -892,14 +893,14 @@ public class Board implements Runnable {
     }
 
     class showPlayerButton extends JButton {
-        private int playerNumber;
-        public showPlayerButton(String text, int playerNumber)
+        private final String playerName;
+        public showPlayerButton(String text, String playerName)
         {
             super(text);
-            this.playerNumber = playerNumber;
+            this.playerName = playerName;
         }
 
-        public int getPlayerNumber() { return this.playerNumber; }
+        public String getPlayerName() { return this.playerName; }
     }
 
     class TopPanel extends JPanel {

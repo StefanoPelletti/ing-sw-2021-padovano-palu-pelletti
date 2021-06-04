@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LeaderCardsPickerSimplified {
     private boolean enabled;
-    private ArrayList<LeaderCard> cards;
+    private List<LeaderCard> cards;
 
     public boolean isEnabled() {
         return enabled;
