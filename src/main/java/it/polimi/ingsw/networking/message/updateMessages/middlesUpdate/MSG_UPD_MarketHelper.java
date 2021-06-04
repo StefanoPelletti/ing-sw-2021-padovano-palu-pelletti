@@ -1,14 +1,16 @@
 package it.polimi.ingsw.networking.message.updateMessages.middlesUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MSG_UPD_MarketHelper extends Message implements Serializable {
+public class MSG_UPD_MarketHelper extends UpdateMessage implements Serializable {
 
     private final boolean enabled;
     private final List<Resource> resources;
@@ -70,5 +72,15 @@ public class MSG_UPD_MarketHelper extends Message implements Serializable {
 
     public Resource[] getExtraResourceChoices() {
         return this.extraResourceChoices;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateMarketHelper(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

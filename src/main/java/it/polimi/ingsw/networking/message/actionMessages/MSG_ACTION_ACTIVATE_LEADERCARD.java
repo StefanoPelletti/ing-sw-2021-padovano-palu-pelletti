@@ -1,8 +1,11 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
+
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 
 import java.io.Serializable;
 
-public class MSG_ACTION_ACTIVATE_LEADERCARD extends Message implements Serializable {
+public class MSG_ACTION_ACTIVATE_LEADERCARD extends ActionMessage implements Serializable {
 
     private final int cardNumber;
 
@@ -26,4 +29,8 @@ public class MSG_ACTION_ACTIVATE_LEADERCARD extends Message implements Serializa
         return cardNumber;
     }
 
+    @Override
+    public boolean execute(ActionManager actionManager) {
+         return actionManager.activateLeaderCard( actionManager.getGame().getCurrentPlayer(), this);
+    }
 }

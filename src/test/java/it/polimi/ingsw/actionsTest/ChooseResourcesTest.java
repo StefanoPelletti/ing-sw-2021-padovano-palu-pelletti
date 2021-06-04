@@ -1,7 +1,7 @@
 package it.polimi.ingsw.actionsTest;
 
 import it.polimi.ingsw.Catcher;
-import it.polimi.ingsw.networking.message.MSG_INIT_CHOOSE_RESOURCE;
+import it.polimi.ingsw.networking.message.actionMessages.MSG_INIT_CHOOSE_RESOURCE;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;

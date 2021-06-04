@@ -1,10 +1,12 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
 
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 
-public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializable {
+public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends ActionMessage implements Serializable {
 
     private final Resource slot1;
     private final Resource[] slot2;
@@ -71,5 +73,10 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends Message implements Serializa
 
     public int getSecondExtraDepot() {
         return secondExtraDepot;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.changeDepotConfig( actionManager.getGame().getCurrentPlayer(), this);
     }
 }

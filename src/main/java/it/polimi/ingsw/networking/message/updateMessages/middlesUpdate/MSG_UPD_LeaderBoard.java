@@ -1,13 +1,15 @@
 package it.polimi.ingsw.networking.message.updateMessages.middlesUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MSG_UPD_LeaderBoard extends Message implements Serializable {
+public class MSG_UPD_LeaderBoard extends UpdateMessage implements Serializable {
 
     private final boolean enabled;
     private final Map<String, Integer> leaderboard;
@@ -39,4 +41,14 @@ public class MSG_UPD_LeaderBoard extends Message implements Serializable {
     //in SOLO mode there are ALWAYS 2 keys in the Map.
     // the player, and Lorenzo. IF Lorenzo's value is 1, he's the LOSER
     //                          IF Lorenzo's value is 2, he's the WINNER
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateLeaderBoard(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
+    }
 }

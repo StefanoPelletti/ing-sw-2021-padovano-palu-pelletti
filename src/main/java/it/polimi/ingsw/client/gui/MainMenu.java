@@ -2,6 +2,9 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.networking.message.initMessages.MSG_CREATE_LOBBY;
+import it.polimi.ingsw.networking.message.initMessages.MSG_JOIN_LOBBY;
+import it.polimi.ingsw.networking.message.initMessages.MSG_REJOIN_LOBBY;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 
 import javax.imageio.ImageIO;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.networking;
 
-import it.polimi.ingsw.networking.message.Message;
+import it.polimi.ingsw.networking.message.actionMessages.ActionMessage;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;
@@ -140,7 +140,7 @@ public class Lobby {
      * A message can only be passed if the receiving ClientHandler handles the currentPlayer.
      * @param message The request message received by the ClientHandler from the Client.
      */
-    public synchronized void onMessage(Message message) {
+    public synchronized void onMessage(ActionMessage message) {
         synchronized (actionManager) {
             actionManager.onMessage(message);
         }

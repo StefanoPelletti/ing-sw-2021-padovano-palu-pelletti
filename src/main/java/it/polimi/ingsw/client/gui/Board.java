@@ -2,7 +2,7 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
-import it.polimi.ingsw.networking.message.MSG_ACTION_DISCARD_LEADERCARD;
+import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_DISCARD_LEADERCARD;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;

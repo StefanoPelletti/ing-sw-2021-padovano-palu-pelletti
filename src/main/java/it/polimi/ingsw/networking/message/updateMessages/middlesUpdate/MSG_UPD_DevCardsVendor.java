@@ -1,14 +1,16 @@
 package it.polimi.ingsw.networking.message.updateMessages.middlesUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.middles.VendorCard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
+public class MSG_UPD_DevCardsVendor extends UpdateMessage implements Serializable {
 
     private final boolean enabled;
     private final List<VendorCard> vendorCards;
@@ -39,5 +41,15 @@ public class MSG_UPD_DevCardsVendor extends Message implements Serializable {
 
     public List<VendorCard> getCards() {
         return this.vendorCards;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateDevCardVendor(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

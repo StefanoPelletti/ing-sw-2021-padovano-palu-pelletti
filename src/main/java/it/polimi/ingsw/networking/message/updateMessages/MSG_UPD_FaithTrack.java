@@ -1,11 +1,12 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;
 
-public class MSG_UPD_FaithTrack extends Message implements Serializable {
+public class MSG_UPD_FaithTrack extends UpdateMessage implements Serializable {
 
     private final boolean[] zones;
 
@@ -24,5 +25,15 @@ public class MSG_UPD_FaithTrack extends Message implements Serializable {
 
     public boolean[] getZones() {
         return zones;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateFaithTrack(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

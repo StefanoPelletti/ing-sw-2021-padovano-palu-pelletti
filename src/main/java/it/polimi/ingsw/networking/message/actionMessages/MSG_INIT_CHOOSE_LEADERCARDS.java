@@ -1,8 +1,11 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
+
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 
 import java.io.Serializable;
 
-public class MSG_INIT_CHOOSE_LEADERCARDS extends Message implements Serializable {
+public class MSG_INIT_CHOOSE_LEADERCARDS extends ActionMessage implements Serializable {
 
     private final int firstCard;
     private final int secondCard;
@@ -34,5 +37,10 @@ public class MSG_INIT_CHOOSE_LEADERCARDS extends Message implements Serializable
 
     public int getSecondCard() {
         return this.secondCard;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.chooseLeaderCard( actionManager.getGame().getCurrentPlayer(), this);
     }
 }

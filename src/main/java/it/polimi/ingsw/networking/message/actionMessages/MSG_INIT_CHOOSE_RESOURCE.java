@@ -1,10 +1,12 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
 
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 
 import java.io.Serializable;
 
-public class MSG_INIT_CHOOSE_RESOURCE extends Message implements Serializable {
+public class MSG_INIT_CHOOSE_RESOURCE extends ActionMessage implements Serializable {
 
     private final Resource resource;
 
@@ -25,5 +27,10 @@ public class MSG_INIT_CHOOSE_RESOURCE extends Message implements Serializable {
 
     public Resource getResource() {
         return this.resource;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.chooseResource( actionManager.getGame().getCurrentPlayer(), this);
     }
 }

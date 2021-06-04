@@ -4,6 +4,10 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.networking.message.actionMessages.*;
+import it.polimi.ingsw.networking.message.initMessages.MSG_CREATE_LOBBY;
+import it.polimi.ingsw.networking.message.initMessages.MSG_JOIN_LOBBY;
+import it.polimi.ingsw.networking.message.initMessages.MSG_REJOIN_LOBBY;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;
@@ -2315,7 +2319,7 @@ class LocalPhase {
      * @return The next Phase, which would be MAIN_MENU.
      */
     public Phase run() {
-        Message message;
+        ActionMessage message;
         boolean execute;
 
         System.out.println(A.YELLOW + " <<>> Starting local game..." + A.RESET);

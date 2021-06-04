@@ -169,6 +169,22 @@ public class GameSimplified {
         }
     }
 
+    public void updateCurrentPlayerDepot(MSG_UPD_WarehouseDepot message){
+        getCurrentPlayerRef().updateWarehouseDepot(message);
+    }
+
+    public void updateCurrentPlayerDevSlot(MSG_UPD_DevSlot message){
+        getCurrentPlayerRef().updateDevelopmentSlot(message);
+    }
+
+    public void updateCurrentPlayerExtraDepot(MSG_UPD_Extradepot message){
+        getCurrentPlayerRef().updateExtradepot( message);
+    }
+
+    public void updateCurrentPlayerStrongbox(MSG_UPD_Strongbox message){
+        getCurrentPlayerRef().updateStrongbox(message);
+    }
+
 
     public DevelopmentCardsVendorSimplified getDevelopmentCardsVendor() {
         return this.developmentCardsVendorSimplified;
@@ -249,8 +265,8 @@ public class GameSimplified {
         return (this.currentPlayer == myPlayerNumber);
     }
 
-    public void updatePlayer(Message message) {
-        MSG_UPD_Player msg = (MSG_UPD_Player) message;
+    public void updatePlayer(MSG_UPD_Player msg)
+    {
         int playerNumber = msg.getPlayerNumber();
 
         Optional<PlayerSimplified> result = playerSimplifiedList.stream().filter(p -> p.getPlayerNumber() == playerNumber).findFirst();

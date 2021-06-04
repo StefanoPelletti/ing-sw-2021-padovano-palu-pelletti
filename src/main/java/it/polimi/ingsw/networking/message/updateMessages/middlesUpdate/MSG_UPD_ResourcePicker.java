@@ -1,11 +1,13 @@
 package it.polimi.ingsw.networking.message.updateMessages.middlesUpdate;
 
+import it.polimi.ingsw.client.cli.UpdateHandler;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 
 import java.io.Serializable;
 
-public class MSG_UPD_ResourcePicker extends Message implements Serializable {
+public class MSG_UPD_ResourcePicker extends UpdateMessage implements Serializable {
 
     private final boolean enabled;
     private final int numOfResources;
@@ -32,5 +34,15 @@ public class MSG_UPD_ResourcePicker extends Message implements Serializable {
 
     public int getNumOfResources() {
         return this.numOfResources;
+    }
+
+    @Override
+    public void executeCLI(UpdateHandler updateHandler) {
+        updateHandler.updateResourcePicker(this);
+    }
+
+    @Override
+    public void executeGUI() {
+
     }
 }

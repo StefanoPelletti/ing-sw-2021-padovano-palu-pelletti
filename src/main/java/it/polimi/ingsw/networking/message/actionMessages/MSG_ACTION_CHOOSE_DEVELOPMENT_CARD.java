@@ -1,8 +1,11 @@
-package it.polimi.ingsw.networking.message;
+package it.polimi.ingsw.networking.message.actionMessages;
+
+import it.polimi.ingsw.networking.message.MessageType;
+import it.polimi.ingsw.server.controller.ActionManager;
 
 import java.io.Serializable;
 
-public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Serializable {
+public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends ActionMessage implements Serializable {
 
     private final int cardNumber;
     private final int slotNumber;
@@ -42,5 +45,10 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends Message implements Seria
 
     public int getSlotNumber() {
         return slotNumber;
+    }
+
+    @Override
+    public boolean execute(ActionManager actionManager) {
+        return actionManager.chooseDevelopmentCard( actionManager.getGame().getCurrentPlayer(), this);
     }
 }
