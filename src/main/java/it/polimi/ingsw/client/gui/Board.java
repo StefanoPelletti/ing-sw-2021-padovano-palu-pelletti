@@ -1,6 +1,15 @@
 package it.polimi.ingsw.client.gui;
 
+import it.polimi.ingsw.networking.message.MSG_ACTION_DISCARD_LEADERCARD;
+import it.polimi.ingsw.server.controller.ActionManager;
+import it.polimi.ingsw.server.controller.GameManager;
+import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.requirements.CardRequirements;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
+import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
+import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
+import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,6 +18,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Board implements Runnable {
     CardLayout cl;
@@ -43,6 +54,167 @@ public class Board implements Runnable {
         // cl.show(cardPanel, CREATE);
 
         SwingUtilities.invokeLater(new Board());
+
+        GameManager gameManager = new GameManager(4);
+        ActionManager actionManager = gameManager.getActionManager();
+        Game game = gameManager.getGame();
+        game.addPlayer("A", 1);
+        game.addPlayer("B", 2);
+        game.addPlayer("C", 3);
+        game.addPlayer("D", 4);
+        Player A = game.getPlayer("A");
+        Player B = game.getPlayer("B");
+        Player C = game.getPlayer("C");
+        Player D = game.getPlayer("D");
+        gameManager.getFaithTrackManager().advance(A);
+        gameManager.getFaithTrackManager().advance(A);
+        for(int i=0; i<4; i++){
+            gameManager.getFaithTrackManager().advance(B);
+        }
+        for(int i =0; i<6; i++){
+            gameManager.getFaithTrackManager().advance(C);
+        }
+        for(int i =0; i<15; i++){
+            gameManager.getFaithTrackManager().advance(D);
+        }
+
+        ArrayList<LeaderCard> list = new ArrayList<>();
+        list.add(new LeaderCard(2,
+                new CardRequirements(Map.of(it.polimi.ingsw.server.model.enumerators.Color.YELLOW, new ReqValue(1, -1), it.polimi.ingsw.server.model.enumerators.Color.GREEN, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SERVANT)
+                , "resources/cardsFront/LFRONT (1).png", "resources/cardsBack/BACK (1).png"));
+        list.add(new LeaderCard(2,
+                new CardRequirements(Map.of(it.polimi.ingsw.server.model.enumerators.Color.BLUE, new ReqValue(1, -1), it.polimi.ingsw.server.model.enumerators.Color.PURPLE, new ReqValue(1, -1))),
+                new DiscountResource(Resource.SHIELD)
+                , "resources/cardsFront/LFRONT (2).png", "resource/cardsBack/BACK (1).png"));
+        B.associateLeaderCards(list);
+        list.clear();
+        list.add(new LeaderCard(2,
+                new CardRequirements(Map.of(it.polimi.ingsw.server.model.enumerators.Color.GREEN, new ReqValue(1, -1), it.polimi.ingsw.server.model.enumerators.Color.BLUE, new ReqValue(1, -1))),
+                new DiscountResource(Resource.STONE)
+                , "resources/cardsFront/LFRONT (3).png", "resource/cardsBack/BACK (1).png"));
+        list.add(new LeaderCard(2,
+                new CardRequirements(Map.of(it.polimi.ingsw.server.model.enumerators.Color.YELLOW, new ReqValue(1, -1), it.polimi.ingsw.server.model.enumerators.Color.PURPLE, new ReqValue(1, -1))),
+                new DiscountResource(Resource.COIN)
+                , "resources/cardsFront/LFRONT (4).png", "resource/cardsBack/BACK (1).png"));
+        C.associateLeaderCards(list);
+        list.clear();
+        list.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.COIN, 5)),
+                new ExtraDepot(Resource.STONE)
+                , "resources/cardsFront/LFRONT (5).png", "resource/cardsBack/BACK (1).png"));
+        list.add(new LeaderCard(3,
+                new ResourceRequirements(Map.of(Resource.SERVANT, 5)),
+                new ExtraDepot(Resource.SHIELD)
+                , "resources/cardsFront/LFRONT (6).png", "resource/cardsBack/BACK (1).png"));
+        D.associateLeaderCards(list);
+
+        B.getLeaderCards()[0].setEnabled(true);
+        actionManager.discardLeaderCard(D, new MSG_ACTION_DISCARD_LEADERCARD(1));
+
+        A.getWarehouseDepot().add(Resource.SERVANT);
+        A.getWarehouseDepot().add(Resource.COIN);
+        A.getWarehouseDepot().add(Resource.COIN);
+        A.getWarehouseDepot().add(Resource.SHIELD);
+
+        B.getWarehouseDepot().add(Resource.STONE);
+        B.getWarehouseDepot().add(Resource.SERVANT);
+        B.getWarehouseDepot().add(Resource.SERVANT);
+
+        C.getWarehouseDepot().add(Resource.SERVANT);
+        C.getWarehouseDepot().swapRow(1,2);
+
+        D.getWarehouseDepot().add(Resource.SHIELD);
+        D.getWarehouseDepot().swapRow(1, 3);
+        D.getWarehouseDepot().add(Resource.SHIELD);
+        D.getWarehouseDepot().add(Resource.SHIELD);
+
+        A.getStrongbox().addResource(Resource.SHIELD, 1);
+        A.getStrongbox().addResource(Resource.COIN, 1);
+        A.getStrongbox().addResource(Resource.STONE, 1);
+        A.getStrongbox().addResource(Resource.SERVANT, 1);
+
+        B.getStrongbox().addResource(Resource.COIN, 1);
+        B.getStrongbox().addResource(Resource.SHIELD, 5);
+
+        C.getStrongbox().addResource(Resource.SERVANT, 3);
+        C.getStrongbox().addResource(Resource.COIN, 2);
+        C.getStrongbox().addResource(Resource.SHIELD, 5);
+
+        D.getStrongbox().addResource(Resource.STONE, 10);
+        D.getStrongbox().addResource(Resource.SHIELD, 11);
+        D.getStrongbox().addResource(Resource.COIN, 9);
+        D.getStrongbox().addResource(Resource.SERVANT, 12);
+
+        D.getDevelopmentSlot().addCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1)),
+                "resources/cardsFront/DFRONT (46).png", "resources/cardsBack/BACK (10)"
+        ), 2);
+
+        D.getDevelopmentSlot().addCard(new DevelopmentCard(2, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 11,
+                Map.of(Resource.SHIELD, 7),
+                new Power(Map.of(Resource.SERVANT, 1),
+                        Map.of(Resource.COIN, 1, Resource.FAITH, 3)),
+                "resources/cardsFront/DFRONT (42).png", "resources/cardsBack/BACK (10)"
+        ), 2);
+
+        D.getDevelopmentSlot().addCard( new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.YELLOW, 1,
+                Map.of(Resource.STONE, 2),
+                new Power(Map.of(Resource.SERVANT, 1),
+                        Map.of(Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (5).png", "resources/cardsBack/BACK (5)"
+        ),1);
+
+        A.getDevelopmentSlot().addCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 10,
+                Map.of(Resource.SHIELD, 5, Resource.SERVANT, 2),
+                new Power(Map.of(Resource.COIN, 1, Resource.SERVANT, 1),
+                        Map.of(Resource.SHIELD, 2, Resource.STONE, 2, Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (38).png", "resources/cardsBack/BACK (10)"
+        ), 0);
+
+        A.getDevelopmentSlot().addCard( new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 9,
+                Map.of(Resource.SHIELD, 6),
+                new Power(Map.of(Resource.COIN, 2),
+                        Map.of(Resource.STONE, 3, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (34).png", "resources/cardsBack/BACK (10)"
+        ) , 1);
+
+        A.getDevelopmentSlot().addCard(new DevelopmentCard(3, it.polimi.ingsw.server.model.enumerators.Color.BLUE, 12,
+                Map.of(Resource.COIN, 4, Resource.STONE, 4),
+                new Power(Map.of(Resource.SERVANT, 1),
+                        Map.of(Resource.COIN, 1, Resource.SHIELD, 3)),
+                "resources/cardsFront/DFRONT (48).png", "resources/cardsBack/BACK (12)"
+        ), 2);
+
+        B.getDevelopmentSlot().addCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 1,
+                Map.of(Resource.SHIELD, 2),
+                new Power(Map.of(Resource.COIN, 1),
+                        Map.of(Resource.FAITH, 1)),
+                "resources/cardsFront/DFRONT (2).png", "resources/cardsBack/BACK (2)"
+        ), 1);
+
+        B.getDevelopmentSlot().addCard(new DevelopmentCard(2, it.polimi.ingsw.server.model.enumerators.Color.YELLOW, 5,
+                Map.of(Resource.STONE, 4),
+                new Power(Map.of(Resource.SHIELD, 1),
+                        Map.of(Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (21).png", "resources/cardsBack/BACK (9)"
+        ), 1);
+
+        B.getDevelopmentSlot().addCard( new DevelopmentCard(3, it.polimi.ingsw.server.model.enumerators.Color.YELLOW, 9,
+                Map.of(Resource.STONE, 6),
+                new Power(Map.of(Resource.SHIELD, 2),
+                        Map.of(Resource.SERVANT, 3, Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (37).png", "resources/cardsBack/BACK (13)"
+        ),1);
+
+        C.getDevelopmentSlot().addCard( new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.YELLOW, 2,
+                Map.of(Resource.SHIELD, 1, Resource.STONE, 1, Resource.COIN, 1),
+                new Power(Map.of(Resource.SHIELD, 1),
+                        Map.of(Resource.COIN, 1)),
+                "resources/cardsFront/DFRONT (9).png", "resources/cardsBack/BACK (5)"
+        ), 1);
     }
 
     public void run() {
