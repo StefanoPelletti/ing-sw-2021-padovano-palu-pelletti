@@ -1,8 +1,6 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
-import it.polimi.ingsw.client.cli.UpdateHandlerLocal;
-import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;

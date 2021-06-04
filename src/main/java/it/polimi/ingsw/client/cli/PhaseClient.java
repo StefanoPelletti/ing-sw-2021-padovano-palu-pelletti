@@ -100,8 +100,6 @@ class Halo {
     static boolean triedAction = false;
     static GameManager gameManager;
     static ActionManager actionManager;
-    static Player myPlayerRefSRV;
-    static Game gameSRV;
     static boolean reconnected = false;
 
     private Halo() {
@@ -139,14 +137,12 @@ class Halo {
         //online var
         game = null;
         myPlayerRef = null;
-        gameSRV = null;
         reconnected = false;
 
 
         //local ref
         gameManager = null;
         actionManager = null;
-        myPlayerRefSRV = null;
     }
 
     /**
@@ -155,10 +151,7 @@ class Halo {
      * @return The user's specified Leader Card.
      */
     private static LeaderCard getMyLeaderCard(int cardNumber) {
-        if (Halo.local)
-            return myPlayerRefSRV.getLeaderCards()[cardNumber];
-        else
-            return myPlayerRef.getLeaderCards()[cardNumber];
+        return myPlayerRef.getLeaderCards()[cardNumber];
     }
 
     /**
@@ -166,10 +159,7 @@ class Halo {
      * @return Both of the user's Leader Cards as a LeaderCard[] array.
      */
     private static LeaderCard[] getBothMyLeaderCard() {
-        if (Halo.local)
-            return myPlayerRefSRV.getLeaderCards();
-        else
-            return myPlayerRef.getLeaderCards();
+        return myPlayerRef.getLeaderCards();
     }
 
     /**
@@ -177,10 +167,7 @@ class Halo {
      * @return A List containing the VendorCards exposed by the middle object DevelopmentCardsVendor.
      */
     private static List<VendorCard> getVendorCards() {
-        if (local)
-            return gameSRV.getDevelopmentCardsVendor().getCards();
-        else
-            return game.getDevelopmentCardsVendor().getCards();
+        return game.getDevelopmentCardsVendor().getCards();
     }
 
     /**
@@ -188,10 +175,7 @@ class Halo {
      * @return A 8-cell boolean array containing the possible choices from the middle object MarketHelper.
      */
     private static boolean[] getMarketChoices() {
-        if (local)
-            return gameSRV.getMarketHelper().getChoices();
-        else
-            return game.getMarketHelper().getChoices();
+        return game.getMarketHelper().getChoices();
     }
 
     /**
@@ -271,10 +255,7 @@ class Halo {
      * @return The MarketHelper toString() as a String.
      */
     public static String printMarketHelper() {
-        if (local)
-            return gameSRV.getMarketHelper().toString();
-        else
-            return game.getMarketHelper().toString();
+        return game.getMarketHelper().toString();
     }
 
     /**
@@ -282,10 +263,7 @@ class Halo {
      * @return The DevelopmentCardsVendor toString() as a String.
      */
     public static String printDevelopmentCardsVendor() {
-        if (local)
-            return gameSRV.getDevelopmentCardsVendor().toString();
-        else
-            return game.getDevelopmentCardsVendor().toString();
+        return game.getDevelopmentCardsVendor().toString();
     }
 
     /**
@@ -294,7 +272,7 @@ class Halo {
      */
     public static String printMarket() {
         if (Halo.local)
-            return gameSRV.getMarket().toString();
+            return game.getMarket().toString();
         else
             return game.getMarket().toString();
     }
@@ -304,10 +282,7 @@ class Halo {
      * @return The user's WarehouseDepot toString() as a String.
      */
     public static String printMyWarehouseDepot() {
-        if (local)
-            return myPlayerRefSRV.getWarehouseDepot().toString();
-        else
-            return myPlayerRef.getWarehouseDepot().toString();
+        return myPlayerRef.getWarehouseDepot().toString();
     }
 
     /**
@@ -315,10 +290,7 @@ class Halo {
      * @return The user's Strongbox toString() as a String.
      */
     public static String printMyStrongbox() {
-        if (local)
-            return myPlayerRefSRV.getStrongbox().toString();
-        else
-            return myPlayerRef.getStrongbox().toString();
+        return myPlayerRef.getStrongbox().toString();
     }
 
     /**
@@ -326,10 +298,7 @@ class Halo {
      * @return The user's DevelopmentSlot toString() as a String.
      */
     public static String printMyDevelopmentSlot() {
-        if (local)
-            return myPlayerRefSRV.getDevelopmentSlot().toString();
-        else
-            return myPlayerRef.getDevelopmentSlot().toString();
+        return myPlayerRef.getDevelopmentSlot().toString();
     }
 
     /**
@@ -337,10 +306,7 @@ class Halo {
      * @return The user's current victory points as a String.
      */
     public static String printMyVP() {
-        if (local)
-            return " My VP : " + myPlayerRefSRV.getVp();
-        else
-            return " My VP : " + myPlayerRef.getVp();
+        return " My VP : " + myPlayerRef.getVp();
     }
 
     /**
@@ -350,13 +316,8 @@ class Halo {
     public static String printPlayers() {
         StringBuilder result = new StringBuilder();
         result.append(A.GREEN + " > Showing players as 'name - number'" + A.RESET);
-        if (local) {
-            for (Player p : Halo.gameSRV.getPlayerList())
+        for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
                 result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
-        } else {
-            for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
-                result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
-        }
         return result.toString();
     }
 
@@ -365,10 +326,7 @@ class Halo {
      * @return The DevelopmentCardsDeck toString() as a String.
      */
     public static String printDevelopmentCardsDeck() {
-        if (local)
-            return gameSRV.getDevelopmentCardsDeck().toString();
-        else
-            return game.getDevDeck().toString();
+        return game.getDevDeck().toString();
     }
 
     /**
@@ -376,10 +334,7 @@ class Halo {
      * @return The FaithTrack toString() as a String.
      */
     public static String printFaithTrack() {
-        if (local)
-            return gameSRV.getFaithTrack().toString(solo);
-        else
-            return game.getFaithTrack().toString(solo);
+        return game.getFaithTrack().toString(solo);
     }
 
     /**
@@ -387,10 +342,7 @@ class Halo {
      * @return A String showing the current turn.
      */
     public static String printCurrentTurn() {
-        if (local)
-            return " Current turn is : " + gameSRV.getTurn();
-        else
-            return " Current turn is : " + game.getTurn();
+        return " Current turn is : " + game.getTurn();
     }
 
     /**
@@ -2339,19 +2291,19 @@ class LocalPhase {
             textList.clear();
             textList = new ArrayList<>((Arrays.asList(text.split("\\s+"))));
 
-            if (Halo.gameSRV.isMiddleActive() && !Halo.gameSRV.isLeaderBoardEnabled()) {
-                if (Halo.gameSRV.isLeaderCardsPickerEnabled()) {
+            if (Halo.game.isMiddleActive() && !Halo.game.isLeaderBoardEnabled()) {
+                if (Halo.game.isLeaderCardsPickerEnabled()) {
                     message = Halo.chooseLeaderCards(textList);
                     if (message != null) {
                         Halo.actionManager.onMessage(message);
                     }
-                } else if (Halo.gameSRV.isMarketHelperEnabled()) {
+                } else if (Halo.game.isMarketHelperEnabled()) {
                     message = Halo.marketChoice(textList);
                     if (message != null) {
                         Halo.actionManager.onMessage(message);
                     }
 
-                } else if (Halo.gameSRV.isDevelopmentCardsVendorEnabled()) {
+                } else if (Halo.game.isDevelopmentCardsVendorEnabled()) {
                     message = Halo.chooseDevCard(textList);
                     if (message != null) {
                         Halo.actionManager.onMessage(message);
@@ -2479,22 +2431,24 @@ class LocalPhase {
         Halo.myNickname = "Player";
         Halo.gameManager = new GameManager(1);
         Halo.actionManager = Halo.gameManager.getActionManager();
-        Halo.gameSRV = Halo.gameManager.getGame();
-        Halo.gameSRV.addPlayer(Halo.myNickname, Halo.myPlayerNumber);
-        Halo.myPlayerRefSRV = Halo.gameManager.currentPlayer();
 
-        Halo.gameSRV.setLeaderCardsPickerCards(Halo.gameSRV.getCurrentPlayerStartingCards());
-        Halo.gameSRV.setLeaderCardsPickerEnabled(true);
+        Halo.gameManager.getGame().addPlayer(Halo.myNickname, Halo.myPlayerNumber);
 
-        UpdateHandlerLocal updateHandlerLocal = new UpdateHandlerLocal();
-        Halo.gameManager.addAllObserver(updateHandlerLocal);
+        Halo.gameManager.getGame().setLeaderCardsPickerCards(Halo.gameManager.getGame().getCurrentPlayerStartingCards());
+        Halo.gameManager.getGame().setLeaderCardsPickerEnabled(true);
+        MSG_UPD_Full message = Halo.gameManager.getFullModel();
+        Halo.game = new GameSimplified();
+        Halo.game.updateAll(message);
+        Halo.myPlayerRef = Halo.game.getCurrentPlayerRef();
+        UpdateHandler updateHandler = new UpdateHandler();
+        Halo.gameManager.addAllObserver(updateHandler);
 
         Halo.yourTurn = true;
 
         System.out.println(" >> Game started!");
 
         System.out.println(" <> Two free Leader Cards!");
-        System.out.println(Halo.gameSRV.getLeaderCardsPicker().toString());
+        System.out.println(Halo.game.getLeaderCardsPicker().toString());
         System.out.println(" > " + A.UL + "Please pick the first card:" + A.RESET);
         System.out.print(" Card number: ");
     }

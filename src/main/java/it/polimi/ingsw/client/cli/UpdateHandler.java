@@ -10,11 +10,12 @@ import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Ex
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.server.utils.A;
+import it.polimi.ingsw.server.utils.ModelObserver;
 
 import java.io.IOException;
 import java.net.ProtocolException;
 
-public class UpdateHandler implements Runnable {
+public class UpdateHandler implements Runnable, ModelObserver {
 
     boolean still = false;
     /**
@@ -63,6 +64,12 @@ public class UpdateHandler implements Runnable {
                 return;
             }
         }
+    }
+
+    @Override
+    public void update(Message message) {
+        UpdateMessage msg = (UpdateMessage) message;
+        msg.executeCLI(this);
     }
 
     public void updatePlayer(MSG_UPD_Player message){
@@ -210,7 +217,5 @@ public class UpdateHandler implements Runnable {
             System.out.println(A.RED + " <> " + ((MSG_ERROR) message).getErrorMessage() + A.RESET);
         }
     }
-
-
 
 }
