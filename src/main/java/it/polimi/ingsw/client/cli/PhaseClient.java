@@ -1651,9 +1651,15 @@ class Halo {
     }
 
     public static void send(Message message) throws IOException {
-        Halo.objectOutputStream.reset();
-        Halo.objectOutputStream.writeObject(message);
-        Halo.objectOutputStream.flush();
+        if(!Halo.socket.isClosed()) {
+            Halo.objectOutputStream.reset();
+            Halo.objectOutputStream.writeObject(message);
+            Halo.objectOutputStream.flush();
+        }
+        else
+        {
+            System.out.println(A.RED+">> write Quit to go back to Main Menu.");
+        }
     }
 }
 
@@ -1888,8 +1894,9 @@ class MenuPhase {
             if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
                 MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
                 System.out.println(A.GREEN + " <<>> Connected! " + A.RESET);
+                System.out.println(A.GREEN + " <> Your assigned nickname is " + msg.getAssignedNickname() + A.RESET);
+                Halo.myNickname = msg.getAssignedNickname();
                 System.out.println(A.GREEN + " <> Your lobby number is " + msg.getLobbyNumber() + A.RESET);
-                Halo.myNickname = nickname;
                 Halo.solo = solo;
                 Halo.defaultAddress = ip;
                 Halo.reconnected = false;

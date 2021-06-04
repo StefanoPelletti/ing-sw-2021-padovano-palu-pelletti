@@ -1287,6 +1287,7 @@ public class MainMenu implements Runnable {
                 Ark.solo = solo;
                 progressBar.setIndeterminate(true);
                 progressLabel.setText("waiting other players");
+                Ark.nickname = msg.getAssignedNickname();
                 messageLabel.setText("Lobby Number is "+msg.getLobbyNumber());
 
                 message = (Message) Ark.objectInputStream.readObject();

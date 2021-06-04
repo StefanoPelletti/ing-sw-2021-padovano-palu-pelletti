@@ -427,12 +427,12 @@ public class ClientHandler implements Runnable, ModelObserver {
 
             this.lobby = new Lobby(i, numOfPlayers);
             synchronized (lobby) {
-                this.lobby.onJoin(inputNickname, this.clientSocket, this);
+                this.nickname = this.lobby.onJoin(inputNickname, this.clientSocket, this);
 
                 Lobby.addLobby(this.lobby);
 
-                System.out.println(inputNickname + " created lobby " + i);
-                this.send(new MSG_OK_CREATE(i));
+                System.out.println(this.nickname + " created lobby " + i);
+                this.send(new MSG_OK_CREATE(i, this.nickname));
 
                 if (numOfPlayers == 1) {
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Solo lobby detected and init " + i);

@@ -249,6 +249,9 @@ public class GameSimplified {
         return result.orElse(null);
     }
 
+    public String getCurrentPlayerName() {
+        return getCurrentPlayerRef().getNickname();
+    }
 
     public int getMyPlayerNumber(String Nickname) {
         for (PlayerSimplified p : playerSimplifiedList) {

@@ -163,13 +163,17 @@ public class Lobby {
      */
     public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
         if (this.lobbyMaxPlayers > nicknameList.size()) {
+            if(nickname.length()>20)
+                nickname = nickname.substring(0,19);
+
             clientHandlers.add(clientHandler);
             socketList.add(socket);
             String newNickname = nickname;
 
-            if (nicknameList.stream().anyMatch(n -> n.equals(nickname))) {
-                if (nicknameList.stream().anyMatch(n -> n.equals(nickname + " (1)"))) {
-                    if (nicknameList.stream().anyMatch(n -> n.equals(nickname + " (2)"))) {
+            String finalNickname = nickname;
+            if (nicknameList.stream().anyMatch(n -> n.equals(finalNickname))) {
+                if (nicknameList.stream().anyMatch(n -> n.equals(finalNickname + " (1)"))) {
+                    if (nicknameList.stream().anyMatch(n -> n.equals(finalNickname + " (2)"))) {
                         newNickname = nickname + " (3)";
                     } else {
                         newNickname = nickname + " (2)";

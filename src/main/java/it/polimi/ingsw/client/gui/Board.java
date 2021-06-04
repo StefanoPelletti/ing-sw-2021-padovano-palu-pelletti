@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_DISCARD_LEADERCARD;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
-import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
@@ -18,12 +17,13 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Board implements Runnable {
@@ -54,13 +54,21 @@ public class Board implements Runnable {
     JButton endTurn_Button;
 
 
+    //RESOURCE CARDS (CENTRAL LEFT PANEL)
+    String lastLeftCard;
 
-    //CARDS
-    static final String BOARD = "Player Board";
+    //CARDS (CENTRAL RIGHT PANEL)  <- card followed by its contents
+    String lastRightCard;
+    static final String DEVDECK = "Development Cards Deck";
+    DevDeck_Board_Card_Panel devDeck_board_card_panel;
+    JButton back_DevDeck_Card_Button;
 
     //fonts
     static final String TIMES = "Times New Roman";
     static final String PAP = "Papyrus";
+
+
+
 
     public static void main(String[] args) {
         // you can write here shortcuts, like going directly to the Settings and opening multiple frames
@@ -245,7 +253,7 @@ public class Board implements Runnable {
     }
 
     public void run() {
-
+        //empty to implement run method
     }
 
     public Board() {
@@ -326,7 +334,13 @@ public class Board implements Runnable {
                 buy_DevCard_Button.addActionListener(buy_DevCard_Button_actionListener);
                 activate_Production_Button.addActionListener(activate_Production_Button_actionListener);
                 endTurn_Button.addActionListener(endTurn_Button_actionListener);
+                back_DevDeck_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
             }
+
+            lastRightCard = Ark.nickname;
+            lastLeftCard = Ark.nickname;
+
+            //controls for first player, eg leadercardpicker enabled
         }
 
         @Override
@@ -337,6 +351,8 @@ public class Board implements Runnable {
 
     }
 
+
+    //LEFT PANEL
     class LeftPanel extends JPanel {
         public LeftPanel() {
             GridBagConstraints c;
@@ -345,28 +361,7 @@ public class Board implements Runnable {
             this.setBackground(new Color(215, 200, 145));
             this.setBorder(BorderFactory.createMatteBorder(1,1,0,1, new Color(62, 43, 9)));
 
-            JLabel paddingVertical = new JLabel();
-            paddingVertical.setText("");
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.gridwidth = 1;
-            c.gridheight = 6; // <- max rows
-            c.insets = new Insets(840,0, 0,0);
-            c.insets = new Insets(839,0, 0,0);
-            this.add(paddingVertical, c);
-
-
-            JLabel paddingHorizontal = new JLabel();
-            paddingHorizontal.setText("");
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.gridwidth = 3; // <- max columns
-            c.gridheight = 1;
-            c.insets = new Insets(0,459, 0,0);
-            c.insets = new Insets(0,457, 0,0);
-            this.add(paddingHorizontal, c);
+            addPadding(this, 839,457,3,6);
 
             quit_Button = new JButton("Quit");
             quit_Button.setPreferredSize(new Dimension(120, 60));
@@ -397,7 +392,7 @@ public class Board implements Runnable {
 
             turnOf = new JLabel();
             turnOf.setOpaque(false);
-            turnOf.setText("Turn of Pablo");
+            turnOf.setText("Turn of "+Ark.game.getCurrentPlayerName());
             turnOf.setHorizontalAlignment(SwingConstants.CENTER);
             turnOf.setFont(new Font(PAP, Font.BOLD, 20));
             c = new GridBagConstraints();
@@ -498,7 +493,7 @@ public class Board implements Runnable {
                 leaderCardLabel1.setLayout(null);
                 leaderCardLabel1.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
                 ImageIcon t1 = new ImageIcon("resources/cardsBack/BACK (1).png");
-                t1 = scaleImage(t1, 300, 300);
+                t1 = scaleImage(t1, 300);
                 leaderCardLabel1.setIcon(t1);
                 c = new GridBagConstraints();
                 c.gridx = 0;
@@ -531,7 +526,7 @@ public class Board implements Runnable {
                 leaderCardLabel2.setLayout(null);
                 leaderCardLabel2.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
                 ImageIcon t2 = new ImageIcon("resources/cardsBack/BACK (1).png");
-                t2 = scaleImage(t2, 300, 300);
+                t2 = scaleImage(t2, 300);
                 leaderCardLabel2.setIcon(t2);
                 c = new GridBagConstraints();
                 c.gridx = 2;
@@ -622,6 +617,8 @@ public class Board implements Runnable {
         }
     }
 
+
+    //BOTTOM PANEL
     class BottomPanel extends JPanel {
         public BottomPanel() {
             GridBagConstraints c;
@@ -630,29 +627,7 @@ public class Board implements Runnable {
             this.setBackground(new Color(215, 200, 145));
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
 
-
-            JLabel paddingVertical = new JLabel();
-            paddingVertical.setText("");
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.gridwidth = 1;
-            c.gridheight = 3; // <- max rows
-            c.insets = new Insets(160,0, 0,0);
-            c.insets = new Insets(158,0, 0,0);
-            this.add(paddingVertical, c);
-
-
-            JLabel paddingHorizontal = new JLabel();
-            paddingHorizontal.setText("");
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.gridwidth = 6; // <- max columns
-            c.gridheight = 1;
-            c.insets = new Insets(0,1680, 0,0);
-            c.insets = new Insets(0,1678, 0,0);
-            this.add(paddingHorizontal, c);
+            addPadding(this, 158,1678,6,3);
 
             {
                 activate_LeaderCards_Button = new JButton("activate card");
@@ -768,9 +743,9 @@ public class Board implements Runnable {
         }
     }
 
-    class PlayersRecapPanel extends JPanel
+    class PlayersRecapPanel extends JPanel //TODO button
     {
-        Map<String, java.util.List> map;
+        private Map<String, java.util.List<JLabel>> map;
 
         public PlayersRecapPanel()
         {
@@ -785,9 +760,11 @@ public class Board implements Runnable {
                 map = new HashMap<>();
                 for(int i = 0; i<Ark.game.getPlayerList().size(); i++) //for all players except the one me
                 {
+                    labelList.clear();
                     PlayerSimplified player = Ark.game.getPlayer(i+1);
                     if(player.equals(Ark.myPlayerRef))
                         continue;
+
                     JPanel playerPanel = new JPanel(new GridBagLayout());
                     playerPanel.setOpaque(false);
                     playerPanel.setBorder(BorderFactory.createLineBorder(new Color(79, 66, 34),2));
@@ -805,9 +782,7 @@ public class Board implements Runnable {
                     c.insets = new Insets(1,1,1,1);
                     playerPanel.add(nicknameLabel,c);
 
-                    Map<Resource,Integer> resources = player.getResources();
-
-                    JLabel coinLabel = new JLabel("Coins: "+resources.get(Resource.COIN));
+                    JLabel coinLabel = new JLabel();
                     coinLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(coinLabel);
                     c = new GridBagConstraints();
@@ -818,10 +793,10 @@ public class Board implements Runnable {
                     c.gridwidth = 1;
                     c.gridheight = 1;
                     c.anchor = GridBagConstraints.LINE_START;
-                    c.insets = new Insets(1,20,1,1);
+                    c.insets = new Insets(1,14,1,1);
                     playerPanel.add(coinLabel,c);
 
-                    JLabel shieldLabel = new JLabel("Shields: "+resources.get(Resource.SHIELD));
+                    JLabel shieldLabel = new JLabel();
                     shieldLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(shieldLabel);
                     c = new GridBagConstraints();
@@ -832,10 +807,10 @@ public class Board implements Runnable {
                     c.gridwidth = 1;
                     c.gridheight = 1;
                     c.anchor = GridBagConstraints.LINE_START;
-                    c.insets = new Insets(1,20,1,1);
+                    c.insets = new Insets(1,14,1,1);
                     playerPanel.add(shieldLabel,c);
 
-                    JLabel stoneLabel = new JLabel("Stones: "+resources.get(Resource.STONE));
+                    JLabel stoneLabel = new JLabel();
                     stoneLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(stoneLabel);
                     c = new GridBagConstraints();
@@ -846,10 +821,10 @@ public class Board implements Runnable {
                     c.gridwidth = 1;
                     c.gridheight = 1;
                     c.anchor = GridBagConstraints.LINE_START;
-                    c.insets = new Insets(1,20,1,1);
+                    c.insets = new Insets(1,14,1,1);
                     playerPanel.add(stoneLabel,c);
 
-                    JLabel servantLabel = new JLabel("Servants: "+resources.get(Resource.SERVANT));
+                    JLabel servantLabel = new JLabel();
                     servantLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(servantLabel);
                     c = new GridBagConstraints();
@@ -860,11 +835,18 @@ public class Board implements Runnable {
                     c.gridwidth = 1;
                     c.gridheight = 1;
                     c.anchor = GridBagConstraints.LINE_START;
-                    c.insets = new Insets(1,20,3,1);
+                    c.insets = new Insets(1,14,3,1);
                     playerPanel.add(servantLabel,c);
 
 
-                    showPlayerButton button = new showPlayerButton("show", player.getNickname());
+                    ShowPlayerButton button = new ShowPlayerButton("show", player.getNickname());
+                    button.addActionListener(e -> {
+                        ShowPlayerButton b = (ShowPlayerButton) e.getSource();
+                        String playerName = b.getPlayerName();
+
+                        cardLayoutLeft.show(centralLeftPanel, playerName);
+                        cardLayoutRight.show(centralRightPanel, playerName);
+                    });
                     button.setFont(new Font(PAP, Font.BOLD, 20));
                     button.setMinimumSize(new Dimension(100,100));
                     button.setBackground(new Color(231, 210, 181));
@@ -879,22 +861,60 @@ public class Board implements Runnable {
                     c.insets = new Insets(10,0,10,10);
                     playerPanel.add(button,c);
 
-                    map.put(player.getNickname(), labelList);
+                    map.put(player.getNickname(), new ArrayList<>(labelList));
                     c = new GridBagConstraints();
                     c.fill = GridBagConstraints.BOTH;
                     c.gridx = i;
                     c.weightx = 0.5;
                     c.weighty = 0.5;
                     this.add(playerPanel, c);
-
                 }
+            }
+            else
+            {
+                //TODO solo mode for bottom panel
+            }
+
+            this.update();
+        }
+
+        public void update() {
+            if(!Ark.solo) {
+                JLabel label;
+                for (String name : map.keySet()) {
+                    List<JLabel> labels = map.get(name);
+                    Map<Resource, Integer> resources = Ark.game.getPlayerRef(name).getResources();
+                    for (int i = 0; i < 4; i++) {
+                        label = labels.get(i); //0 coin //1 shield //2 stone //servant
+                        switch (i) {
+                            case 0:
+                                label.setText("Coins: " + resources.get(Resource.COIN));
+                                break;
+                            case 1:
+                                label.setText("Shields: " + resources.get(Resource.SHIELD));
+                                break;
+                            case 2:
+                                label.setText("Stones: " + resources.get(Resource.STONE));
+                                break;
+                            case 3:
+                                label.setText("Servants: " + resources.get(Resource.SERVANT));
+                                break;
+                            default:
+                                label.setText("Default?");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //TODO solo mode update for bottom panel
             }
         }
     }
 
-    class showPlayerButton extends JButton {
+    class ShowPlayerButton extends JButton { //TODO actionlisteners
         private final String playerName;
-        public showPlayerButton(String text, String playerName)
+        public ShowPlayerButton(String text, String playerName)
         {
             super(text);
             this.playerName = playerName;
@@ -903,6 +923,8 @@ public class Board implements Runnable {
         public String getPlayerName() { return this.playerName; }
     }
 
+
+    //TOP PANEL
     class TopPanel extends JPanel {
         private Image image;
         public TopPanel()
@@ -912,11 +934,7 @@ public class Board implements Runnable {
             } catch (IOException e) {}
             this.setLayout(new GridBagLayout());
 
-            JLabel el = new JLabel();
-            el.setText("");
-            GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(239,1221, 0,0);
-            this.add(el, c);
+            addPadding(this, 239,1221,2,2);
         }
         @Override
         protected void paintComponent(Graphics g) {
@@ -925,6 +943,8 @@ public class Board implements Runnable {
         }
     }
 
+
+    //CENTRAL LEFT PANEL <- CARDLAYOUTLEFT
     class CentralLeftPanel extends JPanel {
         private Image image;
         public CentralLeftPanel()
@@ -954,9 +974,9 @@ public class Board implements Runnable {
         }
     }
 
-    class depotPanel extends JPanel {
+    class DepotPanel extends JPanel {
         //many labels
-        public depotPanel() {
+        public DepotPanel() {
             this.setOpaque(false);
             this.setLayout(new GridBagLayout());
 
@@ -964,35 +984,34 @@ public class Board implements Runnable {
         }
     }
 
+
+    //CENTRAL RIGHT PANEL <- CARDLAYOUTRIGHT
     class CentralRightPanel extends JPanel {
         public CentralRightPanel() {
             cardLayoutRight = new CardLayout();
             this.setLayout(cardLayoutRight);
             this.setOpaque(false);
 
-            Card1_Board card1_board = new Card1_Board();
-            this.add(card1_board, BOARD);
+            Self_Board_Card_Panel self_board_card_panel = new Self_Board_Card_Panel(); //put ref in variables on top
+            this.add(self_board_card_panel, Ark.nickname);
+            devDeck_board_card_panel = new DevDeck_Board_Card_Panel(); //put ref in variables on top
+            this.add(devDeck_board_card_panel, DEVDECK);
         }
-
     }
 
-    class Card1_Board extends JPanel {
+    class Self_Board_Card_Panel extends JPanel {
 
         private Image image;
 
-        public Card1_Board()
+        public Self_Board_Card_Panel() //TODO devslot, update
         {
             this.setLayout(new GridBagLayout());
+
             try {
                 image = ImageIO.read(new File("resources/images/right_board.png"));
             } catch (IOException e) {}
 
-            JLabel el = new JLabel();
-            el.setOpaque(false);
-            el.setText("");
-            GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(601,948, 0,0);
-            this.add(el,c);
+            addPadding(this, 601,948,2,2);
         }
 
         @Override
@@ -1002,19 +1021,207 @@ public class Board implements Runnable {
         }
     }
 
-    public ImageIcon scaleImage(ImageIcon icon, int w, int h)
+    class DevDeck_Board_Card_Panel extends JPanel {
+
+        JLabel[][] labels;
+
+        public DevDeck_Board_Card_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
+
+            this.labels = new JLabel[3][4];
+
+            addPadding(this, 599,946,6,5);
+
+            JLabel level3CardLabel = new JLabel("Level 3");
+            level3CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 2;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.01;
+            c.weighty = 0.5;
+            c.anchor = GridBagConstraints.LINE_END;
+            c.insets = new Insets(0,0,0,0);
+            this.add(level3CardLabel,c);
+
+            JLabel level2CardLabel = new JLabel("Level 2");
+            level2CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 3;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.01;
+            c.weighty = 0.5;
+            c.anchor = GridBagConstraints.LINE_END;
+            c.insets = new Insets(0,0,0,0);
+            this.add(level2CardLabel,c);
+
+            JLabel level1CardLabel = new JLabel("Level 1");
+            level1CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 4;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.01;
+            c.weighty = 0.5;
+            c.anchor = GridBagConstraints.LINE_END;
+            c.insets = new Insets(0,0,0,0);
+            this.add(level1CardLabel,c);
+
+            back_DevDeck_Card_Button = new JButton("Back");
+            back_DevDeck_Card_Button.setPreferredSize(new Dimension(120, 40));
+            back_DevDeck_Card_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_DevDeck_Card_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.01;
+            c.weighty = 0.01;
+            c.insets = new Insets(5,5,0,0);
+            this.add(back_DevDeck_Card_Button,c);
+
+            JLabel greenCardColumnLabel = new JLabel("green");
+            greenCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.01;
+            c.insets = new Insets(0,0,0,0);
+            this.add(greenCardColumnLabel,c);
+
+            JLabel blueCardColumnLabel = new JLabel("blue");
+            blueCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.01;
+            c.insets = new Insets(0,0,0,0);
+            this.add(blueCardColumnLabel,c);
+
+            JLabel yellowCardColumnLabel = new JLabel("yellow");
+            yellowCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.01;
+            c.insets = new Insets(0,0,0,0);
+            this.add(yellowCardColumnLabel,c);
+
+            JLabel purpleCardColumnLabel = new JLabel("purple");
+            purpleCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 5;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.01;
+            c.insets = new Insets(0,0,0,0);
+            this.add(purpleCardColumnLabel,c);
+
+            for(int col = 0; col < 4; col++)
+            {
+                for(int row = 0; row < 3; row++)
+                {
+                     JLabel label = new JLabel();
+                     c = new GridBagConstraints();
+                     c.gridx = col+2;
+                     c.gridy = row+2;
+                     c.weightx = 0.5;
+                     c.weighty = 0.5;
+                     this.add(label,c);
+                     this.labels[row][col] = label;
+                }
+            }
+
+            this.update();
+        }
+
+        public void update() {
+            DevelopmentCard[][] cards = Ark.game.getDevDeck().getCards();
+
+            for(int col = 0; col < 4; col++)
+            {
+                for(int row = 0; row < 3; row++)
+                {
+                    ImageIcon cardIcon;
+                    if(cards[row][col]==null)
+                        cardIcon = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 175);
+                    else
+                        cardIcon = scaleImage(new ImageIcon(cards[row][col].getFrontPath()), 175);
+                    labels[row][col].setIcon(cardIcon);
+                }
+            }
+        }
+    }
+
+
+    //HELPER METHODS (graphics)
+    public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows)
     {
-        int nw = icon.getIconWidth();
-        int nh = icon.getIconHeight();
-        if(icon.getIconWidth() > w) {
-            nw = w;
-            nh = (nw * icon.getIconHeight()) / icon.getIconWidth();
+        GridBagConstraints c;
+
+        JLabel paddingVertical = new JLabel();
+        paddingVertical.setText("");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.gridwidth = 1;
+        c.gridheight = maxRows; // <- max rows
+        c.insets = new Insets(height,0, 0,0);
+        object.add(paddingVertical, c);
+
+
+        JLabel paddingHorizontal = new JLabel();
+        paddingHorizontal.setText("");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.gridwidth = maxColumns; // <- max columns
+        c.gridheight = 1;
+        c.insets = new Insets(0,width, 0,0);
+        object.add(paddingHorizontal, c);
+    }
+
+    public ImageIcon scaleImage(ImageIcon icon, int squareDimension)
+    {
+        return scaleImage(icon, squareDimension, squareDimension);
+    }
+
+    public ImageIcon scaleImage(ImageIcon icon, int width, int height)
+    {
+        int newWidth = icon.getIconWidth();
+        int newHeight = icon.getIconHeight();
+        if(icon.getIconWidth() > width) {
+            newWidth = width;
+            newHeight = (newWidth * icon.getIconHeight()) / icon.getIconWidth();
         }
-        if(nh > h) {
-            nh = h;
-            nw = (icon.getIconWidth() * nh) / icon.getIconHeight();
+        if(newHeight > height) {
+            newHeight = height;
+            newWidth = (icon.getIconWidth() * newHeight) / icon.getIconHeight();
         }
-        return new ImageIcon(icon.getImage().getScaledInstance(nw, nh, Image.SCALE_DEFAULT));
+        return new ImageIcon(icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT));
     }
 
     //ACTION LISTENERS
@@ -1023,20 +1230,20 @@ public class Board implements Runnable {
         string = notificationsArea.getText();
         notificationsArea.setText(string+"\nword");
         ImageIcon t = new ImageIcon(Resource.COIN.getPathLittle());
-        t = scaleImage(t, 50, 50);
+        t = scaleImage(t, 50);
         extraResource1_LeaderCard1_Label.setIcon(t);
         labelUnderLeaderCard1.setText("ENABLED!");
         leaderCardLabel1.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
 
         labelUnderLeaderCard2.setText("DISCARDED!");
         t = new ImageIcon("resources/cardsFront/LFRONT (7).png");
-        t = scaleImage(t, 300, 300);
+        t = scaleImage(t, 300);
         leaderCardLabel2.setIcon(t);
         leaderCardLabel2.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
     };
 
     ActionListener show_DevDeck_Button_actionListener = e -> {
-
+        cardLayoutRight.show(centralRightPanel, DEVDECK);
     };
 
     ActionListener show_Market_Button_actionListener = e -> {
@@ -1064,11 +1271,15 @@ public class Board implements Runnable {
     };
 
     ActionListener activate_Production_Button_actionListener = e -> {
-
+        cardLayoutRight.show(centralRightPanel, Ark.nickname);
     };
 
     ActionListener endTurn_Button_actionListener = e -> {
 
+    };
+
+    ActionListener back_DevDeck_Card_Button_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, lastRightCard);
     };
 
 }
