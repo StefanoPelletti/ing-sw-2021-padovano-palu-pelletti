@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.modelSimplified.StrongboxSimplified;
 import it.polimi.ingsw.client.modelSimplified.WarehouseDepotSimplified;
 import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_DISCARD_LEADERCARD;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsPicker;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
@@ -21,6 +22,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -64,6 +67,9 @@ public class Board implements Runnable {
     static final String MARKET = "Market";
     Market_Board_Card_Panel market_board_card_panel; //<- updatable after a market update //TODO
     JButton back_Market_Card_Button;
+    static final String LPICKER = "Leader Cards Picker";
+    LeaderCardsPicker_Card_Panel leaderCardsPicker_board_card_panel; //<- updatable after a leadercards picker update
+    JButton confirm_LeaderCardsPicker_Card_Button;
 
 
     //fonts
@@ -246,11 +252,17 @@ public class Board implements Runnable {
                 "resources/cardsFront/DFRONT (9).png", "resources/cardsBack/BACK (5)"
         ), 1);
 
+        game.setLeaderCardsPickerCards(game.getCurrentPlayerStartingCards());
+
         Ark.game = new GameSimplified();
         MSG_UPD_Full message = Ark.gameManager.getFullModel();
         Ark.game.updateAll(message);
         Ark.myPlayerRef = Ark.game.getPlayerRef(1);
         SwingUtilities.invokeLater(new Board());
+
+
+
+
     }
 
     public void run() {
@@ -346,12 +358,14 @@ public class Board implements Runnable {
                 {
                     centralLeftPanel.update(player.getNickname());
                 }
+                leaderCardsPicker_board_card_panel.update();
             }
 
             lastRightCard = Ark.nickname;
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
+            cardLayoutRight.show(centralRightPanel, LPICKER);
         }
 
         @Override
@@ -806,7 +820,7 @@ public class Board implements Runnable {
         }
     }
 
-    class PlayersRecapPanel extends JPanel //TODO button
+    class PlayersRecapPanel extends JPanel //TODO solo mode
     {
         private Map<String, java.util.List<JLabel>> map;
 
@@ -973,7 +987,7 @@ public class Board implements Runnable {
         }
     }
 
-    class ShowPlayerButton extends JButton { //TODO actionlisteners
+    class ShowPlayerButton extends JButton {
         private final String playerName;
         public ShowPlayerButton(String text, String playerName)
         {
@@ -1255,6 +1269,8 @@ public class Board implements Runnable {
             this.add(devDeck_board_card_panel, DEVDECK);
             market_board_card_panel = new Market_Board_Card_Panel();
             this.add(market_board_card_panel, MARKET);
+            leaderCardsPicker_board_card_panel = new LeaderCardsPicker_Card_Panel();
+            this.add(leaderCardsPicker_board_card_panel, LPICKER);
 
         }
     }
@@ -1434,8 +1450,7 @@ public class Board implements Runnable {
         JLabel[][] labelGrid; //<- contains the labels for the marblegrid
         JLabel labelSlide; //<- contains the label for the slidemarble
 
-        public Market_Board_Card_Panel()
-        {
+        public Market_Board_Card_Panel() {
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
@@ -1454,6 +1469,130 @@ public class Board implements Runnable {
             MarketMarble slide = Ark.game.getMarket().getSlideMarble();
         }
     }
+
+    class LeaderCardsPicker_Card_Panel extends JPanel implements ItemListener
+    {
+        JLabel[] labelCards;
+        JCheckBox[] checkBoxes;
+
+        int first = -1;
+        int second = -1;
+        boolean modifying = false;
+
+        public LeaderCardsPicker_Card_Panel() {
+            GridBagConstraints c;
+            this.setOpaque(false);
+            this.setLayout(new GridBagLayout());
+
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
+            addPadding(this, 599,946,5,5);
+
+            this.labelCards= new JLabel[4];
+            this.checkBoxes= new JCheckBox[4];
+
+            JLabel titleLabel = new JLabel("Pick your two Cards!");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(titleLabel,c);
+
+            for(int i=0; i<4;i++)
+            {
+                labelCards[i] = new JLabel();
+
+                c = new GridBagConstraints();
+                c.gridx = i+1;
+                c.gridy = 2;
+                c.gridwidth = 1;
+                c.weightx = 0.5;
+                c.weighty = 0.2;
+                this.add(labelCards[i],c);
+
+                checkBoxes[i] = new JCheckBox();
+                checkBoxes[i].setBackground(new Color(178, 49, 35));
+                checkBoxes[i].addItemListener(this);
+                c = new GridBagConstraints();
+                c.gridx = i+1;
+                c.gridy = 3;
+                c.anchor = GridBagConstraints.PAGE_START;
+                c.weightx = 0.5;
+                c.weighty = 0.4;
+                this.add(checkBoxes[i], c);
+            }
+
+            confirm_LeaderCardsPicker_Card_Button = new JButton("confirm!");
+            confirm_LeaderCardsPicker_Card_Button.setEnabled(false);
+            confirm_LeaderCardsPicker_Card_Button.setPreferredSize(new Dimension(200, 60));
+            confirm_LeaderCardsPicker_Card_Button.setFont(new Font(PAP, Font.BOLD, 28));
+            confirm_LeaderCardsPicker_Card_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            c.gridwidth = 4;
+            c.insets = new Insets(0,0,10,0);
+            this.add(confirm_LeaderCardsPicker_Card_Button,c);
+
+
+        }
+
+        public void update()
+        {
+            for(int i=0; i<4; i++)
+            {
+                ImageIcon t = scaleImage(new ImageIcon(Ark.game.getLeaderCardsPicker().getCard(i).getFrontPath()),300);
+                labelCards[i].setIcon(t);
+            }
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            JCheckBox source = (JCheckBox) e.getSource();
+            int number = -1;
+            if (this.checkBoxes[0] == source) number = 0;
+            if (this.checkBoxes[1] == source) number = 1;
+            if (this.checkBoxes[2] == source) number = 2;
+            if (this.checkBoxes[3] == source) number = 3;
+
+            if (!modifying) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    if (first == -1 && second == -1) {
+                        first = number;
+                    } else if (first != -1 && second == -1) {
+                        second = number;
+                        confirm_LeaderCardsPicker_Card_Button.setEnabled(true);
+                    } else if (first != -1 && second != -1 && first != number && second != number) //so a new card was chosen
+                    {
+                        modifying = true;
+                        this.checkBoxes[first].setSelected(false);
+                        first = second;
+                        second = number;
+                        confirm_LeaderCardsPicker_Card_Button.setEnabled(true);
+                        modifying = false;
+
+                    }
+                } else //item deselected
+                {
+
+
+                    if (first != -1 && second != -1) {
+                        if (first == number)
+                            first = second;
+                        second = -1;
+                        confirm_LeaderCardsPicker_Card_Button.setEnabled(false);
+                    } else if (first != -1) {
+                        first = -1;
+                    }
+                }
+            }
+        } //checkBoxes listener, allows for two and only two checks
+    }
+
 
     //HELPER METHODS (graphics)
     public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows)
