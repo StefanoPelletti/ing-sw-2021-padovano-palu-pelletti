@@ -7,6 +7,7 @@ import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.marbles.MarketMarble;
 import it.polimi.ingsw.server.model.middles.Leaderboard;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ReqValue;
@@ -27,47 +28,48 @@ import java.util.List;
 import java.util.Map;
 
 public class Board implements Runnable {
-    CardLayout cardLayoutRight;
     CardLayout cardLayoutLeft;
-    CentralRightPanel centralRightPanel; // <- parent for cardlayout right
+    CardLayout cardLayoutRight;
     CentralLeftPanel centralLeftPanel; // <- parent for cardlayout left
+    CentralRightPanel centralRightPanel; // <- parent for cardlayout right
 
     JFrame mainFrame;
     MainPanel mainPanel;
     Dimension frameDimension;
 
-    //STATIC PANELS VARs
+    //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
     //LEFT PANEL
     JButton quit_Button;
-    JLabel turnLabel, turnOf;
-    JTextArea notificationsArea;
-    JLabel leaderCardLabel1, leaderCardLabel2;
-    JLabel extraResource1_LeaderCard1_Label, extraResource2_LeaderCard1_Label;
-    JLabel extraResource1_LeaderCard2_Label, extraResource2_LeaderCard2_Label;
-    JLabel labelUnderLeaderCard1, labelUnderLeaderCard2;
+    JLabel turnLabel, turnOf; //<- updatable, but not with a custom method
+    JTextArea notificationsArea; //<- updatable, but not with a custom method
+    MyLeaderCardsPanel myLeaderCardsPanel; //<- updatable for leaderCards of this player and extradepot with a single update()
     JButton show_DevDeck_Button;
     JButton show_Market_Button;
     //BOTTOM PANEL
     JButton activate_LeaderCards_Button, change_Depot_Config_Button, get_MarketResource_Button;
     JButton discard_LeaderCard_Button, buy_DevCard_Button, activate_Production_Button;
-    PlayersRecapPanel playersRecapPanel;
+    PlayersRecapPanel playersRecapPanel; //<- updatable after any other players gets a resource update with a single update()
     JButton endTurn_Button;
 
 
-    //RESOURCE CARDS (CENTRAL LEFT PANEL)
+    //CENTRAL LEFT PANEL CARDS <- each card is followed by its necessary contents
     String lastLeftCard;
 
-    //CARDS (CENTRAL RIGHT PANEL)  <- card followed by its contents
+    //CARDS (CENTRAL RIGHT PANEL)  <- each card is followed by its necessary contents
     String lastRightCard;
+    //static final String SELF = Ark.nickname;  <- this is a placeholder to remind that the card below is called like this
+    Self_Board_Card_Panel self_board_card_panel;
     static final String DEVDECK = "Development Cards Deck";
-    DevDeck_Board_Card_Panel devDeck_board_card_panel;
+    DevDeck_Board_Card_Panel devDeck_board_card_panel; //<- updatable after a devdeck update
     JButton back_DevDeck_Card_Button;
+    static final String MARKET = "Market";
+    Market_Board_Card_Panel market_board_card_panel; //<- updatable after a market update //TODO
+    JButton back_Market_Card_Button;
+
 
     //fonts
     static final String TIMES = "Times New Roman";
     static final String PAP = "Papyrus";
-
-
 
 
     public static void main(String[] args) {
@@ -336,6 +338,12 @@ public class Board implements Runnable {
                 endTurn_Button.addActionListener(endTurn_Button_actionListener);
                 back_DevDeck_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
             }
+            //INITIAL UPDATE (?)
+            {
+                myLeaderCardsPanel.update();
+                playersRecapPanel.update();
+                devDeck_board_card_panel.update();
+            }
 
             lastRightCard = Ark.nickname;
             lastLeftCard = Ark.nickname;
@@ -428,226 +436,17 @@ public class Board implements Runnable {
             c.insets = new Insets(20,0, 0,0);
             this.add(scrollPane, c);
 
-            {
-                JPanel leaderCardsPanel = new JPanel(new GridBagLayout());
-                leaderCardsPanel.setOpaque(false);
+            myLeaderCardsPanel = new MyLeaderCardsPanel();
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 4;
+            c.weighty = 0.1;
+            c.gridwidth = 2;
+            c.gridheight = 1;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(10, 0, 0, 0);
+            this.add(myLeaderCardsPanel, c);
 
-                JLabel leaderCardLabel1text = new JLabel();
-                leaderCardLabel1text.setText("Leader Card");
-                leaderCardLabel1text.setOpaque(false);
-                leaderCardLabel1text.setHorizontalAlignment(SwingConstants.CENTER);
-                leaderCardLabel1text.setFont(new Font(PAP, Font.BOLD, 20));
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 0, 0, 0);
-                leaderCardsPanel.add(leaderCardLabel1text, c);
-
-                JLabel leaderCardLabel1text1 = new JLabel();
-                leaderCardLabel1text1.setText("#1");
-                leaderCardLabel1text1.setOpaque(false);
-                leaderCardLabel1text1.setHorizontalAlignment(SwingConstants.CENTER);
-                leaderCardLabel1text1.setFont(new Font(PAP, Font.BOLD, 22));
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 1;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 0, 0, 0);
-                leaderCardsPanel.add(leaderCardLabel1text1, c);
-
-                JLabel leaderCardLabel2text = new JLabel();
-                leaderCardLabel2text.setText("Leader Card");
-                leaderCardLabel2text.setOpaque(false);
-                leaderCardLabel2text.setHorizontalAlignment(SwingConstants.CENTER);
-                leaderCardLabel2text.setFont(new Font(PAP, Font.BOLD, 20));
-                c = new GridBagConstraints();
-                c.gridx = 2;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 0, 0, 0);
-                leaderCardsPanel.add(leaderCardLabel2text, c);
-
-                JLabel leaderCardLabel2text2 = new JLabel();
-                leaderCardLabel2text2.setText("#2");
-                leaderCardLabel2text2.setOpaque(false);
-                leaderCardLabel2text2.setHorizontalAlignment(SwingConstants.CENTER);
-                leaderCardLabel2text2.setFont(new Font(PAP, Font.BOLD, 22));
-                c = new GridBagConstraints();
-                c.gridx = 2;
-                c.gridy = 1;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 0, 0, 0);
-                leaderCardsPanel.add(leaderCardLabel2text2, c);
-
-                ImageIcon t;
-                leaderCardLabel1 = new JLabel();
-                leaderCardLabel1.setLayout(null);
-                leaderCardLabel1.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 2;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 0, 0, 0);
-                leaderCardsPanel.add(leaderCardLabel1, c);
-
-                extraResource1_LeaderCard1_Label = new JLabel();
-                extraResource1_LeaderCard1_Label.setBounds(40, 234, 50, 50);
-                leaderCardLabel1.add(extraResource1_LeaderCard1_Label);
-
-                extraResource2_LeaderCard1_Label = new JLabel();
-                extraResource2_LeaderCard1_Label.setBounds(115, 234, 50, 50);
-                leaderCardLabel1.add(extraResource2_LeaderCard1_Label);
-
-                labelUnderLeaderCard1 = new JLabel();
-                labelUnderLeaderCard1.setOpaque(false);
-                labelUnderLeaderCard1.setHorizontalAlignment(SwingConstants.CENTER);
-                labelUnderLeaderCard1.setFont(new Font(PAP, Font.BOLD, 22));
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 3;
-                c.anchor = GridBagConstraints.PAGE_START;
-                leaderCardsPanel.add(labelUnderLeaderCard1, c);
-
-                LeaderCard l1 = Ark.myPlayerRef.getLeaderCards()[0];
-                if(l1 != null) {
-                    t = scaleImage(new ImageIcon(l1.getFrontPath()), 300);
-                    if(l1.isEnabled()) {
-                        labelUnderLeaderCard1.setText("ENABLED!");
-                        leaderCardLabel1.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
-                        if(l1.getSpecialAbility().isExtraDepot())
-                        {
-                            ExtraDepot depot = ((ExtraDepot) l1.getSpecialAbility());
-                            int num = depot.getNumber();
-                            Resource type = depot.getResourceType();
-
-                            ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()),50);
-                            ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()),50);
-                            switch (num)
-                            {
-                                case 0:
-                                    extraResource1_LeaderCard1_Label.setIcon(noneIcon);
-                                    extraResource1_LeaderCard2_Label.setIcon(noneIcon);
-                                    break;
-                                case 1:
-                                    extraResource1_LeaderCard1_Label.setIcon(presentIcon);
-                                    extraResource1_LeaderCard2_Label.setIcon(noneIcon);
-                                    break;
-                                case 2:
-                                    extraResource1_LeaderCard1_Label.setIcon(presentIcon);
-                                    extraResource1_LeaderCard2_Label.setIcon(presentIcon);
-                                    break;
-                            }
-                        }
-                    }
-                }
-                else {
-                    t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
-                    labelUnderLeaderCard1.setText("not present!");
-                }
-                leaderCardLabel1.setIcon(t);
-
-                leaderCardLabel2 = new JLabel();
-                leaderCardLabel2.setLayout(null);
-                leaderCardLabel2.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-
-                c = new GridBagConstraints();
-                c.gridx = 2;
-                c.gridy = 2;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 0, 0, 0);
-                leaderCardsPanel.add(leaderCardLabel2, c);
-
-                extraResource1_LeaderCard2_Label = new JLabel();
-                extraResource1_LeaderCard2_Label.setBounds(40, 234, 50, 50);
-                leaderCardLabel2.add(extraResource1_LeaderCard2_Label, c);
-
-                extraResource2_LeaderCard2_Label = new JLabel();
-                extraResource2_LeaderCard2_Label.setBounds(115, 234, 50, 50);
-                leaderCardLabel2.add(extraResource2_LeaderCard2_Label, c);
-
-                labelUnderLeaderCard2 = new JLabel();
-                labelUnderLeaderCard2.setOpaque(false);
-                labelUnderLeaderCard2.setHorizontalAlignment(SwingConstants.CENTER);
-                labelUnderLeaderCard2.setFont(new Font(PAP, Font.BOLD, 22));
-                c = new GridBagConstraints();
-                c.gridx = 2;
-                c.gridy = 3;
-                c.anchor = GridBagConstraints.PAGE_START;
-                leaderCardsPanel.add(labelUnderLeaderCard2, c);
-
-                LeaderCard l2 = Ark.myPlayerRef.getLeaderCards()[1];
-                if(l2 != null) {
-                    t = scaleImage(new ImageIcon(l2.getFrontPath()), 300);
-                    if(l2.isEnabled()) {
-                        labelUnderLeaderCard2.setText("ENABLED!");
-                        leaderCardLabel2.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
-                        if(l2.getSpecialAbility().isExtraDepot())
-                        {
-                            ExtraDepot depot = ((ExtraDepot) l2.getSpecialAbility());
-                            int num = depot.getNumber();
-                            Resource type = depot.getResourceType();
-
-                            ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()),50);
-                            ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()),50);
-                            switch (num)
-                            {
-                                case 0:
-                                    extraResource2_LeaderCard1_Label.setIcon(noneIcon);
-                                    extraResource2_LeaderCard2_Label.setIcon(noneIcon);
-                                    break;
-                                case 1:
-                                    extraResource2_LeaderCard1_Label.setIcon(presentIcon);
-                                    extraResource1_LeaderCard2_Label.setIcon(noneIcon);
-                                    break;
-                                case 2:
-                                    extraResource2_LeaderCard1_Label.setIcon(presentIcon);
-                                    extraResource2_LeaderCard2_Label.setIcon(presentIcon);
-                                    break;
-                            }
-                        }
-                    }
-                }
-                else {
-                    t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
-                    labelUnderLeaderCard2.setText("not present!");
-                }
-                leaderCardLabel2.setIcon(t);
-
-                JLabel spacer = new JLabel("");
-                c = new GridBagConstraints();
-                c.gridx = 1;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.weightx = 0.5;
-                c.gridheight = 3;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(0, 10, 0, 10);
-                leaderCardsPanel.add(spacer, c);
-
-                c = new GridBagConstraints();
-                c.gridx = 1;
-                c.gridy = 4;
-                c.weighty = 0.1;
-                c.gridwidth = 2;
-                c.gridheight = 1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.insets = new Insets(10, 0, 0, 0);
-                this.add(leaderCardsPanel, c);
-            } //leaderCardsPanel //TODO make new class to add update method to update leaderCards/extradepots
 
             {
                 JPanel showButtonsPanel = new JPanel();
@@ -686,6 +485,195 @@ public class Board implements Runnable {
                 this.add(showButtonsPanel, c);
             } //showDevDeck and showMarket buttons Panel
 
+        }
+    }
+
+    class MyLeaderCardsPanel extends JPanel {
+
+        JLabel leaderCardLabel1, leaderCardLabel2;
+        JLabel extraResource1_LeaderCard1_Label, extraResource2_LeaderCard1_Label;
+        JLabel extraResource1_LeaderCard2_Label, extraResource2_LeaderCard2_Label;
+        JLabel labelUnderLeaderCard1, labelUnderLeaderCard2;
+
+        public MyLeaderCardsPanel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+
+            JLabel leaderCardLabel1text = new JLabel();
+            leaderCardLabel1text.setText("Leader Card");
+            leaderCardLabel1text.setOpaque(false);
+            leaderCardLabel1text.setHorizontalAlignment(SwingConstants.CENTER);
+            leaderCardLabel1text.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 0, 0, 0);
+            this.add(leaderCardLabel1text, c);
+
+            JLabel leaderCardLabel1text1 = new JLabel();
+            leaderCardLabel1text1.setText("#1");
+            leaderCardLabel1text1.setOpaque(false);
+            leaderCardLabel1text1.setHorizontalAlignment(SwingConstants.CENTER);
+            leaderCardLabel1text1.setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 1;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 0, 0, 0);
+            this.add(leaderCardLabel1text1, c);
+
+            JLabel leaderCardLabel2text = new JLabel();
+            leaderCardLabel2text.setText("Leader Card");
+            leaderCardLabel2text.setOpaque(false);
+            leaderCardLabel2text.setHorizontalAlignment(SwingConstants.CENTER);
+            leaderCardLabel2text.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 0;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 0, 0, 0);
+            this.add(leaderCardLabel2text, c);
+
+            JLabel leaderCardLabel2text2 = new JLabel();
+            leaderCardLabel2text2.setText("#2");
+            leaderCardLabel2text2.setOpaque(false);
+            leaderCardLabel2text2.setHorizontalAlignment(SwingConstants.CENTER);
+            leaderCardLabel2text2.setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 1;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 0, 0, 0);
+            this.add(leaderCardLabel2text2, c);
+
+            leaderCardLabel1 = new JLabel();
+            leaderCardLabel1.setLayout(null);
+
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 2;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 0, 0, 0);
+            this.add(leaderCardLabel1, c);
+
+            extraResource1_LeaderCard1_Label = new JLabel();
+            extraResource1_LeaderCard1_Label.setBounds(40, 234, 50, 50);
+            leaderCardLabel1.add(extraResource1_LeaderCard1_Label);
+
+            extraResource2_LeaderCard1_Label = new JLabel();
+            extraResource2_LeaderCard1_Label.setBounds(115, 234, 50, 50);
+            leaderCardLabel1.add(extraResource2_LeaderCard1_Label);
+
+            labelUnderLeaderCard1 = new JLabel();
+            labelUnderLeaderCard1.setOpaque(false);
+            labelUnderLeaderCard1.setHorizontalAlignment(SwingConstants.CENTER);
+            labelUnderLeaderCard1.setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 3;
+            c.anchor = GridBagConstraints.PAGE_START;
+            this.add(labelUnderLeaderCard1, c);
+
+            leaderCardLabel2 = new JLabel();
+            leaderCardLabel2.setLayout(null);
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 0, 0, 0);
+            this.add(leaderCardLabel2, c);
+
+            extraResource1_LeaderCard2_Label = new JLabel();
+            extraResource1_LeaderCard2_Label.setBounds(40, 234, 50, 50);
+            leaderCardLabel2.add(extraResource1_LeaderCard2_Label, c);
+
+            extraResource2_LeaderCard2_Label = new JLabel();
+            extraResource2_LeaderCard2_Label.setBounds(115, 234, 50, 50);
+            leaderCardLabel2.add(extraResource2_LeaderCard2_Label, c);
+
+            labelUnderLeaderCard2 = new JLabel();
+            labelUnderLeaderCard2.setOpaque(false);
+            labelUnderLeaderCard2.setHorizontalAlignment(SwingConstants.CENTER);
+            labelUnderLeaderCard2.setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 3;
+            c.anchor = GridBagConstraints.PAGE_START;
+            this.add(labelUnderLeaderCard2, c);
+
+            JLabel spacer = new JLabel("");
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 0;
+            c.weighty = 0.1;
+            c.weightx = 0.5;
+            c.gridheight = 3;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0, 10, 0, 10);
+            this.add(spacer, c);
+        }
+
+        public void update() {
+        LeaderCard l1 = Ark.myPlayerRef.getLeaderCards()[0];
+        updateSpecificCard(l1, labelUnderLeaderCard1, leaderCardLabel1, extraResource1_LeaderCard1_Label, extraResource1_LeaderCard2_Label);
+
+        LeaderCard l2 = Ark.myPlayerRef.getLeaderCards()[1];
+        updateSpecificCard(l2, labelUnderLeaderCard2, leaderCardLabel2, extraResource2_LeaderCard2_Label, extraResource2_LeaderCard2_Label);
+        }
+
+        private void updateSpecificCard(LeaderCard leaderCard, JLabel labelUnderLeaderCard, JLabel leaderCardLabel, JLabel extraDepotLabel1, JLabel extraDepotLabel2) {
+            ImageIcon t;
+            if(leaderCard != null) {
+                t = scaleImage(new ImageIcon(leaderCard.getFrontPath()), 300);
+                if(leaderCard.isEnabled()) {
+                    labelUnderLeaderCard.setText("ENABLED!");
+                    leaderCardLabel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+                    if(leaderCard.getSpecialAbility().isExtraDepot())
+                    {
+                        ExtraDepot depot = ((ExtraDepot) leaderCard.getSpecialAbility());
+                        int num = depot.getNumber();
+                        Resource type = depot.getResourceType();
+
+                        ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()),50);
+                        ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()),50);
+                        switch (num)
+                        {
+                            case 0:
+                                extraDepotLabel1.setIcon(noneIcon);
+                                extraDepotLabel2.setIcon(noneIcon);
+                                break;
+                            case 1:
+                                extraDepotLabel1.setIcon(presentIcon);
+                                extraDepotLabel2.setIcon(noneIcon);
+                                break;
+                            case 2:
+                                extraDepotLabel1.setIcon(presentIcon);
+                                extraDepotLabel2.setIcon(presentIcon);
+                                break;
+                        }
+                    }
+                }
+            }
+            else {
+                t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
+                labelUnderLeaderCard.setText("not present!");
+            }
+            leaderCardLabel.setIcon(t);
         }
     }
 
@@ -946,8 +934,6 @@ public class Board implements Runnable {
             {
                 //TODO solo mode for bottom panel
             }
-
-            this.update();
         }
 
         public void update() {
@@ -1064,14 +1050,17 @@ public class Board implements Runnable {
             this.setLayout(cardLayoutRight);
             this.setOpaque(false);
 
-            Self_Board_Card_Panel self_board_card_panel = new Self_Board_Card_Panel(); //put ref in variables on top
+            self_board_card_panel = new Self_Board_Card_Panel();
             this.add(self_board_card_panel, Ark.nickname);
-            devDeck_board_card_panel = new DevDeck_Board_Card_Panel(); //put ref in variables on top
+            devDeck_board_card_panel = new DevDeck_Board_Card_Panel();
             this.add(devDeck_board_card_panel, DEVDECK);
+            market_board_card_panel = new Market_Board_Card_Panel();
+            this.add(market_board_card_panel, MARKET);
+
         }
     }
 
-    class Self_Board_Card_Panel extends JPanel {
+    class Self_Board_Card_Panel extends JPanel { //this card is called by Ark.nickname
 
         private Image image;
 
@@ -1093,7 +1082,7 @@ public class Board implements Runnable {
         }
     }
 
-    class DevDeck_Board_Card_Panel extends JPanel {
+    class DevDeck_Board_Card_Panel extends JPanel { //this card is called by DEVDECK
 
         JLabel[][] labels;
 
@@ -1222,8 +1211,6 @@ public class Board implements Runnable {
                      this.labels[row][col] = label;
                 }
             }
-
-            this.update();
         }
 
         public void update() {
@@ -1244,6 +1231,30 @@ public class Board implements Runnable {
         }
     }
 
+    class Market_Board_Card_Panel extends JPanel {
+        JLabel[][] labelGrid; //<- contains the labels for the marblegrid
+        JLabel labelSlide; //<- contains the label for the slidemarble
+
+        public Market_Board_Card_Panel()
+        {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
+
+            this.labelGrid = new JLabel[3][4];
+            this.labelSlide = new JLabel();
+
+            addPadding(this, 599,946,6,5);
+
+
+        }
+
+        public void update() {
+            MarketMarble[][] grid = Ark.game.getMarket().getGrid();
+            MarketMarble slide = Ark.game.getMarket().getSlideMarble();
+        }
+    }
 
     //HELPER METHODS (graphics)
     public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows)
@@ -1298,20 +1309,7 @@ public class Board implements Runnable {
 
     //ACTION LISTENERS
     ActionListener quit_Button_actionListener = e -> {
-        String string;
-        string = notificationsArea.getText();
-        notificationsArea.setText(string+"\nword");
-        ImageIcon t = new ImageIcon(Resource.COIN.getPathLittle());
-        t = scaleImage(t, 50);
-        extraResource1_LeaderCard1_Label.setIcon(t);
-        labelUnderLeaderCard1.setText("ENABLED!");
-        leaderCardLabel1.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
-
-        labelUnderLeaderCard2.setText("DISCARDED!");
-        t = new ImageIcon("resources/cardsFront/LFRONT (7).png");
-        t = scaleImage(t, 300);
-        leaderCardLabel2.setIcon(t);
-        leaderCardLabel2.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+        notificationsArea.append("\nword");
     };
 
     ActionListener show_DevDeck_Button_actionListener = e -> {
@@ -1319,7 +1317,7 @@ public class Board implements Runnable {
     };
 
     ActionListener show_Market_Button_actionListener = e -> {
-
+        cardLayoutRight.show(centralRightPanel, MARKET);
     };
 
     ActionListener activate_LeaderCards_Button_actionListener = e -> {
