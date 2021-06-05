@@ -1085,7 +1085,7 @@ public class Board implements Runnable {
             c.weighty = 0.2;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.FIRST_LINE_END;
-            c.insets = new Insets(30,70,0,8);
+            c.insets = new Insets(15,70,0,8);
             this.add(shelf2[0], c);
 
             c = new GridBagConstraints();
@@ -1095,7 +1095,7 @@ public class Board implements Runnable {
             c.weighty = 0.2;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            c.insets = new Insets(30,0,0,0);
+            c.insets = new Insets(15,0,0,0);
             this.add(shelf2[1], c);
 
             JPanel thirdshelfPanel = new JPanel(new GridBagLayout());
@@ -1137,7 +1137,7 @@ public class Board implements Runnable {
             c.weighty = 0.5;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.PAGE_START;
-            c.insets = new Insets(30,0,0,0);
+            c.insets = new Insets(15,0,0,0);
             this.add(thirdshelfPanel, c);
 
             JLabel[] strongboxIconLabel  = new JLabel[4];
@@ -1145,94 +1145,34 @@ public class Board implements Runnable {
             ImageIcon icon;
 
             {
-                JPanel coinPanel = new JPanel(new GridBagLayout());
-                coinPanel.setOpaque(false);
-
-                icon = scaleImage(new ImageIcon(Resource.COIN.getPathLittle()), 60);
-                strongboxIconLabel[0] = new JLabel();
-                strongboxIconLabel[0].setIcon(icon);
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                coinPanel.add(strongboxIconLabel[0], c);
-
                 strongbox[0] = new JLabel(); //coin //shield //stone //servant
                 strongbox[0].setFont(new Font(PAP, Font.BOLD, 20));
                 c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 1;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                coinPanel.add(strongbox[0], c);
-
-                c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 4;
                 c.weightx = 0.5;
                 c.weighty = 0.1;
                 c.gridwidth = 1;
                 c.anchor = GridBagConstraints.FIRST_LINE_END;
-                c.insets = new Insets(50, 0, 0, 54);
-                this.add(coinPanel, c);
+                c.insets = new Insets(70, 0, 3, 80);
+                this.add(strongbox[0], c);
             } //coin
             {
-                JPanel shieldPanel = new JPanel(new GridBagLayout());
-                shieldPanel.setOpaque(false);
-
-                icon = scaleImage(new ImageIcon(Resource.SHIELD.getPathLittle()), 60);
-                strongboxIconLabel[1] = new JLabel();
-                strongboxIconLabel[1].setIcon(icon);
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                shieldPanel.add(strongboxIconLabel[1], c);
-
                 strongbox[1] = new JLabel();  //shield //stone //servant
                 strongbox[1].setFont(new Font(PAP, Font.BOLD, 20));
                 c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 1;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                shieldPanel.add(strongbox[1], c);
-
-                c = new GridBagConstraints();
                 c.gridx = 2;
                 c.gridy = 4;
                 c.weightx = 0.5;
                 c.weighty = 0.1;
                 c.gridwidth = 1;
                 c.anchor = GridBagConstraints.FIRST_LINE_START;
-                c.insets = new Insets(50, 0, 0, 10);
-                this.add(shieldPanel, c);
+                c.insets = new Insets(70, 10, 3, 0);
+                this.add(strongbox[1], c);
             } //shield
             {
-                JPanel stonePanel = new JPanel(new GridBagLayout());
-                stonePanel.setOpaque(false);
-
-                icon = scaleImage(new ImageIcon(Resource.STONE.getPathLittle()),60);
-                strongboxIconLabel[2] = new JLabel();
-                strongboxIconLabel[2].setIcon(icon);
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                stonePanel.add(strongboxIconLabel[2], c);
-
                 strongbox[2] = new JLabel();  //stone //servant
                 strongbox[2].setFont(new Font(PAP, Font.BOLD, 20));
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 1;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                stonePanel.add(strongbox[2], c);
-
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 5;
@@ -1240,32 +1180,12 @@ public class Board implements Runnable {
                 c.weighty = 0.5;
                 c.gridwidth = 1;
                 c.anchor = GridBagConstraints.FIRST_LINE_END;
-                c.insets = new Insets(0,0,55,54);
-                this.add(stonePanel, c);
+                c.insets = new Insets(35,0,2,80);
+                this.add(strongbox[2], c);
             } //stone
             {
-                JPanel servantPanel = new JPanel(new GridBagLayout());
-                servantPanel.setOpaque(false);
-
-                icon = scaleImage(new ImageIcon(Resource.SERVANT.getPathLittle()),60);
-                strongboxIconLabel[3] = new JLabel();
-                strongboxIconLabel[3].setIcon(icon);
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 0;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                servantPanel.add(strongboxIconLabel[3], c);
-
                 strongbox[3] = new JLabel();  //servant
                 strongbox[3].setFont(new Font(PAP, Font.BOLD, 20));
-                c = new GridBagConstraints();
-                c.gridx = 0;
-                c.gridy = 1;
-                c.weighty = 0.1;
-                c.anchor = GridBagConstraints.PAGE_START;
-                servantPanel.add(strongbox[3], c);
-
                 c = new GridBagConstraints();
                 c.gridx = 2;
                 c.gridy = 5;
@@ -1273,10 +1193,8 @@ public class Board implements Runnable {
                 c.weighty = 0.5;
                 c.gridwidth = 1;
                 c.anchor = GridBagConstraints.FIRST_LINE_START;
-                c.insets = new Insets(0,0,55,10);
-                this.add(servantPanel, c);
-
-
+                c.insets = new Insets(35,10,2,0);
+                this.add(strongbox[3], c);
             } //servant
 
         }
