@@ -2,13 +2,14 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
+import it.polimi.ingsw.client.modelSimplified.StrongboxSimplified;
+import it.polimi.ingsw.client.modelSimplified.WarehouseDepotSimplified;
 import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_DISCARD_LEADERCARD;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.marbles.MarketMarble;
-import it.polimi.ingsw.server.model.middles.Leaderboard;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
@@ -22,10 +23,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class Board implements Runnable {
     CardLayout cardLayoutLeft;
@@ -343,6 +342,10 @@ public class Board implements Runnable {
                 myLeaderCardsPanel.update();
                 playersRecapPanel.update();
                 devDeck_board_card_panel.update();
+                for(PlayerSimplified player : Ark.game.getPlayerList())
+                {
+                    centralLeftPanel.update(player.getNickname());
+                }
             }
 
             lastRightCard = Ark.nickname;
@@ -1005,6 +1008,9 @@ public class Board implements Runnable {
     //CENTRAL LEFT PANEL <- CARDLAYOUTLEFT
     class CentralLeftPanel extends JPanel {
         private Image image;
+
+        java.util.List<DepotPanel> depotPanelList;
+
         public CentralLeftPanel()
         {
             try {
@@ -1013,18 +1019,23 @@ public class Board implements Runnable {
 
             cardLayoutLeft = new CardLayout();
             this.setLayout(cardLayoutLeft);
-            this.setLayout(new GridBagLayout()); //delete this
 
+            depotPanelList = new ArrayList<>();
 
-            //java.util.List<String> depotCards = Ark.game.getPlayerSimplifiedList().stream().map(PlayerSimplified::getPlayerNumber).map(x -> ""+x).collect(Collectors.toList());
-
-
-            JLabel el = new JLabel();
-            el.setText("");
-            GridBagConstraints c = new GridBagConstraints();
-            c.insets = new Insets(601,273, 0,0);
-            this.add(el, c);
+            for(PlayerSimplified player : Ark.game.getPlayerList())
+            {
+                DepotPanel depotPanel = new DepotPanel(player.getNickname());
+                this.add(depotPanel, player.getNickname());
+                depotPanelList.add(depotPanel);
+            }
         }
+
+        public void update(String name)
+        {
+            Optional<DepotPanel> result = depotPanelList.stream().filter(p -> p.panelName.equals(name)).findFirst();
+            result.ifPresent(DepotPanel::update);
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -1033,12 +1044,282 @@ public class Board implements Runnable {
     }
 
     class DepotPanel extends JPanel {
+        private String panelName;
+
+        JLabel shelf1;
+        JLabel[] shelf2;
+        JLabel[] shelf3;
+
+        JLabel[] strongbox; //coin shield stone servant
+
         //many labels
-        public DepotPanel() {
+        public DepotPanel(String panelName) {
+            super();
+            this.panelName = panelName;
             this.setOpaque(false);
             this.setLayout(new GridBagLayout());
+            shelf1 = new JLabel();
+            shelf2 = new JLabel[2];
+            shelf2[0] = new JLabel(); shelf2[1] = new JLabel();
+            shelf3 = new JLabel[3];
+            shelf3[0] = new JLabel(); shelf3[1] = new JLabel(); shelf3[2] = new JLabel();
+
+            GridBagConstraints c;
+
+            addPadding(this,601,273,5,6 );
+
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.gridwidth = 2;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(105,60,0,0);
+            this.add(shelf1, c);
+
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.FIRST_LINE_END;
+            c.insets = new Insets(30,70,0,8);
+            this.add(shelf2[0], c);
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.insets = new Insets(30,0,0,0);
+            this.add(shelf2[1], c);
+
+            JPanel thirdshelfPanel = new JPanel(new GridBagLayout());
+            thirdshelfPanel.setOpaque(false);
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.FIRST_LINE_END;
+            c.insets = new Insets(0,60,0,8);
+            thirdshelfPanel.add(shelf3[0], c);
+
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 0;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(0,0,0,8);
+            thirdshelfPanel.add(shelf3[1], c);
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 0;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.gridwidth = 1;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.insets = new Insets(0,0,0,0);
+            thirdshelfPanel.add(shelf3[2], c);
+
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.gridwidth = 2;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(30,0,0,0);
+            this.add(thirdshelfPanel, c);
+
+            JLabel[] strongboxIconLabel  = new JLabel[4];
+            strongbox = new JLabel[4];
+            ImageIcon icon;
+
+            {
+                JPanel coinPanel = new JPanel(new GridBagLayout());
+                coinPanel.setOpaque(false);
+
+                icon = scaleImage(new ImageIcon(Resource.COIN.getPathLittle()), 60);
+                strongboxIconLabel[0] = new JLabel();
+                strongboxIconLabel[0].setIcon(icon);
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                coinPanel.add(strongboxIconLabel[0], c);
+
+                strongbox[0] = new JLabel(); //coin //shield //stone //servant
+                strongbox[0].setFont(new Font(PAP, Font.BOLD, 20));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                coinPanel.add(strongbox[0], c);
+
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 4;
+                c.weightx = 0.5;
+                c.weighty = 0.1;
+                c.gridwidth = 1;
+                c.anchor = GridBagConstraints.FIRST_LINE_END;
+                c.insets = new Insets(50, 0, 0, 54);
+                this.add(coinPanel, c);
+            } //coin
+            {
+                JPanel shieldPanel = new JPanel(new GridBagLayout());
+                shieldPanel.setOpaque(false);
+
+                icon = scaleImage(new ImageIcon(Resource.SHIELD.getPathLittle()), 60);
+                strongboxIconLabel[1] = new JLabel();
+                strongboxIconLabel[1].setIcon(icon);
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                shieldPanel.add(strongboxIconLabel[1], c);
+
+                strongbox[1] = new JLabel();  //shield //stone //servant
+                strongbox[1].setFont(new Font(PAP, Font.BOLD, 20));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                shieldPanel.add(strongbox[1], c);
+
+                c = new GridBagConstraints();
+                c.gridx = 2;
+                c.gridy = 4;
+                c.weightx = 0.5;
+                c.weighty = 0.1;
+                c.gridwidth = 1;
+                c.anchor = GridBagConstraints.FIRST_LINE_START;
+                c.insets = new Insets(50, 0, 0, 10);
+                this.add(shieldPanel, c);
+            } //shield
+            {
+                JPanel stonePanel = new JPanel(new GridBagLayout());
+                stonePanel.setOpaque(false);
+
+                icon = scaleImage(new ImageIcon(Resource.STONE.getPathLittle()),60);
+                strongboxIconLabel[2] = new JLabel();
+                strongboxIconLabel[2].setIcon(icon);
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                stonePanel.add(strongboxIconLabel[2], c);
+
+                strongbox[2] = new JLabel();  //stone //servant
+                strongbox[2].setFont(new Font(PAP, Font.BOLD, 20));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                stonePanel.add(strongbox[2], c);
+
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 5;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                c.gridwidth = 1;
+                c.anchor = GridBagConstraints.FIRST_LINE_END;
+                c.insets = new Insets(0,0,55,54);
+                this.add(stonePanel, c);
+            } //stone
+            {
+                JPanel servantPanel = new JPanel(new GridBagLayout());
+                servantPanel.setOpaque(false);
+
+                icon = scaleImage(new ImageIcon(Resource.SERVANT.getPathLittle()),60);
+                strongboxIconLabel[3] = new JLabel();
+                strongboxIconLabel[3].setIcon(icon);
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                servantPanel.add(strongboxIconLabel[3], c);
+
+                strongbox[3] = new JLabel();  //servant
+                strongbox[3].setFont(new Font(PAP, Font.BOLD, 20));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weighty = 0.1;
+                c.anchor = GridBagConstraints.PAGE_START;
+                servantPanel.add(strongbox[3], c);
+
+                c = new GridBagConstraints();
+                c.gridx = 2;
+                c.gridy = 5;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                c.gridwidth = 1;
+                c.anchor = GridBagConstraints.FIRST_LINE_START;
+                c.insets = new Insets(0,0,55,10);
+                this.add(servantPanel, c);
 
 
+            } //servant
+
+        }
+
+        public void update()
+        {
+            PlayerSimplified playerRef = Ark.game.getPlayerRef(this.panelName);
+            WarehouseDepotSimplified depotRef = playerRef.getWarehouseDepot();
+            StrongboxSimplified strongboxRef = playerRef.getStrongbox();
+
+            Resource shelf1r = depotRef.getShelf1();
+            Resource[] shelf2r = depotRef.getShelf2();
+            Resource[] shelf3r = depotRef.getShelf3();
+
+            this.shelf1.setIcon(scaleImage(new ImageIcon(shelf1r.getPathLittle()),50));
+            this.shelf2[0].setIcon(scaleImage(new ImageIcon(shelf2r[0].getPathLittle()),50));
+            this.shelf2[1].setIcon(scaleImage(new ImageIcon(shelf2r[1].getPathLittle()),50));
+            this.shelf3[0].setIcon(scaleImage(new ImageIcon(shelf3r[0].getPathLittle()),50));
+            this.shelf3[1].setIcon(scaleImage(new ImageIcon(shelf3r[1].getPathLittle()),50));
+            this.shelf3[2].setIcon(scaleImage(new ImageIcon(shelf3r[2].getPathLittle()),50));
+
+            Integer num;
+
+            num = strongboxRef.getQuantity(Resource.COIN);
+            if(num == null)
+                this.strongbox[0].setText("0");
+            else
+                this.strongbox[0].setText(""+num);
+            num = strongboxRef.getQuantity(Resource.SHIELD);
+            if(num == null)
+                this.strongbox[1].setText("0");
+            else
+                this.strongbox[1].setText(""+num);
+            num = strongboxRef.getQuantity(Resource.STONE);
+            if(num == null)
+                this.strongbox[2].setText("0");
+            else
+                this.strongbox[2].setText(""+num);
+            num = strongboxRef.getQuantity(Resource.SERVANT);
+            if(num == null)
+                this.strongbox[3].setText("0");
+            else
+                this.strongbox[3].setText(""+num);
         }
     }
 
@@ -1314,10 +1595,12 @@ public class Board implements Runnable {
 
     ActionListener show_DevDeck_Button_actionListener = e -> {
         cardLayoutRight.show(centralRightPanel, DEVDECK);
+        cardLayoutLeft.show(centralLeftPanel,Ark.nickname);
     };
 
     ActionListener show_Market_Button_actionListener = e -> {
         cardLayoutRight.show(centralRightPanel, MARKET);
+        cardLayoutLeft.show(centralLeftPanel,Ark.nickname);
     };
 
     ActionListener activate_LeaderCards_Button_actionListener = e -> {
