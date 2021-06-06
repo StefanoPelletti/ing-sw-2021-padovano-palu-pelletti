@@ -73,6 +73,8 @@ public class Board implements Runnable {
     static final String LPICKER = "Leader Cards Picker";
     LeaderCardsPicker_Board_Card_Panel leaderCardsPicker_board_card_panel; //<- updatable after a leadercards picker update
     JButton confirm_LeaderCardsPicker_Card_Button;
+    static final String RPICKER = "Resource Picker";
+    ResourcePicker_Board_Card_Panel resourcePicker_board_card_panel;
     static final String CHANGEDEPOT = "Change Depot Configuration";
     ChangeDepotConfig_Board_Card_Panel changeDepotConfig_board_card_panel;
     JButton confirm_ChangeDepotConfig_Card_Button;
@@ -88,12 +90,7 @@ public class Board implements Runnable {
     //fonts
     static final String TIMES = "Times New Roman";
     static final String PAP = "Papyrus";
-    //some URLS
-    static final String CoinURL = Resource.COIN.getPathBig();
-    static final String StoneURL = Resource.STONE.getPathBig();
-    static final String ShieldURL = Resource.SHIELD.getPathBig();
-    static final String ServantURL = Resource.SERVANT.getPathBig();
-    static final String NoneURL = Resource.NONE.getPathBig();
+
 
 
     public static void main(String[] args) {
@@ -395,6 +392,7 @@ public class Board implements Runnable {
                 changeDepotConfig_board_card_panel.update();
                 discardLeaderCard_card_panel.update();
                 activateLeaderCard_board_card_panel.update();
+                resourcePicker_board_card_panel.update();
             }
 
             lastRightCard = Ark.nickname;
@@ -1765,12 +1763,15 @@ public class Board implements Runnable {
             this.add(discardLeaderCard_card_panel, DISCARDLEADERCARD);
             activateLeaderCard_board_card_panel = new ActivateLeaderCard_Board_Card_Panel();
             this.add(activateLeaderCard_board_card_panel, ACTIVATELEADERCARD);
+            resourcePicker_board_card_panel = new ResourcePicker_Board_Card_Panel();
+            this.add(resourcePicker_board_card_panel, RPICKER);
         }
     }
 
     class Self_Board_Card_Panel extends JPanel { //this card is called by Ark.nickname
 
         private Image image;
+        private JLabel[] grid;
 
         public Self_Board_Card_Panel() //TODO devslot, update
         {
@@ -1781,6 +1782,8 @@ public class Board implements Runnable {
             } catch (IOException e) {}
 
             addPadding(this, 601,948,2,2);
+
+
         }
 
         @Override
@@ -2152,6 +2155,84 @@ public class Board implements Runnable {
         }
     }
 
+    class ResourcePicker_Board_Card_Panel extends JPanel {
+
+        private JLabel subtitleLabel;
+
+        public ResourcePicker_Board_Card_Panel() {
+            GridBagConstraints c;
+            this.setOpaque(false);
+            this.setLayout(new GridBagLayout());
+
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
+            addPadding(this, 599,946,5,5);
+
+            JLabel titleLabel = new JLabel("Pick your Resources!");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.1;
+            this.add(titleLabel,c);
+
+            subtitleLabel = new JLabel();
+            subtitleLabel.setFont(new Font(PAP, Font.BOLD, 40));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 2;
+            c.gridwidth = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.1;
+            this.add(subtitleLabel,c);
+
+            Resource resource;
+            CustomResourceButton button;
+
+            for(int i=0; i<4; i++)
+            {
+               resource = Resource.COIN;
+               if(i==1) resource = Resource.SHIELD;
+               if(i==2) resource = Resource.STONE;
+               if(i==3) resource = Resource.SERVANT;
+
+               button = new CustomResourceButton(resource);
+               button.setBackground(new Color(231, 210, 181));
+               button.setPreferredSize(new Dimension(130,130));
+               button.setIcon(scaleImage(new ImageIcon(resource.getPathLittle()),110));
+               button.addActionListener(resourcePicker_actionListener);
+               c = new GridBagConstraints();
+               c.gridx = i+1;
+               c.gridy = 3;
+               c.weightx = 0.5;
+               c.weighty = 0.5;
+               c.insets = new Insets(0,0,20,0);
+               this.add(button,c);
+            }
+        }
+
+        public void update() {
+            switch(Ark.game.getResourcePicker().getNumOfResources()) {
+                case 2: subtitleLabel.setText("resources left: 2");
+                break;
+                case 1: subtitleLabel.setText("resources left: 1");
+                break;
+                default: subtitleLabel.setText("resources left: none, get out");
+                break;
+            }
+        }
+
+        class CustomResourceButton extends JButton {
+            private Resource resource;
+            public CustomResourceButton(Resource resource) {
+                super();
+                this.resource = resource;
+            }
+            public Resource getResource() { return this.resource; }
+        }
+    }
+
     class GoToMarket_Board_Card_Panel extends JPanel {
         private final JLabel[][] labelGrid; //<- contains the labels for the marblegrid
         private final JLabel labelSlide; //<- contains the label for the slidemarble
@@ -2289,8 +2370,6 @@ public class Board implements Runnable {
             }
         }
     }
-
-
 
     class DiscardLeaderCard_Card_Panel extends JPanel {
         ChooseLeaderCardButton leaderCardButton[];
@@ -2574,6 +2653,8 @@ public class Board implements Runnable {
         }
     }
 
+
+
     //HELPER METHODS (graphics)
     public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows) {
         GridBagConstraints c;
@@ -2712,5 +2793,10 @@ public class Board implements Runnable {
         int number = source.getNumber();
 
 
+    };
+    ActionListener resourcePicker_actionListener = e -> {
+        ResourcePicker_Board_Card_Panel.CustomResourceButton source = (ResourcePicker_Board_Card_Panel.CustomResourceButton) e.getSource();
+        Resource resource = source.getResource();
+        int resourceLeft = Ark.game.getResourcePicker().getNumOfResources();
     };
 }
