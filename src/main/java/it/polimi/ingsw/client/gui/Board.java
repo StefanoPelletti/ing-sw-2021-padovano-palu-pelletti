@@ -79,8 +79,7 @@ public class Board implements Runnable {
     JButton back_ChangeDepotConfig_Card_Button;
     static final String DISCARDLEADERCARD = "Discard LeaderCard";
     DiscardLeaderCard_Card_Panel discardLeaderCard_card_panel;
-    JButton back_DiscardLeaderCard;
-    JButton confirm_DiscardLeaderCard_Card_Button;
+    JButton back_DiscardLeaderCard_Card_Button;
     static final String ACTIVATELEADERCARD = "Activate Leader Card";
     ActivateLeaderCard_Board_Card_Panel activateLeaderCard_board_card_panel;
     JButton back_ActivateLeaderCard_Button;
@@ -376,6 +375,9 @@ public class Board implements Runnable {
                 back_Market_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
                 back_GoToMarket_Card_Button.addActionListener(back_GoToMarket_Card_Button_actionListener);
                 discard_LeaderCard_Button.addActionListener(discard_LeaderCard_Button_actionListener);
+                back_DiscardLeaderCard_Card_Button.addActionListener(back_DiscardLeaderCard_Card_Button_actionListener);
+                back_ActivateLeaderCard_Button.addActionListener(back_ActivateLeaderCard_Card_Button_actionListener);
+                back_ChangeDepotConfig_Card_Button.addActionListener(back_ChangeDepotConfig_Card_Button_actionListener);
             }
             //INITIAL UPDATE (?)
             {
@@ -2291,19 +2293,22 @@ public class Board implements Runnable {
 
 
     class DiscardLeaderCard_Card_Panel extends JPanel {
-        JLabel[] labelCards;
-        JRadioButton[] rbutton;
+        ChooseLeaderCardButton leaderCardButton[];
+        //JRadioButton[] rbutton;
+        JLabel[] labelsUnderTheLeaderCard;
 
         public DiscardLeaderCard_Card_Panel() {
             GridBagConstraints c;
-            this.setLayout(new GridBagLayout());
             this.setOpaque(false);
+            this.setLayout(new GridBagLayout());
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
-
             addPadding(this, 599,946,100,100);
 
-            this.labelCards = new JLabel[2];
-            this.rbutton = new JRadioButton[2];
+            leaderCardButton = new ChooseLeaderCardButton[2];
+            labelsUnderTheLeaderCard = new JLabel[2];
+
+            //this.labelCards = new JLabel[2];
+            //this.rbutton = new JRadioButton[2];
 
             JLabel titleLabel = new JLabel("Select a card to discard it!");
             titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
@@ -2315,64 +2320,120 @@ public class Board implements Runnable {
             c.weighty = 0.5;
             this.add(titleLabel,c);
 
-            for(int i=0; i<2; i++)
-            {
-                labelCards[i] = new JLabel();
+            back_DiscardLeaderCard_Card_Button = new JButton("Back");
+            back_DiscardLeaderCard_Card_Button.setPreferredSize(new Dimension(120, 40));
+            back_DiscardLeaderCard_Card_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_DiscardLeaderCard_Card_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.insets = new Insets(5,5,0,0);
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            this.add(back_DiscardLeaderCard_Card_Button,c);
 
-                c = new GridBagConstraints();
-                c.gridx = i+1;
-                c.gridy = 2;
-                c.gridwidth = 1;
-                c.weightx = 0.5;
-                c.weighty = 0.2;
-                this.add(labelCards[i],c);
+            JLabel labelOverLeaderCard1 = new JLabel("Leader Card #1");
+            labelOverLeaderCard1.setFont(new Font(PAP, Font.BOLD, 26));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(labelOverLeaderCard1,c);
 
-                rbutton[i] = new JRadioButton();
-                rbutton[i].setBackground(new Color(178, 49, 35));
-                c = new GridBagConstraints();
-                c.gridx = i+1;
-                c.gridy = 3;
-                c.anchor = GridBagConstraints.PAGE_START;
-                c.weightx = 0.5;
-                c.weighty = 0.4;
-                this.add(rbutton[i], c);
-            }
+            JLabel labelOverLeaderCard2 = new JLabel("Leader Card #2");
+            labelOverLeaderCard2.setFont(new Font(PAP, Font.BOLD, 26));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(labelOverLeaderCard2,c);
 
-            ButtonGroup rb = new ButtonGroup();
-            rb.add(rbutton[0]);
-            rb.add(rbutton[1]);
+            leaderCardButton[0] = new ChooseLeaderCardButton(0);
+            leaderCardButton[0].setPreferredSize(new Dimension(272,400));
+            leaderCardButton[0].setBackground(new Color(231, 210, 181));
+            leaderCardButton[0].addActionListener(discardLeaderCard_actionListener);
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(leaderCardButton[0],c);
 
+            leaderCardButton[1] = new ChooseLeaderCardButton(1);
+            leaderCardButton[1].setPreferredSize(new Dimension(272,400));
+            leaderCardButton[1].setBackground(new Color(231, 210, 181));
+            leaderCardButton[1].addActionListener(discardLeaderCard_actionListener);
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(leaderCardButton[1],c);
 
-
-            confirm_DiscardLeaderCard_Card_Button = new JButton("confirm!");
-            confirm_DiscardLeaderCard_Card_Button.setEnabled(false);
-            confirm_DiscardLeaderCard_Card_Button.setPreferredSize(new Dimension(200, 60));
-            confirm_DiscardLeaderCard_Card_Button.setFont(new Font(PAP, Font.BOLD, 28));
-            confirm_DiscardLeaderCard_Card_Button.setBackground(new Color(231, 210, 181));
+            labelsUnderTheLeaderCard[0] = new JLabel();
+            labelsUnderTheLeaderCard[0].setFont(new Font(PAP, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 4;
             c.weightx = 0.5;
-            c.weighty = 0.4;
-            c.gridwidth = 4;
+            c.weighty = 0.5;
             c.insets = new Insets(0,0,10,0);
-            this.add(confirm_DiscardLeaderCard_Card_Button,c);
+            this.add(labelsUnderTheLeaderCard[0],c);
+
+
+            labelsUnderTheLeaderCard[1] = new JLabel();
+            labelsUnderTheLeaderCard[1].setFont(new Font(PAP, Font.BOLD, 22));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(0,0,10,0);
+            this.add(labelsUnderTheLeaderCard[1],c);
 
         }
 
         public void update() {
-            LeaderCard[] leadercards = Ark.myPlayerRef.getLeaderCards();
-
-            for(int i=0; i<2; i++)
-            {
-                if(leadercards[i] != null) {
-                    ImageIcon t = scaleImage(new ImageIcon(leadercards[i].getFrontPath()), 300);
-                    labelCards[i].setIcon(t);
-                } else {
-                    ImageIcon t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
-                    labelCards[i].setIcon(t);
+            LeaderCard[] cards = Ark.myPlayerRef.getLeaderCards();
+            for(int i=0; i<2; i++) {
+                if(cards[i] == null)
+                {
+                    this.leaderCardButton[i].setEnabled(false);
+                    this.labelsUnderTheLeaderCard[i].setText("not present");
+                    this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),375));
+                }
+                else
+                {
+                    if(cards[i].isEnabled())
+                    {
+                        this.leaderCardButton[i].setEnabled(false);
+                        this.labelsUnderTheLeaderCard[i].setText("can't discard anymore");
+                        this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()),375));
+                    }
+                    else
+                    {
+                        this.leaderCardButton[i].setEnabled(true);
+                        this.labelsUnderTheLeaderCard[i].setText("select this?");
+                        this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()),375));
+                    }
                 }
             }
+        }
+
+        class ChooseLeaderCardButton extends JButton {
+            private int number;
+
+            public ChooseLeaderCardButton(int number) {
+                super();
+                this.number = number;
+            }
+
+            public int getNumber() { return this.number; }
         }
     }
 
@@ -2437,7 +2498,7 @@ public class Board implements Runnable {
             leaderCardButtons[0] = new ChooseLeaderCardButton(0);
             leaderCardButtons[0].setPreferredSize(new Dimension(272,400));
             leaderCardButtons[0].setBackground(new Color(231, 210, 181));
-            leaderCardButtons[0].addActionListener(activate_LeaderCards_Button_actionListener);
+            leaderCardButtons[0].addActionListener(activateLeaderCard_actionListener);
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 3;
@@ -2448,7 +2509,7 @@ public class Board implements Runnable {
             leaderCardButtons[1] = new ChooseLeaderCardButton(1);
             leaderCardButtons[1].setPreferredSize(new Dimension(272,400));
             leaderCardButtons[1].setBackground(new Color(231, 210, 181));
-            leaderCardButtons[1].addActionListener(activate_LeaderCards_Button_actionListener);
+            leaderCardButtons[1].addActionListener(activateLeaderCard_actionListener);
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 3;
@@ -2475,7 +2536,6 @@ public class Board implements Runnable {
             c.weighty = 0.5;
             c.insets = new Insets(0,0,10,0);
             this.add(labelsUnderTheLeaderCard[1],c);
-
         }
 
         public void update() {
@@ -2618,6 +2678,18 @@ public class Board implements Runnable {
         cardLayoutRight.show(centralRightPanel, lastRightCard);
     };
 
+    ActionListener back_DiscardLeaderCard_Card_Button_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, lastRightCard);
+    };
+
+    ActionListener back_ActivateLeaderCard_Card_Button_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, lastRightCard);
+    };
+
+    ActionListener back_ChangeDepotConfig_Card_Button_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, lastRightCard);
+    };
+
     ActionListener getRowOrColumn_ActionListener = e -> {
 
         GoToMarket_Board_Card_Panel.RowOrColumn_Button source = (GoToMarket_Board_Card_Panel.RowOrColumn_Button) e.getSource();
@@ -2635,4 +2707,10 @@ public class Board implements Runnable {
 
     };
 
+    ActionListener discardLeaderCard_actionListener = e -> {
+        DiscardLeaderCard_Card_Panel.ChooseLeaderCardButton source = (DiscardLeaderCard_Card_Panel.ChooseLeaderCardButton) e.getSource();
+        int number = source.getNumber();
+
+
+    };
 }
