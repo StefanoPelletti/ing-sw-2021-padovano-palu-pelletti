@@ -18,6 +18,7 @@ import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -77,6 +78,10 @@ public class Board implements Runnable {
     ChangeDepotConfig_Board_Card_Panel changeDepotConfig_board_card_panel;
     JButton confirm_ChangeDepotConfig_Card_Button;
     JButton back_ChangeDepotConfig_Card_Button;
+    static final String DISCARDLEADERCARD = "Discard LeaderCard";
+    DiscardLeaderCard_Card_Panel discardLeaderCard_card_panel;
+    JButton back_DiscardLeaderCard;
+    JButton confirm_DiscardLeaderCard_Card_Button;
 
 
     //fonts
@@ -367,6 +372,7 @@ public class Board implements Runnable {
                 back_DevDeck_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
                 back_Market_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
                 back_GoToMarket_Card_Button.addActionListener(back_GoToMarket_Card_Button_actionListener);
+                discard_LeaderCard_Button.addActionListener(discard_LeaderCard_Button_actionListener);
             }
             //INITIAL UPDATE (?)
             {
@@ -382,6 +388,7 @@ public class Board implements Runnable {
                 market_board_card_panel.update();
                 goToMarket_board_card_panel.update();
                 changeDepotConfig_board_card_panel.update();
+                discardLeaderCard_card_panel.update();
             }
 
             lastRightCard = Ark.nickname;
@@ -1748,6 +1755,8 @@ public class Board implements Runnable {
             this.add(goToMarket_board_card_panel, GOTOMARKET);
             changeDepotConfig_board_card_panel = new ChangeDepotConfig_Board_Card_Panel();
             this.add(changeDepotConfig_board_card_panel, CHANGEDEPOT);
+            discardLeaderCard_card_panel = new DiscardLeaderCard_Card_Panel();
+            this.add(discardLeaderCard_card_panel, DISCARDLEADERCARD);
         }
     }
 
@@ -2081,8 +2090,6 @@ public class Board implements Runnable {
             c.gridwidth = 4;
             c.insets = new Insets(0,0,10,0);
             this.add(confirm_LeaderCardsPicker_Card_Button,c);
-
-
         }
 
         public void update()
@@ -2244,7 +2251,6 @@ public class Board implements Runnable {
                     labelGrid[row][col].setIcon(marbleIcon);
                 }
             }
-
         }
 
         @Override
@@ -2273,6 +2279,92 @@ public class Board implements Runnable {
         }
     }
 
+    class DiscardLeaderCard_Card_Panel extends JPanel {
+        JLabel[] labelCards;
+        JRadioButton[] rbutton;
+
+        public DiscardLeaderCard_Card_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
+
+            addPadding(this, 599,946,100,100);
+
+            this.labelCards = new JLabel[2];
+            this.rbutton = new JRadioButton[2];
+
+            JLabel titleLabel = new JLabel("Select a card to discard it!");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(titleLabel,c);
+
+            for(int i=0; i<2; i++)
+            {
+                labelCards[i] = new JLabel();
+
+                c = new GridBagConstraints();
+                c.gridx = i+1;
+                c.gridy = 2;
+                c.gridwidth = 1;
+                c.weightx = 0.5;
+                c.weighty = 0.2;
+                this.add(labelCards[i],c);
+
+                rbutton[i] = new JRadioButton();
+                rbutton[i].setBackground(new Color(178, 49, 35));
+                c = new GridBagConstraints();
+                c.gridx = i+1;
+                c.gridy = 3;
+                c.anchor = GridBagConstraints.PAGE_START;
+                c.weightx = 0.5;
+                c.weighty = 0.4;
+                this.add(rbutton[i], c);
+            }
+
+            ButtonGroup rb = new ButtonGroup();
+            rb.add(rbutton[0]);
+            rb.add(rbutton[1]);
+
+
+
+            confirm_DiscardLeaderCard_Card_Button = new JButton("confirm!");
+            confirm_DiscardLeaderCard_Card_Button.setEnabled(false);
+            confirm_DiscardLeaderCard_Card_Button.setPreferredSize(new Dimension(200, 60));
+            confirm_DiscardLeaderCard_Card_Button.setFont(new Font(PAP, Font.BOLD, 28));
+            confirm_DiscardLeaderCard_Card_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            c.gridwidth = 4;
+            c.insets = new Insets(0,0,10,0);
+            this.add(confirm_LeaderCardsPicker_Card_Button,c);
+
+        }
+
+        public void update() {
+            LeaderCard[] leadercards = Ark.myPlayerRef.getLeaderCards();
+
+            for(int i=0; i<2; i++)
+            {
+                if(leadercards[i] != null) {
+                    ImageIcon t = scaleImage(new ImageIcon(leadercards[i].getFrontPath()), 300);
+                    labelCards[i].setIcon(t);
+                } else {
+                    ImageIcon t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
+                    labelCards[i].setIcon(t);
+                }
+            }
+        }
+    }
+
     //HELPER METHODS (graphics)
     public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows)
     {
@@ -2289,7 +2381,6 @@ public class Board implements Runnable {
         c.gridheight = maxRows; // <- max rows
         c.insets = new Insets(height,0, 0,0);
         object.add(paddingVertical, c);
-
 
         JLabel paddingHorizontal = new JLabel();
         paddingHorizontal.setText("");
@@ -2353,7 +2444,8 @@ public class Board implements Runnable {
     };
 
     ActionListener discard_LeaderCard_Button_actionListener = e -> {
-
+        cardLayoutRight.show(centralRightPanel, DISCARDLEADERCARD);
+        cardLayoutLeft.show(centralLeftPanel, Ark.nickname);
     };
 
     ActionListener buy_DevCard_Button_actionListener = e -> {
@@ -2388,4 +2480,5 @@ public class Board implements Runnable {
         column = rc.getColumn();
         num = rc.getNum();
     };
+
 }
