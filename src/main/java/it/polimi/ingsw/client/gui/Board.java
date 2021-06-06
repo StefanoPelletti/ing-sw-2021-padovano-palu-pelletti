@@ -388,7 +388,7 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            cardLayoutRight.show(centralRightPanel, CHANGEDEPOT);
+            //cardLayoutRight.show(centralRightPanel, );
         }
 
         @Override
@@ -1480,7 +1480,7 @@ public class Board implements Runnable {
             c.gridx = 1;
             c.gridy = 5;
             c.weightx = 0.5;
-            c.weighty = 0.3;
+            c.weighty = 0.7;
             c.gridwidth = 1;
             this.add(firstExtraDepotPanel,c);
 
@@ -1490,7 +1490,7 @@ public class Board implements Runnable {
             c.gridx = 2;
             c.gridy = 5;
             c.weightx = 0.5;
-            c.weighty = 0.3;
+            c.weighty = 0.7;
             c.gridwidth = 1;
             this.add(secondExtraDepotPanel,c);
 
