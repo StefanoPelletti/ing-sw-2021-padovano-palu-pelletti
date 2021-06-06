@@ -293,7 +293,7 @@ public class Board implements Runnable {
     }
 
     public Board() {
-        mainFrame = new JFrame("Title");
+        mainFrame = new JFrame("Huh?");
         mainPanel = new MainPanel();
         mainFrame.setContentPane(mainPanel);
 
@@ -308,6 +308,7 @@ public class Board implements Runnable {
         mainFrame.setVisible(true);
     }
 
+    // this is the custom, new contentPane to set in the mainFrame.
     class MainPanel extends JPanel {
 
         private Image image;
@@ -398,7 +399,7 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            //cardLayoutRight.show(centralRightPanel, );
+            cardLayoutRight.show(centralRightPanel, LPICKER );
         }
 
         @Override
@@ -1016,17 +1017,17 @@ public class Board implements Runnable {
                 //TODO solo mode update for bottom panel
             }
         }
-    }
 
-    class ShowPlayerButton extends JButton {
-        private final String playerName;
-        public ShowPlayerButton(String text, String playerName)
-        {
-            super(text);
-            this.playerName = playerName;
+        class ShowPlayerButton extends JButton {
+            private final String playerName;
+            public ShowPlayerButton(String text, String playerName)
+            {
+                super(text);
+                this.playerName = playerName;
+            }
+
+            public String getPlayerName() { return this.playerName; }
         }
-
-        public String getPlayerName() { return this.playerName; }
     }
 
 
@@ -2030,12 +2031,12 @@ public class Board implements Runnable {
     }
 
     class LeaderCardsPicker_Board_Card_Panel extends JPanel implements ItemListener {
-        JLabel[] labelCards;
-        JCheckBox[] checkBoxes;
+        private final JLabel[] labelCards;
+        private final CustomCheckbox[] checkBoxes;
 
-        int first = -1;
-        int second = -1;
-        boolean modifying = false;
+        private int first = -1;
+        private int second = -1;
+        private boolean modifying = false;
 
         public LeaderCardsPicker_Board_Card_Panel() {
             GridBagConstraints c;
@@ -2046,7 +2047,7 @@ public class Board implements Runnable {
             addPadding(this, 599,946,5,5);
 
             this.labelCards= new JLabel[4];
-            this.checkBoxes= new JCheckBox[4];
+            this.checkBoxes= new CustomCheckbox[4];
 
             JLabel titleLabel = new JLabel("Pick your two Cards!");
             titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
@@ -2070,7 +2071,7 @@ public class Board implements Runnable {
                 c.weighty = 0.2;
                 this.add(labelCards[i],c);
 
-                checkBoxes[i] = new JCheckBox();
+                checkBoxes[i] = new CustomCheckbox(i);
                 checkBoxes[i].setBackground(new Color(178, 49, 35));
                 checkBoxes[i].addItemListener(this);
                 c = new GridBagConstraints();
@@ -2100,20 +2101,13 @@ public class Board implements Runnable {
         public void update()
         {
             for(int i=0; i<4; i++)
-            {
-                ImageIcon t = scaleImage(new ImageIcon(Ark.game.getLeaderCardsPicker().getCard(i).getFrontPath()),300);
-                labelCards[i].setIcon(t);
-            }
+                labelCards[i].setIcon(scaleImage(new ImageIcon(Ark.game.getLeaderCardsPicker().getCard(i).getFrontPath()),300));
         }
 
         @Override
         public void itemStateChanged(ItemEvent e) {
-            JCheckBox source = (JCheckBox) e.getSource();
-            int number = -1;
-            if (this.checkBoxes[0] == source) number = 0;
-            if (this.checkBoxes[1] == source) number = 1;
-            if (this.checkBoxes[2] == source) number = 2;
-            if (this.checkBoxes[3] == source) number = 3;
+            CustomCheckbox source = (CustomCheckbox) e.getSource();
+            int number = source.getNumber();
 
             if (!modifying) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -2122,15 +2116,14 @@ public class Board implements Runnable {
                     } else if (first != -1 && second == -1) {
                         second = number;
                         confirm_LeaderCardsPicker_Card_Button.setEnabled(true);
-                    } else if (first != -1 && second != -1 && first != number && second != number) //so a new card was chosen
+                    } else if (first != -1 && first != number && second != number) //so a new card was chosen
                     {
                         modifying = true;
-                        this.checkBoxes[first].setSelected(false);
+                        checkBoxes[first].setSelected(false);
                         first = second;
                         second = number;
                         confirm_LeaderCardsPicker_Card_Button.setEnabled(true);
                         modifying = false;
-
                     }
                 } else //item deselected
                 {
@@ -2145,11 +2138,21 @@ public class Board implements Runnable {
                 }
             }
         } //checkBoxes listener, allows for two and only two checks
+
+        class CustomCheckbox extends JCheckBox {
+            private final int number;
+            public CustomCheckbox(int number)
+            {
+                super();
+                this.number = number;
+            }
+            public int getNumber() { return this.number; }
+        }
     }
 
     class GoToMarket_Board_Card_Panel extends JPanel {
-        JLabel[][] labelGrid; //<- contains the labels for the marblegrid
-        JLabel labelSlide; //<- contains the label for the slidemarble
+        private final JLabel[][] labelGrid; //<- contains the labels for the marblegrid
+        private final JLabel labelSlide; //<- contains the label for the slidemarble
         private Image image;
 
         public GoToMarket_Board_Card_Panel() {
@@ -2163,7 +2166,7 @@ public class Board implements Runnable {
 
             try {
                 image = ImageIO.read(new File("resources/images/market2.png"));
-            } catch (IOException e) {}
+            } catch (IOException ignored) {}
 
             addPadding(this, 599,946,100,100);
 
@@ -2208,7 +2211,8 @@ public class Board implements Runnable {
                 for(int col = 0; col < 5; col++)
                 {
                     if(col == 4 && row != 3) {
-                        RowOrColumn_Button rc = new RowOrColumn_Button(row, false, "" + (row+1));
+                        RowOrColumn_Button rc = new RowOrColumn_Button(row, false);
+                        rc.setText("" + (row+1));
                         rc.addActionListener(getRowOrColumn_ActionListener);
                         rc.setPreferredSize(new Dimension(47, 47));
                         rc.setFont(new Font(PAP, Font.BOLD, 20));
@@ -2220,7 +2224,8 @@ public class Board implements Runnable {
                         c.weighty = 1.5;
                         this.add(rc, c);
                     } else if(row == 3 && col != 4) {
-                        RowOrColumn_Button rc = new RowOrColumn_Button(col, true, "" + (col+1));
+                        RowOrColumn_Button rc = new RowOrColumn_Button(col, true);
+                        rc.setText("" + (col+1));
                         rc.addActionListener(getRowOrColumn_ActionListener);
                         rc.setPreferredSize(new Dimension(47, 47));
                         rc.setFont(new Font(PAP, Font.BOLD, 20));
@@ -2247,15 +2252,14 @@ public class Board implements Runnable {
 
         public void update() {
             MarketMarble[][] grid = Ark.game.getMarket().getGrid();
-            MarketMarble slide = Ark.game.getMarket().getSlideMarble();
+            MarketMarble slideMarble = Ark.game.getMarket().getSlideMarble();
 
             for(int col = 0; col < 4; col++) {
                 for (int row = 0; row < 3; row++) {
-                    ImageIcon marbleIcon;
-                    marbleIcon = scaleImage(new ImageIcon(grid[row][col].getPath()), 64);
-                    labelGrid[row][col].setIcon(marbleIcon);
+                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 64));
                 }
             }
+            labelSlide.setIcon(scaleImage(new ImageIcon(slideMarble.getPath()), 64));
         }
 
         @Override
@@ -2263,26 +2267,28 @@ public class Board implements Runnable {
             super.paintComponent(g);
             g.drawImage(image, 0, 0, this);
         }
+
+        class RowOrColumn_Button extends JButton {
+            private final int num;
+            private final boolean column;
+
+            public RowOrColumn_Button(int num, boolean column) {
+                super();
+                this.num = num;
+                this.column = column;
+            }
+
+            public int getNum() {
+                return num;
+            }
+
+            public boolean isColumn() {
+                return column;
+            }
+        }
     }
 
-    class RowOrColumn_Button extends JButton {
-        private final int num;
-        private final boolean column;
 
-        public RowOrColumn_Button(int num, boolean column, String title) {
-            super(title);
-            this.num = num;
-            this.column = column;
-        }
-
-        public int getNum() {
-            return num;
-        }
-
-        public boolean getColumn() {
-            return column;
-        }
-    }
 
     class DiscardLeaderCard_Card_Panel extends JPanel {
         JLabel[] labelCards;
@@ -2350,7 +2356,7 @@ public class Board implements Runnable {
             c.weighty = 0.4;
             c.gridwidth = 4;
             c.insets = new Insets(0,0,10,0);
-            this.add(confirm_LeaderCardsPicker_Card_Button,c);
+            this.add(confirm_DiscardLeaderCard_Card_Button,c);
 
         }
 
@@ -2372,7 +2378,7 @@ public class Board implements Runnable {
 
     class ActivateLeaderCard_Board_Card_Panel extends JPanel {
 
-        ChooseLeaderCardButton[] leaderCardButton;
+        ChooseLeaderCardButton[] leaderCardButtons;
         JLabel[] labelsUnderTheLeaderCard;
 
         public ActivateLeaderCard_Board_Card_Panel() {
@@ -2382,7 +2388,7 @@ public class Board implements Runnable {
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
             addPadding(this, 599,946,100,100);
 
-            leaderCardButton = new ChooseLeaderCardButton[2];
+            leaderCardButtons = new ChooseLeaderCardButton[2];
             labelsUnderTheLeaderCard = new JLabel[2];
 
             back_ActivateLeaderCard_Button = new JButton("Back");
@@ -2428,27 +2434,27 @@ public class Board implements Runnable {
             c.weighty = 0.5;
             this.add(labelOverLeaderCard2,c);
 
-            leaderCardButton[0] = new ChooseLeaderCardButton(0);
-            leaderCardButton[0].setPreferredSize(new Dimension(272,400));
-            leaderCardButton[0].setBackground(new Color(231, 210, 181));
-            leaderCardButton[0].addActionListener(activate_LeaderCards_Button_actionListener);
+            leaderCardButtons[0] = new ChooseLeaderCardButton(0);
+            leaderCardButtons[0].setPreferredSize(new Dimension(272,400));
+            leaderCardButtons[0].setBackground(new Color(231, 210, 181));
+            leaderCardButtons[0].addActionListener(activate_LeaderCards_Button_actionListener);
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 3;
             c.weightx = 0.5;
             c.weighty = 0.5;
-            this.add(leaderCardButton[0],c);
+            this.add(leaderCardButtons[0],c);
 
-            leaderCardButton[1] = new ChooseLeaderCardButton(1);
-            leaderCardButton[1].setPreferredSize(new Dimension(272,400));
-            leaderCardButton[1].setBackground(new Color(231, 210, 181));
-            leaderCardButton[1].addActionListener(activate_LeaderCards_Button_actionListener);
+            leaderCardButtons[1] = new ChooseLeaderCardButton(1);
+            leaderCardButtons[1].setPreferredSize(new Dimension(272,400));
+            leaderCardButtons[1].setBackground(new Color(231, 210, 181));
+            leaderCardButtons[1].addActionListener(activate_LeaderCards_Button_actionListener);
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 3;
             c.weightx = 0.5;
             c.weighty = 0.5;
-            this.add(leaderCardButton[1],c);
+            this.add(leaderCardButtons[1],c);
 
             labelsUnderTheLeaderCard[0] = new JLabel();
             labelsUnderTheLeaderCard[0].setFont(new Font(PAP, Font.BOLD, 22));
@@ -2459,7 +2465,6 @@ public class Board implements Runnable {
             c.weighty = 0.5;
             c.insets = new Insets(0,0,10,0);
             this.add(labelsUnderTheLeaderCard[0],c);
-
 
             labelsUnderTheLeaderCard[1] = new JLabel();
             labelsUnderTheLeaderCard[1].setFont(new Font(PAP, Font.BOLD, 22));
@@ -2478,30 +2483,27 @@ public class Board implements Runnable {
             for(int i=0; i<2; i++) {
                 if(cards[i] == null)
                 {
-                    this.leaderCardButton[i].setEnabled(false);
+                    this.leaderCardButtons[i].setEnabled(false);
                     this.labelsUnderTheLeaderCard[i].setText("not present");
-                    this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),375));
+                    this.leaderCardButtons[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),375));
+                }
+                else if(cards[i].isEnabled())
+                {
+                    this.leaderCardButtons[i].setEnabled(false);
+                    this.labelsUnderTheLeaderCard[i].setText("already enabled");
+                    this.leaderCardButtons[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()),375));
                 }
                 else
                 {
-                    if(cards[i].isEnabled())
-                    {
-                        this.leaderCardButton[i].setEnabled(false);
-                        this.labelsUnderTheLeaderCard[i].setText("already enabled");
-                        this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()),375));
-                    }
-                    else
-                    {
-                        this.leaderCardButton[i].setEnabled(true);
-                        this.labelsUnderTheLeaderCard[i].setText("select this?");
-                        this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()),375));
-                    }
+                    this.leaderCardButtons[i].setEnabled(true);
+                    this.labelsUnderTheLeaderCard[i].setText("select this?");
+                    this.leaderCardButtons[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()),375));
                 }
             }
         }
 
         class ChooseLeaderCardButton extends JButton {
-            private int number;
+            private final int number;
 
             public ChooseLeaderCardButton(int number) {
                 super();
@@ -2541,13 +2543,11 @@ public class Board implements Runnable {
         object.add(paddingHorizontal, c);
     }
 
-    public ImageIcon scaleImage(ImageIcon icon, int squareDimension)
-    {
+    public ImageIcon scaleImage(ImageIcon icon, int squareDimension) {
         return scaleImage(icon, squareDimension, squareDimension);
     }
 
-    public ImageIcon scaleImage(ImageIcon icon, int width, int height)
-    {
+    public ImageIcon scaleImage(ImageIcon icon, int width, int height) {
         int newWidth = icon.getIconWidth();
         int newHeight = icon.getIconHeight();
         if(icon.getIconWidth() > width) {
@@ -2619,14 +2619,15 @@ public class Board implements Runnable {
     };
 
     ActionListener getRowOrColumn_ActionListener = e -> {
-        int num;
-        boolean column;
-        RowOrColumn_Button rc = (RowOrColumn_Button) e.getSource();
 
-        column = rc.getColumn();
-        num = rc.getNum();
+        GoToMarket_Board_Card_Panel.RowOrColumn_Button source = (GoToMarket_Board_Card_Panel.RowOrColumn_Button) e.getSource();
+
+        int number = source.getNum();
+        boolean column = source.isColumn();
+
     };
 
+    //implements
     ActionListener activateLeaderCard_actionListener = e -> {
         ActivateLeaderCard_Board_Card_Panel.ChooseLeaderCardButton source = (ActivateLeaderCard_Board_Card_Panel.ChooseLeaderCardButton) e.getSource();
         int number = source.getNumber();
