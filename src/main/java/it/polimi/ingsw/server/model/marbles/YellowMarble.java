@@ -9,8 +9,10 @@ import java.util.List;
 
 public class YellowMarble implements MarketMarble, Serializable {
     private final Color color;
+    private String path;
 
     public YellowMarble() {
+        path = "resources/punchboard/yellow_marble.png";
         color = Color.YELLOW;
     }
 
@@ -33,5 +35,9 @@ public class YellowMarble implements MarketMarble, Serializable {
      */
     public String toAbbreviation() {
         return A.YELLOW + color.toAbbreviation() + A.RESET;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

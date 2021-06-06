@@ -28,4 +28,6 @@ public interface MarketMarble extends Serializable {
      * @return The abbreviation String.
      */
     String toAbbreviation();
+
+    String getPath();
 }

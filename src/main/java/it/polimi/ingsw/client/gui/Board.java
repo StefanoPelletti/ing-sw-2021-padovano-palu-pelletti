@@ -348,6 +348,7 @@ public class Board implements Runnable {
                 activate_Production_Button.addActionListener(activate_Production_Button_actionListener);
                 endTurn_Button.addActionListener(endTurn_Button_actionListener);
                 back_DevDeck_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
+                back_Market_Card_Button.addActionListener(back_DevDeck_Card_Button_actionListener);
             }
             //INITIAL UPDATE (?)
             {
@@ -359,6 +360,7 @@ public class Board implements Runnable {
                     centralLeftPanel.update(player.getNickname());
                 }
                 leaderCardsPicker_board_card_panel.update();
+                market_board_card_panel.update();
             }
 
             lastRightCard = Ark.nickname;
@@ -375,7 +377,6 @@ public class Board implements Runnable {
         }
 
     }
-
 
     //LEFT PANEL
     class LeftPanel extends JPanel {
@@ -1449,6 +1450,7 @@ public class Board implements Runnable {
     class Market_Board_Card_Panel extends JPanel {
         JLabel[][] labelGrid; //<- contains the labels for the marblegrid
         JLabel labelSlide; //<- contains the label for the slidemarble
+        private Image image;
 
         public Market_Board_Card_Panel() {
             GridBagConstraints c;
@@ -1459,14 +1461,88 @@ public class Board implements Runnable {
             this.labelGrid = new JLabel[3][4];
             this.labelSlide = new JLabel();
 
-            addPadding(this, 599,946,6,5);
+            try {
+                image = ImageIO.read(new File("resources/images/market2.png"));
+            } catch (IOException e) {}
 
+            addPadding(this, 599,946,100,100);
+
+            back_Market_Card_Button = new JButton("Back");
+            back_Market_Card_Button.setPreferredSize(new Dimension(120, 40));
+            back_Market_Card_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_Market_Card_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 4.00;
+            c.weighty = 9.00;
+            c.insets = new Insets(15,5,0,0);
+            c.anchor = GridBagConstraints.NORTH;
+            this.add(back_Market_Card_Button,c);
+
+            ImageIcon slideMarble = scaleImage(new ImageIcon("resources/punchboard/purple_marble.png"), 64);
+            labelSlide.setIcon(slideMarble);
+            c = new GridBagConstraints();
+            c.gridx = 5;
+            c.gridy = 2;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 1.01;
+            c.weighty = 1.01;
+            this.add(labelSlide, c);
+
+            JLabel label1 = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 50;
+            c.gridy = 50;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 30.51;
+            c.weighty = 30.51;
+            this.add(label1,c);
+
+            for(int col = 0; col < 4; col++)
+            {
+                for(int row = 0; row < 3; row++)
+                {
+                    //ImageIcon marble;
+                    //marble = scaleImage(new ImageIcon("resources/punchboard/blu_marble.png"), 64);
+                    JLabel label = new JLabel();
+                    //label.setIcon(marble);
+                    c = new GridBagConstraints();
+                    c.gridx = col+2;
+                    c.gridy = row+3;
+                    c.weightx = 0.4;
+                    c.weighty = 1.5;
+                    this.add(label,c);
+                    this.labelGrid[row][col] = label;
+                }
+            }
 
         }
 
         public void update() {
             MarketMarble[][] grid = Ark.game.getMarket().getGrid();
             MarketMarble slide = Ark.game.getMarket().getSlideMarble();
+
+            for(int col = 0; col < 4; col++)
+            {
+                for(int row = 0; row < 3; row++)
+                {
+                    ImageIcon marbleIcon;
+                    marbleIcon = scaleImage(new ImageIcon(grid[row][col].getPath()), 64);
+                    labelGrid[row][col].setIcon(marbleIcon);
+                }
+            }
+
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(image, 0, 0, this);
         }
     }
 
@@ -1692,4 +1768,7 @@ public class Board implements Runnable {
         cardLayoutRight.show(centralRightPanel, lastRightCard);
     };
 
+    ActionListener back_Market_Card_Button_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, lastRightCard);
+    };
 }
