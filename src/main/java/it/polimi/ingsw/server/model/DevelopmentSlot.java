@@ -121,7 +121,8 @@ public class DevelopmentSlot extends ModelObservable {
         List<DevelopmentCard> result = new ArrayList<>();
         for (int n = 0; n < 3; n++) {
             for (int h = 0; h < 3; h++) {
-                if (cards[n][h] != null) result.add(cards[n][h]);
+                if (cards[n][h] != null)
+                    result.add(cards[n][h]);
             }
         }
         return result;

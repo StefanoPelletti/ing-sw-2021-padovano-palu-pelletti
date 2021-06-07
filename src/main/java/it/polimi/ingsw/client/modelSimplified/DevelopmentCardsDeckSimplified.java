@@ -18,16 +18,18 @@ public class DevelopmentCardsDeckSimplified {
         }
     }
 
+
+    public DevelopmentCard[][] getCards() {
+        return this.cards;
+    }
+
+
     /**
      * Returns a representation of the current state of a given DevelopmentCardsDeck.
      * It only shows the Visible Cards.
      *
      * @return A String the represents the current state of the DevelopmentCardsDeck.
      */
-    public DevelopmentCard[][] getCards() {
-        return this.cards;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder(" DEVELOPMENT DECK, ALL THE VISIBLE CARDS: ");

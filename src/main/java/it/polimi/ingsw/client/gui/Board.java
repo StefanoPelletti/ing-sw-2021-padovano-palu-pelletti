@@ -31,26 +31,71 @@ import java.util.List;
 import java.util.*;
 
 public class Board implements Runnable {
-    static final String DEVDECK = "Development Cards Deck";
-    static final String MARKET = "Market";
-    static final String GETMARKETRESOURCES = "Get Market Resources";
-    static final String LEADERCARDSPICKER = "Leader Cards Picker";
-    static final String RESOURCEPICKER = "Resource Picker";
-    static final String CHANGEDEPOTCONFIG = "Change Depot Configuration";
-    static final String DISCARDLEADERCARD = "Discard LeaderCard";
-    static final String ACTIVATELEADERCARD = "Activate Leader Card";
-    static final String MARKETHELPER = "Market Helper";
-    static final String VENDOR = "Development Cards Vendor";
-    //fonts
-    static final String TIMES = "Times New Roman";
-    static final String PAP = "Papyrus";
     CardLayout cardLayoutLeft;
     CardLayout cardLayoutRight;
     CentralLeftPanel centralLeftPanel; // <- parent for cardlayout left
     CentralRightPanel centralRightPanel; // <- parent for cardlayout right
+
     JFrame mainFrame;
     MainPanel mainPanel;
     Dimension frameDimension;
+
+    //CENTRAL LEFT PANEL CARDS <- each card is followed by its necessary contents
+    String lastLeftCard;
+
+    /*
+    //CARDS (CENTRAL RIGHT PANEL)  <- each card is followed by its necessary contents
+    */
+    String lastRightCard;
+
+    //static final String SELF = Ark.nickname, OTHERS = player.getNickname()  <- this is a placeholder to remind that the card below is called like this
+    Self_DevSlot_Panel self_devSlot_panel;
+    Others_DevSlot_Panel others_devSlot_panel;
+
+    static final String DEVDECK = "Development Cards Deck";
+    DevDeck_Panel devDeck_panel; //<- updatable after a devdeck update
+
+    static final String MARKET = "Market";
+    Market_Panel market_panel; //<- updatable after a market update
+
+    static final String GETMARKETRESOURCES = "Get Market Resources";
+    GetMarketResource_Panel getMarketResource_panel;
+
+    static final String LEADERCARDSPICKER = "Leader Cards Picker";
+    LeaderCardsPicker_Panel leaderCardsPicker_panel; //<- updatable after a leadercards picker update
+
+    static final String RESOURCEPICKER = "Resource Picker";
+    ResourcePicker_Panel resourcePicker_panel;
+
+    static final String CHANGEDEPOTCONFIG = "Change Depot Configuration";
+    ChangeDepotConfig_Panel changeDepotConfig_panel;
+
+    static final String DISCARDLEADERCARD = "Discard LeaderCard";
+    DiscardLeaderCard_Panel discardLeaderCard_panel;
+
+    static final String ACTIVATELEADERCARD = "Activate Leader Card";
+    ActivateLeaderCard_Panel activateLeaderCard_panel;
+
+    static final String MARKETHELPER = "Market Helper";
+    MarketHelper_Panel marketHelper_panel;
+
+    static final String VENDOR = "Development Cards Vendor";
+    Vendor_Panel vendor_panel;
+
+    //fonts
+    static final String TIMES = "Times New Roman";
+    static final String PAP = "Papyrus";
+
+
+
+
+
+
+
+
+
+
+
     //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
     //LEFT PANEL
     JButton quit_Button;
@@ -64,25 +109,8 @@ public class Board implements Runnable {
     JButton discard_LeaderCard_Button, buy_DevCard_Button, activate_Production_Button;
     PlayersRecapPanel playersRecapPanel; //<- updatable after any other players gets a resource update with a single update()
     JButton endTurn_Button;
-    //CENTRAL LEFT PANEL CARDS <- each card is followed by its necessary contents
-    String lastLeftCard;
-    /*
-     //CARDS (CENTRAL RIGHT PANEL)  <- each card is followed by its necessary contents
-     */
-    String lastRightCard;
-    //static final String SELF = Ark.nickname, OTHERS = player.getNickname()  <- this is a placeholder to remind that the card below is called like this
-    Self_DevSlot_Panel self_devSlot_panel;
-    Others_DevSlot_Panel others_devSlot_panel;
-    DevDeck_Panel devDeck_panel; //<- updatable after a devdeck update
-    Market_Panel market_panel; //<- updatable after a market update
-    GetMarketResource_Panel getMarketResource_panel;
-    LeaderCardsPicker_Panel leaderCardsPicker_panel; //<- updatable after a leadercards picker update
-    ResourcePicker_Panel resourcePicker_panel;
-    ChangeDepotConfig_Panel changeDepotConfig_panel;
-    DiscardLeaderCard_Panel discardLeaderCard_panel;
-    ActivateLeaderCard_Panel activateLeaderCard_panel;
-    MarketHelper_Panel marketHelper_panel;
-    Vendor_Panel vendor_panel;
+
+
     //ACTION LISTENERS
     ActionListener quit_actionListener = e -> {
         notificationsArea.append("\nword");
@@ -129,6 +157,9 @@ public class Board implements Runnable {
     };
     ActionListener back_changeDepotConfig_actionListener = e -> {
         cardLayoutRight.show(centralRightPanel, lastRightCard);
+    };
+    ActionListener back_othersDevSlot_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, Ark.nickname);
     };
     ActionListener init_leaderCardsPicker_actionListener = e -> {
 
@@ -471,20 +502,20 @@ public class Board implements Runnable {
         String result = "";
         switch (resource) {
             case COIN:
-                result = result + "Stone";
+                result += "Stone";
                 break;
             case SHIELD:
-                result = result + "Shield";
+                result += "Shield";
                 break;
             case STONE:
-                result = result + "Stone";
+                result += "Stone";
                 break;
             case SERVANT:
-                result = result + "Servant";
+                result += "Servant";
                 break;
         }
         if (plural)
-            result = result + "s";
+            result += "s";
         return result;
     }
 
@@ -548,6 +579,7 @@ public class Board implements Runnable {
                 devDeck_panel.update();
                 for (PlayerSimplified player : Ark.game.getPlayerList()) {
                     centralLeftPanel.update(player.getNickname());
+                    centralRightPanel.update(player.getNickname());
                 }
                 leaderCardsPicker_panel.update();
                 changeDepotConfig_panel.update();
@@ -557,7 +589,6 @@ public class Board implements Runnable {
                 discardLeaderCard_panel.update();
                 activateLeaderCard_panel.update();
                 resourcePicker_panel.update();
-                self_devSlot_panel.update();
                 marketHelper_panel.update();
                 vendor_panel.update();
             }
@@ -566,7 +597,7 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            cardLayoutRight.show(centralRightPanel, VENDOR);
+            //cardLayoutRight.show(centralRightPanel, "B");
         }
 
         @Override
@@ -1119,7 +1150,7 @@ public class Board implements Runnable {
                     playerPanel.add(servantLabel, c);
 
 
-                    ShowPlayerButton button = new ShowPlayerButton("show", player.getNickname());
+                    ShowPlayerButton button = new ShowPlayerButton("show more", player.getNickname());
                     button.addActionListener(e -> {
                         ShowPlayerButton b = (ShowPlayerButton) e.getSource();
                         String playerName = b.getPlayerName();
@@ -1128,7 +1159,7 @@ public class Board implements Runnable {
                         cardLayoutRight.show(centralRightPanel, playerName);
                     });
                     button.setFont(new Font(PAP, Font.BOLD, 20));
-                    button.setMinimumSize(new Dimension(100, 100));
+                    button.setMinimumSize(new Dimension(140, 100));
                     button.setBackground(new Color(231, 210, 181));
                     c = new GridBagConstraints();
                     c.gridx = 1;
@@ -1457,10 +1488,14 @@ public class Board implements Runnable {
      * CENTRAL RIGHT PANEL <- CARDLAYOUTRIGHT
      */
     class CentralRightPanel extends JPanel {
+
+        private final java.util.List<Others_DevSlot_Panel> othersDevSlotList;
+
         public CentralRightPanel() {
             cardLayoutRight = new CardLayout();
             this.setLayout(cardLayoutRight);
             this.setOpaque(false);
+            this.othersDevSlotList = new ArrayList<>();
 
             self_devSlot_panel = new Self_DevSlot_Panel();
             this.add(self_devSlot_panel, Ark.nickname);
@@ -1484,7 +1519,24 @@ public class Board implements Runnable {
             this.add(marketHelper_panel, MARKETHELPER);
             vendor_panel = new Vendor_Panel();
             this.add(vendor_panel, VENDOR);
+
+            for (PlayerSimplified player : Ark.game.getPlayerList()) {
+                if(player.getNickname().equals(Ark.nickname)) continue;
+                Others_DevSlot_Panel panel = new Others_DevSlot_Panel(player.getNickname());
+                this.add(panel, player.getNickname());
+                othersDevSlotList.add(panel);
+            }
         }
+
+        public void update(String name) {
+            if(name.equals(Ark.nickname))
+                self_devSlot_panel.update();
+            else {
+                Optional<Others_DevSlot_Panel> result = othersDevSlotList.stream().filter(p -> p.panelName.equals(name)).findFirst();
+                result.ifPresent(Others_DevSlot_Panel::update);
+            }
+        }
+
     }
 
     class Self_DevSlot_Panel extends JPanel { //this card is called by Ark.nickname
@@ -1594,14 +1646,155 @@ public class Board implements Runnable {
 
     class Others_DevSlot_Panel extends JPanel {
         private Image image;
+        private final String panelName;
+        private final JLabel[] devGrid;
+        private final JLabel[] leadGrid;
+        private final JLabel[] leadLabel;
 
-        public Others_DevSlot_Panel() {
+        public Others_DevSlot_Panel(String panelName) {
+            this.panelName = panelName;
             this.setLayout(new GridBagLayout());
             GridBagConstraints c;
 
             try {
                 image = ImageIO.read(new File("resources/images/right_board.png"));
-            } catch (IOException e) {
+            } catch (IOException ignored) {
+            }
+
+            addPadding(this, 601, 273, 5, 6);
+
+            this.devGrid = new JLabel[3];
+            this.leadGrid = new JLabel[2];
+            this.leadLabel = new JLabel[2];
+
+            JButton back_OthersDevSlot = new JButton("Back");
+            back_OthersDevSlot.addActionListener(back_othersDevSlot_actionListener);
+            back_OthersDevSlot.setPreferredSize(new Dimension(120, 40));
+            back_OthersDevSlot.setFont(new Font(PAP, Font.BOLD, 20));
+            back_OthersDevSlot.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.01;
+            c.weighty = 0.01;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.insets = new Insets(6, 6, 0, 0);
+            this.add(back_OthersDevSlot, c);
+
+            JPanel leaderCardPanel = new JPanel();
+            leaderCardPanel.setLayout(new GridBagLayout());
+            leaderCardPanel.setOpaque(false);
+
+            for(int i = 0; i < 2; i++) {
+                JPanel leadPanel = new JPanel(new GridBagLayout());
+                leadPanel.setBackground(new Color(231, 210, 181));
+                leadPanel.setBorder(BorderFactory.createLineBorder(new Color(231, 210, 181),1));
+
+                JLabel label = new JLabel();
+                if(i==0) label.setText("Leader Card #1");
+                else label.setText("Leader Card #2");
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setFont(new Font(PAP, Font.BOLD, 20));
+                c = new GridBagConstraints();
+                c.gridy = 0;
+                c.weighty = 0.3;
+                c.fill = GridBagConstraints.BOTH;
+                leadPanel.add(label,c);
+
+                this.leadGrid[i] = new JLabel();
+                this.leadGrid[i].setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+
+                c = new GridBagConstraints();
+                c.gridy = 1;
+                c.weighty = 0.8;
+                c.fill = GridBagConstraints.BOTH;
+                leadPanel.add(this.leadGrid[i],c);
+
+                this.leadLabel[i] = new JLabel();
+                this.leadLabel[i].setFont(new Font(PAP, Font.BOLD, 20));
+                this.leadLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
+
+                c.gridy = 2;
+                c.weighty = 0.3;
+                c.fill = GridBagConstraints.BOTH;
+                leadPanel.add(this.leadLabel[i],c);
+
+                c = new GridBagConstraints();
+                c.gridx = i;
+                c.weightx = 0.5;
+                int pad = 40;
+                c.insets = new Insets(20,pad*i,0,pad*(1-i));
+                if(i==0) c.anchor = GridBagConstraints.FIRST_LINE_END;
+                else c.anchor = GridBagConstraints.FIRST_LINE_START;
+                leaderCardPanel.add(leadPanel,c);
+            }
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 1;
+            c.weightx = 0.5;
+            c.fill = GridBagConstraints.BOTH;
+            this.add(leaderCardPanel, c);
+
+            JPanel devPanel = new JPanel();
+            devPanel.setLayout(new GridBagLayout());
+            devPanel.setOpaque(false);
+
+            for(int i=0; i<3; i++) {
+                JPanel tpane = new JPanel();
+                tpane.setOpaque(false);
+                this.devGrid[i] = new JLabel();
+
+                this.devGrid[i].setBorder(BorderFactory.createLineBorder(new Color(231, 210, 181),1));
+                tpane.add(this.devGrid[i]);
+                c.gridx = i;
+                c.weightx = 0.3;
+                c.fill = GridBagConstraints.BOTH;
+                if(i==0) c.insets = new Insets(0,50,10,0);
+                if(i==1) c.insets = new Insets(0,10,10,0);
+                if(i==2) c.insets = new Insets(0,0,10,40);
+                devPanel.add(tpane,c);
+            }
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.8;
+            c.fill = GridBagConstraints.BOTH;
+            this.add(devPanel, c);
+
+        }
+
+        public void update() {
+
+            PlayerSimplified player = Ark.game.getPlayerRef(this.panelName);
+            DevelopmentCard[] devCard = player.getDevelopmentSlot().getTopCards();
+            LeaderCard[] l = player.getLeaderCards();
+
+            for(int i=0; i<2; i++) {
+                if(l[i] == null) {
+                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),234));
+                    this.leadLabel[i].setText("not present");
+                }
+                else {
+                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()),234));
+                    if(l[i].isEnabled()) {
+                        this.leadLabel[i].setText("enabled");
+                        this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW,1));
+                    }
+                    else
+                        this.leadLabel[i].setText("not enabled");
+                }
+            }
+
+            for(int i=0; i<3; i++) {
+                if(devCard[i] == null)
+                    this.devGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),220));
+                else
+                    this.devGrid[i].setIcon(scaleImage(new ImageIcon(devCard[i].getFrontPath()),220));
             }
         }
 

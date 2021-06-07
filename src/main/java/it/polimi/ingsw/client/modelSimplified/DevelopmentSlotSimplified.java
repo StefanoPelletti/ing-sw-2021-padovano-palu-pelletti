@@ -20,15 +20,39 @@ public class DevelopmentSlotSimplified {
         }
     }
 
+
+    public DevelopmentCard[][] getCards() {
+        return this.cards;
+    }
+
+    /**
+     * Returns a DevelopmentCard[] array containing the top cards of this development slot.
+     * Some card may be null, reflecting the internal status.
+     *
+     * @return a 3-cell DevelopmentCard[] array
+     */
+
+    public DevelopmentCard[] getTopCards() {
+        DevelopmentCard[] result = new DevelopmentCard[3];
+
+        for(int deck=0; deck<3; deck++)
+        {
+            DevelopmentCard t = null;
+            for(int height=0; height<3; height++) {
+                if(this.cards[deck][height]!=null)
+                    t = this.cards[deck][height];
+                else
+                    break;
+            }
+            result[deck] = t;
+        }
+        return result;
+    }
     /**
      * Returns a representation of the current state of a given DevelopmentSlot.
      *
      * @return A String that represents the DevSlot.
      */
-    public DevelopmentCard[][] getCards() {
-        return this.cards;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
