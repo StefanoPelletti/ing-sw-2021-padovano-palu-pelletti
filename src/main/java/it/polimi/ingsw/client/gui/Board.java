@@ -2893,9 +2893,9 @@ public class Board implements Runnable {
 
     class Vendor_Card_Panel extends JPanel {
         JLabel devCard;
-        JButton slot1;
-        JButton slot2;
-        JButton slot3;
+        SlotButton slot1;
+        SlotButton slot2;
+        SlotButton slot3;
         int currentCard;
 
         public Vendor_Card_Panel() {
@@ -2953,9 +2953,10 @@ public class Board implements Runnable {
             c.anchor = GridBagConstraints.WEST;
             this.add(next,c);
 
-            slot1 = new JButton("1");
+            slot1 = new SlotButton("1", 1);
             slot1.setFont(new Font(PAP, Font.BOLD, 20));
             slot1.setBackground(new Color(231, 210, 181));
+            slot1.addActionListener(Vendor_Card_Panel_Action_Listener);
             c = new GridBagConstraints();
             c.gridx = 4;
             c.gridy = 3;
@@ -2964,9 +2965,10 @@ public class Board implements Runnable {
             c.gridheight=2;
             this.add(slot1,c);
 
-            slot2 = new JButton("2");
+            slot2 = new SlotButton("2", 2);
             slot2.setFont(new Font(PAP, Font.BOLD, 20));
             slot2.setBackground(new Color(231, 210, 181));
+            slot2.addActionListener(Vendor_Card_Panel_Action_Listener);
             c = new GridBagConstraints();
             c.gridx = 4;
             c.gridy = 4;
@@ -2975,9 +2977,10 @@ public class Board implements Runnable {
             c.gridheight=2;
             this.add(slot2,c);
 
-            slot3 = new JButton("3");
+            slot3 = new SlotButton("3", 3);
             slot3.setFont(new Font(PAP, Font.BOLD, 20));
             slot3.setBackground(new Color(231, 210, 181));
+            slot3.addActionListener(Vendor_Card_Panel_Action_Listener);
             c = new GridBagConstraints();
             c.gridx = 4;
             c.gridy = 5;
@@ -3011,6 +3014,23 @@ public class Board implements Runnable {
                 if (!devCards.get(0).isSlot3()) {
                     slot3.setEnabled(false);
                 }
+            }
+        }
+
+        public int getCurrentCard() {
+            return currentCard;
+        }
+
+        class SlotButton extends JButton {
+            int currentCard;
+            int position;
+            public SlotButton(String text, int position) {
+                super(text);
+                this.position = position;
+            }
+
+            public int getPosition() {
+                return position;
             }
         }
 
@@ -3243,4 +3263,11 @@ public class Board implements Runnable {
         int choiceNumber = source.getChoiceNumber();
     };
 
+    ActionListener Vendor_Card_Panel_Action_Listener = e -> {
+        Vendor_Card_Panel.SlotButton source = (Vendor_Card_Panel.SlotButton) e.getSource();
+        int slotNumber = source.getPosition();
+        int cardNumber = vendor_card_panel.getCurrentCard();
+
+        System.out.println("La carta selezionata è la numero: " + cardNumber + " e lo slot selezioanto è il numero: " + slotNumber);
+    };
 }
