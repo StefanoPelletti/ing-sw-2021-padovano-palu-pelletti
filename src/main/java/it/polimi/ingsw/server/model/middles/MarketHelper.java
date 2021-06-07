@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_MarketHelper;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.ArrayList;
@@ -55,6 +54,7 @@ public class MarketHelper extends ModelObservable {
     /**
      * Sets the MerketHelper active or disabled.
      * Also notifies observers.
+     *
      * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
@@ -69,6 +69,7 @@ public class MarketHelper extends ModelObservable {
     /**
      * Called at the beginning of a Market Action.
      * Also notifies the observers.
+     *
      * @param newResources The resources that must be placed or discarded by the player.
      */
     public void setResources(List<Resource> newResources) {
@@ -114,6 +115,7 @@ public class MarketHelper extends ModelObservable {
      * <li> the other choices remain the same as above</li>
      * </ul>
      * Also notifies the observers.
+     *
      * @param choices The possible choices for the current resource.
      */
     public void setChoices(boolean[] choices) {
@@ -124,6 +126,7 @@ public class MarketHelper extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -132,6 +135,7 @@ public class MarketHelper extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_MarketHelper representing the current state of the MarketHelper.
+     *
      * @return a MSG_UPD_MarketHelper representing the current state of the MarketHelper
      */
     public MSG_UPD_MarketHelper generateMessage() {

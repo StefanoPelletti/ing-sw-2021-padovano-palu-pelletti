@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Market;
 import it.polimi.ingsw.server.model.marbles.*;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.ArrayList;
@@ -78,12 +77,12 @@ public class Market extends ModelObservable {
      * <li> The first Marble in the row becomes the new SlideMarble.
      * </ul>
      * Also notifies the observers.
+     *
      * @param row The row of the Market to push.
      * @return A List of the Marbles in the row (before the push), or null if an incorrect row value was inserted.
      * @see #getRow(int)
      */
-    public List<MarketMarble> pushRow(int row)
-    {
+    public List<MarketMarble> pushRow(int row) {
         if (row < 0 || row > 2) return null;
         List<MarketMarble> result = getRow(row);
 
@@ -99,6 +98,7 @@ public class Market extends ModelObservable {
 
     /**
      * Returns A List of the Marbles in a specified row.
+     *
      * @param row The row of Market to get.
      * @return A List of the Marbles in the specified row, or null if an incorrect row value was inserted.
      */
@@ -118,6 +118,7 @@ public class Market extends ModelObservable {
      * <li> The first Marble in the column becomes the new SlideMarble
      * </ul>
      * Also notifies the observers.
+     *
      * @param column The column of the Market to push.
      * @return A List of the Marbles in the column (before the push), or null if an incorrect column value was inserted.
      */
@@ -137,6 +138,7 @@ public class Market extends ModelObservable {
 
     /**
      * Returns A List of the Marbles in a specified column.
+     *
      * @param column The column of Market to get.
      * @return A List of the Marbles in the specified column, or null if an incorrect column value was inserted.
      */
@@ -163,7 +165,8 @@ public class Market extends ModelObservable {
     /**
      * Replaces the current grid and SlideMarble with custom ones.
      * May break game rules, willingly.
-     * @param grid The new MarketMarble[][] matrix.
+     *
+     * @param grid        The new MarketMarble[][] matrix.
      * @param slideMarble The new SlideMarble.
      */
     public void setGrid(MarketMarble[][] grid, MarketMarble slideMarble) {
@@ -173,6 +176,7 @@ public class Market extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -181,6 +185,7 @@ public class Market extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_Market representing the current state of the Market.
+     *
      * @return A MSG_UPD_Market representing the current state of the Market.
      */
     public MSG_UPD_Market generateMessage() {

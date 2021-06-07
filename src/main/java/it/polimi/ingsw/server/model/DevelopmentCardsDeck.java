@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_DevDeck;
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.*;
@@ -378,13 +377,14 @@ public class DevelopmentCardsDeck extends ModelObservable {
     /**
      * Removes a specified Card from the DevelopmentCardsDeck and returns it.
      * Also notifies the observers.
-     * @param row A row of the DevelopmentCardsDeck.
+     *
+     * @param row    A row of the DevelopmentCardsDeck.
      * @param column A column of the DevelopmentCardsDeck.
      * @return The card that that is being removed, or null if the selected deck was empty or the row and column parameters were out of bounds.
      */
     public DevelopmentCard removeCard(int row, int column) {
-        if( row < 0 || row > 2) return null;
-        if( column < 0 || column > 3) return null;
+        if (row < 0 || row > 2) return null;
+        if (column < 0 || column > 3) return null;
         DevelopmentCard card = null;
         for (int i = 3; i >= 0; i--) {
             if (cards[row][column][i] != null) {
@@ -400,6 +400,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
     /**
      * It is used in the Solo mode with Lorenzo. It removes 2 cards of a column starting from the bottom (level 1 to level 3).
      * Also notifies the observers.
+     *
      * @param column A column of the DevelopmentCardsDeck.
      * @return True if the cards are removed correctly, False if the column is < 0 or > 3.
      */
@@ -423,6 +424,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     /**
      * Returns a DevelopmentCard matrix containing all the Visible Cards of the DevelopmentCardsDeck.
+     *
      * @return A DevelopmentCard matrix containing all the Visible Cards of the DevelopmentCardsDeck.
      */
     public DevelopmentCard[][] getVisible() {
@@ -450,7 +452,8 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     /**
      * Returns a DevelopmentCard array containing all the DevelopmentCards from a specified deck.
-     * @param row A row of the DevelopmentCardsDeck.
+     *
+     * @param row    A row of the DevelopmentCardsDeck.
      * @param column A column of the DevelopmentCardsDeck.
      * @return A DevelopmentCard[] stack of 4 cards in that position, or null if the parameters were out of bounds.
      */
@@ -463,6 +466,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     /**
      * Used in Solo mode, checks if a column is destroyed.
+     *
      * @return True if the column has been destroyed, False otherwise.
      */
     public boolean isOneColumnDestroyed() {
@@ -485,6 +489,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     /**
      * Sets a custom grid.
+     *
      * @param grid A grid of DevelopmentCards.
      */
     public void setGrid(DevelopmentCard[][][] grid) {
@@ -494,6 +499,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -502,6 +508,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_DevDeck representing the current state of the DevelopmentCardsDeck.
+     *
      * @return A MSG_UPD_DevDeck representing the current state of the DevelopmentCardsDeck.
      */
     public MSG_UPD_DevDeck generateMessage() {

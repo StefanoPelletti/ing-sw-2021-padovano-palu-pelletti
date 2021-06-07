@@ -20,13 +20,14 @@ public class DevelopmentCard implements Serializable {
 
     /**
      * Construct a DevelopmentCard. It initializes a new card by receiving:
-     * @param level The level of the card.
-     * @param color The color of the card.
-     * @param vp The victory points of the card.
-     * @param cost The cost of the card.
-     * @param power The power of the card.
+     *
+     * @param level     The level of the card.
+     * @param color     The color of the card.
+     * @param vp        The victory points of the card.
+     * @param cost      The cost of the card.
+     * @param power     The power of the card.
      * @param frontPath The path to an Image that shows the Front of the Card.
-     * @param backPath The path to an Image that shows the Back of the Card.
+     * @param backPath  The path to an Image that shows the Back of the Card.
      */
     public DevelopmentCard(int level, Color color, int vp, Map<Resource, Integer> cost, Power power,
                            String frontPath, String backPath) {
@@ -67,9 +68,13 @@ public class DevelopmentCard implements Serializable {
         return vp;
     }
 
-    public String getFrontPath() { return this.frontPath; }
+    public String getFrontPath() {
+        return this.frontPath;
+    }
 
-    public String getBackPath() { return this.backPath; }
+    public String getBackPath() {
+        return this.backPath;
+    }
 
     public Map<Resource, Integer> getPowerInput() {
         return power.getInput();
@@ -81,6 +86,7 @@ public class DevelopmentCard implements Serializable {
 
     /**
      * Used to check if the parameters are correct, following the standard game rules.
+     *
      * @return True if the card has coherent values.
      */
     public boolean internalCheck() {

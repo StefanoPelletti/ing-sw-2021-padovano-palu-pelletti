@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
-import it.polimi.ingsw.server.model.WarehouseDepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.utils.A;
 
@@ -20,9 +19,17 @@ public class WarehouseDepotSimplified {
         this.shelf3 = new Resource[]{Resource.NONE, Resource.NONE, Resource.NONE};
     }
 
-    public Resource getShelf1() { return this.shelf1; }
-    public Resource[] getShelf2() { return this.shelf2; }
-    public Resource[] getShelf3() { return this.shelf3; }
+    public Resource getShelf1() {
+        return this.shelf1;
+    }
+
+    public Resource[] getShelf2() {
+        return this.shelf2;
+    }
+
+    public Resource[] getShelf3() {
+        return this.shelf3;
+    }
 
     public Map<Resource, Integer> getResources() {
         Map<Resource, Integer> result = new HashMap<>();
@@ -78,6 +85,7 @@ public class WarehouseDepotSimplified {
 
     /**
      * Returns the representation of the current state of a given WarehouseDepot.
+     *
      * @return A String representing the current state of the WarehouseDepot.
      */
     @Override

@@ -7,8 +7,8 @@ import it.polimi.ingsw.server.model.actionTokens.RemoverToken;
 import it.polimi.ingsw.server.model.enumerators.Color;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 public class ActionTokenStack {
     private final List<ActionToken> stack;
@@ -41,6 +41,7 @@ public class ActionTokenStack {
 
     /**
      * Returns the first ActionToken of the stack, which is then placed at the end of the stack.
+     *
      * @return The first ActionToken of the stack, which is then placed at the end of the stack.
      */
     public ActionToken pickFirst() {

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.networking.message.updateMessages.playerUpdate;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
-import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.enumerators.Resource;
@@ -19,8 +18,9 @@ public class MSG_UPD_Extradepot extends UpdateMessage implements Serializable {
      * It contains the internal status of a Leader Card ExtraDepot type.
      * Note: it is referred to the CurrentPlayer.
      * Note: this message does not refer directly to the card. It is assumed that only one card with such resource exists at any given moment.
+     *
      * @param resource the resource managed by the ExtraDepot
-     * @param number the amount of resource placed in that ExtraDepot
+     * @param number   the amount of resource placed in that ExtraDepot
      */
     public MSG_UPD_Extradepot(Resource resource, int number) {
         super(MessageType.MSG_UPD_Extradepot);

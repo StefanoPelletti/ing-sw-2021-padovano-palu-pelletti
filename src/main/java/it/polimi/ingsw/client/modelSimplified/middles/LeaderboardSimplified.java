@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderBoard;
-import it.polimi.ingsw.server.model.middles.Leaderboard;
 import it.polimi.ingsw.server.utils.A;
 
 import java.util.Map;
@@ -26,9 +25,13 @@ public class LeaderboardSimplified {
     /**
      * Returns the Leaderboard status, with a prompt that tells a specified Player if he won, lost, or tied.
      * This method also works in Solo mode by specifying it.
+     *
      * @return A String with the result, personalized in base of the type of game (multiplayer or Solo) and the player.
      */
-    public Map<String, Integer> getBoard() { return this.board; }
+    public Map<String, Integer> getBoard() {
+        return this.board;
+    }
+
     public String toResult(String thisPlayer, boolean solo) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append("Empty LeaderboardSimplified.").toString();

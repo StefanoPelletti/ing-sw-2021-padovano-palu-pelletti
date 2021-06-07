@@ -11,6 +11,7 @@ public class MSG_OK_CREATE extends Message implements Serializable {
      * MSG_OK_CREATE is sent by the ClientHandler to the Client.
      * It indicates the positive result of the CREATE routine.
      * Note: assignedNickname may be the same nickname requested by the player.
+     *
      * @param lobbyNumber The number of the Lobby newly created in the Server.
      * @throws IllegalArgumentException If lobbyNumber is less than 0.
      */
@@ -24,5 +25,8 @@ public class MSG_OK_CREATE extends Message implements Serializable {
     public int getLobbyNumber() {
         return this.lobbyNumber;
     }
-    public String getAssignedNickname() { return this.assignedNickname; }
+
+    public String getAssignedNickname() {
+        return this.assignedNickname;
+    }
 }

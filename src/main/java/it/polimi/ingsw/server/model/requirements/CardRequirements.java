@@ -33,6 +33,7 @@ public class CardRequirements implements Requirement, Serializable {
 
     /**
      * Returns a String representing the Card Requirements.
+     *
      * @return A String representing the Card Requirements.
      */
     @Override

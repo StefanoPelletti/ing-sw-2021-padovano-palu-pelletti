@@ -1,13 +1,10 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_DevSlot;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class DevelopmentSlot extends ModelObservable {
     private final DevelopmentCard[][] cards;
@@ -31,10 +28,10 @@ public class DevelopmentSlot extends ModelObservable {
     }
 
 
-
     /**
      * Tries to add a DevelopmentCard in this DevelopmentSlot.
-     * @param newCard The card that is being placed.
+     *
+     * @param newCard      The card that is being placed.
      * @param selectedSlot The slot where the user wants to put the card.
      * @return True if the card is added correctly, False if:
      * <ul>
@@ -43,8 +40,8 @@ public class DevelopmentSlot extends ModelObservable {
      * <li> parameters are not correct
      */
     public boolean addCard(DevelopmentCard newCard, int selectedSlot) {
-        if(selectedSlot < 0 || selectedSlot > 2) return false;
-        if(newCard == null) return false;
+        if (selectedSlot < 0 || selectedSlot > 2) return false;
+        if (newCard == null) return false;
 
         int newCardLevel = newCard.getLevel();
         int cardLevel;
@@ -74,13 +71,16 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Checks if a DevelopmentCard is addable in this DevelopmentSlot, without adding it.
-     * @param newCard A card that is being tested.
+     *
+     * @param newCard      A card that is being tested.
      * @param selectedSlot A slot where the card is being tried at.
      * @return True if the card is addable, False otherwise.
      */
     public boolean validateNewCard(DevelopmentCard newCard, int selectedSlot) {
-        if(selectedSlot < 0 || selectedSlot > 2) return false;
-        if (newCard == null) { return false; }
+        if (selectedSlot < 0 || selectedSlot > 2) return false;
+        if (newCard == null) {
+            return false;
+        }
 
         int newCardLevel = newCard.getLevel();
         int cardLevel;
@@ -100,6 +100,7 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Returns a new DevelopmentCard matrix of all the DevelopmentCards present in the DevSlot.
+     *
      * @return A new DevelopmentCard matrix of all the DevelopmentCards present in the DevSlot.
      */
     public DevelopmentCard[][] getAllCards() {
@@ -113,6 +114,7 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Returns a new List containing all the DevelopmentCards present in the DevSlot.
+     *
      * @return A new List containing all the DevelopmentCards present in the DevSlot.
      */
     public List<DevelopmentCard> getCards() {
@@ -128,6 +130,7 @@ public class DevelopmentSlot extends ModelObservable {
     /**
      * Return a new List containing all the DevelopmentCards that are on top of the stacks.
      * The card on top are the ones usable in the Production Action.
+     *
      * @return A new List containing all the DevelopmentCards that are on top of the stacks.
      */
     public List<DevelopmentCard> getTopCards() {
@@ -142,6 +145,7 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Returns an array of the top cards in the DevSlot (the cards that the user can actually use and see).
+     *
      * @return An array of the top cards in the DevSlot (the cards that the user can actually use and see).
      */
     public DevelopmentCard[] getOnTop() {
@@ -150,6 +154,7 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Returns the amount of the cards in the DevSlot.
+     *
      * @return The amount of the cards in the DevSlot.
      */
     public int getNumOfCards() {
@@ -158,6 +163,7 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -166,6 +172,7 @@ public class DevelopmentSlot extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_DevSlot representing the current state of the DevelopmentSlot.
+     *
      * @return A MSG_UPD_DevSlot representing the current state of the DevelopmentSlot.
      */
     public MSG_UPD_DevSlot generateMessage() {

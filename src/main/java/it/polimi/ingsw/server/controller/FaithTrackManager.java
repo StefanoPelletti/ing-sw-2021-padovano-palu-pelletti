@@ -16,7 +16,8 @@ public class FaithTrackManager {
 
     /**
      * Constructs a FaithTrackManager which operates on the Player positions and the FaithTrack.
-     * @param game A Game reference, extracted from the GameManager.
+     *
+     * @param game        A Game reference, extracted from the GameManager.
      * @param gameManager The GameManager reference.
      */
     public FaithTrackManager(Game game, GameManager gameManager) {
@@ -27,9 +28,10 @@ public class FaithTrackManager {
 
     /**
      * Advances a specified Player on the FaithTrack.
-     * @see #advance(Player, boolean) for better understanding.
+     *
      * @param p The reference to the player.
      * @return The return value of advance() method.
+     * @see #advance(Player, boolean) for better understanding.
      */
     public boolean advance(Player p) {
         return advance(p, false);
@@ -37,8 +39,9 @@ public class FaithTrackManager {
 
     /**
      * Advances Lorenzo on the FaithTrack.
-     * @see #advance(Player, boolean) for better understanding.
+     *
      * @return The return value of advance() method.
+     * @see #advance(Player, boolean) for better understanding.
      */
     public boolean advanceLorenzo() {
         return advance(null, true);
@@ -47,12 +50,13 @@ public class FaithTrackManager {
     /**
      * Advances a Player (or Lorenzo) on the FaithTrack.
      * The methods assigns points based on the zones activated as specified by the Game's rules.
-     * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
-     * @param player The reference to the Player advancing. Null if the parameter lorenzo is set to True.
+     *
+     * @param player  The reference to the Player advancing. Null if the parameter lorenzo is set to True.
      * @param lorenzo True if Lorenzo is moving, False otherwise.
      * @return True if the operation terminated correctly, False if: <ul>
      * <li> lorenzo is false and (the player reference is null or the player does not exist in this game)
      * <li> the referenced player/Lorenzo position returns an error value (-1).
+     * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
      */
     public boolean advance(Player player, boolean lorenzo) {
         Player p;
@@ -138,6 +142,7 @@ public class FaithTrackManager {
      * Advances all players except the specified one.
      * In Solo mode advances Lorenzo.
      * It is used when a player discards a resource in the market action.
+     *
      * @param player The Player reference which stays still.
      * @return True if the operation terminated correctly, False if the player reference is false or it does not exist in the game.
      */
@@ -162,9 +167,10 @@ public class FaithTrackManager {
     /**
      * Generates a String containing the points awarded to the Players for activating a Zone.
      * Points are awarded based on position,
-     * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
+     *
      * @param players The list of Players playing the Game.
      * @return A List of points awarded to the corresponding players.
+     * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
      */
     private String returnAddedPoints(List<Player> players) {
         StringBuilder message = new StringBuilder();

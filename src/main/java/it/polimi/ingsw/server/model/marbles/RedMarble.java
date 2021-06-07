@@ -10,7 +10,7 @@ import java.util.List;
 public class RedMarble implements MarketMarble, Serializable {
 
     private final Color color;
-    private String path;
+    private final String path;
 
     public RedMarble() {
         path = "resources/punchboard/red_marble.png";
@@ -19,6 +19,7 @@ public class RedMarble implements MarketMarble, Serializable {
 
     /**
      * This method throws a RedMarbleException. It does not add a FAITH in the given List.
+     *
      * @param ignored Formally a List of Resource.
      * @throws RedMarbleException Always throws this exception.
      */
@@ -28,6 +29,7 @@ public class RedMarble implements MarketMarble, Serializable {
 
     /**
      * Returns the Color of this Marble, colored in a proper manner.
+     *
      * @return A Colored String representing this Marble.
      */
     @Override
@@ -37,6 +39,7 @@ public class RedMarble implements MarketMarble, Serializable {
 
     /**
      * Returns the Color of this Marble in an abbreviated form, colored in a proper manner.
+     *
      * @return A Colored String containing the Initial of the Color of this Marble.
      */
     public String toAbbreviation() {

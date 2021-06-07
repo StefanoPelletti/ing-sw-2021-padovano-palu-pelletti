@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.server.model.DevelopmentCard;
+
 import java.io.Serializable;
 
 public class VendorCard implements Serializable {
@@ -11,7 +12,8 @@ public class VendorCard implements Serializable {
 
     /**
      * CONSTRUCTOR
-     * @param card The card eligible for a sell to the player who asked to buy a card.
+     *
+     * @param card  The card eligible for a sell to the player who asked to buy a card.
      * @param slot1 True if and only if card can be placed in slot 1 of the player.
      * @param slot2 True if and only if card can be placed in slot 2 of the player.
      * @param slot3 True if and only if card can be placed in slot 3 of the player.
@@ -25,6 +27,7 @@ public class VendorCard implements Serializable {
 
     /**
      * Returns the Development Card which can be placed in some slot.
+     *
      * @return A Development Card.
      */
     public DevelopmentCard getCard() {
@@ -33,6 +36,7 @@ public class VendorCard implements Serializable {
 
     /**
      * Returns True if this Card can be placed in the first Development Slot, False otherwise.
+     *
      * @return True if this Card can be placed in the first Development Slot, False otherwise.
      */
     public boolean isSlot1() {
@@ -41,6 +45,7 @@ public class VendorCard implements Serializable {
 
     /**
      * Returns True if this Card can be placed in the second Development Slot, False otherwise.
+     *
      * @return True if this Card can be placed in the second Development Slot, False otherwise.
      */
     public boolean isSlot2() {
@@ -49,6 +54,7 @@ public class VendorCard implements Serializable {
 
     /**
      * Returns True if this Card can be placed in the third Development Slot, False otherwise.
+     *
      * @return True if this Card can be placed in the third Development Slot, False otherwise.
      */
     public boolean isSlot3() {
@@ -57,10 +63,11 @@ public class VendorCard implements Serializable {
 
     /**
      * Returns True if this Card can be placed in the specified Development Slot, False otherwise.
+     *
      * @param slot The number of the Slot being tested.
      * @return True if this Card can be placed in the selected slot, False otherwise.
      */
-    public boolean isSlot(int slot){
+    public boolean isSlot(int slot) {
         switch (slot) {
             case 0:
                 return slot1;

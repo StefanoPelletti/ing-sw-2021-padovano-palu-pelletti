@@ -11,9 +11,7 @@ import it.polimi.ingsw.networking.message.initMessages.MSG_REJOIN_LOBBY;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;
-import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.middles.VendorCard;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
@@ -22,7 +20,10 @@ import it.polimi.ingsw.server.utils.A;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 import static it.polimi.ingsw.server.model.enumerators.Resource.FAITH;
 
@@ -42,7 +43,7 @@ public class PhaseClient implements Runnable {
      * <li> tarts an online game, by creating, joining or rejoining a lobby (Phase ONLINE_PHASE),
      * <li> starts a local game (Phase LOCAL_PHASE),
      * <li> quit (Phase QUIT). </ul>
-     *  If the Player encounters a network error, the Client goes first in ERROR Phase and then returns in MAIN_MENU.
+     * If the Player encounters a network error, the Client goes first in ERROR Phase and then returns in MAIN_MENU.
      */
     public void run() {
         System.out.println(A.YELLOW + " <<>> Welcome player." + A.RESET);
@@ -111,7 +112,7 @@ class Halo {
      */
     public static void closeStreams() {
         try {
-            if(socket != null && !socket.isClosed()) {
+            if (socket != null && !socket.isClosed()) {
                 socket.close();
                 outputStream.close();
                 inputStream.close();
@@ -250,6 +251,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The MarketHelper toString() as a String.
      */
     public static String printMarketHelper() {
@@ -258,6 +260,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The DevelopmentCardsVendor toString() as a String.
      */
     public static String printDevelopmentCardsVendor() {
@@ -266,6 +269,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The Market toString() as a String.
      */
     public static String printMarket() {
@@ -277,6 +281,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The user's WarehouseDepot toString() as a String.
      */
     public static String printMyWarehouseDepot() {
@@ -285,6 +290,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The user's Strongbox toString() as a String.
      */
     public static String printMyStrongbox() {
@@ -293,6 +299,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The user's DevelopmentSlot toString() as a String.
      */
     public static String printMyDevelopmentSlot() {
@@ -301,6 +308,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The user's current victory points as a String.
      */
     public static String printMyVP() {
@@ -309,18 +317,20 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return A String representing a list of the players followed by their number.
      */
     public static String printPlayers() {
         StringBuilder result = new StringBuilder();
         result.append(A.GREEN + " > Showing players as 'name - number'" + A.RESET);
         for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
-                result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
+            result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
         return result.toString();
     }
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The DevelopmentCardsDeck toString() as a String.
      */
     public static String printDevelopmentCardsDeck() {
@@ -329,6 +339,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return The FaithTrack toString() as a String.
      */
     public static String printFaithTrack() {
@@ -337,6 +348,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return A String showing the current turn.
      */
     public static String printCurrentTurn() {
@@ -345,6 +357,7 @@ class Halo {
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
+     *
      * @return A String showing the user's Leader Cards.
      */
     public static String printMyLeaderCards() {
@@ -364,6 +377,7 @@ class Halo {
     /**
      * Filters the given key and then shows the corresponding item.
      * This method should be called after a check on the key.
+     *
      * @param key A String representing the item that the user wants to be shown.
      * @see #checkShowCommand(List)
      */
@@ -408,9 +422,10 @@ class Halo {
     /**
      * Converts a given String to a certain Resource.
      * Note: FAITH or EXTRA are not considered as matchable
+     *
      * @param resource A String which should be converted into a corresponding Resource.
      * @return The corresponding Resource, if there was a match,
-     *         or null, if there wasn't.
+     * or null, if there wasn't.
      */
     private static Resource convertStringToResource(String resource) {
         resource = resource.toLowerCase();
@@ -425,9 +440,10 @@ class Halo {
     /**
      * Checks if a given List of String can be parsed as a valid Action command.
      * A valid Action command should be a number between 0 and 8 (included), and should not select a main move.
+     *
      * @param textList A List of String.
      * @return True if the textList is a valid Action command,
-     *         False in any other case: <ul>
+     * False in any other case: <ul>
      * <li> the textList contains more than one word (only the number is expected).
      * <li> the only word is not a number.
      * <li> the number is not between 0 and 8 (included).
@@ -467,13 +483,14 @@ class Halo {
     /**
      * Checks if a given List of String can be parsed as a valid Show command.
      * A valid Show command should be one of these three cases:
-     *  1)  show player 'i' 'item'  (i is a number, item is an allowed item).
-     *  2)  show 'nickname' 'item'  (same behavior as the first case).
-     *  3)  show 'item'             (referring to the player handled by this Client).
+     * 1)  show player 'i' 'item'  (i is a number, item is an allowed item).
+     * 2)  show 'nickname' 'item'  (same behavior as the first case).
+     * 3)  show 'item'             (referring to the player handled by this Client).
      * Note: in Local Mode, only the third one is permitted.
+     *
      * @param textList A List of String.
      * @return True if the textList is a valid Show command,
-     *         False in any other case: <ul>
+     * False in any other case: <ul>
      * <li> (if local) the textList contains more than two Strings
      * <li> (if online) the textList does not contain 2, 3 or 4 Strings
      * <li> (in case 2) the nickname is referring to a non-existing player
@@ -528,8 +545,8 @@ class Halo {
                 System.out.println(A.RED + " > Sorry, the player number is not a number." + A.RESET);
                 return false;
             }
-        }else {
-            if(Halo.game.getPlayerList().stream().noneMatch(p-> p.getNickname().equals(textList.get(1)))){
+        } else {
+            if (Halo.game.getPlayerList().stream().noneMatch(p -> p.getNickname().equals(textList.get(1)))) {
                 System.out.println(A.RED + " > No player with that nickname" + A.RESET);
                 return false;
             }
@@ -542,9 +559,10 @@ class Halo {
 
     /**
      * Checks if a given List of String can be parsed as a 0, a 1, or a 2.
+     *
      * @param textList A List of String.
      * @return True if the list does in fact parse as 0, 1 or 2.
-     *         False if any condition of parsing fails.
+     * False if any condition of parsing fails.
      */
     private static boolean checkNumber0_1_2(List<String> textList) {
         if (textList.size() == 1) {
@@ -567,9 +585,10 @@ class Halo {
 
     /**
      * Checks if a given List of String can be parsed as a -1, 0, 1 or 2.
+     *
      * @param textList A List of String.
      * @return True if the List does in fact parse as -1, 0, 1 or 2.
-     *         False if any condition of parsing fails.
+     * False if any condition of parsing fails.
      */
     private static boolean checkNumberN1_0_1_2(List<String> textList) {
         if (textList.size() == 1) {
@@ -592,9 +611,10 @@ class Halo {
 
     /**
      * Checks if a given List of String can be parsed as a 1, 2, 3 or 4.
+     *
      * @param textList a List of String.
      * @return True if the List does in fact parse as 1, 2, 3 or 4.
-     *         False if any condition of parsing fails.
+     * False if any condition of parsing fails.
      */
     private static boolean checkNumber1_2_3_4(List<String> textList) {
         if (textList.size() > 1) {
@@ -617,8 +637,9 @@ class Halo {
     /**
      * Checks if the user has Leader Cards on which can be performed an action.
      * One such card should be either activable or discardable.
+     *
      * @return True if at least one of the two cards can be discarded or activated,
-     *         False otherwise.
+     * False otherwise.
      */
     private static boolean checkLeaderCards() {
         LeaderCard l1 = getMyLeaderCard(0);
@@ -652,10 +673,11 @@ class Halo {
     /**
      * Checks if the user has chosen a second Leader Card different than a first one, identified by the first parameter.
      * This method should be called after a checkNumber1_2_3_4().
+     *
      * @param textList A List of String.
-     * @param first The number of the first (already) chosen Leader Card.
+     * @param first    The number of the first (already) chosen Leader Card.
      * @return True if the user has typed in a valid value, not the same one as first, and between 1 and 4 (included),
-     *         False otherwise.
+     * False otherwise.
      * @see #chooseLeaderCards(List) the method that calls this function.
      */
     private static boolean checkLeaderCardPickerNumber(List<String> textList, int first) {
@@ -682,9 +704,10 @@ class Halo {
 
     /**
      * A more powerful version of the .checkNumber0_1_2(), adds additional messages and controls while choosing a Leader Card number.
+     *
      * @param textList A List of String.
      * @return True if the player has selected 0, or 1 or 2 (in these two cases the card is activable or discardable),
-     *         False otherwise.
+     * False otherwise.
      */
     private static boolean checkLeaderCardsNumber(List<String> textList) {
         if (textList.size() > 1) {
@@ -728,9 +751,10 @@ class Halo {
     /**
      * Checks that the a given List corresponds to a pair of available VendorCard values.
      * A generic valid value should be something as " 1 2 ", with the first number representing the card Number, and the second one representing the choosen Slot.
+     *
      * @param textList A List of String.
      * @return True if the user has correctly typed in a cardNumber and a slotNumber that were available in the Vendor cards,
-     *         False if that combination was not valid, or the textList was not formatted as a pair of numbers.
+     * False if that combination was not valid, or the textList was not formatted as a pair of numbers.
      * @see #chooseDevCard(List) the method that calls this function.
      */
     private static boolean checkNumberDevSlot(List<String> textList) {
@@ -750,7 +774,7 @@ class Halo {
                     System.out.println(A.RED + " > That's not a proper slot!" + A.RESET);
                     return false;
                 }
-                if (!cards.get(cardNum-1).isSlot(slotNum-1)) {
+                if (!cards.get(cardNum - 1).isSlot(slotNum - 1)) {
                     System.out.println(A.RED + " > Error! You can't place that card in this slot" + A.RESET);
                     return false;
                 }
@@ -779,9 +803,10 @@ class Halo {
 
     /**
      * Checks that the a given List corresponds to a correct MarketHelper choice.
+     *
      * @param textList A List of String.
      * @return True if the player has correctly typed in a number which corresponds to a valid available MarketHelper choice,
-     *         False if the textList was not formatted as a number, or the choice number was not a valid one.
+     * False if the textList was not formatted as a number, or the choice number was not a valid one.
      */
     private static boolean checkChoice(List<String> textList) {
         if (textList.size() > 1) {
@@ -809,11 +834,12 @@ class Halo {
      * Checks that the user has correctly typed in a String corresponding to a sequence of resources.
      * The amount of resource is defined by numberOfResource, and if the modifier resourceNonePermitted is set to true,
      * the user cannot type in the "NONE" Resource.
-     * @param textList A List of String.
-     * @param numberOfResources An int representing the amount of resource requested to the user.
+     *
+     * @param textList              A List of String.
+     * @param numberOfResources     An int representing the amount of resource requested to the user.
      * @param resourceNonePermitted A boolean modifier that allows or denies the possibility to accept the Resource "NONE".
      * @return True if the user has correctly typed in the Resources as described above,
-     *         False otherwise.
+     * False otherwise.
      * @see #convertStringToResource(String) the next method that will be used.
      */
     private static boolean checkResource(List<String> textList, int numberOfResources, boolean resourceNonePermitted) {
@@ -829,12 +855,13 @@ class Halo {
 
     /**
      * Checks that the user has correctly typed in a number of column/row that is actually correct.
-     *  If column is true, the number can be between 1 and 4 (included).
-     *  If column is false, (so basically it's a row), the number can be between 1 and 3 (included).
+     * If column is true, the number can be between 1 and 4 (included).
+     * If column is false, (so basically it's a row), the number can be between 1 and 3 (included).
+     *
      * @param textList A List of String.
-     * @param column True if the user has previously selected a column, and False if a row was selected.
+     * @param column   True if the user has previously selected a column, and False if a row was selected.
      * @return True if the user has correctly typed in a number according to above,
-     *         False otherwise.
+     * False otherwise.
      * @see #getMarketChoices() the method that calls this function..
      */
     private static boolean checkNumberMarket(List<String> textList, boolean column) {
@@ -851,7 +878,7 @@ class Halo {
                 }
             } else {
                 if (number < 0 || number > 3) {
-                    System.out.println(A.RED + " > The row number must be 1, 2, 3. Or 0 to quit."+ A.RESET);
+                    System.out.println(A.RED + " > The row number must be 1, 2, 3. Or 0 to quit." + A.RESET);
                     return false;
                 }
             }
@@ -864,9 +891,10 @@ class Halo {
 
     /**
      * Checks that the user has correctly typed in a sequence of number (either 1, 2 or 3 can be inserted).
+     *
      * @param textList A List of String.
      * @return True if the user has correctly typed in a sequence of the three specified numbers, in any order and not repeated,
-     *         False otherwise.
+     * False otherwise.
      */
     private static boolean checkStandardProductionInput(List<String> textList) {
         int n1;
@@ -879,7 +907,7 @@ class Halo {
         try {
             n1 = Integer.parseInt(textList.get(0));
             if (n1 < 1 || n1 > 4) {
-                System.out.println(A.RED + "The numbers you insert must be between 1 and 3"+ A.RESET);
+                System.out.println(A.RED + "The numbers you insert must be between 1 and 3" + A.RESET);
                 return false;
             }
             if (textList.size() > 1) {
@@ -918,9 +946,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The user can decide to abort the routine.
      * Is shared between both Online Mode and Local Mode.
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_GET_MARKET_RESOURCES message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted. or the player decided to cancel the action
+     * or null if the message wasn't well formatted. or the player decided to cancel the action
      */
     public static MSG_ACTION_GET_MARKET_RESOURCES getMarketResources(List<String> textList) {
         String text;
@@ -981,9 +1010,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The user can decide to abort the routine.
      * Is shared between both Online Mode and Local Mode
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_CHANGE_DEPOT_CONFIG message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted. or the player decided to cancel the action
+     * or null if the message wasn't well formatted. or the player decided to cancel the action
      */
     public static MSG_ACTION_CHANGE_DEPOT_CONFIG changeDepotConfig(List<String> textList) {
         Halo.triedAction = false;
@@ -1104,9 +1134,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The user can decide to abort the routine.
      * Is shared between both Online Mode and Local Mode.
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_ACTIVATE_PRODUCTION message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted. or the player decided to cancel the action
+     * or null if the message wasn't well formatted. or the player decided to cancel the action
      */
     public static MSG_ACTION_ACTIVATE_PRODUCTION activateProduction(List<String> textList) {
         Halo.triedAction = true;
@@ -1155,7 +1186,7 @@ class Halo {
         }
 
         if (basic) {
-            System.out.println(" >> " +A.UL + "Which resources do you want as input for the basic production? Write them as: stone shield" + A.RESET);
+            System.out.println(" >> " + A.UL + "Which resources do you want as input for the basic production? Write them as: stone shield" + A.RESET);
             while (true) {
                 System.out.print(" Will: ");
                 text = Halo.input.nextLine();
@@ -1185,7 +1216,7 @@ class Halo {
         }
 
         System.out.println(" >> STANDARD PRODUCTION ");
-        System.out.println(" " +A.UL + "Do you want to activate it?" + A.RESET);
+        System.out.println(" " + A.UL + "Do you want to activate it?" + A.RESET);
         System.out.println(" Press 0 to cancel action, 1 for yes, 2 for no");
         while (true) {
             System.out.print(" Will: ");
@@ -1302,9 +1333,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The user can decide to abort the routine.
      * Is shared between both Online Mode and Local Mode
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_DISCARD_LEADERCARD message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted. or the player decided to cancel the action
+     * or null if the message wasn't well formatted. or the player decided to cancel the action
      */
     public static MSG_ACTION_DISCARD_LEADERCARD discardLeaderCard(List<String> textList) {
         Halo.triedAction = false;
@@ -1339,7 +1371,7 @@ class Halo {
         } else return null;
 
         try {
-            return new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard-1);
+            return new MSG_ACTION_DISCARD_LEADERCARD(cardToDiscard - 1);
         } catch (IllegalArgumentException e) {
             System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
@@ -1351,9 +1383,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The user can decide to abort the routine.
      * Is shared between both Online Mode and Local Mode
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_ACTIVATE_LEADERCARD message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted., or the player decided to cancel the action
+     * or null if the message wasn't well formatted., or the player decided to cancel the action
      */
     public static MSG_ACTION_ACTIVATE_LEADERCARD activateLeaderCard(List<String> textList) {
         Halo.triedAction = false;
@@ -1389,7 +1422,7 @@ class Halo {
         } else return null;
 
         try {
-            return new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate-1);
+            return new MSG_ACTION_ACTIVATE_LEADERCARD(cardToActivate - 1);
         } catch (IllegalArgumentException e) {
             System.out.println(A.RED + " > We could not build that message" + A.RESET);
             return null;
@@ -1402,9 +1435,10 @@ class Halo {
      * The routine is automatically enabled if the DevelopmentCardsVendor middle object is enabled.
      * The user can decide to abort the routine by inserting -1 -1.
      * Is shared between both Online Mode and Local Mode
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted.
+     * or null if the message wasn't well formatted.
      * @see #checkNumberDevSlot(List)
      */
     public static MSG_ACTION_CHOOSE_DEVELOPMENT_CARD chooseDevCard(List<String> textList) {
@@ -1448,9 +1482,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The routine is automatically enabled if the MarketHelper middle object is enabled.
      * Is shared between both Online Mode and Local Mode.
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_ACTION_MARKET_CHOICE message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted.
+     * or null if the message wasn't well formatted.
      * @see #checkChoice(List)
      */
     public static MSG_ACTION_MARKET_CHOICE marketChoice(List<String> textList) {
@@ -1481,9 +1516,10 @@ class Halo {
      * Routine that handles the chooseResource action.
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The routine is automatically enabled if the ResourcePicker middle object is enabled.
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_INIT_CHOOSE_RESOURCE message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted.
+     * or null if the message wasn't well formatted.
      * @see #checkNumber1_2_3_4(List)
      */
     public static MSG_INIT_CHOOSE_RESOURCE chooseResource(List<String> textList) {
@@ -1528,9 +1564,10 @@ class Halo {
      * Builds a proper message that is sent to the Controller, which modifies the model accordingly.
      * The routine is automatically enabled if the LeaderCardsPicker middle object is enabled.
      * Is shared between both Online Mode and Local Mode.
+     *
      * @param textList A List of String.
      * @return A well formatted MSG_INIT_CHOOSE_RESOURCE message if the message was built accordingly to specification,
-     *         or null if the message wasn't well formatted.
+     * or null if the message wasn't well formatted.
      * @see #checkLeaderCardsNumber(List)
      * @see #checkLeaderCardPickerNumber(List, int)
      */
@@ -1572,7 +1609,8 @@ class Halo {
     /**
      * Shows the specified Player's (identified by his playerNumber) asset.
      * The asset is one of the allowed item to be shown.
-     * @param key A String representing the item that is going to be shown.
+     *
+     * @param key          A String representing the item that is going to be shown.
      * @param playerNumber An int representing the number of the chosen Player.
      * @see #checkShowCommand(List) the method that contains a List of allowed items
      * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
@@ -1589,7 +1627,8 @@ class Halo {
     /**
      * Shows the specified Player's (identified by his nickname) asset.
      * The asset is one of the allowed item to be shown.
-     * @param key A String representing the item that is going to be shown.
+     *
+     * @param key      A String representing the item that is going to be shown.
      * @param nickname A String representing the name of the chosen Player.
      * @see #checkShowCommand(List) the method that contains a List of allowed items
      * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
@@ -1606,7 +1645,8 @@ class Halo {
      * Shows the specified Player's asset.
      * This method should not directly be called, and only work in Online Game.
      * The asset is one of the allowed item to be shown.
-     * @param key A String representing the item that is going to be shown.
+     *
+     * @param key    A String representing the item that is going to be shown.
      * @param player The reference to the PlayerSimplified.
      * @see #checkShowCommand(List) the method that contains a List of allowed items
      * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
@@ -1649,14 +1689,12 @@ class Halo {
     }
 
     public static void send(Message message) throws IOException {
-        if(!Halo.socket.isClosed()) {
+        if (!Halo.socket.isClosed()) {
             Halo.objectOutputStream.reset();
             Halo.objectOutputStream.writeObject(message);
             Halo.objectOutputStream.flush();
-        }
-        else
-        {
-            System.out.println(A.RED+">> write Quit to go back to Main Menu.");
+        } else {
+            System.out.println(A.RED + ">> write Quit to go back to Main Menu.");
         }
     }
 }
@@ -1674,11 +1712,12 @@ class MenuPhase {
      * The MenuPhase run() waits on the System.in for a user input.
      * Simple Commands are accepted, checked, and parsed, consequentially entering a new Phase for the program.
      * For a List of possible commands, see the printHelpMenu() method in Halo.
+     *
      * @return The next Phase.
      */
     public Phase run() {
         Halo.sweep();
-        System.out.println(" <<>> "+ A.UL + "Main Menu." + A.RESET);
+        System.out.println(" <<>> " + A.UL + "Main Menu." + A.RESET);
         System.out.println(" >> Write " + A.CYAN + "help" + A.RESET + " for a list of commands.");
         List<String> textList = new ArrayList<>();
         String text;
@@ -1771,12 +1810,13 @@ class MenuPhase {
      * The Rejoin Routine tries to build a MSG_REJOIN_LOBBY message that will be sent to a Server.
      * If the request is accepted, an existing Game is linked through, and the Client goes directly to ONLINE_PHASE.
      * If the request is refused or a network error occurs, the Client goes into an ERROR Phase.
-     * @param ip The IP of the Server.
-     * @param port The port number of the Server.
+     *
+     * @param ip          The IP of the Server.
+     * @param port        The port number of the Server.
      * @param lobbyNumber The number of the Lobby the user is trying to reconnect to.
-     * @param nickname The nickname the user previously joined the lobby with.
+     * @param nickname    The nickname the user previously joined the lobby with.
      * @return MAIN_MENU if the command was not parsed correctly. ONLINE_PHASE if the connection has been successfully established.
-     *         ERROR in any other case.
+     * ERROR in any other case.
      */
     private Phase rejoinRoutine(String ip, int port, int lobbyNumber, String nickname) {
         Message message;
@@ -1819,12 +1859,13 @@ class MenuPhase {
      * The Join Routine tries to build a MSG_JOIN_LOBBY message that will be sent to a Server.
      * If the request is accepted, the Client will link to this new Game and goes directly to ONLINE_PHASE.
      * If the request is refused or a network error occurs, the Client goes into an ERROR Phase.
-     * @param ip The IP of the Server.
-     * @param port The port number of the Server.
+     *
+     * @param ip          The IP of the Server.
+     * @param port        The port number of the Server.
      * @param lobbyNumber The number of the Lobby the user is trying to connect to.
-     * @param nickname The nickname chosen by the user.
+     * @param nickname    The nickname chosen by the user.
      * @return MAIN_MENU if the command was not parsed correctly. ONLINE_PHASE if the connection has been successfully established.
-     *         ERROR in any other case.
+     * ERROR in any other case.
      */
     private Phase joinRoutine(String ip, int port, int lobbyNumber, String nickname) {
         Message message;
@@ -1866,13 +1907,14 @@ class MenuPhase {
      * The Create Routine tries to build a MSG_CREATE_LOBBY message that will be sent to a Server.
      * If the request is accepted, the Client will link to this new Game and goes directly to ONLINE_PHASE.
      * If the request is refused or a network error occurs, the Client goes into an ERROR Phase.
-     * @param ip The IP of the Server.
-     * @param port The port number of the Server.
+     *
+     * @param ip              The IP of the Server.
+     * @param port            The port number of the Server.
      * @param numberOfPlayers The desired capacity of the Lobby.
-     * @param nickname The nickname chosen by the user.
-     * @param solo (parsed directly before calling the method) True if a Solo game is going to be created.
+     * @param nickname        The nickname chosen by the user.
+     * @param solo            (parsed directly before calling the method) True if a Solo game is going to be created.
      * @return MAIN_MENU if the command was not parsed correctly. ONLINE_PHASE if the connection has been successfully established.
-     *         ERROR in any other case.
+     * ERROR in any other case.
      */
     private Phase createRoutine(String ip, int port, int numberOfPlayers, String nickname, boolean solo) {
         Message message;
@@ -1914,8 +1956,9 @@ class MenuPhase {
 
     /**
      * Tries to open a Connection to a specified Internet Socket.
+     *
      * @param address The Server address.
-     * @param port The port number.
+     * @param port    The port number.
      * @throws IOException If an IOException while opening the Socket or opening the Streams occur.
      */
     private void openStreams(String address, int port) throws IOException {
@@ -1932,6 +1975,7 @@ class MenuPhase {
      * A Generic Create Command should be written as "create 'address' 'port' 'nickname' 'lobbyCapacity'".
      * Whereas address is the address of the Server, port is the port number of the Server,
      * nickname is the chosen nickname of the user, and lobbyCapacity is a number between 1 and 4 (included).
+     *
      * @param textList A List of String.
      * @return True if the textList represents a Valid Create Command, False otherwise.
      */
@@ -1969,6 +2013,7 @@ class MenuPhase {
      * A Generic Join Command should be written as "join 'address' 'port' 'nickname' 'lobbyNumber'".
      * Whereas address is the address of the Server, port is the port number of the Server,
      * nickname is the preferred nickname of the user, and lobbyNumber is a number greater than 0 (included).
+     *
      * @param textList A List of String.
      * @return True if the textList represents a Valid Join Command, False otherwise.
      */
@@ -2062,6 +2107,7 @@ class OnlinePhase {
      * When called, GameSimplified instance is created, and a MSG_UPD_Full is expected from the Server.
      * After that, a UpdateHandler will be launched and the Thread will wait on the System.in.
      * If any network error occurs, the Client will be brought back to the Main Menu.
+     *
      * @return MAIN_MENU if the Game ends correctly, ERROR if any network error occurs.
      */
     public Phase run() {
@@ -2273,6 +2319,7 @@ class LocalPhase {
      * Some action can not (and should not) be available in this Mode.
      * The Network part is non-existent.
      * This method should be caller after initializating the Local Mode using init().
+     *
      * @return The next Phase, which would be MAIN_MENU.
      */
     public Phase run() {
@@ -2463,6 +2510,7 @@ class ErrorPhase {
     /**
      * Closes the Streams and brings the user back to the MainMenu.
      * Does not sweep.
+     *
      * @return Phase.MAIN_MENU.
      */
     public Phase run() {

@@ -3,9 +3,6 @@ package it.polimi.ingsw.networking;
 import it.polimi.ingsw.networking.message.*;
 import it.polimi.ingsw.networking.message.actionMessages.ActionMessage;
 import it.polimi.ingsw.networking.message.initMessages.InitMessage;
-import it.polimi.ingsw.networking.message.initMessages.MSG_CREATE_LOBBY;
-import it.polimi.ingsw.networking.message.initMessages.MSG_JOIN_LOBBY;
-import it.polimi.ingsw.networking.message.initMessages.MSG_REJOIN_LOBBY;
 import it.polimi.ingsw.server.utils.ModelObserver;
 
 import java.io.*;
@@ -34,6 +31,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Construct a new ClientHandler which manages a specified socket
+     *
      * @param clientSocket the socket corresponding to a Client to handle
      */
     public ClientHandler(Socket clientSocket) {
@@ -49,11 +47,11 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Execution Body of the ClientHandler:
-     *  FIRST BLOCK: unwraps the request of the newly connected player. Possible requests: <ul>
+     * FIRST BLOCK: unwraps the request of the newly connected player. Possible requests: <ul>
      * <li> CREATE, JOIN, REJOIN -> the ClientHandler acts as requested
      * <li> Anything else -> the ClientHandler closes the connection. </ul>
-     *  SECOND BLOCK: checks if the Lobby has been destroyed by a CountDownTimer.
-     *  THIRD BLOCK: MAIN RUN, a Finite State Machine: <ul>
+     * SECOND BLOCK: checks if the Lobby has been destroyed by a CountDownTimer.
+     * THIRD BLOCK: MAIN RUN, a Finite State Machine: <ul>
      * <li> Starting State: GIVE_MODEL: updates the Client with a current-state Full Model
      * <li> LISTEN_CLIENT: listens for a Client Request. The Request is then passed to the Lobby
      * <li> DISCONNECTED: the ClientHandler executes the disconnected procedure
@@ -69,7 +67,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
             InitMessage message;
             message = (InitMessage) objectInputStream.readObject();
-            if(!message.execute(this)) return;
+            if (!message.execute(this)) return;
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -115,6 +113,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Sends the Client a message containing the current-state Full Model.
+     *
      * @return the next Phase: <ul>
      * <li> LISTEN_CLIENT if the message has been sent without errors,
      * <li> DISCONNECTED if an error occurred.
@@ -134,6 +133,7 @@ public class ClientHandler implements Runnable, ModelObserver {
      * Waits for a request from the Client.
      * In case the player handled is the currentPlayer, the request is passed to the lobby and the ClientHandler listens for a new request.
      * There may be exceptions on the socket, which determine the next State.
+     *
      * @return GAME_OVER is the Game is ended, or DISCONNECTED if a network error occurred.
      */
     private Phase listenClient() {
@@ -193,6 +193,7 @@ public class ClientHandler implements Runnable, ModelObserver {
      * Sends a specified message to the handled Client.
      * If the ClientHandler is in pending-connection state, the message will not be forwarded.
      * note: uses reset() and flush() to send the message.
+     *
      * @param message The message that will be sent to the client.
      * @throws IOException If any error occurred during the message send.
      */
@@ -208,6 +209,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Returns the nickname of the player handler by the ClientHandler.
+     *
      * @return The nickname of the player handler by the ClientHandler.
      */
     public String getNickname() {
@@ -216,6 +218,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * Returns the pending-connection status.
+     *
      * @return True if the ClientHandler is in a pending-connection state, False otherwise.
      */
     public Boolean isPendingConnection() {
@@ -228,8 +231,9 @@ public class ClientHandler implements Runnable, ModelObserver {
      * Inserts the player handled in the IdlePlayer list.
      * IF the lobby has no more active players, destroy the lobby,
      * ELSE Waits for a WakeUp.
-     *  After a WakeUp, the ClientHandler sends a current-state of the Game Model.
-     *  Removes the player from the IdlePlayer list, and sets to false the pending-connection state.
+     * After a WakeUp, the ClientHandler sends a current-state of the Game Model.
+     * Removes the player from the IdlePlayer list, and sets to false the pending-connection state.
+     *
      * @return the next Phase: <ul>
      * <li> GAME_OVER if the Game has ended
      * <li> DISCONNECTED if a network error has occurred while sending the Full Model
@@ -277,10 +281,11 @@ public class ClientHandler implements Runnable, ModelObserver {
      * This method should be called by an external ClientHandler to a pending-connection ClientHandler.
      * The external ClientHandler gives all its streams and socket to the pending-connection ClientHandler.
      * Consequentially Wakes up the pending-connection ClientHandler.
-     * @param socket The socket managed by the external ClientHandler.
-     * @param inputStream The input stream associated with the above socket.
-     * @param objectInputStream The object stream associated with the above input stream.
-     * @param outputStream The output stream associated with the above socket.
+     *
+     * @param socket             The socket managed by the external ClientHandler.
+     * @param inputStream        The input stream associated with the above socket.
+     * @param objectInputStream  The object stream associated with the above input stream.
+     * @param outputStream       The output stream associated with the above socket.
      * @param objectOutputStream The object stream associated with the the above output stream.
      * @see #wakeUp()
      */
@@ -311,6 +316,7 @@ public class ClientHandler implements Runnable, ModelObserver {
     /**
      * Used in the Observer Pattern, forwards a specified message to the Client.
      * If the specified message is a MSG_Stop, interrupts the ClientHandler which will then go into a GAME_OVER condition.
+     *
      * @param message The message to send to the handled Client.
      */
     @Override
@@ -327,7 +333,7 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
     }
 
-    public boolean rejoinLobby(int lobbyNumber, String inputNickname){
+    public boolean rejoinLobby(int lobbyNumber, String inputNickname) {
         this.nickname = inputNickname;
         this.lobby = Lobby.getLobby(lobbyNumber);
         try {
@@ -348,14 +354,13 @@ public class ClientHandler implements Runnable, ModelObserver {
             handler.substituteStreams(this.clientSocket, this.inputStream, this.objectInputStream, this.outputStream, this.objectOutputStream);
             System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " reconnected to lobby, giving up ");
             return false;
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean joinLobby(int lobbyNumber, String inputNickname ){
+    public boolean joinLobby(int lobbyNumber, String inputNickname) {
         try {
             this.lobby = Lobby.getLobby(lobbyNumber);
             if (this.lobby == null) {
@@ -387,18 +392,16 @@ public class ClientHandler implements Runnable, ModelObserver {
 
             }
             return true;
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }
-        catch (InterruptedException e){
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return false;
         }
     }
 
-    public boolean createLobby(String inputNickname, int numOfPlayers){
+    public boolean createLobby(String inputNickname, int numOfPlayers) {
         this.nickname = inputNickname;
 
         boolean found = false;
@@ -444,12 +447,10 @@ public class ClientHandler implements Runnable, ModelObserver {
                 }
             }
             return true;
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }
-        catch(InterruptedException e){
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return false;
         }

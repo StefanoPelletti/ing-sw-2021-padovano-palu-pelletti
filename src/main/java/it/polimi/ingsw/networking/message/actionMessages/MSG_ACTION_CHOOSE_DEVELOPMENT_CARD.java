@@ -15,12 +15,12 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends ActionMessage implements
      * It requests the ClientHandler to perform the Controller chooseDevelopmentCard() method.
      * Contains the number of the card chosen, and the number of the slot to place the card in.
      * Note: if cardNumber and slotNumber are both -1, it means the player wants to cancel the buyDevelopmentCard action.
+     *
      * @param cardNumber The desired card to buy.
      * @param slotNumber The desired slot to place the above card.
      * @throws IllegalArgumentException If the message is built with: <ul>
-     * <li> cardNumber less than -1
-     * <li> slotNumber not between 0 and 2 (included).
-
+     *                                  <li> cardNumber less than -1
+     *                                  <li> slotNumber not between 0 and 2 (included).
      */
     public MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(int cardNumber, int slotNumber) {
         super(MessageType.MSG_ACTION_CHOOSE_DEVELOPMENT_CARD);
@@ -49,6 +49,6 @@ public class MSG_ACTION_CHOOSE_DEVELOPMENT_CARD extends ActionMessage implements
 
     @Override
     public boolean execute(ActionManager actionManager) {
-        return actionManager.chooseDevelopmentCard( actionManager.getGame().getCurrentPlayer(), this);
+        return actionManager.chooseDevelopmentCard(actionManager.getGame().getCurrentPlayer(), this);
     }
 }

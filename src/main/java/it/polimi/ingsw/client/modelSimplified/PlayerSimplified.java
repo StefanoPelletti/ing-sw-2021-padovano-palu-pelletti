@@ -25,7 +25,6 @@ public class PlayerSimplified {
     private LeaderCard[] leaderCards;
 
 
-
     public PlayerSimplified(int playerNumber) {
         this.vp = 0;
         this.playerNumber = playerNumber;

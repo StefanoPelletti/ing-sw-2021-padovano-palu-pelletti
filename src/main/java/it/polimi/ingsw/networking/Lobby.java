@@ -27,7 +27,8 @@ public class Lobby {
     /**
      * Constructs a new Lobby with the specified capacity and number.
      * Initializes the lobby as not deleted and not started.
-     * @param lobbyNumber The Lobby number.
+     *
+     * @param lobbyNumber     The Lobby number.
      * @param lobbyMaxPlayers The capacity of the Lobby.
      */
     public Lobby(int lobbyNumber, int lobbyMaxPlayers) {
@@ -44,6 +45,7 @@ public class Lobby {
 
     /**
      * Checks if there's already a Lobby with the specified lobbyNumber.
+     *
      * @param lobbyNumber The number of the lobby to search.
      * @return True if there's already a Lobby with the same lobby number, False if there's none.
      */
@@ -56,6 +58,7 @@ public class Lobby {
 
     /**
      * Searches for the Lobby which has the specified lobbyNumber.
+     *
      * @param lobbyNumber The number of the Lobby to search.
      * @return The Lobby reference with such lobbyNumber, or null if there's none.
      */
@@ -69,6 +72,7 @@ public class Lobby {
     /**
      * Adds the specified Lobby to the static Lobby List.
      * Starts a CountDownThread which will eliminate the Lobby after some time, if the Lobby has not been started yet.
+     *
      * @param lobby The reference to the Lobby to be added.
      */
     public static synchronized void addLobby(Lobby lobby) {
@@ -79,6 +83,7 @@ public class Lobby {
     /**
      * Creates the CountDownThread Thread related to a specified Lobby.
      * The interval of time to deletion can be set here.
+     *
      * @param lobby The Lobby reference.
      * @see #addLobby(Lobby), which invokes this method.
      */
@@ -88,6 +93,7 @@ public class Lobby {
 
     /**
      * Returns the static Lobby List.
+     *
      * @return The static Lobby List.
      */
     public static synchronized List<Lobby> getLobbies() {
@@ -96,6 +102,7 @@ public class Lobby {
 
     /**
      * Removes the specified Lobby from the static Lobby List.
+     *
      * @param lobby The reference to the Lobby to remove from the static Lobby List.
      */
     public static synchronized void removeLobby(Lobby lobby) {
@@ -138,6 +145,7 @@ public class Lobby {
     /**
      * Passes the specified Message from the ClientHandler to the ActionManager.
      * A message can only be passed if the receiving ClientHandler handles the currentPlayer.
+     *
      * @param message The request message received by the ClientHandler from the Client.
      */
     public synchronized void onMessage(ActionMessage message) {
@@ -150,8 +158,9 @@ public class Lobby {
      * Links a specified ClientHandler to this Lobby object.
      * Checks if another player in this Lobby has the same nickname as the given nickname,
      * in that case the method will add a progressive number after the specified nickname.
-     * @param nickname The name of the Player associated with the ClientHandler.
-     * @param socket The socket operated by the ClientHandler.
+     *
+     * @param nickname      The name of the Player associated with the ClientHandler.
+     * @param socket        The socket operated by the ClientHandler.
      * @param clientHandler The ClientHandler reference.
      * @return a String containing the new nickname:
      * <ul>
@@ -164,8 +173,8 @@ public class Lobby {
     public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
         final int maxPlayerNameSize = 15;
         if (this.lobbyMaxPlayers > nicknameList.size()) {
-            if(nickname.length()>maxPlayerNameSize)
-                nickname = nickname.substring(0,maxPlayerNameSize-1);
+            if (nickname.length() > maxPlayerNameSize)
+                nickname = nickname.substring(0, maxPlayerNameSize - 1);
 
             clientHandlers.add(clientHandler);
             socketList.add(socket);
@@ -190,6 +199,7 @@ public class Lobby {
 
     /**
      * Adds a player, specified by his number, to the IdlePlayer list.
+     *
      * @param playerNumber The number of the player who's gone Idle/Disconnected.
      */
     public synchronized void addIdlePlayer(Integer playerNumber) {
@@ -198,6 +208,7 @@ public class Lobby {
 
     /**
      * Removes a player, specified by his number, from the IdlePlayer list.
+     *
      * @param playerNumber The number of the player who's not Idle/Disconnected anymore.
      */
     public void removeIdlePlayer(Integer playerNumber) {
@@ -207,6 +218,7 @@ public class Lobby {
     /**
      * Disconnects a player, specified by his nickname, and consequentially
      * invokes the related Controller method disconnectPlayer().
+     *
      * @param nickname The nickname of the player who's gone Idle/Disconnected.
      */
     public void disconnectPlayer(String nickname) {
@@ -220,6 +232,7 @@ public class Lobby {
 
     /**
      * Searches for a ClientHandler which is in a pending-reconnection state and has the same nickname as the given one.
+     *
      * @param nickname The nickname of the player searched.
      * @return The ClientHandler reference if there's one in such state in this Lobby, or null if there's none.
      */
@@ -231,6 +244,7 @@ public class Lobby {
 
     /**
      * Returns the capacity of the Lobby.
+     *
      * @return The capacity of the Lobby.
      */
     public int getLobbyMaxPlayers() {
@@ -239,6 +253,7 @@ public class Lobby {
 
     /**
      * Returns the number of the Lobby.
+     *
      * @return The number of the Lobby.
      */
     public int getLobbyNumber() {
@@ -248,6 +263,7 @@ public class Lobby {
     /**
      * Returns the number of players that have connected to the Lobby.
      * Note that this method does not concern the Idle/Disconnected players, as they are still counted.
+     *
      * @return The number of players that have connected to the Lobby.
      */
     public int getNumberOfPresentPlayers() {
@@ -258,6 +274,7 @@ public class Lobby {
     /**
      * Searches the number of a player who has the specified nickname.
      * Note: this method is called by the ClientHandler, whose nicknames are surely present.
+     *
      * @param nickname The nickname of the specified Player.
      * @return The number of the player with the specified nickname.
      */
@@ -267,6 +284,7 @@ public class Lobby {
 
     /**
      * Return the number of the current Player.
+     *
      * @return The number of the current Player.
      */
     public synchronized int currentPlayer() {
@@ -275,6 +293,7 @@ public class Lobby {
 
     /**
      * Generates a MSG_UPD_Full message containing the entire current-state of the Game.
+     *
      * @return A MSG_UPD_Full message.
      */
     public synchronized MSG_UPD_Full getFullModel() {
@@ -284,6 +303,7 @@ public class Lobby {
     /**
      * Returns the started status of the Lobby.
      * After a Lobby.init(), this will return True.
+     *
      * @return True if the Lobby is started, False otherwise.
      */
     public synchronized boolean isStarted() {
@@ -292,6 +312,7 @@ public class Lobby {
 
     /**
      * Returns the deleted status of the Lobby.
+     *
      * @return True if the Lobby has been deleted, False otherwise.
      */
     public synchronized boolean isDeleted() {
@@ -300,6 +321,7 @@ public class Lobby {
 
     /**
      * Sets the deleted status of the Lobby.
+     *
      * @param deleted The boolean value to set.
      */
     public synchronized void setDeleted(boolean deleted) {
@@ -320,6 +342,7 @@ public class Lobby {
 
     /**
      * Returns the GameOver status of the GameManager.
+     *
      * @return True if the Game has ended, False otherwise.
      */
     public boolean isGameOver() {
@@ -328,6 +351,7 @@ public class Lobby {
 
     /**
      * Method used by a newly reconnected ClientHandler to notify other players that his player has reconnected to the Game.
+     *
      * @param nickname The nickname of the player who's reconnected to the Game.
      */
     public void notifyReconnection(String nickname) {
@@ -336,6 +360,7 @@ public class Lobby {
 
     /**
      * Returns the status of the IdlePlayers List.
+     *
      * @return True if all players are Idle/Disconnected, False otherwise.
      */
     public boolean areAllPlayersIdle() {

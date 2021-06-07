@@ -12,6 +12,7 @@ public class MSG_NOTIFICATION extends UpdateMessage implements Serializable {
     /**
      * MSG_NOTIFICATION is sent by the ClientHandler to the Client.
      * It indicates that some event has happened.
+     *
      * @param message A String representing the event.
      */
     public MSG_NOTIFICATION(String message) {

@@ -22,18 +22,19 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends ActionMessage implements Ser
      * MSG_ACTION_ACTIVATE_PRODUCTION is sent by the Client to the ClientHandler.
      * It requests the ClientHandler to perform the Controller activateProduction() method.
      * Contains all the resources chosen by the player that must be processed by the Controller.
+     *
      * @param standardProduction A 3-cell boolean array representing which Development Card the player has chose to activate.
-     * @param basicProduction A boolean that is true if the player has chosen to use the basic production.
-     * @param leaderProduction A 2-cell boolean array representing which Leader Card the player has chosen to use.
-     * @param basicInput A List of 2 Resources representing the input of the basic production. Should be null if basicProduction is false.
-     * @param basicOutput A Resource representing the output of the basic production. Not used if basicProduction is false.
-     * @param leaderOutput1 A Resource representing the output of the first Leader Card. Not used if leaderProduction[0] is false.
-     * @param leaderOutput2 A Resource representing the output of the second Leader Card. Not used if leaderProduction[1] is false.
+     * @param basicProduction    A boolean that is true if the player has chosen to use the basic production.
+     * @param leaderProduction   A 2-cell boolean array representing which Leader Card the player has chosen to use.
+     * @param basicInput         A List of 2 Resources representing the input of the basic production. Should be null if basicProduction is false.
+     * @param basicOutput        A Resource representing the output of the basic production. Not used if basicProduction is false.
+     * @param leaderOutput1      A Resource representing the output of the first Leader Card. Not used if leaderProduction[0] is false.
+     * @param leaderOutput2      A Resource representing the output of the second Leader Card. Not used if leaderProduction[1] is false.
      * @throws IllegalArgumentException If the message is built with: <ul>
-     * <li> standardProduction array is null or leaderProduction is null
-     * <li> if basicProduction is true and ( basicInput is null or it does not contain 2 resources )
-     * <li> if leaderProduction[0] is true and leaderOutput1 is null
-     * <li> if leaderProduction[1] is true and leaderOutput2 is null.
+     *                                  <li> standardProduction array is null or leaderProduction is null
+     *                                  <li> if basicProduction is true and ( basicInput is null or it does not contain 2 resources )
+     *                                  <li> if leaderProduction[0] is true and leaderOutput1 is null
+     *                                  <li> if leaderProduction[1] is true and leaderOutput2 is null.
      */
     public MSG_ACTION_ACTIVATE_PRODUCTION(boolean[] standardProduction, boolean basicProduction, boolean[] leaderProduction,
                                           List<Resource> basicInput,
@@ -91,6 +92,6 @@ public class MSG_ACTION_ACTIVATE_PRODUCTION extends ActionMessage implements Ser
 
     @Override
     public boolean execute(ActionManager actionManager) {
-        return actionManager.activateProduction( actionManager.getGame().getCurrentPlayer(), this);
+        return actionManager.activateProduction(actionManager.getGame().getCurrentPlayer(), this);
     }
 }

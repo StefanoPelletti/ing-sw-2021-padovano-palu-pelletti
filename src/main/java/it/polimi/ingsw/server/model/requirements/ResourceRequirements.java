@@ -28,6 +28,7 @@ public class ResourceRequirements implements Requirement, Serializable {
 
     /**
      * Returns a String representing the Resource Requirements.
+     *
      * @return A String representing the Resource Requirements.
      */
     @Override

@@ -1,10 +1,10 @@
 package it.polimi.ingsw.server.model.middles;
 
-import it.polimi.ingsw.networking.message.*;
+import it.polimi.ingsw.networking.message.MSG_NOTIFICATION;
+import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.actionMessages.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_End;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 public class MessageHelper extends ModelObservable {
@@ -21,6 +21,7 @@ public class MessageHelper extends ModelObservable {
      * Used only in Solo mode.
      * Saves what Lorenzo did in his action to forward it to the player.
      * Also notifies the observers.
+     *
      * @param action the action that Lorenzo did
      */
     public synchronized void setLorenzoNotificationMessage(int action) {
@@ -40,6 +41,7 @@ public class MessageHelper extends ModelObservable {
     /**
      * Saves a generic message to forward to the players.
      * Also notifies the observers.
+     *
      * @param message The message to forward to players.
      */
     public synchronized void setNewMessage(String message) {
@@ -50,8 +52,9 @@ public class MessageHelper extends ModelObservable {
     /**
      * Saves an action notification to forward to the players.
      * Also notifies the observers.
+     *
      * @param nickname The player who did the action.
-     * @param message The action of the player.
+     * @param message  The action of the player.
      */
     public synchronized void setNotificationMessage(String nickname, Message message) {
         switch (message.getMessageType()) {
@@ -75,15 +78,17 @@ public class MessageHelper extends ModelObservable {
                 MSG_ACTION_ACTIVATE_PRODUCTION msg = (MSG_ACTION_ACTIVATE_PRODUCTION) message;
                 helperMessage = nickname + " activated production. Here's what he chose to activate:\n";
                 if (msg.isBasicProduction()) {
-                    helperMessage += "Basic power\n   input -> output  : "+ A.RESET + msg.getBasicInput() +" -> "+ msg.getBasicOutput() + "\n";
+                    helperMessage += "Basic power\n   input -> output  : " + msg.getBasicInput() + " -> " + msg.getBasicOutput() + "\n";
                 }
                 boolean[] choices = msg.getStandardProduction();
-                if (choices[0]) helperMessage += A.YELLOW + "Standard production of the card visible in his devSlot 1\n";
+                if (choices[0]) helperMessage += "Standard production of the card visible in his devSlot 1\n";
                 if (choices[1]) helperMessage += "Standard production of the card visible in his devSlot 2\n";
                 if (choices[2]) helperMessage += "Standard production of the card visible in his devSlot 3\n";
                 choices = msg.getLeaderProduction();
-                if (choices[0]) helperMessage += "Leader Card production of his leaderCard 1, he got a "+ A.RESET +msg.getLeaderOutput1();
-                if (choices[1]) helperMessage += A.YELLOW + "Leader Card production of his leaderCard 2, he got a "+msg.getLeaderOutput2();
+                if (choices[0])
+                    helperMessage += "Leader Card production of his leaderCard 1, he got a " + msg.getLeaderOutput1();
+                if (choices[1])
+                    helperMessage += "Leader Card production of his leaderCard 2, he got a " + msg.getLeaderOutput2();
                 break;
             case MSG_ACTION_GET_MARKET_RESOURCES:
                 helperMessage = nickname + " has decided to go to the market";
@@ -108,6 +113,7 @@ public class MessageHelper extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -116,6 +122,7 @@ public class MessageHelper extends ModelObservable {
 
     /**
      * Returns a MSG_NOTIFICATION containing the message String previously set.
+     *
      * @return A MSG_NOTIFICATION containing the message String previously set.
      */
     public MSG_NOTIFICATION generateMessage() {

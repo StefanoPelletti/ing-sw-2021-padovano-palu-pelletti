@@ -5,8 +5,6 @@ import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.controller.GameManager;
-import it.polimi.ingsw.server.model.Game;
-import it.polimi.ingsw.server.model.Player;
 
 import java.io.*;
 import java.net.Socket;

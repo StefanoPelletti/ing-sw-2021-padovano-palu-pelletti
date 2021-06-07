@@ -5,7 +5,7 @@ import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;
 
-public class MSG_UPD_End extends UpdateMessage implements Serializable{
+public class MSG_UPD_End extends UpdateMessage implements Serializable {
 
     /**
      * MSG_UPD_End is sent by the ClientHandler to the Client.

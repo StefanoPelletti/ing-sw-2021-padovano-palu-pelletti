@@ -54,14 +54,17 @@ public class MarketHelperSimplified {
         return resources.get(currentResource);
     }
 
-    public int getCurrentResourceInt() { return this.currentResource; }
+    public int getCurrentResourceInt() {
+        return this.currentResource;
+    }
 
     public boolean[] getChoices() {
         return this.choices;
     }
 
     /**
-     * The static toString() shows the user a list of possible choices to resolve a Resource grabbed from the Market.
+     * The toString() shows the user a list of possible choices to resolve a Resource grabbed from the Market.
+     *
      * @return A String representing the current state of the Market Helper.
      */
     @Override

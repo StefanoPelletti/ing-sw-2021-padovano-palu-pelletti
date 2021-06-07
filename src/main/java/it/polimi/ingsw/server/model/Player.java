@@ -28,7 +28,8 @@ public class Player extends ModelObservable {
 
     /**
      * Constructor of the Player class.
-     * @param nickname The nickname for the new Player.
+     *
+     * @param nickname     The nickname for the new Player.
      * @param playerNumber The number for the new Player.
      */
     public Player(String nickname, int playerNumber) {
@@ -51,6 +52,7 @@ public class Player extends ModelObservable {
      * Sets the starting Leader Cards for the Player.
      * In the standard game rules, this method is called in initialization phase, and is given a List of cards from
      * LeaderCardsDeck.pickFourCards()
+     *
      * @param startingCards The assigned Leader Cards.
      */
     public void setStartingCards(List<LeaderCard> startingCards) {
@@ -143,8 +145,9 @@ public class Player extends ModelObservable {
 
     /**
      * Sets the LeaderCard enabled field to True if it has been activated or sets the LeaderCard to null if it has been discarded.
+     *
      * @param cardNumber The number of the card.
-     * @param enable The status of the LeaderCard. True if it is being enabled, False if it being discarded.
+     * @param enable     The status of the LeaderCard. True if it is being enabled, False if it being discarded.
      */
     public void setLeaderCards(int cardNumber, boolean enable) {
         if (enable)
@@ -176,6 +179,7 @@ public class Player extends ModelObservable {
     /**
      * Associates the LeaderCards to the Player.
      * Also notifies observers.
+     *
      * @param cards The newly assigned List of Leader Cards.
      */
     public void associateLeaderCards(List<LeaderCard> cards) {
@@ -186,6 +190,7 @@ public class Player extends ModelObservable {
 
     /**
      * Returns the total amount of resources that the Player owns in his depot, extraDepots and Strongbox.
+     *
      * @return The total amount of resources that the Player owns in his depot, extraDepots and Strongbox.
      */
     public int getTotal() {
@@ -200,6 +205,7 @@ public class Player extends ModelObservable {
 
     /**
      * Returns a map of the resources that the Player owns in his depot, extraDepots and Strongbox.
+     *
      * @return A map of the resources that the Player owns in his depot, extraDepots and Strongbox.
      */
     public Map<Resource, Integer> getResources() {
@@ -220,6 +226,7 @@ public class Player extends ModelObservable {
 
     /**
      * Returns a map of the resources that the Player owns in his depot and extraDepot. Not in his Strongbox.
+     *
      * @return A map of the resources that the Player owns in his depot and extraDepot. Not in his Strongbox.
      */
     public Map<Resource, Integer> getDepotAndExtraDepotResources() {
@@ -237,6 +244,7 @@ public class Player extends ModelObservable {
     /**
      * Returns a List of Leader Cards whose SpecialAbility is a DiscountResourceAbility.
      * May return an empty List.
+     *
      * @return The List of Leader Cards whose SpecialAbility is a DiscountResourceAbility.
      */
     public List<LeaderCard> getCardsWithDiscountResourceAbility() {
@@ -251,6 +259,7 @@ public class Player extends ModelObservable {
     /**
      * Returns a List of Leader Cards whose SpecialAbility is a ExtraDepot.
      * May return an empty List.
+     *
      * @return The List of Leader Cards whose SpecialAbility is a ExtraDepot.
      */
     public List<LeaderCard> getCardsWithExtraDepotAbility() {
@@ -265,6 +274,7 @@ public class Player extends ModelObservable {
     /**
      * Returns a List of Leader Cards whose SpecialAbility is a ProductionAbility.
      * May return an empty List.
+     *
      * @return The List of Leader Cards whose SpecialAbility is a ProductionAbility.
      */
     public List<LeaderCard> getCardsWithProductionAbility() {
@@ -279,6 +289,7 @@ public class Player extends ModelObservable {
     /**
      * Returns a List of Leader Cards whose SpecialAbility is a MarketResourceAbility.
      * May return an empty List.
+     *
      * @return The List of Leader Cards whose SpecialAbility is a MarketResourceAbility.
      */
     public List<LeaderCard> getCardsWithMarketResourceAbility() {
@@ -311,7 +322,7 @@ public class Player extends ModelObservable {
         if (obj == this) return true;
         if (!(obj instanceof Player)) return false;
         Player o = (Player) obj;
-        return (this.nickname.equals(o.nickname) && this.playerNumber==o.playerNumber);
+        return (this.nickname.equals(o.nickname) && this.playerNumber == o.playerNumber);
     }
 
     @Override
@@ -326,6 +337,7 @@ public class Player extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -334,6 +346,7 @@ public class Player extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_Player representing the current state of the Player.
+     *
      * @return A MSG_UPD_Player representing the current state of the Player.
      */
     public MSG_UPD_Player generateMessage() {

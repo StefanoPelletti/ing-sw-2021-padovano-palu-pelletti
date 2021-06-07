@@ -1,10 +1,7 @@
 package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourcePicker;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
-
-import static it.polimi.ingsw.server.model.enumerators.Resource.*;
 
 
 public class ResourcePicker extends ModelObservable {
@@ -27,6 +24,7 @@ public class ResourcePicker extends ModelObservable {
      * Sets the ResourcePicker active or disabled.
      * Also notifies observers.
      * This method should be used only after the usage of setNumOfResources().
+     *
      * @param enabled The boolean value to set.
      * @see #setNumOfResources(int)
      */
@@ -42,6 +40,7 @@ public class ResourcePicker extends ModelObservable {
     /**
      * Sets the ResourcePicker amount of Resources.
      * To notify, the ResourcePicker must be set to enabled.
+     *
      * @param numOfResources The amount of available numOfResources for a player.
      * @see #setEnabled(boolean)
      */
@@ -65,6 +64,7 @@ public class ResourcePicker extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -73,6 +73,7 @@ public class ResourcePicker extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_ResourcePicker representing the current state of the ResourcePicker.
+     *
      * @return A MSG_UPD_ResourcePicker representing the current state of the ResourcePicker.
      */
     public MSG_UPD_ResourcePicker generateMessage() {

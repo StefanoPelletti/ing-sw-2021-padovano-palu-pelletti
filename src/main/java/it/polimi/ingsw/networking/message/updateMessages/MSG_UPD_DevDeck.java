@@ -1,7 +1,6 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
-import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.model.DevelopmentCard;
 
@@ -15,6 +14,7 @@ public class MSG_UPD_DevDeck extends UpdateMessage implements Serializable {
      * MSG_UPD_DevDeck is sent by the ClientHandler to the Client.
      * It is generated my a model.DevelopmentCardsDeck generateMessage().
      * It contains the internal status of the DevelopmentCardsDeck, but just the Visible Cards.
+     *
      * @param cards A 3x4 matrix which represents the Visible Cards on the DevelopmentCardsDeck.
      */
     public MSG_UPD_DevDeck(DevelopmentCard[][] cards) {

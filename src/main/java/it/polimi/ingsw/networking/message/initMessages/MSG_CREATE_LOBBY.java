@@ -1,8 +1,6 @@
 package it.polimi.ingsw.networking.message.initMessages;
 
 import it.polimi.ingsw.networking.ClientHandler;
-import it.polimi.ingsw.networking.Lobby;
-import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.MessageType;
 
 import java.io.Serializable;
@@ -16,11 +14,12 @@ public class MSG_CREATE_LOBBY extends InitMessage implements Serializable {
      * MSG_CREATE_LOBBY is sent by the Client to the ClientHandler.
      * It requests the ClientHandler to create a new Lobby with specified capacity.
      * See the ClientHandler run() method, FIRST BLOCK, CREATE part.
+     *
      * @param numOfPlayers The Lobby capacity.
-     * @param nickname The nickname of the player requesting to create a new Lobby.
+     * @param nickname     The nickname of the player requesting to create a new Lobby.
      * @throws IllegalArgumentException If the message is build with: <ul>
-     * <li> numOfPlayers is not between 1 and 4 (included)
-     * <li> nickname is null.
+     *                                  <li> numOfPlayers is not between 1 and 4 (included)
+     *                                  <li> nickname is null.
      */
     public MSG_CREATE_LOBBY(int numOfPlayers, String nickname) {
         super(MessageType.MSG_CREATE_LOBBY);

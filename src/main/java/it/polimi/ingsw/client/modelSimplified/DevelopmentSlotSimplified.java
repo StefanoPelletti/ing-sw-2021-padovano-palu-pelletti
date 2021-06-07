@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_DevSlot;
 import it.polimi.ingsw.server.model.DevelopmentCard;
-import it.polimi.ingsw.server.model.DevelopmentSlot;
 import it.polimi.ingsw.server.utils.A;
 
 public class DevelopmentSlotSimplified {
@@ -23,9 +22,12 @@ public class DevelopmentSlotSimplified {
 
     /**
      * Returns a representation of the current state of a given DevelopmentSlot.
+     *
      * @return A String that represents the DevSlot.
      */
-    public DevelopmentCard[][] getCards() { return this.cards; }
+    public DevelopmentCard[][] getCards() {
+        return this.cards;
+    }
 
     @Override
     public String toString() {

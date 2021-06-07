@@ -13,6 +13,7 @@ public class MSG_ACTION_DISCARD_LEADERCARD extends ActionMessage implements Seri
      * MSG_ACTION_DISCARD_LEADERCARD is sent by the Client to the ClientHandler.
      * It requests the ClientHandler to perform the Controller discardLeaderCard() method.
      * Contains a number representing the card to discard.
+     *
      * @param cardNumber The desired card number.
      * @throws IllegalArgumentException If cardNumber is not 0 or 1.
      */
@@ -31,6 +32,6 @@ public class MSG_ACTION_DISCARD_LEADERCARD extends ActionMessage implements Seri
 
     @Override
     public boolean execute(ActionManager actionManager) {
-        return actionManager.discardLeaderCard( actionManager.getGame().getCurrentPlayer(), this);
+        return actionManager.discardLeaderCard(actionManager.getGame().getCurrentPlayer(), this);
     }
 }

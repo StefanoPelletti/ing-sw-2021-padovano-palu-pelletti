@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.networking.message.MSG_Stop;
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderBoard;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.Map;
@@ -28,6 +27,7 @@ public class Leaderboard extends ModelObservable {
      * Sets the LeaderBoard enabled or disabled.
      * If the LeaderBoard is being set to enabled, it will notify its observers with two message, a MSG_UPD_LeaderBoard followed by a MSG_Stop.
      * The LeaderBoard is not thought to be used after the Game has ended.
+     *
      * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
@@ -41,8 +41,9 @@ public class Leaderboard extends ModelObservable {
     /**
      * If absent, the player is added with the given score.
      * If present, the previous score of the player is summed with the given quantity.
+     *
      * @param nickname The name of player associated with the score.
-     * @param score The score of the player.
+     * @param score    The score of the player.
      */
     public void addScore(String nickname, Integer score) {
         if (this.board == null) {
@@ -59,6 +60,7 @@ public class Leaderboard extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies the observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -67,6 +69,7 @@ public class Leaderboard extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_LeaderBoard representing the current state of the LeaderBoard.
+     *
      * @return A MSG_UPD_LeaderBoard representing the current state of the LeaderBoard.
      */
     public MSG_UPD_LeaderBoard generateMessage() {

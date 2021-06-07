@@ -1,8 +1,6 @@
 package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_FaithTrack;
-import it.polimi.ingsw.server.model.FaithTrack;
-import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.utils.A;
 
 import java.util.List;
@@ -25,9 +23,12 @@ public class FaithTrackSimplified {
     /**
      * Returns a String that represents the current status of FaithTrack, with the zones and the position of the Players.
      * Can work in Solo mode.
+     *
      * @return A String representing the current status of the FaithTrack.
      */
-    public boolean[] getZones() { return this.zones; }
+    public boolean[] getZones() {
+        return this.zones;
+    }
 
     public String toString(boolean solo) {
         StringBuilder result = new StringBuilder();

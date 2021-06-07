@@ -14,6 +14,7 @@ public class DiscountResource implements SpecialAbility, Serializable {
 
     /**
      * Returns the type of Resource this Card discounts.
+     *
      * @return The type of Resource this Card discounts.
      */
     public Resource getDiscountedResource() {

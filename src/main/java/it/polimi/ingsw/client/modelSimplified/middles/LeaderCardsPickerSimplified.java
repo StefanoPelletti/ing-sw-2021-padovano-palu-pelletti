@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsPicker;
 import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.model.middles.LeaderCardsPicker;
 import it.polimi.ingsw.server.utils.A;
 
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class LeaderCardsPickerSimplified {
     /**
      * Returns a String containing the 4 Leader Cards that the LeaderCardsPicker has to offer.
      * Note: see Player.getStartingLeaderCards().
+     *
      * @return A String containing the 4 Leader Cards that the LeaderCardsPicker has to offer.
      */
     @Override

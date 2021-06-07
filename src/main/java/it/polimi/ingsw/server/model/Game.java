@@ -67,14 +67,14 @@ public class Game extends ModelObservable {
         return this.turn;
     }
 
-    public int getBlackCrossPosition() {
-        return this.blackCrossPosition;
-    }
-
     //SETTERS
     public void setTurn(int turn) {
         this.turn = turn;
         notifyObservers();
+    }
+
+    public int getBlackCrossPosition() {
+        return this.blackCrossPosition;
     }
 
     public void setBlackCrossPosition(int blackCrossPosition) {
@@ -140,8 +140,10 @@ public class Game extends ModelObservable {
     }
 
     //GETTERS NON BASIC
+
     /**
      * Returns the reference of the current Player.
+     *
      * @return The reference of the current Player.
      */
     public Player getCurrentPlayer() {
@@ -150,6 +152,7 @@ public class Game extends ModelObservable {
 
     /**
      * Sets the current player and notifies the observers that the current player has changed.
+     *
      * @param currentPlayer The number of the current player.
      */
     public void setCurrentPlayer(int currentPlayer) {
@@ -159,6 +162,7 @@ public class Game extends ModelObservable {
 
     /**
      * Returns the reference of a Player specified by his nickname.
+     *
      * @param nickname The nickname of a Player.
      * @return The Player reference if it was found, null otherwise.
      */
@@ -169,6 +173,7 @@ public class Game extends ModelObservable {
 
     /**
      * Returns the reference of a Player specified by his player number.
+     *
      * @param playerNumber The number of a Player.
      * @return The Player reference if it was found, null otherwise.
      */
@@ -180,6 +185,7 @@ public class Game extends ModelObservable {
     /**
      * Changes the status of the game.
      * If the status is LAST TURN then notifies the observers.
+     *
      * @param status The new status of the Game.
      */
     public void changeStatus(Status status) {
@@ -197,7 +203,8 @@ public class Game extends ModelObservable {
      * The Player is set his initial Leader Cards and initial Resources.
      * If the Player is the third or the fourth, his position will be 1 instead of 0.
      * If the Player is the first, his reference is saved in firstPlayer.
-     * @param nickname The nickname for the new Player.
+     *
+     * @param nickname     The nickname for the new Player.
      * @param playerNumber The number for the new Player.
      * @return False if the nickname already exists, True if the player is added correctly.
      */
@@ -206,7 +213,7 @@ public class Game extends ModelObservable {
         Player player = new Player(nickname, playerNumber);
         player.setStartingCards(leaderCardsDeck.pickFourCards());
         player.setInitialStartingResources();
-        if(playerNumber == 3 || playerNumber == 4)
+        if (playerNumber == 3 || playerNumber == 4)
             player.setPosition(1);
         if (playerNumber == 1)
             firstPlayer = player;
@@ -218,6 +225,7 @@ public class Game extends ModelObservable {
 
     /**
      * It's a method used by the Observer pattern. It links the observer to all the objects in the Model.
+     *
      * @param observer The ModelObserver being added.
      */
     public void addAllObservers(ModelObserver observer) {
@@ -248,6 +256,7 @@ public class Game extends ModelObservable {
 
     /**
      * Given
+     *
      * @param nickname nickname of a player
      * @return true if the player is correctly removed.
      */
@@ -257,6 +266,7 @@ public class Game extends ModelObservable {
 
     /**
      * Modifies the messageHelper which notifies all the observers.
+     *
      * @param message The message being forwarded to the observers.
      */
     public void broadcastMessage(String message) {
@@ -304,6 +314,7 @@ public class Game extends ModelObservable {
 
     /**
      * Returns True if any of the Middle Objects are enabled.
+     *
      * @return True if any of the Middle Objects are enabled, False otherwise.
      */
     public boolean isMiddleActive() {
@@ -353,6 +364,7 @@ public class Game extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -361,6 +373,7 @@ public class Game extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_Game representing the current state of the Game.
+     *
      * @return A MSG_UPD_Game representing the current state of the Game.
      */
     public MSG_UPD_Game generateMessage() {

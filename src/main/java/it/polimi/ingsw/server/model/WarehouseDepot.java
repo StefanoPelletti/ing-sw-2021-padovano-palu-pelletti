@@ -3,7 +3,6 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_WarehouseDepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.Arrays;
@@ -43,6 +42,7 @@ public class WarehouseDepot extends ModelObservable {
      * <li> admitted values for the elements of the shelves are: Resource.NONE, Resource.SHIELD, Resource.STONE, Resource.COIN, Resource.SERVANT
      * <li> in a valid configuration, a shelf can not contain 2 different resources, both not being Resource.NONE (represents the empty space in a depot)
      * <li> no common resources are admitted between 2 shelves, except for Resource.NONE
+     *
      * @param shelf1 First shelf of the depot.
      * @param shelf2 Second shelf of the depot.
      * @param shelf3 Third shelf of the depot.
@@ -62,6 +62,7 @@ public class WarehouseDepot extends ModelObservable {
     /**
      * Tries to set a new configuration of the WarehouseDepot, using the validateNewConfig() method.
      * If the operation terminated successfully, notifies observers.
+     *
      * @param shelf1 First shelf of the depot.
      * @param shelf2 Second shelf of the depot.
      * @param shelf3 Third shelf of the depot.
@@ -81,6 +82,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Returns a map of the resources contained in the depot, Resource.NONE excluded.
+     *
      * @return A map of the resources contained in the depot, Resource.NONE excluded.
      */
     public Map<Resource, Integer> getResources() {
@@ -105,6 +107,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Returns the amount of resources contained in the depot, Resource.NONE excluded.
+     *
      * @return The amount of resources contained in the depot, Resource.NONE excluded.
      */
     public int getTotal() {
@@ -121,6 +124,7 @@ public class WarehouseDepot extends ModelObservable {
      * Tries to consume a specified resource from the WarehouseDepot.
      * If it consumes it successfully, notifies observers and returns True.
      * The consumed resource is swapped with a Resource.NONE.
+     *
      * @param resource The Resource to consume.
      * @return True if and only if the Resource was correctly consumed. False otherwise.
      */
@@ -149,6 +153,7 @@ public class WarehouseDepot extends ModelObservable {
     /**
      * Tries to add a specified Resource in this depot.
      * This method follows the rules of validateNewConfig().
+     *
      * @param resource The Resource to add.
      * @return True if and only if the Resource was correctly added. False otherwise.
      * @see #validateNewConfig(Resource, Resource[], Resource[])
@@ -187,6 +192,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Checks if a resource is addable in the WarehouseDepot, following the rules for a valid configuration.
+     *
      * @param resource The Resource to check if it is addable.
      * @return True if and only if the specified Resource is addable in the current configuration of the depot.
      * @see #validateNewConfig(Resource, Resource[], Resource[])
@@ -221,6 +227,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Returns 1 if the shelf1 is not empty, 0 otherwise.
+     *
      * @return 1 if the shelf1 is not empty, 0 otherwise.
      */
     public int getShelf1ResourceNumber() {
@@ -234,6 +241,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Returns the amount of Resource that are not Resource.NONE in shelf2.
+     *
      * @return The amount of Resource that are not Resource.NONE in shelf2.
      */
     public int getShelf2ResourceNumber() {
@@ -249,6 +257,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Returns the amount of Resource that are not Resource.NONE in shelf3.
+     *
      * @return The amount of Resource that are not Resource.NONE in shelf3.
      */
     public int getShelf3ResourceNumber() {
@@ -261,6 +270,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Creates a new WarehouseDepot which previews the action of swapping two specified rows.
+     *
      * @param r1 The row to swap with r2.
      * @param r2 The row to swap with r1.
      * @return A new WarehouseDepot with the rows r1 and r2 swapped.
@@ -277,6 +287,7 @@ public class WarehouseDepot extends ModelObservable {
      * The swapping preferences a left-insertion of the present Resources.
      * Returns true if the two row were successfully swapped, false otherwise.
      * If the rows were swapped, notifies observers.
+     *
      * @param r1 The row to swap with r2.
      * @param r2 The row to swap with r1.
      * @return True if and only if the rows were swapped correctly. False in any other case.
@@ -396,6 +407,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -404,6 +416,7 @@ public class WarehouseDepot extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_WarehouseDepot representing the current state of the WarehouseDepot.
+     *
      * @return A MSG_UPD_WarehouseDepot representing the current state of the WarehouseDepot.
      */
     public MSG_UPD_WarehouseDepot generateMessage() {

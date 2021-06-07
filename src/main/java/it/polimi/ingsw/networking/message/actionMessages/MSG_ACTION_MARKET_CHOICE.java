@@ -13,6 +13,7 @@ public class MSG_ACTION_MARKET_CHOICE extends ActionMessage implements Serializa
      * MSG_ACTION_MARKET_CHOICE is sent by the Client to the ClientHandler.
      * It requests the ClientHandler to perform the Controller newMarketChoice() method.
      * Contains a integer representing the choice.
+     *
      * @param choice The desired choice.
      * @throws IllegalArgumentException If choice is not between 0 and 8 (included).
      */
@@ -31,6 +32,6 @@ public class MSG_ACTION_MARKET_CHOICE extends ActionMessage implements Serializa
 
     @Override
     public boolean execute(ActionManager actionManager) {
-        return actionManager.newChoiceMarket( actionManager.getGame().getCurrentPlayer(), this);
+        return actionManager.newChoiceMarket(actionManager.getGame().getCurrentPlayer(), this);
     }
 }

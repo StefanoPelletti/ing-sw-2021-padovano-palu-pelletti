@@ -6,6 +6,7 @@ public class allDisconnectedThread implements Runnable {
     /**
      * Construct a object designed to destroy a specified Lobby in which there are no more active players.
      * Wakes up all pending-connection ClientHandlers to interrupt them correctly.
+     *
      * @param lobby The reference to the Lobby to destroy.
      */
     public allDisconnectedThread(Lobby lobby) {

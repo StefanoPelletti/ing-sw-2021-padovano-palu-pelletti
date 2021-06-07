@@ -13,6 +13,7 @@ public class MSG_INIT_CHOOSE_RESOURCE extends ActionMessage implements Serializa
     /**
      * MSG_INIT_CHOOSE_RESOURCE is sent by the Client to the ClientHandler.
      * Contains a standard Resource, and is operated by the middles.ResourcePicker object.
+     *
      * @param resource The desired Resource.
      * @throws IllegalArgumentException If the desired resource is not a COIN, SERVANT, STONE or SHIELD.
      */
@@ -31,6 +32,6 @@ public class MSG_INIT_CHOOSE_RESOURCE extends ActionMessage implements Serializa
 
     @Override
     public boolean execute(ActionManager actionManager) {
-        return actionManager.chooseResource( actionManager.getGame().getCurrentPlayer(), this);
+        return actionManager.chooseResource(actionManager.getGame().getCurrentPlayer(), this);
     }
 }

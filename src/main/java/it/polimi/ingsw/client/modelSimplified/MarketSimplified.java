@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.modelSimplified;
 
 
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Market;
-import it.polimi.ingsw.server.model.Market;
 import it.polimi.ingsw.server.model.marbles.MarketMarble;
 import it.polimi.ingsw.server.utils.A;
 
@@ -30,10 +29,17 @@ public class MarketSimplified {
         }
     }
 
-    public MarketMarble[][] getGrid() { return this.grid; }
-    public MarketMarble getSlideMarble() { return this.slideMarble; }
+    public MarketMarble[][] getGrid() {
+        return this.grid;
+    }
+
+    public MarketMarble getSlideMarble() {
+        return this.slideMarble;
+    }
+
     /**
      * Returns the representation of the current state of a given Market.
+     *
      * @return A String representing the current state of the Market.
      */
     @Override

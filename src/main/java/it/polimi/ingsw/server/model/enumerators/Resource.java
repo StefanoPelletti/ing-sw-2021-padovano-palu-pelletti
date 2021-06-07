@@ -5,13 +5,13 @@ import it.polimi.ingsw.server.utils.A;
 import java.io.Serializable;
 
 public enum Resource implements Serializable {
-    SHIELD("resources/punchboard/shield.png","resources/punchboard/shield2.png"),
-    COIN("resources/punchboard/coin.png","resources/punchboard/coin2.png"),
-    SERVANT("resources/punchboard/servant.png","resources/punchboard/servant2.png"),
-    STONE("resources/punchboard/stone.png","resources/punchboard/stone2.png"),
-    NONE("resources/punchboard/none.png","resources/punchboard/none.png"),
-    EXTRA("resources/punchboard/extra.png","resources/punchboard/extra.png"),
-    FAITH("resources/punchboard/faith.png","resources/punchboard/faith.png");
+    SHIELD("resources/punchboard/shield.png", "resources/punchboard/shield2.png"),
+    COIN("resources/punchboard/coin.png", "resources/punchboard/coin2.png"),
+    SERVANT("resources/punchboard/servant.png", "resources/punchboard/servant2.png"),
+    STONE("resources/punchboard/stone.png", "resources/punchboard/stone2.png"),
+    NONE("resources/punchboard/none.png", "resources/punchboard/none.png"),
+    EXTRA("resources/punchboard/extra.png", "resources/punchboard/extra.png"),
+    FAITH("resources/punchboard/faith.png", "resources/punchboard/faith.png");
 
 
     private final String pathLittle;
@@ -22,11 +22,17 @@ public enum Resource implements Serializable {
         this.pathBig = pathBig;
     }
 
-    public String getPathLittle() { return this.pathLittle; }
-    public String getPathBig() { return this.pathBig; }
+    public String getPathLittle() {
+        return this.pathLittle;
+    }
+
+    public String getPathBig() {
+        return this.pathBig;
+    }
 
     /**
      * Returns the Enumerator Value, Colored in a proper manner.
+     *
      * @return A Colored String.
      */
     @Override

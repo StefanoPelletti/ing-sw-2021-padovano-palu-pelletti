@@ -14,6 +14,7 @@ public class Production implements SpecialAbility, Serializable {
 
     /**
      * Returns the type of Resource that this Card uses to produce a Faith and a free choice Resource.
+     *
      * @return The type of Resource in input for this Card.
      */
     public Resource getInput() {

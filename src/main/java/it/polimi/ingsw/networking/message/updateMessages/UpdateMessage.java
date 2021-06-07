@@ -6,10 +6,11 @@ import it.polimi.ingsw.networking.message.MessageType;
 
 public abstract class UpdateMessage extends Message {
 
-    public UpdateMessage(MessageType messageType){
+    public UpdateMessage(MessageType messageType) {
         super(messageType);
     }
 
     public abstract void executeCLI(UpdateHandler updateHandler);
+
     public abstract void executeGUI();
 }

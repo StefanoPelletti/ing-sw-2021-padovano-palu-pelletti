@@ -7,7 +7,7 @@ import it.polimi.ingsw.server.controller.ActionManager;
 public abstract class ActionMessage extends Message {
 
 
-    public ActionMessage(MessageType messageType){
+    public ActionMessage(MessageType messageType) {
         super(messageType);
     }
 

@@ -24,6 +24,7 @@ public class ErrorObject extends ModelObservable {
      * Sets the ErrorObject enabled or disabled.
      * If the ErrorObject is being set to enabled, it will notify its observers.
      * If the ErrorObject is being set to disabled, it will reset the error Message and will not notify the observers.
+     *
      * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
@@ -40,6 +41,7 @@ public class ErrorObject extends ModelObservable {
 
     /**
      * Sets the ErrorObject message that will be forwarded to the observers when a setEnable(true) is invoked.
+     *
      * @param errorMessage The error message.
      * @see #setEnabled(boolean)
      */
@@ -49,6 +51,7 @@ public class ErrorObject extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -57,6 +60,7 @@ public class ErrorObject extends ModelObservable {
 
     /**
      * Returns a MSG_ERROR representing the current state of the ErrorObject.
+     *
      * @return A MSG_ERROR representing the current state of the ErrorObject.
      */
     public MSG_ERROR generateMessage() {

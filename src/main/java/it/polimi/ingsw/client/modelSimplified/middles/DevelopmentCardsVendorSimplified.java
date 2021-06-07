@@ -1,11 +1,11 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_DevCardsVendor;
-import it.polimi.ingsw.server.model.middles.DevelopmentCardsVendor;
+import it.polimi.ingsw.server.model.middles.VendorCard;
+import it.polimi.ingsw.server.utils.A;
 
 import java.util.ArrayList;
 import java.util.List;
-import it.polimi.ingsw.server.model.middles.VendorCard;
 
 public class DevelopmentCardsVendorSimplified {
     private boolean enabled;
@@ -30,8 +30,26 @@ public class DevelopmentCardsVendorSimplified {
         return cards;
     }
 
+    /**
+     * Returns the representation of the current state of a given DevelopmentCardVendor.
+     *
+     * @return A String representing the current state of the DevelopmentCardsVendor.
+     */
     @Override
     public String toString() {
-        return DevelopmentCardsVendor.toString(this.enabled, this.cards);
+        StringBuilder result = new StringBuilder();
+        boolean enabled = this.enabled;
+        List<VendorCard> cards = this.cards;
+        if (!enabled) return result.append(A.RED + " VENDOR IS NOT ENABLED!" + A.RESET).toString();
+        result.append(A.CYAN + " THE VENDOR IS HERE TO HELP! " + A.RESET).append("\n").append("\n");
+        for (int i = 0; i < cards.size(); i++) {
+            result.append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+            result.append("  The card number: ").append(i + 1).append("\n");
+            result.append(cards.get(i).getCard()).append("\n");
+            if (cards.get(i).isSlot1()) result.append("  Can be placed in slot number 1").append("\n");
+            if (cards.get(i).isSlot2()) result.append("  Can be placed in slot number 2").append("\n");
+            if (cards.get(i).isSlot3()) result.append("  Can be placed in slot number 3").append("\n");
+        }
+        return result.toString();
     }
 }

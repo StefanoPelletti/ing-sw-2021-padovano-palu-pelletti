@@ -9,7 +9,7 @@ public class StartingPoint {
 
     public static void main(String[] args) {
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             System.out.println("Insert a parameter:");
             System.out.println("                      - gui                 : starts the graphic user interface");
             System.out.println("                      - cli                 : starts the command line interface");
@@ -18,7 +18,7 @@ public class StartingPoint {
             return;
         }
 
-        switch(args[0]) {
+        switch (args[0]) {
             case "cli":
                 (new PhaseClient()).run();
                 break;
@@ -26,15 +26,13 @@ public class StartingPoint {
                 (new MainMenu()).run();
                 break;
             case "server":
-                if(args.length==1)
+                if (args.length == 1)
                     (new Server(43210)).run();
-                else
-                {
+                else {
                     try {
                         int portNumber = Integer.parseInt(args[1]);
                         (new Server(portNumber)).run();
-                    }
-                    catch (NumberFormatException e) {
+                    } catch (NumberFormatException e) {
                         System.out.println("Invalid parameter specified");
                     }
                 }

@@ -17,6 +17,7 @@ public enum Color implements Serializable {
     /**
      * Returns the abbreviation for this Color.
      * The returning String contains the Initial of this Color.
+     *
      * @return A String containing the Initial of this Color.
      */
     public String toAbbreviation() {
@@ -25,6 +26,7 @@ public enum Color implements Serializable {
 
     /**
      * Returns the Enumerator Value, Colored in a proper manner.
+     *
      * @return A Colored String.
      */
     @Override

@@ -13,11 +13,11 @@ import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObserver;
 
 import java.io.IOException;
-import java.net.ProtocolException;
 
 public class UpdateHandler implements Runnable, ModelObserver {
 
     boolean still = false;
+
     /**
      * The UpdateHandler updates a GameSimplified instance which is supposed to be already present in the Halo.
      * The UpdateHandler is also able to show real time messages, from both the Server and the Simplified Model which is updated by Update messages.
@@ -30,15 +30,13 @@ public class UpdateHandler implements Runnable, ModelObserver {
         Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
         if (Halo.yourTurn) { // && Halo.game.isLeaderCardsPickerEnabled()
-            System.out.println(A.YELLOW + " > You are the First player! "+A.RESET);
+            System.out.println(A.YELLOW + " > You are the First player! " + A.RESET);
             System.out.println(A.YELLOW + " <> Two free Leader Cards!" + A.RESET);
             System.out.println(Halo.game.getLeaderCardsPicker().toString());
-            System.out.println(" > "+ A.UL + "Please pick the first card:" + A.RESET);
+            System.out.println(" > " + A.UL + "Please pick the first card:" + A.RESET);
             System.out.print(" Card number: ");
-        }
-        else
-        {
-            if(!Halo.reconnected) {
+        } else {
+            if (!Halo.reconnected) {
                 System.out.println(A.YELLOW + " > You are the player number " + Halo.myPlayerRef.getPlayerNumber() + "!" + A.RESET);
                 System.out.println(A.YELLOW + " > Please wait for your turn to choose the your Leader Cards");
                 System.out.print(" > Because you are player number " + Halo.myPlayerRef.getPlayerNumber() + ", you will also receive ");
@@ -57,9 +55,9 @@ public class UpdateHandler implements Runnable, ModelObserver {
                 message = (UpdateMessage) Halo.objectInputStream.readObject();
                 message.executeCLI(this);
             } catch (IOException | ClassNotFoundException | ClassCastException e) {
-                System.out.println(A.RED+"<> Connection to server was lost "+A.RESET);
+                System.out.println(A.RED + "<> Connection to server was lost " + A.RESET);
                 return;
-            } catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 return;
             }
         }
@@ -71,53 +69,53 @@ public class UpdateHandler implements Runnable, ModelObserver {
         msg.executeCLI(this);
     }
 
-    public void updatePlayer(MSG_UPD_Player message){
+    public void updatePlayer(MSG_UPD_Player message) {
         synchronized (Halo.game) {
             Halo.game.updatePlayer(message);
         }
     }
 
-    public void updateCurrentPlayerDepot(MSG_UPD_WarehouseDepot message){
+    public void updateCurrentPlayerDepot(MSG_UPD_WarehouseDepot message) {
         Halo.game.updateCurrentPlayerDepot(message);
     }
 
-    public void updateCurrentPlayerDevSlot(MSG_UPD_DevSlot message){
+    public void updateCurrentPlayerDevSlot(MSG_UPD_DevSlot message) {
         Halo.game.updateCurrentPlayerDevSlot(message);
     }
 
-    public void updateCurrentPlayerExtraDepot(MSG_UPD_Extradepot message){
+    public void updateCurrentPlayerExtraDepot(MSG_UPD_Extradepot message) {
         Halo.game.updateCurrentPlayerExtraDepot(message);
     }
 
-    public void updateCurrentPlayerStrongbox(MSG_UPD_Strongbox message){
+    public void updateCurrentPlayerStrongbox(MSG_UPD_Strongbox message) {
         Halo.game.updateCurrentPlayerStrongbox(message);
     }
 
-    public void updateDevCardVendor(MSG_UPD_DevCardsVendor message){
+    public void updateDevCardVendor(MSG_UPD_DevCardsVendor message) {
         synchronized (Halo.game) {
             Halo.game.updateDevelopmentCardsVendor(message);
         }
     }
 
-    public void updateLeaderCardPicker(MSG_UPD_LeaderCardsPicker message){
+    public void updateLeaderCardPicker(MSG_UPD_LeaderCardsPicker message) {
         synchronized (Halo.game) {
             Halo.game.updateLeaderCardsPicker(message);
         }
     }
 
-    public void updateResourcePicker(MSG_UPD_ResourcePicker message){
+    public void updateResourcePicker(MSG_UPD_ResourcePicker message) {
         synchronized (Halo.game) {
             Halo.game.updateResourcePicker(message);
         }
     }
 
-    public void updateMarketHelper(MSG_UPD_MarketHelper message){
+    public void updateMarketHelper(MSG_UPD_MarketHelper message) {
         synchronized (Halo.game) {
             Halo.game.updateMarketHelper(message);
         }
     }
 
-    public void updateGame(MSG_UPD_Game message){
+    public void updateGame(MSG_UPD_Game message) {
         synchronized (Halo.game) {
             if (Halo.solo) {
                 if (Halo.game.getTurn() + 1 == message.getTurn()) Halo.action = false;
@@ -126,25 +124,25 @@ public class UpdateHandler implements Runnable, ModelObserver {
         }
     }
 
-    public void updateMarket(MSG_UPD_Market message){
+    public void updateMarket(MSG_UPD_Market message) {
         synchronized (Halo.game) {
             Halo.game.updateMarket(message);
         }
     }
 
-    public void updateDevDeck(MSG_UPD_DevDeck message){
+    public void updateDevDeck(MSG_UPD_DevDeck message) {
         synchronized (Halo.game) {
             Halo.game.updateDevelopmentCardsDeck(message);
         }
     }
 
-    public void updateFaithTrack(MSG_UPD_FaithTrack message){
+    public void updateFaithTrack(MSG_UPD_FaithTrack message) {
         synchronized (Halo.game) {
             Halo.game.updateFaithTrack(message);
         }
     }
 
-    public void updateEnd(MSG_UPD_End message){
+    public void updateEnd(MSG_UPD_End message) {
         synchronized (Halo.game) {
             Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
             if (Halo.yourTurn) {
@@ -190,7 +188,7 @@ public class UpdateHandler implements Runnable, ModelObserver {
         }
     }
 
-    public void updateLeaderBoard (MSG_UPD_LeaderBoard message){
+    public void updateLeaderBoard(MSG_UPD_LeaderBoard message) {
         synchronized (Halo.game) {
             Halo.game.updateLeaderBoard(message);
             Halo.yourTurn = false;
@@ -200,20 +198,20 @@ public class UpdateHandler implements Runnable, ModelObserver {
         throw new IllegalArgumentException();
     }
 
-    public void notify (MSG_NOTIFICATION message){
+    public void notify(MSG_NOTIFICATION message) {
         synchronized (Halo.game) {
             System.out.println();
             System.out.println(A.YELLOW + " <> " + (message).getMessage() + A.RESET);
         }
     }
 
-    public void printError(MSG_ERROR message){
+    public void printError(MSG_ERROR message) {
         synchronized (Halo.game) {
             if (Halo.yourTurn)
                 System.out.println(A.RED + " <> You got an error: " + A.RESET);
             else
                 System.out.println(A.RED + " <> player " + Halo.game.getCurrentPlayerRef().getNickname() + " got an error: " + A.RESET);
-            System.out.println(A.RED + " <> " + ((MSG_ERROR) message).getErrorMessage() + A.RESET);
+            System.out.println(A.RED + " <> " + message.getErrorMessage() + A.RESET);
         }
     }
 

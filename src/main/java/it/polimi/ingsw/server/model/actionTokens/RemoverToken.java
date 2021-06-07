@@ -7,6 +7,7 @@ public class RemoverToken implements ActionToken {
 
     /**
      * Constructs a Remover Token with an assigned Color.
+     *
      * @param color The Color of the Remover Token.
      * @throws IllegalArgumentException If the color is not GREEN, BLUE, YELLOW or PURPLE.
      */
@@ -21,6 +22,7 @@ public class RemoverToken implements ActionToken {
      * Column number 0 is GREEN, column number 1 is BLUE,
      * colomn number 2 is YELLOW, column number 3 is PURPLE.
      * A Remover Token is assigned a Color, but its practical data is the column number.
+     *
      * @return The column number, from 0 to 3 (included).
      */
     public int getColumn() {
@@ -58,6 +60,7 @@ public class RemoverToken implements ActionToken {
 
     /**
      * Returns the assigned Color of this Remover Token.
+     *
      * @return The Color that was assigned to this Remover Token.
      */
     public Color getColor() {

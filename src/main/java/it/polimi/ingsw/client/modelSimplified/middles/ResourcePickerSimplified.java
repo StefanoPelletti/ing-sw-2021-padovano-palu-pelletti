@@ -1,11 +1,9 @@
 package it.polimi.ingsw.client.modelSimplified.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_ResourcePicker;
-import it.polimi.ingsw.server.model.middles.ResourcePicker;
 import it.polimi.ingsw.server.utils.A;
 
 import static it.polimi.ingsw.server.model.enumerators.Resource.*;
-import static it.polimi.ingsw.server.model.enumerators.Resource.STONE;
 
 public class ResourcePickerSimplified {
     private boolean enabled;
@@ -29,6 +27,7 @@ public class ResourcePickerSimplified {
 
     /**
      * Returns the amount of Resource and a related list the user should choose from.
+     *
      * @return A String representing the current state of a ResourcePicker.
      */
     @Override

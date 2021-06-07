@@ -7,13 +7,18 @@ public class ReqValue implements Serializable {
     private final int reqNumCard;
     private final int reqLvlCard;
 
-    public ReqValue(int reqNumCard, int reqLvlCard){
+    public ReqValue(int reqNumCard, int reqLvlCard) {
         this.reqNumCard = reqNumCard;
         this.reqLvlCard = reqLvlCard;
     }
 
-    public int getReqNumCard() { return this.reqNumCard; }
-    public int getReqLvlCard() { return this.reqLvlCard; }
+    public int getReqNumCard() {
+        return this.reqNumCard;
+    }
+
+    public int getReqLvlCard() {
+        return this.reqLvlCard;
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -2,7 +2,6 @@ package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderCardsPicker;
 import it.polimi.ingsw.server.model.LeaderCard;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ public class LeaderCardsPicker extends ModelObservable {
     /**
      * Sets the LeaderCardsPicker active or disabled.
      * Also notifies observers.
+     *
      * @param enabled The boolean value to set.
      */
     public void setEnabled(boolean enabled) {
@@ -48,6 +48,7 @@ public class LeaderCardsPicker extends ModelObservable {
 
     /**
      * Creates a message generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -56,6 +57,7 @@ public class LeaderCardsPicker extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_LeaderCardsPicker representing the current state of the LeaderCardsPicker.
+     *
      * @return A MSG_UPD_LeaderCardsPicker representing the current state of the LeaderCardsPicker.
      */
     public MSG_UPD_LeaderCardsPicker generateMessage() {

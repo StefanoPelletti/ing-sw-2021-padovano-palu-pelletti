@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GreyMarble implements MarketMarble, Serializable {
     private final Color color;
-    private String path;
+    private final String path;
 
     public GreyMarble() {
         color = Color.GREY;
@@ -18,6 +18,7 @@ public class GreyMarble implements MarketMarble, Serializable {
 
     /**
      * Adds a STONE to the given Resource List.
+     *
      * @param resourceList The Resource List.
      */
     public void addResource(List<Resource> resourceList) {
@@ -26,6 +27,7 @@ public class GreyMarble implements MarketMarble, Serializable {
 
     /**
      * Returns the Color of this Marble, colored in a proper manner.
+     *
      * @return A Colored String representing this Marble.
      */
     @Override
@@ -35,6 +37,7 @@ public class GreyMarble implements MarketMarble, Serializable {
 
     /**
      * Returns the Color of this Marble in an abbreviated form, colored in a proper manner.
+     *
      * @return A Colored String containing the Initial of the Color of this Marble.
      */
     public String toAbbreviation() {

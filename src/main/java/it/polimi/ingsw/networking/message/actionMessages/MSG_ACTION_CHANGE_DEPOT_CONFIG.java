@@ -19,16 +19,17 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends ActionMessage implements Ser
      * It requests the ClientHandler to perform the Controller changeDepotConfig() method.
      * Contains the new configuration of the warehouse depot requested by the player.
      * Note: if the player has no ExtraDepot, the corresponding value should be -1.
-     * @param slot1 The first shelf of the depot.
-     * @param slot2 The second shelf of the depot.
-     * @param slot3 The third shelf of the depot.
-     * @param firstExtraDepot The eventual first ExtraDepot number of resources.
+     *
+     * @param slot1            The first shelf of the depot.
+     * @param slot2            The second shelf of the depot.
+     * @param slot3            The third shelf of the depot.
+     * @param firstExtraDepot  The eventual first ExtraDepot number of resources.
      * @param secondExtraDepot The eventual second ExtraDepot number of resources.
      * @throws IllegalArgumentException If the message is built with: <ul>
-     * <li> slot1 not COIN, SERVANT, SHIELD, STONE or NONE
-     * <li> slot2 is null or slot3 is null
-     * <li> firstExtraDepot is not between -1 and 2 (included)
-     * <li> secondExtraDepot is not between -1 and 2 (included).
+     *                                  <li> slot1 not COIN, SERVANT, SHIELD, STONE or NONE
+     *                                  <li> slot2 is null or slot3 is null
+     *                                  <li> firstExtraDepot is not between -1 and 2 (included)
+     *                                  <li> secondExtraDepot is not between -1 and 2 (included).
      */
     public MSG_ACTION_CHANGE_DEPOT_CONFIG(Resource slot1, Resource[] slot2, Resource[] slot3, int firstExtraDepot, int secondExtraDepot) {
         super(MessageType.MSG_ACTION_CHANGE_DEPOT_CONFIG);
@@ -77,6 +78,6 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends ActionMessage implements Ser
 
     @Override
     public boolean execute(ActionManager actionManager) {
-        return actionManager.changeDepotConfig( actionManager.getGame().getCurrentPlayer(), this);
+        return actionManager.changeDepotConfig(actionManager.getGame().getCurrentPlayer(), this);
     }
 }

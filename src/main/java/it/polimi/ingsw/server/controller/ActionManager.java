@@ -43,6 +43,7 @@ public class ActionManager {
      * The Player performing the action is always the Current Player.
      * Objects calling this method should check that they're handling the current Player before calling this filter.
      * If the selected method returns true, it sends a message to notify the Players that the action is concluded, so they do not expect other messages related to the performed action.
+     *
      * @param message The message that a player sent, it is the action that he wants to perform.
      */
     public void onMessage(ActionMessage message) {
@@ -68,10 +69,10 @@ public class ActionManager {
      *      <li> if the game is in multiplayer and the player is not the last, 4 new LeaderCards are offered to the next player. </li>
      *      <li> if the game is in multiplayer and the player is the last, the initial resources are offered to the players or the standard turn begins. </li>
      * </ul>
-     * @param player The reference to the Current Player.
+     *
+     * @param player  The reference to the Current Player.
      * @param message The message that the player sent.
      * @return True if and only if the Resource are associated to the Players without errors.
-     *
      * @see MSG_INIT_CHOOSE_LEADERCARDS
      * @see LeaderCardsPicker
      */
@@ -96,8 +97,7 @@ public class ActionManager {
             return false;
         }
 //VALIDATION
-        if (!leaderCardsPicker.isEnabled())
-        {
+        if (!leaderCardsPicker.isEnabled()) {
             gameManager.setErrorObject("Error! Method chooseLeaderCards was somehow invoked while LeaderCardsPicker middle-object was not enabled!");
             return false;
         }
@@ -134,7 +134,7 @@ public class ActionManager {
      * Adds the chosen initial Resource to the Current Player.
      * Only in Multiplayer Mode.
      * For the given player, it adds the resource contained in the message in his depot.
-     *
+     * <p>
      * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model.
      * ERRORS:
      * <ul>
@@ -146,7 +146,8 @@ public class ActionManager {
      *      <li> if the player is not the last, prepare the ResourcePicker for the next player, which must choose his initial resources. </li>
      *      <li> if the player is the last one, standard turns begin. </li>
      * </ul>
-     * @param player The reference to the Current Player.
+     *
+     * @param player  The reference to the Current Player.
      * @param message The message that the player sent.
      * @return trTrue if and only if the resource is added to the depot of the player without errors.
      * @see MSG_INIT_CHOOSE_RESOURCE
@@ -198,7 +199,7 @@ public class ActionManager {
      * Activates the chosen Leader Card of the Current Player.
      * For the given player, it checks if the leaderCard that has been passed can be activated by controlling the resources or the cards owned.
      * If the requirements are all fulfilled then it activates the leaderCard and notifies the player.
-     *
+     * <p>
      * If an error occurs, the action is cancelled and the error is notified. Nothing else changes in the model.
      * ERRORS:
      * <ul>
@@ -208,7 +209,8 @@ public class ActionManager {
      *     <li> the resources for the activation are not enough (ResourceRequirement). </li>
      *     <li> the cards owned are not enough or are not the ones needed (CardRequirement). </li>
      * </ul>
-     * @param player The reference to the Current Player.
+     *
+     * @param player  The reference to the Current Player.
      * @param message The message that the player sent.
      * @return True if and only if the Leader Card has been activated correctly.
      */
@@ -287,7 +289,8 @@ public class ActionManager {
      *     <li> The leaderCard has been enabled and can't be discarded anymore. </li>
      * </ul>
      * If the leaderCard is discarded correctly, it moves the player's position on the FaithTrack by one.
-     * @param player The reference to the current player.
+     *
+     * @param player  The reference to the current player.
      * @param message The message that the player sent.
      * @return True if and only if the Leader Card has been discarded correctly.
      */
@@ -322,7 +325,7 @@ public class ActionManager {
      * It then checks if the player has enough resources for everything, if so it sets a main action as done, notifies all the players and removes the resources from depot and strongbox.
      * If the player has not enough resources it gives an error message.
      * Finally, the produced resources are added in the strongbox and the faith points are added (the player advances on the Faith Track).
-     *
+     * <p>
      * ERRORS:
      * <ul>
      *     <li> one of the parameters 'standardproduction' or 'leaderproduction' is null. </li>
@@ -335,7 +338,8 @@ public class ActionManager {
      *     <li> the resource for the leaderCard production can't be produced because it is not valid. </li>
      *     <li> the player as not enough resources for all the selected productions. </li>
      * </ul>
-     * @param player The player that wants to activate the production.
+     *
+     * @param player  The player that wants to activate the production.
      * @param message The message that the player sent.
      * @return True if and only if the production has been done correctly.
      */
@@ -511,7 +515,8 @@ public class ActionManager {
      * NOTE: if the configuration is the same as the one before it just returns true (no notifications for the players).
      * NOTE: for the errors related to the slots:
      *       @see WarehouseDepot
-      @param player The reference to the Current Player.
+     *
+     * @param player  The reference to the Current Player.
      * @param message The message that the player has sent.
      * @return True if and only if the configuration has changed correctly or if it is the same as before.
      */
@@ -624,13 +629,14 @@ public class ActionManager {
      * If so, it adds the cards in a list of possible cards with the slots they can be put in.
      * The final list is the one with just the cards that can be bought and placed in one of the player's slots.
      * Finally, it notifies all the players, puts the card in the developmentCardVendor and enables it.
-     *
+     * <p>
      * ERRORS:
      * <ul>
      *     <li> the player has already done a main action. </li>
      *     <li> the player cannot buy any card. </li>
      *     <li> the card cannot be placed in any slot. </li>
      * </ul>
+     *
      * @param player The reference of the Current Player.
      * @return True if and only if the player can buy at least one card.
      */
@@ -691,17 +697,17 @@ public class ActionManager {
 
         //second check: all the cards that the player can't put in his slot are removed from the ones selected before.
         for (int i = 0; i < cards.size(); i++) {
-            slot1=false;
-            slot2=false;
-            slot3=false;
+            slot1 = false;
+            slot2 = false;
+            slot3 = false;
             if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 0)) {
-                slot1=true;
+                slot1 = true;
             }
             if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 1)) {
-                slot2=true;
+                slot2 = true;
             }
             if (player.getDevelopmentSlot().validateNewCard(cards.get(i), 2)) {
-                slot3=true;
+                slot3 = true;
             }
             if (slot1 || slot2 || slot3) {
                 finalCards.add(new VendorCard(cards.get(i), slot1, slot2, slot3));
@@ -726,7 +732,7 @@ public class ActionManager {
      * It then removes the card from the development card deck and the resources used to buy that card, considering also the Discount Abilities of that player.
      * Then, it notifies all the players that a card has been bought and sets the developmentCardVendor to disabled.
      * Finally, it saves that a main action has been done.
-     *
+     * <p>
      * ERRORS:
      * <ul>
      *     <li> if the cardNumber and the slot number are -1 the user did not buy any card. </li>
@@ -737,7 +743,8 @@ public class ActionManager {
      *     <li> the card was not present. </li>
      * </ul>
      * NOTE: if the card bought is the 7th for that player, it changes the game status accordingly to the game mode.
-      @param player The reference of the Current Player.
+     *
+     * @param player  The reference of the Current Player.
      * @param message The message that the player has sent.
      * @return True if and only if the card has been bought and placed and all the resources have been removed.
      */
@@ -793,8 +800,7 @@ public class ActionManager {
                 }
             }
         }
-        if(r==3)
-        {
+        if (r == 3) {
             gameManager.setErrorObject("Error! Card was not present!");
             return false;
         }
@@ -835,7 +841,7 @@ public class ActionManager {
      * After pushing a row or a column, it adds all the resources in a list of MarketMarble (and makes the player advance if the marble is red).
      * Finally, it saves that a main action has been done, then checks if the list of resources is empty, if so, it just returns true.
      * If not, it adds the resources in the marketHelper and calls the SetNextResourceOption method.
-     *
+     * <p>
      * ERRORS:
      * <ul>
      *     <li> the player has chosen a column but the number is not correct. </li>
@@ -846,7 +852,8 @@ public class ActionManager {
      * NOTE: if the player has one MarketResource Ability, it converts every EXTRA Market Marble in the specified resource, if the player has no MarketResource Abilities it removes the Marble.
      * NOTE: the case where the player has two MarketResource Abilities is dealt in the SetNextResourceOption method.
      *          @see #setNextResourceOptions(Player)
-     * @param player The reference to the Current Player.
+     *
+     * @param player  The reference to the Current Player.
      * @param message The message that the player sent.
      * @return True if and only if no error occurred.
      */
@@ -940,9 +947,9 @@ public class ActionManager {
      *     <li>0: convert the resource in the one given by the Leader Card 1 of the player</li>
      *     <li>1: convert the resource in the one given by the Leader Card 2 of the player</li>
      * </ul>
-     *If no error occurs, notifies the players
+     * If no error occurs, notifies the players
      *
-     * @param player The reference to the Current Player.
+     * @param player  The reference to the Current Player.
      * @param message The Message coming from the Player.
      * @return True if the action terminated successful, False if there was any kind of Error.
      */
@@ -1065,6 +1072,7 @@ public class ActionManager {
      * In that case, a MSG_UPD_Leaderboard will be sent followed by a MSG_Stop.
      * Otherwise, a new Player (not Idle) is selected by calling the GameManager endTurn() and the Game advances normally.
      * If the new Player was disconnected in the INIT Status, the correct Middle Object will be re-enabled for him.
+     *
      * @param player The current Player reference.
      * @param notify Set to True if you want to notify other Player that 'player' has ended its turn. Set False to not.
      * @return True if the Game is continuing, False if the Game has ended by calling this method.
@@ -1139,6 +1147,7 @@ public class ActionManager {
      * This method is called only after the Player has ended its turn in Solo mode and in STANDARD_TURN.
      * Works by extracting one of the Action Token, and consequentially modifying the model accordingly to the Game Rules.
      * The behavior of the Token is defined in their interface.
+     *
      * @see it.polimi.ingsw.server.model.actionTokens.ActionToken
      */
     private void lorenzoMove() {
@@ -1167,6 +1176,7 @@ public class ActionManager {
      * Computates the next MarketHelper choices for the current Player.
      * The new choices are directly inserted in the MarketHelper and notified to the Players.
      * This Method should be called lastly when setting up the MarketHelper, as it enables it automatically.
+     *
      * @param player The current Player reference.
      */
     public void setNextResourceOptions(Player player) {
@@ -1238,8 +1248,9 @@ public class ActionManager {
      *      <li> tries to consume it from the extraDepots. If it is not found there,</li>
      *      <li> consumes the resource (and all the remaining resources of the same type in the map) from the strongbox.</li>
      * </ul>
+     *
      * @param player The player who pays the cost.
-     * @param cost The map containing the resources and the relative quantity to consume.
+     * @param cost   The map containing the resources and the relative quantity to consume.
      */
     public void consumeResources(Player player, Map<Resource, Integer> cost) {
         WarehouseDepot warehouseDepot = player.getWarehouseDepot();
@@ -1275,7 +1286,8 @@ public class ActionManager {
      * Notifies the observers that such Player has crashed.
      * Eventually saves his status, if he was still choosing LeaderCards or Initial Resources.
      * If the Player was the currentPlayer, advances the Game normally.
-     * @param player The reference of the Player who just crashed.
+     *
+     * @param player              The reference of the Player who just crashed.
      * @param currentPlayerNumber The number of the current Player.
      */
     public void disconnectPlayer(Player player, int currentPlayerNumber) {
@@ -1314,6 +1326,7 @@ public class ActionManager {
 
     /**
      * Notifies other Players that someone's reconnected.
+     *
      * @param nickname The name of the Player who's being reconnected.
      */
     public void notifyReconnection(String nickname) {

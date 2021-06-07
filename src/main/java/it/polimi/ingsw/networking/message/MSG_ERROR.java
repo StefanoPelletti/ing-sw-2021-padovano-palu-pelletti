@@ -14,6 +14,7 @@ public class MSG_ERROR extends UpdateMessage implements Serializable {
      * It communicates that an error has occurred.
      * Its usage depends on the phase in which the message is received (game phase or opening phases).
      * Contains a String explaining the error cause.
+     *
      * @param errorMessage The error cause.
      */
     public MSG_ERROR(String errorMessage) {

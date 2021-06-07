@@ -9,7 +9,7 @@ import java.util.List;
 
 public class YellowMarble implements MarketMarble, Serializable {
     private final Color color;
-    private String path;
+    private final String path;
 
     public YellowMarble() {
         path = "resources/punchboard/yellow_marble.png";
@@ -18,6 +18,7 @@ public class YellowMarble implements MarketMarble, Serializable {
 
     /**
      * Adds a COIN to the given Resource List.
+     *
      * @param resourceList The Resource List.
      */
     public void addResource(List<Resource> resourceList) {
@@ -31,6 +32,7 @@ public class YellowMarble implements MarketMarble, Serializable {
 
     /**
      * Returns the Color of this Marble in an abbreviated form, colored in a proper manner.
+     *
      * @return A Colored String containing the Initial of the Color of this Marble.
      */
     public String toAbbreviation() {

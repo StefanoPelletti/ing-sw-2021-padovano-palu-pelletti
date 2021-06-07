@@ -1,12 +1,7 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.client.modelSimplified.GameSimplified;
-import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_FaithTrack;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
-
-import java.util.List;
 
 public class FaithTrack extends ModelObservable {
     private final Game game;
@@ -14,6 +9,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Constructor of the FaithTrack.
+     *
      * @param game The Game reference.
      */
     public FaithTrack(Game game) {
@@ -23,6 +19,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Gets the position of the player and calls the other method.
+     *
      * @param player The Player reference.
      * @return A number for all the zones:
      * <ul>
@@ -39,6 +36,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * This method is used to know what would happen in a specific position of the FaithTrack if a Player advances.
+     *
      * @param p A specific position of a Player (or even Lorenzo).
      * @return The number for the zone if one would activate, 0 if no zone would be activated, -1 if the position is greater than 24 (impossible).
      */
@@ -52,6 +50,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Increments the position of the player by 1.
+     *
      * @param player The Player reference.
      * @return True if the player advanced, False if the position of the player is the last one.
      */
@@ -63,6 +62,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Increments the position of Lorenzo by 1.
+     *
      * @return True if Lorenzo advanced, False if its position is the last one.
      */
     public boolean advanceLorenzo() {
@@ -75,6 +75,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * When a zone has been activated this method calculates the Victory Points.
+     *
      * @param player The Player reference.
      * @return The number of points given by each zone:
      * <ul>
@@ -94,8 +95,9 @@ public class FaithTrack extends ModelObservable {
     /**
      * Sets the specified zone to True or False, according to the value of activated.
      * Also notifies its observers.
+     *
      * @param zoneNumber The number of the zone.
-     * @param activated True if the zone if being activated.
+     * @param activated  True if the zone if being activated.
      */
     public void setZones(int zoneNumber, Boolean activated) {
         zones[zoneNumber] = activated;
@@ -113,6 +115,7 @@ public class FaithTrack extends ModelObservable {
 
     /**
      * Returns a new 3-cell boolean array containing the current status of the zones.
+     *
      * @return A new 3-cell boolean array containing the current status of the zones.
      */
     public boolean[] getZones() {
@@ -130,7 +133,6 @@ public class FaithTrack extends ModelObservable {
     }
 
     /**
-     *
      * @return the actual message passed by the notifyObservers() method that contains the status of the FaithTrack.
      */
     public MSG_UPD_FaithTrack generateMessage() {

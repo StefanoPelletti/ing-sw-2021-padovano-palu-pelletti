@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.modelSimplified;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Strongbox;
-import it.polimi.ingsw.server.model.Strongbox;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.utils.A;
 
@@ -18,6 +17,7 @@ public class StrongboxSimplified {
 
     /**
      * Returns the representation of the current state of a given Strongbox.
+     *
      * @return A String representing the current state of the Strongbox.
      */
     @Override

@@ -2,8 +2,8 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.model.enumerators.Color;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
+import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
 import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
@@ -124,6 +124,7 @@ public class LeaderCardsDeck {
 
     /**
      * Returns the next 4 cards available. Becomes cyclical if called more than 4 times without shuffling.
+     *
      * @return The next 4 cards available. Becomes cyclical if called more than 4 times without shuffling.
      */
     public synchronized List<LeaderCard> pickFourCards() {

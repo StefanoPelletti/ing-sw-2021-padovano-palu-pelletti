@@ -2,12 +2,10 @@ package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Strongbox;
 import it.polimi.ingsw.server.model.enumerators.Resource;
-import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class Strongbox extends ModelObservable {
@@ -23,6 +21,7 @@ public class Strongbox extends ModelObservable {
     /**
      * Tries do add a given quantity of a specified Resource in the Strongbox.
      * If the operation went well, notifies observers.
+     *
      * @param resource The resource to add in the strongbox
      * @param quantity The quantity of resource to add in the strongbox
      * @return True if and only if the quantity of resource is added. False otherwise.
@@ -38,6 +37,7 @@ public class Strongbox extends ModelObservable {
     /**
      * Tries to remove a given quantity of a specified Resource from the Strongbox.
      * If the operation went well, notifies observers.
+     *
      * @param resource The resource to remove from the Strongbox.
      * @param quantity The quantity of resource to remove from the Strongbox.
      * @return True if and only if the quantity of resource is removed. False otherwise.
@@ -49,7 +49,7 @@ public class Strongbox extends ModelObservable {
         } else {
             if ((tmp - quantity) >= 0) /*there will be resources after the remove */ {
                 resources.put(resource, tmp - quantity);
-                if(resources.get(resource)==0) resources.remove(resource);
+                if (resources.get(resource) == 0) resources.remove(resource);
                 notifyObservers();
                 return true;
             } else //note : tmp-quantity SHOULD BE ZERO, not negative. I cannot ask to remove MORE than what the strongbox has to offer.
@@ -62,6 +62,7 @@ public class Strongbox extends ModelObservable {
 
     /**
      * Returns the amount of the given Resource in the Strongbox.
+     *
      * @param resource The specified type of Resource.
      * @return The amount of the given Resource in the Strongbox, or null if there was none.
      */
@@ -71,6 +72,7 @@ public class Strongbox extends ModelObservable {
 
     /**
      * Returns the total amount of resources in the Strongbox.
+     *
      * @return The total amount of resources in the Strongbox.
      */
     public Integer getTotal() {
@@ -79,6 +81,7 @@ public class Strongbox extends ModelObservable {
 
     /**
      * Creates a message using generateMessage() and notifies observers.
+     *
      * @see #generateMessage()
      */
     private void notifyObservers() {
@@ -87,6 +90,7 @@ public class Strongbox extends ModelObservable {
 
     /**
      * Returns a MSG_UPD_Strongbox representing the current state of the Strongbox.
+     *
      * @return A MSG_UPD_Strongbox representing the current state of the Strongbox.
      */
     public MSG_UPD_Strongbox generateMessage() {

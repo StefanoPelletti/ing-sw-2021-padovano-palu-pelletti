@@ -8,8 +8,9 @@ public abstract class Message implements Serializable {
     /**
      * Message is the Parent Class of all MSG_something.
      * messageType must show a correlation between the message and his type.
-     * @see MessageType For the possible messages.
+     *
      * @param messageType The type of the Message being built.
+     * @see MessageType For the possible messages.
      */
     public Message(MessageType messageType) {
         this.messageType = messageType;
