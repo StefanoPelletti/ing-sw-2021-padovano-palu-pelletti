@@ -10,6 +10,7 @@ import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.marbles.MarketMarble;
+import it.polimi.ingsw.server.model.middles.VendorCard;
 import it.polimi.ingsw.server.model.requirements.CardRequirements;
 import it.polimi.ingsw.server.model.requirements.ReqValue;
 import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
@@ -87,6 +88,8 @@ public class Board implements Runnable {
     JButton back_ActivateLeaderCard_Button;
     static final String MARKETHELPER = "Market Helper";
     MarketHelper_Board_Card_Panel marketHelper_board_card_panel;
+    static final String VENDOR = "Vendor";
+    Vendor_Card_Panel vendor_card_panel;
 
 
     //fonts
@@ -132,6 +135,26 @@ public class Board implements Runnable {
             Ark.gameManager.getFaithTrackManager().advance(D);
         }
 
+        List<VendorCard> buyable = new ArrayList<>();
+        buyable.add(new VendorCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 12,
+                Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
+                new Power(Map.of(Resource.STONE, 1),
+                        Map.of(Resource.COIN, 3, Resource.SHIELD, 1)),
+                "resources/cardsFront/DFRONT (46).png", "resources/cardsBack/BACK (10)"), true, false, true));
+
+        buyable.add(new VendorCard(new DevelopmentCard(2, it.polimi.ingsw.server.model.enumerators.Color.YELLOW, 5,
+                Map.of(Resource.STONE, 4),
+                new Power(Map.of(Resource.SHIELD, 1),
+                        Map.of(Resource.FAITH, 2)),
+                "resources/cardsFront/DFRONT (21).png", "resources/cardsBack/BACK (9)"), false, true, true));
+
+        buyable.add(new VendorCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 3,
+                Map.of(Resource.SHIELD, 3),
+                new Power(Map.of(Resource.SERVANT, 2),
+                        Map.of(Resource.COIN, 1, Resource.SHIELD, 1, Resource.STONE, 1)),
+                "resources/cardsFront/DFRONT (10).png", "resources/cardsBack/BACK (2)"), false, false, true));
+        game.getDevelopmentCardsVendor().setCards(buyable);
+        game.getDevelopmentCardsVendor().setEnabled(true);
 
 
         ArrayList<LeaderCard> list = new ArrayList<>();
@@ -202,7 +225,6 @@ public class Board implements Runnable {
         D.getStrongbox().addResource(Resource.SHIELD, 11);
         D.getStrongbox().addResource(Resource.COIN, 9);
         D.getStrongbox().addResource(Resource.SERVANT, 12);
-
 
         D.getDevelopmentSlot().addCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 12,
                 Map.of(Resource.SHIELD, 4, Resource.COIN, 4),
@@ -281,9 +303,6 @@ public class Board implements Runnable {
         Ark.game.updateAll(message);
         Ark.myPlayerRef = Ark.game.getPlayerRef(1);
         SwingUtilities.invokeLater(new Board());
-
-
-
 
     }
 
@@ -398,13 +417,14 @@ public class Board implements Runnable {
                 resourcePicker_board_card_panel.update();
                 self_board_card_panel.update();
                 marketHelper_board_card_panel.update();
+                vendor_card_panel.update();
             }
 
             lastRightCard = Ark.nickname;
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            cardLayoutRight.show(centralRightPanel, MARKETHELPER );
+            cardLayoutRight.show(centralRightPanel, VENDOR);
         }
 
         @Override
@@ -801,8 +821,7 @@ public class Board implements Runnable {
                 c.anchor = GridBagConstraints.LINE_START;
                 c.insets = new Insets(0, 8, 15, 2);
                 this.add(discard_LeaderCard_Button, c);
-
-
+                
                 buy_DevCard_Button = new JButton("buy card");
                 buy_DevCard_Button.setPreferredSize(new Dimension(145, 60));
                 buy_DevCard_Button.setFont(new Font(PAP, Font.BOLD, 18));
@@ -1320,6 +1339,8 @@ public class Board implements Runnable {
             this.add(resourcePicker_board_card_panel, RPICKER);
             marketHelper_board_card_panel = new MarketHelper_Board_Card_Panel();
             this.add(marketHelper_board_card_panel, MARKETHELPER);
+            vendor_card_panel = new Vendor_Card_Panel();
+            this.add(vendor_card_panel, VENDOR);
         }
     }
 
@@ -2870,6 +2891,184 @@ public class Board implements Runnable {
         }
     }
 
+    class Vendor_Card_Panel extends JPanel {
+        JLabel devCard;
+        JButton slot1;
+        JButton slot2;
+        JButton slot3;
+        int currentCard;
+
+        public Vendor_Card_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
+            addPadding(this, 599,946,10,12);
+
+            currentCard = 0;
+
+            JLabel title = new JLabel("Select a card to buy it!");
+            title.setFont(new Font(PAP, Font.BOLD, 40));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 5;
+            c.weightx = 0.3;
+            c.weighty = 0.05;
+            c.insets = new Insets(5,0,5,0);
+            this.add(title,c);
+
+            JButton prev = new JButton("<");
+            prev.addActionListener(prev_ActionListener);
+            prev.setFont(new Font(PAP, Font.BOLD, 20));
+            prev.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 4;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.gridheight=2;
+            c.anchor = GridBagConstraints.EAST;
+            this.add(prev,c);
+
+            devCard = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.gridheight = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(devCard,c);
+
+            JButton next = new JButton(">");
+            next.addActionListener(next_ActionListener);
+            next.setFont(new Font(PAP, Font.BOLD, 20));
+            next.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 4;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.gridheight=2;
+            c.anchor = GridBagConstraints.WEST;
+            this.add(next,c);
+
+            slot1 = new JButton("1");
+            slot1.setFont(new Font(PAP, Font.BOLD, 20));
+            slot1.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 3;
+            c.weightx = 0.3;
+            c.weighty = 0.3;
+            c.gridheight=2;
+            this.add(slot1,c);
+
+            slot2 = new JButton("2");
+            slot2.setFont(new Font(PAP, Font.BOLD, 20));
+            slot2.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 4;
+            c.weightx = 0.3;
+            c.weighty = 0.3;
+            c.gridheight=2;
+            this.add(slot2,c);
+
+            slot3 = new JButton("3");
+            slot3.setFont(new Font(PAP, Font.BOLD, 20));
+            slot3.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 5;
+            c.weightx = 0.3;
+            c.weighty = 0.3;
+            c.gridheight=2;
+            this.add(slot3,c);
+
+            JLabel position = new JLabel("Slot?");
+            position.setFont(new Font(PAP, Font.BOLD, 30));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 2;
+            c.weightx = 4.0;
+            c.weighty = 0.001;
+            this.add(position,c);
+
+        }
+
+        public void update() {
+            if(Ark.game.getDevelopmentCardsVendor().isEnabled()) {
+                List<VendorCard> devCards = Ark.game.getDevelopmentCardsVendor().getCards();
+                devCard.setIcon(scaleImage(new ImageIcon(devCards.get(0).getCard().getFrontPath()), 400));
+
+                if (!devCards.get(0).isSlot1()) {
+                    slot1.setEnabled(false);
+                }
+                if (!devCards.get(0).isSlot2()) {
+                    slot2.setEnabled(false);
+                }
+                if (!devCards.get(0).isSlot3()) {
+                    slot3.setEnabled(false);
+                }
+            }
+        }
+
+        ActionListener next_ActionListener = e -> {
+            if(Ark.game.getDevelopmentCardsVendor().isEnabled()) {
+                currentCard++;
+                List<VendorCard> devCards = Ark.game.getDevelopmentCardsVendor().getCards();
+                if(currentCard > devCards.size()-1) {
+                    currentCard = 0;
+                }
+
+                devCard.setIcon(scaleImage(new ImageIcon(devCards.get(currentCard).getCard().getFrontPath()), 400));
+
+                if (!devCards.get(currentCard).isSlot1()) {
+                    slot1.setEnabled(false);
+                } else {
+                    slot1.setEnabled(true);
+                }
+                if (!devCards.get(currentCard).isSlot2()) {
+                    slot2.setEnabled(false);
+                } else {
+                    slot2.setEnabled(true);
+                }
+                if (!devCards.get(currentCard).isSlot3()) {
+                    slot3.setEnabled(false);
+                } else {
+                    slot3.setEnabled(true);
+                }
+            }
+        };
+
+        ActionListener prev_ActionListener = e -> {
+            if(Ark.game.getDevelopmentCardsVendor().isEnabled()) {
+                currentCard--;
+                List<VendorCard> devCards = Ark.game.getDevelopmentCardsVendor().getCards();
+                if (currentCard < 0) {
+                    currentCard = devCards.size()-1;
+                }
+                devCard.setIcon(scaleImage(new ImageIcon(devCards.get(currentCard).getCard().getFrontPath()), 400));
+
+                if (!devCards.get(currentCard).isSlot1()) {
+                    slot1.setEnabled(false);
+                } else {
+                    slot1.setEnabled(true);
+                }
+                if (!devCards.get(currentCard).isSlot2()) {
+                    slot2.setEnabled(false);
+                } else {
+                    slot2.setEnabled(true);
+                }
+                if (!devCards.get(currentCard).isSlot3()) {
+                    slot3.setEnabled(false);
+                } else {
+                    slot3.setEnabled(true);
+                }
+            }
+        };
+    }
 
     //HELPER METHODS (graphics)
     public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows) {
@@ -3019,7 +3218,6 @@ public class Board implements Runnable {
 
     };
 
-
     ActionListener activateLeaderCard_actionListener = e -> {
         ActivateLeaderCard_Board_Card_Panel.ChooseLeaderCardButton source = (ActivateLeaderCard_Board_Card_Panel.ChooseLeaderCardButton) e.getSource();
         int number = source.getNumber();
@@ -3044,4 +3242,5 @@ public class Board implements Runnable {
         MarketHelper_Board_Card_Panel.ChoiceButton source = (MarketHelper_Board_Card_Panel.ChoiceButton) e.getSource();
         int choiceNumber = source.getChoiceNumber();
     };
+
 }
