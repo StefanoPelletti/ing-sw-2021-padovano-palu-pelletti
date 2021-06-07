@@ -4,7 +4,6 @@ import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.client.modelSimplified.StrongboxSimplified;
 import it.polimi.ingsw.client.modelSimplified.WarehouseDepotSimplified;
-import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_DISCARD_LEADERCARD;
 import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_GET_MARKET_RESOURCES;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.GameManager;
@@ -87,7 +86,7 @@ public class Board implements Runnable {
     ActivateLeaderCard_Board_Card_Panel activateLeaderCard_board_card_panel;
     JButton back_ActivateLeaderCard_Button;
     static final String MARKETHELPER = "Market Helper";
-    //MarketHelper_Board_Card_Panel marketHelper_board_card_panel;
+    MarketHelper_Board_Card_Panel marketHelper_board_card_panel;
 
 
     //fonts
@@ -398,6 +397,7 @@ public class Board implements Runnable {
                 activateLeaderCard_board_card_panel.update();
                 resourcePicker_board_card_panel.update();
                 self_board_card_panel.update();
+                marketHelper_board_card_panel.update();
             }
 
             lastRightCard = Ark.nickname;
@@ -1318,6 +1318,8 @@ public class Board implements Runnable {
             this.add(activateLeaderCard_board_card_panel, ACTIVATELEADERCARD);
             resourcePicker_board_card_panel = new ResourcePicker_Board_Card_Panel();
             this.add(resourcePicker_board_card_panel, RPICKER);
+            marketHelper_board_card_panel = new MarketHelper_Board_Card_Panel();
+            this.add(marketHelper_board_card_panel, MARKETHELPER);
         }
     }
 
@@ -2652,18 +2654,7 @@ public class Board implements Runnable {
 
                         depotQuantity[lcnum] = num;
 
-                        //FIXME
-                        switch (res){
-                            case COIN: this.label.setText("Stones");
-                                break;
-                            case SHIELD: this.label.setText("Shields");
-                                break;
-                            case STONE: this.label.setText("Stones");
-                                break;
-                            case SERVANT: this.label.setText("Servants");
-                                break;
-                        }
-
+                        this.label.setText(resourceToString(res,true));
 
                         this.number.setText(""+depotQuantity[lcnum]);
                         this.less.setEnabled(true);
@@ -2734,7 +2725,150 @@ public class Board implements Runnable {
         }
     }
 
+    class MarketHelper_Board_Card_Panel extends JPanel {
 
+        JButton[] choiceButtons;
+        JLabel[] resourceLabel;
+
+        public MarketHelper_Board_Card_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9),1));
+
+            addPadding(this, 599,946,4,12);
+
+            choiceButtons = new ChoiceButton[8];
+            resourceLabel = new JLabel[4];
+
+            JLabel titleLabel = new JLabel("Market Helper is here!");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(5,0,0,0);
+            this.add(titleLabel,c);
+
+
+            JPanel flowResource = new JPanel(new GridBagLayout());
+            addPadding(flowResource, 60,920,7,2);
+            flowResource.setBorder(BorderFactory.createLineBorder(new Color( 175, 154, 121),1 ));
+            flowResource.setBackground(new Color( 214, 189, 148));
+
+            JLabel resourceRemaining = new JLabel("remaining resources: ");
+            resourceRemaining.setFont(new Font(PAP, Font.BOLD, 26));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.insets = new Insets(0,10,0,20);
+            flowResource.add(resourceRemaining,c);
+
+            for(int i=0; i<4; i++)
+            {
+                JLabel resource = new JLabel();
+                c = new GridBagConstraints();
+                c.gridx = i+2;
+                c.gridy = 1;
+                c.insets = new Insets(0,8,0,8);
+                this.resourceLabel[i] = resource;
+                flowResource.add(resource,c);
+            }
+
+            c.gridx = 1;
+            c.gridy = 2;
+            c.gridwidth = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.fill = GridBagConstraints.BOTH;
+            c.anchor = GridBagConstraints.PAGE_START;
+            this.add(flowResource,c);
+
+            for(int i=0; i<8; i++)
+            {
+                ChoiceButton button = new ChoiceButton(i);
+                button.setPreferredSize(new Dimension(700,46));
+                button.setBackground(new Color( 231, 210, 181));
+                button.setFont(new Font(PAP, Font.BOLD, 24));
+                button.setEnabled(false);
+
+                if(i==2) button.setText("discard that resource");
+                if(i==3) button.setText("swap the 1st and 2nd rows of your depot");
+                if(i==4) button.setText("swap the 1st and 3rd rows of your depot");
+                if(i==5) button.setText("swap the 2nd and 3rd rows of your depot");
+                if(i==6) button.setText("hop to the next available resource");
+                if(i==7) button.setText("hop back to the previous resource");
+
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = i+3;
+                c.gridwidth = 1;
+                c.weightx = 0.3;
+                c.weighty = 0.05;
+                this.choiceButtons[i] = button;
+                this.add(button,c);
+            }
+        }
+
+        public void update() {
+            boolean enabled = Ark.game.isMarketHelperEnabled();
+            boolean[] choices = Ark.game.getMarketHelper().getChoices();
+            Resource[] extraResources = Ark.game.getMarketHelper().getExtraResources();
+            List<Resource> resources = Ark.game.getMarketHelper().getResources();
+            int currentResource = Ark.game.getMarketHelper().getCurrentResourceInt();
+
+            for(int i=0; i<4; i++)
+            {
+                this.resourceLabel[i].setBorder(null);
+
+                if(i<resources.size())
+                    this.resourceLabel[i].setIcon(scaleImage(new ImageIcon(resources.get(i).getPathLittle()),50));
+                else
+                    this.resourceLabel[i].setIcon(null);
+            }
+
+            if(!resources.isEmpty())
+                this.resourceLabel[currentResource].setBorder(BorderFactory.createLineBorder(new Color(178, 49, 35),2));
+
+
+            for(int i=0; i<8;i++)
+            {
+                if(!enabled) {
+                    this.choiceButtons[i].setEnabled(false);
+                }
+                else
+                {
+                    this.choiceButtons[i].setEnabled(choices[i]);
+
+                    if(i==0)
+                    {
+                        if(resources.get(currentResource) != Resource.EXTRA) //so it is a normal choice
+                            this.choiceButtons[0].setText("put in depot");
+                        else
+                            this.choiceButtons[0].setText("convert in "+resourceToString(extraResources[0],false));
+                    }
+                    else if(i==1)
+                    {
+                        if(resources.get(currentResource) != Resource.EXTRA) //so it is a normal choice
+                            this.choiceButtons[1].setText("put in the extra depot");
+                        else
+                            this.choiceButtons[1].setText("convert in "+resourceToString(extraResources[1],false));
+                    }
+                }
+            }
+        }
+
+        class ChoiceButton extends JButton {
+            private final int choiceNumber;
+            public ChoiceButton(int choiceNumber) {
+                super();
+                this.choiceNumber = choiceNumber;
+            }
+            public int getChoiceNumber() { return this.choiceNumber; }
+        }
+    }
 
 
     //HELPER METHODS (graphics)
@@ -2783,6 +2917,29 @@ public class Board implements Runnable {
         }
         return new ImageIcon(icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
     }
+
+    //HELPER METHODS (non Graphics)
+    public String resourceToString(Resource resource, boolean plural) {
+        String result="";
+        switch (resource){
+            case COIN:
+                result = result+"Stone";
+                break;
+            case SHIELD:
+                result = result+"Shield";
+                break;
+            case STONE:
+                result = result+"Stone";
+                break;
+            case SERVANT:
+                result = result+"Servant";
+                break;
+        }
+        if(plural)
+            result = result+"s";
+        return result;
+    }
+
 
     //ACTION LISTENERS
     ActionListener quit_Button_actionListener = e -> {
@@ -2862,7 +3019,7 @@ public class Board implements Runnable {
 
     };
 
-    //implements
+
     ActionListener activateLeaderCard_actionListener = e -> {
         ActivateLeaderCard_Board_Card_Panel.ChooseLeaderCardButton source = (ActivateLeaderCard_Board_Card_Panel.ChooseLeaderCardButton) e.getSource();
         int number = source.getNumber();
@@ -2876,9 +3033,15 @@ public class Board implements Runnable {
 
 
     };
+
     ActionListener resourcePicker_actionListener = e -> {
         ResourcePicker_Board_Card_Panel.CustomResourceButton source = (ResourcePicker_Board_Card_Panel.CustomResourceButton) e.getSource();
         Resource resource = source.getResource();
         int resourceLeft = Ark.game.getResourcePicker().getNumOfResources();
+    };
+
+    ActionListener marketHelper_actionListener = e -> {
+        MarketHelper_Board_Card_Panel.ChoiceButton source = (MarketHelper_Board_Card_Panel.ChoiceButton) e.getSource();
+        int choiceNumber = source.getChoiceNumber();
     };
 }

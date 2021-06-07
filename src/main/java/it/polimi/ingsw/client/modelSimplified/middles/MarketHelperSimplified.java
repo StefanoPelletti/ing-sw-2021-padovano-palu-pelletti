@@ -54,6 +54,8 @@ public class MarketHelperSimplified {
         return resources.get(currentResource);
     }
 
+    public int getCurrentResourceInt() { return this.currentResource; }
+
     public boolean[] getChoices() {
         return this.choices;
     }
