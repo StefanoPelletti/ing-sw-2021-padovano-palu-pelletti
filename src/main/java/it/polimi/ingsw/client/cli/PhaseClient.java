@@ -315,7 +315,7 @@ class Halo {
         result.append(A.GREEN + " > Showing players as 'name - number'" + A.RESET);
         for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
             result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
-        if(solo)
+        if (solo)
             result.append("\n  Lorenzo - 2");
         return result.toString();
     }
@@ -2426,7 +2426,7 @@ class LocalPhase {
                                         }
 //ACTION BUY DEV CARDS
                                         case 7: {
-                                            /*if(!Halo.action){
+                                            /*if(!Halo.action){  //TODO
                                                 System.out.println("You must do a main action before ending the turn");
                                                 break actionLoop;
                                             }*/

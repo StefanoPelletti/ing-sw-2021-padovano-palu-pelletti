@@ -90,7 +90,9 @@ public class PlayerSimplified {
         return this.playerNumber;
     }
 
-    public boolean[] getFaithTrackPanels() { return this.faithTrackPanels; }
+    public boolean[] getFaithTrackPanels() {
+        return this.faithTrackPanels;
+    }
 
     public Map<Resource, Integer> getResources() {
         Map<Resource, Integer> resources = this.warehouseDepot.getResources();

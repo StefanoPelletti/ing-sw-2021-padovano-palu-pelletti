@@ -208,10 +208,10 @@ public class GameManager {
         for (Player p : game.getPlayerList()) {
             int points = 0;
 
-            for(int i=0; i<p.getFaithTrackPanels().length; i++) {
-                if(p.getFaithTrackPanels()[0]) points += 2;
-                if(p.getFaithTrackPanels()[1]) points += 3;
-                if(p.getFaithTrackPanels()[2]) points += 4;
+            for (int i = 0; i < p.getFaithTrackPanels().length; i++) {
+                if (p.getFaithTrackPanels()[0]) points += 2;
+                if (p.getFaithTrackPanels()[1]) points += 3;
+                if (p.getFaithTrackPanels()[2]) points += 4;
             }
 
             for (DevelopmentCard card : p.getDevelopmentSlot().getCards()) {

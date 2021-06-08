@@ -94,7 +94,7 @@ public class FaithTrackManager {
                     message.append("\n FaithTrack Panels have been flipped ");
                     faithTrack.advance(player);
                 }
-                message.append(returnFlippedZones(players, result-1));
+                message.append(returnFlippedZones(players, result - 1));
                 faithTrack.setZones(result - 1, true);
                 break;
             case 3:
@@ -168,7 +168,7 @@ public class FaithTrackManager {
      * Generates a String containing the faithTrackPanel flipped to the Players for activating a Zone.
      *
      * @param players The list of Players playing the Game.
-     * @param zone the zone being activated
+     * @param zone    the zone being activated
      * @return A List of points awarded to the corresponding players.
      * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
      */
@@ -178,7 +178,7 @@ public class FaithTrackManager {
             if (faithTrack.calculateVP(p) > 0) {
                 p.setFaithTrackPanels(zone);
                 message.append("\n ").append(p.getNickname());
-                message.append(" zone ").append(zone+1);
+                message.append(" zone ").append(zone + 1);
                 message.append(" - ").append(faithTrack.calculateVP(p)).append(" points ");
             }
         }

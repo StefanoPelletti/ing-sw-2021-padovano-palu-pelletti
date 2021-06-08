@@ -148,8 +148,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                     //lobby.onMessage(message);
                     lobby.onMessage(message);
                 } else {
-                    objectOutputStream.writeObject(new MSG_ERROR("not your Turn!"));
-                    objectOutputStream.flush();
+                    send(new MSG_ERROR("not your Turn!"));
                 }
             } catch (ClassNotFoundException | IOException exception) {
                 if (lobby.isGameOver())

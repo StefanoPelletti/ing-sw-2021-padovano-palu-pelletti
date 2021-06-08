@@ -35,11 +35,10 @@ public class DevelopmentSlotSimplified {
     public DevelopmentCard[] getTopCards() {
         DevelopmentCard[] result = new DevelopmentCard[3];
 
-        for(int deck=0; deck<3; deck++)
-        {
+        for (int deck = 0; deck < 3; deck++) {
             DevelopmentCard t = null;
-            for(int height=0; height<3; height++) {
-                if(this.cards[deck][height]!=null)
+            for (int height = 0; height < 3; height++) {
+                if (this.cards[deck][height] != null)
                     t = this.cards[deck][height];
                 else
                     break;
@@ -48,6 +47,7 @@ public class DevelopmentSlotSimplified {
         }
         return result;
     }
+
     /**
      * Returns a representation of the current state of a given DevelopmentSlot.
      *
@@ -77,7 +77,7 @@ public class DevelopmentSlotSimplified {
         }
         for (int i = 0; i < 3; i++) {
             if (cards[0][i] != onTop[0]) {
-                assert cards[0][i] != null; //getVP was signaling possible nullPointerException, please check
+                assert cards[0][i] != null; //getVP was signaling possible nullPointerException, please check //FIXME
                 result.append("VP of underneath cards: ").append(cards[0][i].getVp()).append("\n");
             } else {
                 break;

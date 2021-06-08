@@ -1,10 +1,8 @@
 package it.polimi.ingsw.server.model.middles;
 
 import it.polimi.ingsw.networking.message.MSG_NOTIFICATION;
-import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.actionMessages.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_End;
-import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 public class MessageHelper extends ModelObservable {

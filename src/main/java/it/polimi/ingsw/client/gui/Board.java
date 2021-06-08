@@ -87,15 +87,6 @@ public class Board implements Runnable {
     static final String PAP = "Papyrus";
 
 
-
-
-
-
-
-
-
-
-
     //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
     //LEFT PANEL
     JButton quit_Button;
@@ -447,32 +438,26 @@ public class Board implements Runnable {
     }
 
     //HELPER METHODS (graphics)
-    public static void addPadding(JComponent object, int height, int width, int maxColumns, int maxRows) {
+    public static void addPadding(JComponent object, int height, int width, int maximumWidth, int maximumHeight) {
         GridBagConstraints c;
 
-        JLabel paddingVertical = new JLabel();
-        paddingVertical.setText("");
-        c = new GridBagConstraints();
-        c.gridx = 0;
+        c = new GridBagConstraints(); //padding horizontal
+        c.gridx = 1;
         c.gridy = 0;
         c.weightx = 0;
         c.weighty = 0;
-        c.gridwidth = 1;
-        c.gridheight = maxRows; // <- max rows
-        c.insets = new Insets(height, 0, 0, 0);
-        object.add(paddingVertical, c);
-
-        JLabel paddingHorizontal = new JLabel();
-        paddingHorizontal.setText("");
-        c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridwidth = maxColumns; // <- max columns
         c.gridheight = 1;
-        c.insets = new Insets(0, width, 0, 0);
-        object.add(paddingHorizontal, c);
+        c.gridwidth = maximumWidth;
+        object.add(Box.createHorizontalStrut(width),c);
+
+        c = new GridBagConstraints(); //padding vertical
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.gridheight = maximumHeight;
+        c.gridwidth = 1;
+        object.add(Box.createVerticalStrut(height),c);
     }
 
     public void run() {
@@ -597,7 +582,7 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            //cardLayoutRight.show(centralRightPanel, "B");
+            cardLayoutRight.show(centralRightPanel, MARKETHELPER);
         }
 
         @Override
@@ -615,9 +600,10 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
             this.setBackground(new Color(215, 200, 145));
-            this.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, new Color(62, 43, 9)));
+            this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 1, new Color(62, 43, 9)));
 
-            addPadding(this, 839, 457, 3, 6);
+            //addPadding(this, 839, 458, 3, 6);
+            addPadding(this, 839, 458, 3, 6);
 
             quit_Button = new JButton("Quit");
             quit_Button.addActionListener(quit_actionListener);
@@ -629,6 +615,8 @@ public class Board implements Runnable {
             c.gridy = 1;
             c.gridwidth = 1;
             c.gridheight = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
             c.anchor = GridBagConstraints.FIRST_LINE_START;
             c.insets = new Insets(20, 20, 0, 0);
             this.add(quit_Button, c);
@@ -643,6 +631,8 @@ public class Board implements Runnable {
             c.gridy = 1;
             c.gridwidth = 1;
             c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
             c.fill = GridBagConstraints.HORIZONTAL;
             c.insets = new Insets(20, 0, 0, 0);
             this.add(turnLabel, c);
@@ -657,8 +647,9 @@ public class Board implements Runnable {
             c.gridy = 2;
             c.gridwidth = 1;
             c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
             c.fill = GridBagConstraints.HORIZONTAL;
-
             this.add(turnOf, c);
 
             notificationsArea = new JTextArea();
@@ -681,6 +672,8 @@ public class Board implements Runnable {
             c.gridy = 3;
             c.gridwidth = 2;
             c.gridheight = 1;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
             c.anchor = GridBagConstraints.PAGE_START;
             c.insets = new Insets(20, 0, 0, 0);
             this.add(scrollPane, c);
@@ -690,6 +683,7 @@ public class Board implements Runnable {
             c.gridx = 1;
             c.gridy = 4;
             c.weighty = 0.1;
+            c.weightx = 0.5;
             c.gridwidth = 2;
             c.gridheight = 1;
             c.anchor = GridBagConstraints.PAGE_START;
@@ -710,6 +704,8 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 0;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
                 c.insets = new Insets(5, 5, 20, 12);
                 c.anchor = GridBagConstraints.LINE_START;
                 showButtonsPanel.add(show_DevDeck_Button, c);
@@ -722,6 +718,8 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 0;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
                 c.insets = new Insets(5, 12, 20, 5);
                 c.anchor = GridBagConstraints.LINE_END;
                 showButtonsPanel.add(show_Market_Button, c);
@@ -729,6 +727,7 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 5;
+                c.weightx = 0.5;
                 c.weighty = 0.1;
                 c.gridwidth = 2;
                 c.gridheight = 1;
@@ -974,6 +973,7 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 3;
                 c.gridy = 1;
+                c.weightx = 0.5;
                 c.weighty = 0.5;
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -991,6 +991,7 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 2;
+                c.weightx = 0.5;
                 c.weighty = 0.5;
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -1006,6 +1007,7 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 2;
                 c.gridy = 2;
+                c.weightx = 0.5;
                 c.weighty = 0.5;
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -1021,6 +1023,7 @@ public class Board implements Runnable {
                 c = new GridBagConstraints();
                 c.gridx = 3;
                 c.gridy = 2;
+                c.weightx = 0.5;
                 c.weighty = 0.5;
                 c.gridwidth = 1;
                 c.gridheight = 1;
@@ -1035,6 +1038,7 @@ public class Board implements Runnable {
             c.gridx = 4;
             c.gridy = 1;
             c.weighty = 0.5;
+            c.weightx = 0.5;
             c.gridwidth = 1;
             c.gridheight = 2;
             this.add(playersRecapPanel, c);
@@ -1048,9 +1052,10 @@ public class Board implements Runnable {
             c.gridx = 5;
             c.gridy = 1;
             c.weighty = 0.5;
+            c.weightx = 0.5;
             c.gridwidth = 1;
             c.gridheight = 2;
-            c.insets = new Insets(0, 0, 0, 0);
+            c.insets = new Insets(0, 0, 0, 2);
             this.add(endTurn_Button, c);
         }
     }
@@ -1235,6 +1240,7 @@ public class Board implements Runnable {
         private Image image;
 
         public TopPanel() {
+            GridBagConstraints c;
             try {
                 image = ImageIO.read(new File("resources/images/upper_board.png"));
             } catch (IOException e) {
@@ -1242,6 +1248,8 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
 
             addPadding(this, 239, 1221, 2, 2);
+
+
         }
 
         @Override
@@ -1521,7 +1529,7 @@ public class Board implements Runnable {
             this.add(vendor_panel, VENDOR);
 
             for (PlayerSimplified player : Ark.game.getPlayerList()) {
-                if(player.getNickname().equals(Ark.nickname)) continue;
+                if (player.getNickname().equals(Ark.nickname)) continue;
                 Others_DevSlot_Panel panel = new Others_DevSlot_Panel(player.getNickname());
                 this.add(panel, player.getNickname());
                 othersDevSlotList.add(panel);
@@ -1529,7 +1537,7 @@ public class Board implements Runnable {
         }
 
         public void update(String name) {
-            if(name.equals(Ark.nickname))
+            if (name.equals(Ark.nickname))
                 self_devSlot_panel.update();
             else {
                 Optional<Others_DevSlot_Panel> result = othersDevSlotList.stream().filter(p -> p.panelName.equals(name)).findFirst();
@@ -1687,13 +1695,13 @@ public class Board implements Runnable {
             leaderCardPanel.setLayout(new GridBagLayout());
             leaderCardPanel.setOpaque(false);
 
-            for(int i = 0; i < 2; i++) {
+            for (int i = 0; i < 2; i++) {
                 JPanel leadPanel = new JPanel(new GridBagLayout());
                 leadPanel.setBackground(new Color(231, 210, 181));
-                leadPanel.setBorder(BorderFactory.createLineBorder(new Color(231, 210, 181),1));
+                leadPanel.setBorder(BorderFactory.createLineBorder(new Color(231, 210, 181), 1));
 
                 JLabel label = new JLabel();
-                if(i==0) label.setText("Leader Card #1");
+                if (i == 0) label.setText("Leader Card #1");
                 else label.setText("Leader Card #2");
                 label.setHorizontalAlignment(SwingConstants.CENTER);
                 label.setFont(new Font(PAP, Font.BOLD, 20));
@@ -1701,16 +1709,16 @@ public class Board implements Runnable {
                 c.gridy = 0;
                 c.weighty = 0.3;
                 c.fill = GridBagConstraints.BOTH;
-                leadPanel.add(label,c);
+                leadPanel.add(label, c);
 
                 this.leadGrid[i] = new JLabel();
-                this.leadGrid[i].setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+                this.leadGrid[i].setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
                 c = new GridBagConstraints();
                 c.gridy = 1;
                 c.weighty = 0.8;
                 c.fill = GridBagConstraints.BOTH;
-                leadPanel.add(this.leadGrid[i],c);
+                leadPanel.add(this.leadGrid[i], c);
 
                 this.leadLabel[i] = new JLabel();
                 this.leadLabel[i].setFont(new Font(PAP, Font.BOLD, 20));
@@ -1719,16 +1727,16 @@ public class Board implements Runnable {
                 c.gridy = 2;
                 c.weighty = 0.3;
                 c.fill = GridBagConstraints.BOTH;
-                leadPanel.add(this.leadLabel[i],c);
+                leadPanel.add(this.leadLabel[i], c);
 
                 c = new GridBagConstraints();
                 c.gridx = i;
                 c.weightx = 0.5;
                 int pad = 40;
-                c.insets = new Insets(20,pad*i,0,pad*(1-i));
-                if(i==0) c.anchor = GridBagConstraints.FIRST_LINE_END;
+                c.insets = new Insets(20, pad * i, 0, pad * (1 - i));
+                if (i == 0) c.anchor = GridBagConstraints.FIRST_LINE_END;
                 else c.anchor = GridBagConstraints.FIRST_LINE_START;
-                leaderCardPanel.add(leadPanel,c);
+                leaderCardPanel.add(leadPanel, c);
             }
 
             c = new GridBagConstraints();
@@ -1742,20 +1750,20 @@ public class Board implements Runnable {
             devPanel.setLayout(new GridBagLayout());
             devPanel.setOpaque(false);
 
-            for(int i=0; i<3; i++) {
+            for (int i = 0; i < 3; i++) {
                 JPanel tpane = new JPanel();
                 tpane.setOpaque(false);
                 this.devGrid[i] = new JLabel();
 
-                this.devGrid[i].setBorder(BorderFactory.createLineBorder(new Color(231, 210, 181),1));
+                this.devGrid[i].setBorder(BorderFactory.createLineBorder(new Color(231, 210, 181), 1));
                 tpane.add(this.devGrid[i]);
                 c.gridx = i;
                 c.weightx = 0.3;
                 c.fill = GridBagConstraints.BOTH;
-                if(i==0) c.insets = new Insets(0,50,10,0);
-                if(i==1) c.insets = new Insets(0,10,10,0);
-                if(i==2) c.insets = new Insets(0,0,10,40);
-                devPanel.add(tpane,c);
+                if (i == 0) c.insets = new Insets(0, 50, 10, 0);
+                if (i == 1) c.insets = new Insets(0, 10, 10, 0);
+                if (i == 2) c.insets = new Insets(0, 0, 10, 40);
+                devPanel.add(tpane, c);
             }
 
             c = new GridBagConstraints();
@@ -1774,27 +1782,25 @@ public class Board implements Runnable {
             DevelopmentCard[] devCard = player.getDevelopmentSlot().getTopCards();
             LeaderCard[] l = player.getLeaderCards();
 
-            for(int i=0; i<2; i++) {
-                if(l[i] == null) {
-                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),234));
+            for (int i = 0; i < 2; i++) {
+                if (l[i] == null) {
+                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 234));
                     this.leadLabel[i].setText("not present");
-                }
-                else {
-                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()),234));
-                    if(l[i].isEnabled()) {
+                } else {
+                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()), 234));
+                    if (l[i].isEnabled()) {
                         this.leadLabel[i].setText("enabled");
-                        this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW,1));
-                    }
-                    else
+                        this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
+                    } else
                         this.leadLabel[i].setText("not enabled");
                 }
             }
 
-            for(int i=0; i<3; i++) {
-                if(devCard[i] == null)
-                    this.devGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"),220));
+            for (int i = 0; i < 3; i++) {
+                if (devCard[i] == null)
+                    this.devGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 220));
                 else
-                    this.devGrid[i].setIcon(scaleImage(new ImageIcon(devCard[i].getFrontPath()),220));
+                    this.devGrid[i].setIcon(scaleImage(new ImageIcon(devCard[i].getFrontPath()), 220));
             }
         }
 
@@ -3130,7 +3136,7 @@ public class Board implements Runnable {
 
 
             JPanel flowResource = new JPanel(new GridBagLayout());
-            addPadding(flowResource, 60, 920, 7, 2);
+            addPadding(flowResource, 46, 920, 7, 2);
             flowResource.setBorder(BorderFactory.createLineBorder(new Color(175, 154, 121), 1));
             flowResource.setBackground(new Color(214, 189, 148));
 
