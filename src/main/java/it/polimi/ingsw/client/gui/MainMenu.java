@@ -440,7 +440,7 @@ public class MainMenu implements Runnable {
             if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
                 MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
 
-                Ark.nickname = msg.getNickname();
+                Ark.nickname = msg.getAssignedNickname();
                 Ark.solo = solo;
 
                 progressBar.setIndeterminate(true);

@@ -10,8 +10,17 @@ import java.util.List;
 
 public class FaithTrackManager {
 
+    /**
+     * the reference to the faithTrack in the model
+     */
     private final FaithTrack faithTrack;
+    /**
+     * the reference to the model entry point
+     */
     private final Game game;
+    /**
+     * the reference to the GameManager
+     */
     private final GameManager gameManager;
 
     /**

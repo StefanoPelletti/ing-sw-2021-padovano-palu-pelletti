@@ -7,33 +7,62 @@ import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.Game;
 import it.polimi.ingsw.server.model.Player;
 
-import java.net.Socket;
 import java.util.*;
 
-
+/**
+ * The Lobby handles multiple ClientHandlers.
+ * <p>
+ *     It gives the ClientHandler many managing services.
+ *     It handles the reference to the Sole Controller and Sole Model.
+ *     By design ClientHandlers are not allowed to invoke directly the Controller, and uses the Lobby to do so.
+ */
 public class Lobby {
+    /**
+     * A shared List of the Lobbies currently stored in the memory.
+     */
     private static final List<Lobby> lobbies = new ArrayList<>();
+    /**
+     * the number of this Lobby
+     */
     private final int lobbyNumber;
+    /**
+     * the capacity of this Lobby
+     */
     private final int lobbyMaxPlayers;
-    private final boolean solo;
-    List<Socket> socketList; //this may as well be removed.
-    List<String> nicknameList;
-    List<ClientHandler> clientHandlers;
+    /**
+     * a List containing the nicknames of all the connected players
+     */
+    private final List<String> nicknameList;
+    /**
+     * a List containing the references to the ClientHandlers of all the connected players
+     */
+    private final List<ClientHandler> clientHandlers;
+    /**
+     * the Reference to the Sole GameManager
+     */
     private GameManager gameManager;
+    /**
+     * the Reference to the Sole ActionManager
+     */
     private ActionManager actionManager;
+    /**
+     * True after init() and False before
+     */
     private boolean started;
+    /**
+     * False before any entity (for example the CountDownThread) eliminates it. Must be set to True otherwise.
+     * Usually is False through all the Game
+     */
     private boolean deleted;
 
     /**
      * Constructs a new Lobby with the specified capacity and number.
      * Initializes the lobby as not deleted and not started.
      *
-     * @param lobbyNumber     The Lobby number.
-     * @param lobbyMaxPlayers The capacity of the Lobby.
+     * @param lobbyNumber     the Lobby number
+     * @param lobbyMaxPlayers the capacity of the Lobby
      */
     public Lobby(int lobbyNumber, int lobbyMaxPlayers) {
-        solo = (lobbyMaxPlayers == 1);
-        this.socketList = new LinkedList<>();
         this.nicknameList = new LinkedList<>();
         this.clientHandlers = new LinkedList<>();
         this.lobbyNumber = lobbyNumber;
@@ -84,8 +113,8 @@ public class Lobby {
      * Creates the CountDownThread Thread related to a specified Lobby.
      * The interval of time to deletion can be set here.
      *
-     * @param lobby The Lobby reference.
-     * @see #addLobby(Lobby), which invokes this method.
+     * @param lobby the reference to this Lobby
+     * @see #addLobby(Lobby) the method that calls this method
      */
     public static void createCountDownThread(Lobby lobby) {
         new Thread(new CountDownThread(lobby, 30)).start();
@@ -94,7 +123,7 @@ public class Lobby {
     /**
      * Returns the static Lobby List.
      *
-     * @return The static Lobby List.
+     * @return the static Lobby List
      */
     public static synchronized List<Lobby> getLobbies() {
         return Lobby.lobbies;
@@ -144,9 +173,11 @@ public class Lobby {
 
     /**
      * Passes the specified Message from the ClientHandler to the ActionManager.
+     * <p>
      * A message can only be passed if the receiving ClientHandler handles the currentPlayer.
+     * If this method is called by the non-currentPlayer, unpredictable behaviour is surely gonna happen.
      *
-     * @param message The request message received by the ClientHandler from the Client.
+     * @param message the ActionMessage received by the ClientHandler from the Client.
      */
     public synchronized void onMessage(ActionMessage message) {
         synchronized (actionManager) {
@@ -160,7 +191,6 @@ public class Lobby {
      * in that case the method will add a progressive number after the specified nickname.
      *
      * @param nickname      The name of the Player associated with the ClientHandler.
-     * @param socket        The socket operated by the ClientHandler.
      * @param clientHandler The ClientHandler reference.
      * @return a String containing the new nickname:
      * <ul>
@@ -170,14 +200,13 @@ public class Lobby {
      * <li> nickname (3) if there are already three players with such nickname
      * <li> null if this method gets called while the lobby is at full capacity.
      */
-    public synchronized String onJoin(String nickname, Socket socket, ClientHandler clientHandler) {
+    public synchronized String onJoin(String nickname, ClientHandler clientHandler) {
         final int maxPlayerNameSize = 15;
         if (this.lobbyMaxPlayers > nicknameList.size()) {
             if (nickname.length() > maxPlayerNameSize)
                 nickname = nickname.substring(0, maxPlayerNameSize - 1);
 
             clientHandlers.add(clientHandler);
-            socketList.add(socket);
             String newNickname = nickname;
 
             String finalNickname = nickname;
@@ -267,8 +296,7 @@ public class Lobby {
      * @return The number of players that have connected to the Lobby.
      */
     public int getNumberOfPresentPlayers() {
-        assert (this.socketList.size() == this.nicknameList.size());
-        return this.socketList.size();
+        return this.nicknameList.size();
     }
 
     /**

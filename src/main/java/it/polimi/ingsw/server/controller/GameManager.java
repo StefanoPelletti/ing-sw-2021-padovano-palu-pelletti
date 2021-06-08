@@ -14,14 +14,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
-
+    /**
+     * the reference to the model entry point
+     */
     private final Game game;
+    /**
+     * the reference to the faithTrackManager
+     */
     private final FaithTrackManager faithTrackManager;
+    /**
+     * the reference to the ActionManager
+     */
     private final ActionManager actionManager;
+    /**
+     * True if this Gamemanager is handling a SinglePlayer game, False otherwise
+     */
     private final boolean solo;
+    /**
+     * a List of currently disconnected Players/Clienthandlers
+     */
     private final List<Integer> idlePlayers;
+    /**
+     * the capacity of the Lobby
+     */
     private final int lobbyMaxPlayers;
-
+    /**
+     * a Boolean which indicates the current SinglePlayer mode winner.
+     * <p>
+     *     null if there's no winner yet, True if the Player is the winner, False if Lorenzo is the winner
+     */
     private Boolean soloWinner;
 
     /**
