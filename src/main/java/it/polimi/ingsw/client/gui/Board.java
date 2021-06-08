@@ -591,7 +591,7 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            cardLayoutRight.show(centralRightPanel, MARKETHELPER);
+            cardLayoutRight.show(centralRightPanel, PRODSELECTION);
         }
 
         @Override
@@ -2611,6 +2611,7 @@ public class Board implements Runnable {
             c.weightx = 0.5;
             c.weighty = 0.4;
             c.gridwidth = 4;
+            c.anchor = GridBagConstraints.PAGE_END;
             c.insets = new Insets(0, 0, 10, 0);
             this.add(confirm_LeaderCardsPicker_Button, c);
         }
@@ -3212,6 +3213,17 @@ public class Board implements Runnable {
             c.insets = new Insets(5, 5, 0, 0);
             this.add(back_ChangeDepotConfig_Card_Button, c);
 
+            JLabel titleLabel = new JLabel("Change depot configuration");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(titleLabel, c);
+
+
             JButton resourceChangerButton;
             { //first shelf
                 JPanel firstShelf = new JPanel(new GridBagLayout());
@@ -3402,6 +3414,7 @@ public class Board implements Runnable {
             c.weightx = 0.5;
             c.weighty = 0.4;
             c.gridwidth = 2;
+            c.anchor = GridBagConstraints.PAGE_END;
             c.insets = new Insets(0, 0, 10, 0);
             this.add(confirm_ChangeDepotConfig_Button, c);
         }
@@ -3918,12 +3931,9 @@ public class Board implements Runnable {
     }
 
     class ProductionSelection_Panel extends JPanel {
-        private final JToggleButton leaderCard1;
-        private final JToggleButton leaderCard2;
+        private final JToggleButton[] leaderCardButton;
+        private final JToggleButton[] devCardButton;
         private final JToggleButton basicProduction;
-        private final JToggleButton devCard1;
-        private JToggleButton devCard2;
-        private JToggleButton devCard3;
 
         ActionListener confirm_ProductionSelection_Panel = e -> {
             cardLayoutRight.show(centralRightPanel, PRODUCTION);
@@ -3931,6 +3941,9 @@ public class Board implements Runnable {
         };
 
         public ProductionSelection_Panel() {
+            leaderCardButton = new JToggleButton[2];
+            devCardButton = new JToggleButton[3];
+
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
@@ -3945,126 +3958,142 @@ public class Board implements Runnable {
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
-            c.gridwidth = 1;
-            c.gridheight = 1;
             c.weightx = 0.1;
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
             this.add(back_ProductionSelection_Button, c);
 
+            JLabel titleLabel = new JLabel("Choose your productions");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(titleLabel, c);
+
+            JPanel upperPanel = new JPanel();
+            upperPanel.setLayout(new GridBagLayout());
+            upperPanel.setOpaque(false);
+
+            for(int i=0; i<2; i++) {
+                this.leaderCardButton[i] = new JToggleButton();
+                this.leaderCardButton[i].setText("Leader Card #"+(i+1));
+                this.leaderCardButton[i].setPreferredSize(new Dimension(240, 60));
+                this.leaderCardButton[i].setFont(new Font(PAP, Font.BOLD, 24));
+                this.leaderCardButton[i].setBackground(new Color(231,210,181));
+
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = i;
+                c.weightx = 0.6;
+                c.weighty = 0.4;
+                c.anchor = GridBagConstraints.LINE_END;
+                upperPanel.add(this.leaderCardButton[i] , c);
+            }
+
+            basicProduction = new JToggleButton();
+            basicProduction.setIcon(scaleImage(new ImageIcon("resources/punchboard/basic_production.png"), 150));
+            basicProduction.setBackground(new Color(231, 210, 181));
+            basicProduction.setPreferredSize(new Dimension(150, 150));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 0;
+            c.weightx = 0.1;
+            c.weighty = 0.4;
+            c.gridheight = 2;
+            c.insets = new Insets(0,70,0,0);
+            upperPanel.add(basicProduction, c);
+
+            JLabel basicProductionLabel = new JLabel("basic production");
+            basicProductionLabel.setFont(new Font(PAP, Font.BOLD, 24));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 0;
+            c.weightx = 0.1;
+            c.weighty = 0.4;
+            c.gridheight = 2;
+            c.anchor = GridBagConstraints.LINE_START;
+            c.insets = new Insets(0,0,0,60);
+            upperPanel.add(basicProductionLabel,c);
+
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            c.gridwidth = 2;
+            c.fill = GridBagConstraints.BOTH;
+            this.add(upperPanel,c);
+
+
+            JPanel stdProductionPanel = new JPanel(new GridBagLayout());
+            stdProductionPanel.setOpaque(false);
+
+            for(int i=0; i<3; i++) {
+                this.devCardButton[i] = new JToggleButton();
+                this.devCardButton[i].setBackground(new Color(231, 210, 181));
+                this.devCardButton[i].setPreferredSize(new Dimension(178,255));
+                c = new GridBagConstraints();
+                c.gridx = i;
+                c.weightx = 0.5;
+                c.weighty = 0.4;
+                c.insets = new Insets(0,50,0,50);
+                stdProductionPanel.add(this.devCardButton[i], c);
+            }
+
+            c.gridx = 1;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            c.gridwidth = 2;
+            c.fill = GridBagConstraints.BOTH;
+            this.add(stdProductionPanel, c);
+
+
             JButton confirm_ProductionSelection_Button = new JButton("confirm!");
             confirm_ProductionSelection_Button.addActionListener(confirm_ProductionSelection_Panel);
-            confirm_ProductionSelection_Button.setPreferredSize(new Dimension(150, 50));
+            confirm_ProductionSelection_Button.setPreferredSize(new Dimension(200, 60));
             confirm_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 28));
             confirm_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
-            c.gridx = 5;
+            c.gridx = 1;
             c.gridy = 5;
             c.weightx = 0.5;
             c.weighty = 0.4;
             c.gridwidth = 2;
-            c.insets = new Insets(0, 0, 10, 10);
-            c.anchor = GridBagConstraints.LAST_LINE_END;
+            c.anchor = GridBagConstraints.PAGE_END;
+            c.insets = new Insets(0,0,10,0);
             this.add(confirm_ProductionSelection_Button, c);
 
-            leaderCard1 = new JToggleButton("LeaderCard 1");
-            leaderCard1.setPreferredSize(new Dimension(210, 50));
-            leaderCard1.setFont(new Font(PAP, Font.BOLD, 24));
-            leaderCard1.setBackground(new Color(231,210,181));
-            c = new GridBagConstraints();
-            c.gridx = 2;
-            c.gridy = 2;
-            c.weightx = 0.5;
-            c.weighty = 0.4;
-            this.add(leaderCard1, c);
-
-            leaderCard2 = new JToggleButton("LeaderCard 2");
-            leaderCard2.setPreferredSize(new Dimension(210, 50));
-            leaderCard2.setFont(new Font(PAP, Font.BOLD, 24));
-            leaderCard2.setBackground(new Color(231,210,181));
-            c = new GridBagConstraints();
-            c.gridx = 4;
-            c.gridy = 2;
-            c.weightx = 0.5;
-            c.weighty = 0.4;
-            this.add(leaderCard2, c);
-
-            basicProduction = new JToggleButton();
-            ImageIcon basicProd = scaleImage(new ImageIcon("resources/punchboard/basic_production.png"), 150);
-            basicProduction.setIcon(basicProd);
-            basicProduction.setBackground(new Color(231, 210, 181));
-            basicProduction.setPreferredSize(new Dimension(150, 150));
-            c = new GridBagConstraints();
-            c.gridx = 3;
-            c.gridy = 3;
-            c.weightx = 0.5;
-            c.weighty = 0.4;
-            this.add(basicProduction, c);
-
-            devCard1 = new JToggleButton();
-            devCard1.setBackground(new Color(231, 210, 181));
-            c = new GridBagConstraints();
-            c.gridx = 2;
-            c.gridy = 4;
-            c.weightx = 0.5;
-            c.weighty = 0.4;
-            this.add(devCard1, c);
-
-            devCard2 = new JToggleButton();
-            devCard2.setBackground(new Color(231, 210, 181));
-            c = new GridBagConstraints();
-            c.gridx = 3;
-            c.gridy = 4;
-            c.weightx = 0.5;
-            c.weighty = 0.4;
-            this.add(devCard2, c);
-
-            devCard3 = new JToggleButton();
-            devCard3.setBackground(new Color(231, 210, 181));
-            c = new GridBagConstraints();
-            c.gridx = 4;
-            c.gridy = 4;
-            c.weightx = 0.5;
-            c.weighty = 0.4;
-            this.add(devCard3, c);
         }
+
+
 
         public void update() {
             DevelopmentCard[] topCards = Ark.myPlayerRef.getDevelopmentSlot().getTopCards();
             LeaderCard[] leaderCards = Ark.myPlayerRef.getLeaderCards();
 
-            if(!leaderCards[0].isEnabled() || !leaderCards[1].getSpecialAbility().isProduction()) {
-                leaderCard1.setEnabled(false);
-            }
-            if(!leaderCards[1].isEnabled() || !leaderCards[2].getSpecialAbility().isProduction()) {
-                leaderCard2.setEnabled(false);
+
+            for(int i=0; i<2; i++) {
+                if(leaderCards[i] == null)
+                    this.leaderCardButton[i].setEnabled(false);
+                else if(!leaderCards[i].isEnabled() || !leaderCards[i].getSpecialAbility().isProduction())
+                    this.leaderCardButton[i].setEnabled(false);
             }
 
-            for(int i = 0; i < 3; i++) {
-                if(i == 0 && topCards[i] == null) {
-                    ImageIcon dCard1 = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 200);
-                    devCard1.setIcon(dCard1);
-                    devCard1.setEnabled(false);
-                } else if (i == 0 && topCards[i] != null) {
-                    ImageIcon dCard1 = scaleImage(new ImageIcon(topCards[i].getFrontPath()), 200);
-                    devCard1.setIcon(dCard1);
+
+            for(int i=0; i<3; i++) {
+                if(topCards[i] == null) {
+                    this.devCardButton[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 235));
+                    this.devCardButton[i].setEnabled(false);
                 }
-                if(i == 1 && topCards[i] == null) {
-                    ImageIcon dCard2 = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 200);
-                    devCard2.setIcon(dCard2);
-                    devCard2.setEnabled(false);
-                } else if (i == 1 && topCards[i] != null){
-                    ImageIcon dCard2 = scaleImage(new ImageIcon(topCards[i].getFrontPath()), 200);
-                    devCard2.setIcon(dCard2);
-                }
-                if(i == 2 && topCards[i] == null) {
-                    ImageIcon dCard3 = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 200);
-                    devCard3.setIcon(dCard3);
-                    devCard3.setEnabled(false);
-                } else if (i == 2 && topCards[i] != null){
-                    ImageIcon dCard3 = scaleImage(new ImageIcon(topCards[i].getFrontPath()), 200);
-                    devCard3.setIcon(dCard3);
+                else
+                {
+                    this.devCardButton[i].setIcon(scaleImage(new ImageIcon(topCards[i].getFrontPath()), 235));
+                    this.devCardButton[i].setEnabled(true);
                 }
             }
         }
