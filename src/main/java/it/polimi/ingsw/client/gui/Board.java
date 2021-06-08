@@ -103,6 +103,8 @@ public class Board implements Runnable {
     JButton discard_LeaderCard_Button, buy_DevCard_Button, activate_Production_Button;
     PlayersRecapPanel playersRecapPanel; //<- updatable after any other players gets a resource update with a single update()
     JButton endTurn_Button;
+    //TOP PANEL
+    TopPanel topPanel;
 
 
     //ACTION LISTENERS
@@ -320,6 +322,8 @@ public class Board implements Runnable {
                 new ExtraDepot(Resource.SHIELD)
                 , "resources/cardsFront/LFRONT (6).png", "resource/cardsBack/BACK (1).png"));
         A.associateLeaderCards(list);
+        A.setFaithTrackPanels(1);
+        A.setFaithTrackPanels(0);
 
         B.getLeaderCards()[0].setEnabled(true);
         A.getLeaderCards()[0].setEnabled(true);
@@ -533,7 +537,8 @@ public class Board implements Runnable {
                 c.gridy = 0;
                 c.gridwidth = 2;
                 c.gridheight = 1;
-                this.add(new TopPanel(), c);
+                topPanel = new TopPanel();
+                this.add(topPanel, c);
 
                 c = new GridBagConstraints();
                 c.gridx = 0;
@@ -579,6 +584,7 @@ public class Board implements Runnable {
                 marketHelper_panel.update();
                 vendor_panel.update();
                 productionSelection_panel.update();
+                topPanel.update();
             }
 
             lastRightCard = Ark.nickname;
@@ -1240,9 +1246,17 @@ public class Board implements Runnable {
 
     //TOP PANEL
     class TopPanel extends JPanel {
+
         private Image image;
 
+        private final CellPanel[] positions;
+        private final ZonePanel[] zones;
+
         public TopPanel() {
+
+            this.positions = new CellPanel[25];
+            this.zones = new ZonePanel[3];
+
             GridBagConstraints c;
             try {
                 image = ImageIO.read(new File("resources/images/upper_board.png"));
@@ -1250,15 +1264,493 @@ public class Board implements Runnable {
             }
             this.setLayout(new GridBagLayout());
 
-            addPadding(this, 239, 1221, 2, 2);
+            addPadding(this, 239, 1221, 4, 4);
 
+            c = new GridBagConstraints(); //left padding
+            c.weightx = 0;
+            c.weighty = 0;
+            c.gridx = 1;
+            c.gridy = 2;
+            this.add(Box.createHorizontalStrut(40), c);
+
+            c = new GridBagConstraints(); //right padding
+            c.weightx = 0;
+            c.weighty = 0;
+            c.gridx = 3;
+            c.gridy = 2;
+            this.add(Box.createHorizontalStrut(36), c);
+
+            c = new GridBagConstraints(); //top padding
+            c.weightx = 0;
+            c.weighty = 0;
+            c.gridx = 2;
+            c.gridy = 1;
+            this.add(Box.createVerticalStrut(32), c);
+
+            c = new GridBagConstraints(); //bottom padding
+            c.weightx = 1;
+            c.weighty = 0;
+            c.gridx = 2;
+            c.gridy = 3;
+            this.add(Box.createVerticalStrut(25), c);
+
+
+            JPanel internalPane = new JPanel();
+            internalPane.setLayout(new GridBagLayout());
+            internalPane.setOpaque(false);
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.fill = GridBagConstraints.BOTH;
+            c.weighty = 0.5;
+            c.weightx = 0.5;
+            this.add(internalPane, c);
+
+
+            CellPanel cellPanel;
+            ZonePanel zonePanel;
+
+            for (int row = 0; row <= 2; row++) {
+                for (int col = 0; col <= 3; col++) {
+
+                    if (isUseful(row, col)) {
+                        cellPanel = new CellPanel(true);
+
+                        this.positions[pos(row, col)] = cellPanel;
+                    } else
+                        cellPanel = new CellPanel(false);
+
+                    c = new GridBagConstraints();
+                    c.gridx = col;
+                    c.gridy = row;
+                    c.weightx = 0.3;
+                    c.weighty = 0.3;
+                    c.insets = new Insets(2, 2, 2, 2);
+                    internalPane.add(cellPanel, c);
+                }
+            }
+
+            for (int col = 4; col <= 5; col++) {
+                cellPanel = new CellPanel(true);
+                this.positions[pos(0, col)] = cellPanel;
+                c = new GridBagConstraints();
+                c.gridx = col;
+                c.gridy = 0;
+                c.weightx = 0.3;
+                c.weighty = 0.3;
+                c.insets = new Insets(2, 2, 2, 2);
+                internalPane.add(cellPanel, c);
+            }
+
+            zonePanel = new ZonePanel();
+            this.zones[0] = zonePanel;
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 1;
+            c.weightx = 0.3;
+            c.weighty = 0.3;
+            c.gridwidth = 2;
+            c.gridheight = 2;
+            c.insets = new Insets(2, 2, 2, 2);
+            internalPane.add(zonePanel, c);
+
+            for (int row = 0; row <= 2; row++) {
+                for (int col = 6; col <= 8; col++) {
+
+                    if (isUseful(row, col)) {
+                        cellPanel = new CellPanel(true);
+                        this.positions[pos(row, col)] = cellPanel;
+                    } else
+                        cellPanel = new CellPanel(false);
+
+                    c = new GridBagConstraints();
+                    c.gridx = col;
+                    c.gridy = row;
+                    c.weightx = 0.3;
+                    c.weighty = 0.3;
+                    c.insets = new Insets(2, 2, 2, 2);
+                    internalPane.add(cellPanel, c);
+                }
+            }
+
+            for (int col = 9; col <= 10; col++) {
+                cellPanel = new CellPanel(true);
+                this.positions[pos(2, col)] = cellPanel;
+                c = new GridBagConstraints();
+                c.gridx = col;
+                c.gridy = 2;
+                c.weightx = 0.3;
+                c.weighty = 0.3;
+                c.insets = new Insets(2, 2, 2, 2);
+                internalPane.add(cellPanel, c);
+            }
+
+            zonePanel = new ZonePanel();
+            this.zones[1] = zonePanel;
+            c = new GridBagConstraints();
+            c.gridx = 9;
+            c.gridy = 0;
+            c.weightx = 0.3;
+            c.weighty = 0.3;
+            c.gridwidth = 2;
+            c.gridheight = 2;
+            c.insets = new Insets(2, 2, 2, 2);
+            internalPane.add(zonePanel, c);
+
+            for (int row = 0; row <= 2; row++) {
+                for (int col = 11; col <= 14; col++) {
+
+                    if (isUseful(row, col)) {
+                        cellPanel = new CellPanel(true);
+                        this.positions[pos(row, col)] = cellPanel;
+                    } else
+                        cellPanel = new CellPanel(false);
+
+                    c = new GridBagConstraints();
+                    c.gridx = col;
+                    c.gridy = row;
+                    c.weightx = 0.3;
+                    c.weighty = 0.3;
+                    c.insets = new Insets(2, 2, 2, 2);
+                    internalPane.add(cellPanel, c);
+                }
+            }
+
+            for (int col = 15; col <= 16; col++) {
+                cellPanel = new CellPanel(true);
+                this.positions[pos(0, col)] = cellPanel;
+                c = new GridBagConstraints();
+                c.gridx = col;
+                c.gridy = 0;
+                c.weightx = 0.3;
+                c.weighty = 0.3;
+                c.insets = new Insets(2, 2, 2, 2);
+                internalPane.add(cellPanel, c);
+            }
+
+            zonePanel = new ZonePanel();
+            this.zones[2] = zonePanel;
+            c = new GridBagConstraints();
+            c.gridx = 15;
+            c.gridy = 1;
+            c.weightx = 0.3;
+            c.weighty = 0.3;
+            c.gridwidth = 2;
+            c.gridheight = 2;
+            c.insets = new Insets(2, 2, 2, 2);
+            internalPane.add(zonePanel, c);
+
+            for (int row = 0; row <= 2; row++) {
+                for (int col = 17; col <= 18; col++) {
+
+                    if (isUseful(row, col)) {
+                        cellPanel = new CellPanel(true);
+                        this.positions[pos(row, col)] = cellPanel;
+                    } else
+                        cellPanel = new CellPanel(false);
+
+                    c = new GridBagConstraints();
+                    c.gridx = col;
+                    c.gridy = row;
+                    c.weightx = 0.3;
+                    c.weighty = 0.3;
+                    c.insets = new Insets(2, 2, 2, 2);
+                    internalPane.add(cellPanel, c);
+                }
+            }
+        }
+
+
+        class ZonePanel extends JPanel {
+
+            static final int boxSize = 112;
+            private final JLabel label;
+
+            public ZonePanel() {
+                GridBagConstraints c;
+                this.setLayout(new GridBagLayout());
+                this.setOpaque(false);
+
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 0;
+                c.weightx = 0;
+                c.weighty = 0;
+                this.add(Box.createHorizontalStrut(boxSize),c);
+
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weightx = 0;
+                c.weighty = 0;
+                this.add(Box.createVerticalStrut(boxSize),c);
+
+                this.label = new JLabel();
+                this.label.setHorizontalAlignment(SwingConstants.CENTER);
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 1;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                c.fill = GridBagConstraints.BOTH;
+                this.add(this.label,c);
+            }
+
+            public void setIcon(Icon icon)
+            {
+                this.label.setIcon(icon);
+            }
+        }
+
+        class CellPanel extends JPanel {
+
+            static final int boxSize = 54;
+            private final JLabel label;
+            boolean isEmpty;
+
+            public CellPanel(boolean useful) {
+                this.isEmpty = true;
+                GridBagConstraints c;
+                this.setLayout(new GridBagLayout());
+                this.setOpaque(false);
+
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 0;
+                c.weightx = 0;
+                c.weighty = 0;
+                this.add(Box.createHorizontalStrut(boxSize),c);
+
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weightx = 0;
+                c.weighty = 0;
+                this.add(Box.createVerticalStrut(boxSize),c);
+
+                if (useful) {
+                    this.label = new JLabel();
+                    this.label.setHorizontalAlignment(SwingConstants.CENTER);
+                    c = new GridBagConstraints();
+                    c.gridx = 1;
+                    c.gridy = 1;
+                    c.weightx = 0.5;
+                    c.weighty = 0.5;
+                    c.fill = GridBagConstraints.BOTH;
+                    this.add(this.label,c);
+                }
+                else
+                    this.label = null;
+
+            }
+
+            public void setIcon(Icon icon)
+            {
+                this.label.setIcon(icon);
+            }
+        }
+
+        public void update() {
+            boolean[] flippedZones = Ark.myPlayerRef.getFaithTrackPanels();
+            if(flippedZones[0])
+                this.zones[0].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor1_front.png"),85));
+            else
+                this.zones[0].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor1_back.png"),85));
+            if(flippedZones[1])
+                this.zones[1].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor2_front.png"),85));
+            else
+                this.zones[1].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor2_back.png"),85));
+            if(flippedZones[2])
+                this.zones[2].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor3_front.png"),85));
+            else
+                this.zones[2].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor3_back.png"),85));
+
+            int[] positionMap = new int[4];
+            int numOfPlayers = Ark.game.getPlayerSimplifiedList().size();
+            for(int i=0; i<4;i++)
+            {
+                if(i>=numOfPlayers)
+                    positionMap[i] = -1;
+                else
+                    positionMap[i] = Ark.game.getPlayer(i+1).getPosition();
+            }
+
+            //empties the currently populated track
+            for(int i=0; i<=24;i++) {
+                if (!this.positions[i].isEmpty) {
+                    this.positions[i].setIcon(null);
+                    this.positions[i].isEmpty = true;
+                }
+            }
+
+            for(int i=0; i<numOfPlayers; i++) {
+                if(!this.positions[positionMap[i]].isEmpty) continue;
+                this.positions[positionMap[i]].setIcon(getNewIcon(i, positionMap));
+                this.positions[positionMap[i]].isEmpty = false;
+            }
+
+            if(Ark.solo) {
+                if(this.positions[Ark.game.getBlackCrossPosition()].isEmpty)
+                    this.positions[Ark.game.getBlackCrossPosition()].setIcon(scaleImage(new ImageIcon("resources/FaithTrackIcons/L.png"), 40));
+            }
 
         }
+
+
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.drawImage(image, 0, 0, this);
+        }
+
+        public ImageIcon getNewIcon(int selectedPosition, int[] intmap)
+        {
+            String output = "";
+
+            if(Ark.solo) {
+                if(intmap[0] == Ark.game.getBlackCrossPosition()) {
+                    output = "resources/FaithTrackIcons/PL.png"; //Lorenzo and player sharing the same cell
+                }
+                else
+                    output = "resources/FaithTrackIcons/P.png"; //player not sharing the same position as Lorenzo
+                return scaleImage(new ImageIcon(output), 40);
+            }
+
+             boolean[] p = new boolean[4];
+             p[selectedPosition] = true;
+             for(int i=0; i<4; i++) {
+                 if (intmap[i] == -1) break;
+                 if (intmap[i] == intmap[selectedPosition]) p[i] = true;
+             }
+
+             if(      p[0] && !p[1] && !p[2] && !p[3])      // 1
+                 output = "resources/FaithTrackIcons/1.png";
+             else if(!p[0] &&  p[1] && !p[2] && !p[3])      //2
+                 output = "resources/FaithTrackIcons/2.png";
+             else if(!p[0] && !p[1] &&  p[2] && !p[3])      // 3
+                 output = "resources/FaithTrackIcons/3.png";
+             else if(!p[0] && !p[1] && !p[2] &&  p[3])      // 4
+                 output = "resources/FaithTrackIcons/4.png";
+             else if( p[0] &&  p[1] && !p[2] && !p[3])      // 12
+                 output = "resources/FaithTrackIcons/12.png";
+             else if( p[0] && !p[1] &&  p[2] && !p[3])      // 13
+                 output = "resources/FaithTrackIcons/13.png";
+             else if( p[0] && !p[1] && !p[2] &&  p[3])      // 14
+                 output = "resources/FaithTrackIcons/14.png";
+             else if(!p[0] &&  p[1] &&  p[2] && !p[3])      // 23
+                 output = "resources/FaithTrackIcons/23.png";
+             else if(!p[0] &&  p[1] && !p[2] &&  p[3])      // 24
+                 output = "resources/FaithTrackIcons/24.png";
+             else if(!p[0] && !p[1] &&  p[2] &&  p[3])      // 34
+                 output = "resources/FaithTrackIcons/34.png";
+             else if( p[0] &&  p[1] &&  p[2] && !p[3])       // 123
+                 output = "resources/FaithTrackIcons/123.png";
+             else if( p[0] &&  p[1] && !p[2] &&  p[3])      // 124
+                 output = "resources/FaithTrackIcons/124.png";
+             else if( p[0] && !p[1] &&  p[2] &&  p[3])      // 134
+                 output = "resources/FaithTrackIcons/134.png";
+             else if(!p[0] &&  p[1] &&  p[2] &&  p[3])       // 234
+                 output = "resources/FaithTrackIcons/234.png";
+             else if( p[0] &&  p[1] &&  p[2] &&  p[3])      // 1234
+                 output = "resources/FaithTrackIcons/1234.png";
+
+
+            return scaleImage(new ImageIcon(output), 40);
+        }
+
+        public boolean isUseful(int row, int col) {
+            switch (row) {
+                case 0:
+                    switch (col) {
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 12:
+                        case 13:
+                        case 14:
+                        case 15:
+                        case 16:
+                        case 17:
+                        case 18:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case 1:
+                    switch (col) {
+                        case 2:
+                        case 7:
+                        case 12:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case 2:
+                    switch (col) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                        case 11:
+                        case 12:
+                            return true;
+                        default:
+                            return false;
+                    }
+                default:
+                    return false;
+            }
+        }
+
+        public int pos(int row, int col ) {
+            switch (row) {
+                case 0:
+                    switch (col) {
+                        case 2:  return 4;
+                        case 3:  return 5;
+                        case 4:  return 6;
+                        case 5:  return 7;
+                        case 6:  return 8;
+                        case 7:  return 9;
+                        case 12: return 18;
+                        case 13: return 19;
+                        case 14: return 20;
+                        case 15: return 21;
+                        case 16: return 22;
+                        case 17: return 23;
+                        case 18: return 24;
+                        default: return -1;
+                    }
+                case 1:
+                    switch (col) {
+                        case 2:  return 3;
+                        case 7:  return 10;
+                        case 12: return 17;
+                        default: return -1;
+                    }
+                case 2:
+                    switch (col) {
+                        case 0:  return 0;
+                        case 1:  return 1;
+                        case 2:  return 2;
+                        case 7:  return 11;
+                        case 8:  return 12;
+                        case 9:  return 13;
+                        case 10: return 14;
+                        case 11: return 15;
+                        case 12: return 16;
+                        default: return -1;
+                    }
+                default:
+                    return -1;
+            }
         }
     }
 
