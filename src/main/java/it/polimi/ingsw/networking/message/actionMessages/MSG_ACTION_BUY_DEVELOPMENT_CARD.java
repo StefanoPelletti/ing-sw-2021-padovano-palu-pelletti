@@ -2,6 +2,7 @@ package it.polimi.ingsw.networking.message.actionMessages;
 
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.controller.ActionManager;
+import it.polimi.ingsw.server.model.middles.MessageHelper;
 
 import java.io.Serializable;
 
@@ -18,5 +19,10 @@ public class MSG_ACTION_BUY_DEVELOPMENT_CARD extends ActionMessage implements Se
     @Override
     public boolean execute(ActionManager actionManager) {
         return actionManager.buyDevelopmentCard(actionManager.getGame().getCurrentPlayer());
+    }
+
+    @Override
+    public String notifyAction(String nickname, MessageHelper messageHelper) {
+        return messageHelper.action_buyDevelopmentCard(nickname, this);
     }
 }

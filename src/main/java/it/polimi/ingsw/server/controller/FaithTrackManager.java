@@ -31,7 +31,7 @@ public class FaithTrackManager {
      *
      * @param p The reference to the player.
      * @return The return value of advance() method.
-     * @see #advance(Player, boolean) for better understanding.
+     * @see #advance(Player, boolean)  the directly called method
      */
     public boolean advance(Player p) {
         return advance(p, false);
@@ -41,7 +41,7 @@ public class FaithTrackManager {
      * Advances Lorenzo on the FaithTrack.
      *
      * @return The return value of advance() method.
-     * @see #advance(Player, boolean) for better understanding.
+     * @see #advance(Player, boolean) the directly called method
      */
     public boolean advanceLorenzo() {
         return advance(null, true);
@@ -56,7 +56,7 @@ public class FaithTrackManager {
      * @return True if the operation terminated correctly, False if: <ul>
      * <li> lorenzo is false and (the player reference is null or the player does not exist in this game)
      * <li> the referenced player/Lorenzo position returns an error value (-1).
-     * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
+     * @see it.polimi.ingsw.server.model.FaithTrack the FaithTrack
      */
     public boolean advance(Player player, boolean lorenzo) {
         Player p;
@@ -84,14 +84,14 @@ public class FaithTrackManager {
                         message.append("Lorenzo has activated the first zone! ");
                     else
                         message = new StringBuilder("Lorenzo has activated the second zone! ");
-                    message.append("\n FaithTrack Panels have been flipped: ");
+                    message.append("\n FaithTrack Panels have been flipped ");
                     faithTrack.advanceLorenzo();
                 } else {
                     if (result == 1)
                         message.append(player.getNickname()).append(" has activated the first zone! ");
                     else
                         message.append(player.getNickname()).append(" has activated the second zone! ");
-                    message.append("\n FaithTrack Panels have been flipped: ");
+                    message.append("\n FaithTrack Panels have been flipped ");
                     faithTrack.advance(player);
                 }
                 message.append(returnFlippedZones(players, result-1));
@@ -100,7 +100,7 @@ public class FaithTrackManager {
             case 3:
                 if (lorenzo) {
                     message = new StringBuilder("Lorenzo has activated the last zone! ");
-                    message.append("\n FaithTrack Panels have been flipped, but Gameover!: ");
+                    message.append("\n FaithTrack Panels have been flipped, but Gameover! ");
                     faithTrack.advanceLorenzo();
                     gameManager.setStatus(Status.GAME_OVER);
                     if (gameManager.getSoloWinner() == null)
@@ -109,9 +109,9 @@ public class FaithTrackManager {
                 } else {
                     message.append(player.getNickname()).append(" has activated the third zone! ");
                     if (!gameManager.getSolo())
-                        message.append("\n FaithTrack Panels have been flipped: ");
+                        message.append("\n FaithTrack Panels have been flipped ");
                     else
-                        message.append("\n It's Game Over. end the turn to finish him!").append("\n FaithTrack Panels have been flipped: ");
+                        message.append("\n It's Game Over. end the turn to finish him!").append("\n FaithTrack Panels have been flipped ");
                     faithTrack.advance(player);
                     if (gameManager.getSolo()) {
                         gameManager.setStatus(Status.GAME_OVER);

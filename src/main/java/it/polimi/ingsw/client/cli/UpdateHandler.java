@@ -55,7 +55,7 @@ public class UpdateHandler implements Runnable, ModelObserver {
                 message = (UpdateMessage) Halo.objectInputStream.readObject();
                 message.executeCLI(this);
             } catch (IOException | ClassNotFoundException | ClassCastException e) {
-                System.out.println(A.RED + "<> Connection to server was lost " + A.RESET);
+                System.out.println("\n" + A.RED + "<> Connection to server was lost " + A.RESET);
                 return;
             } catch (IllegalArgumentException e) {
                 return;

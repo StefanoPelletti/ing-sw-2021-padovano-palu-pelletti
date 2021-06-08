@@ -30,9 +30,14 @@ public class BlueMarble implements MarketMarble, Serializable {
      *
      * @return A Colored String representing this Marble.
      */
+    public String toStringColored() {
+        return "" + A.BLUE + color + A.RESET + " Marble  ";
+    }
+
+
     @Override
     public String toString() {
-        return "" + A.BLUE + color + A.RESET + " Marble  ";
+        return "" + color + " Marble";
     }
 
     /**

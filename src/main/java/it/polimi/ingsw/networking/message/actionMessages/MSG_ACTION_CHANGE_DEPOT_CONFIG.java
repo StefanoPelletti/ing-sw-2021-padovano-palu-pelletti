@@ -3,6 +3,7 @@ package it.polimi.ingsw.networking.message.actionMessages;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.controller.ActionManager;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.model.middles.MessageHelper;
 
 import java.io.Serializable;
 
@@ -79,5 +80,10 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends ActionMessage implements Ser
     @Override
     public boolean execute(ActionManager actionManager) {
         return actionManager.changeDepotConfig(actionManager.getGame().getCurrentPlayer(), this);
+    }
+
+    @Override
+    public String notifyAction(String nickname, MessageHelper messageHelper) {
+        return messageHelper.action_changeDepotConfig(nickname, this);
     }
 }

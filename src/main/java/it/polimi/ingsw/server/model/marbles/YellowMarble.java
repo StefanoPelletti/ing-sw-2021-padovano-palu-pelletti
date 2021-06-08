@@ -25,9 +25,18 @@ public class YellowMarble implements MarketMarble, Serializable {
         resourceList.add(Resource.COIN);
     }
 
+    /**
+     * Returns the Color of this Marble, colored in a proper manner.
+     *
+     * @return A Colored String representing this Marble.
+     */
+    public String toStringColored() {
+        return "" + A.YELLOW + color + A.RESET + " Marble  ";
+    }
+
     @Override
     public String toString() {
-        return "" + A.YELLOW + color + A.RESET + " Marble  ";
+        return "" + color + " Marble";
     }
 
     /**

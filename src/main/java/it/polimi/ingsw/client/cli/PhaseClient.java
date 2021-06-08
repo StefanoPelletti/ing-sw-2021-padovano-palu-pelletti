@@ -315,6 +315,8 @@ class Halo {
         result.append(A.GREEN + " > Showing players as 'name - number'" + A.RESET);
         for (PlayerSimplified p : Halo.game.getPlayerSimplifiedList())
             result.append("\n").append("  ").append(p.getNickname()).append(" - ").append(p.getPlayerNumber());
+        if(solo)
+            result.append("\n  Lorenzo - 2");
         return result.toString();
     }
 

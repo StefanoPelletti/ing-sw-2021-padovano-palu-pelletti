@@ -35,8 +35,7 @@ public enum Resource implements Serializable {
      *
      * @return A Colored String.
      */
-    @Override
-    public String toString() {
+    public String toStringColored() {
         switch (this) {
             case SHIELD:
                 return A.BLUE + "SHIELD" + A.RESET;

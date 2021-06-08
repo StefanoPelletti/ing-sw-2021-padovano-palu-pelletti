@@ -11,7 +11,7 @@ import java.net.Socket;
 enum Phase {GIVE_MODEL, DISCONNECTED, GAME_OVER, TIME_OUT, LISTEN_CLIENT}
 
 public class ClientHandler implements Runnable, ModelObserver {
-    // Random random = new Random();
+    // Random random = new Random(); //TODO
 
     private final Object outputLock;
     private final Object pendingLock;

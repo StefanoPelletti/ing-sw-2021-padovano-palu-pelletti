@@ -91,8 +91,8 @@ public class WarehouseDepotSimplified {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("               WAREHOUSE DEPOT:").append("\n");
         result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append("               WAREHOUSE DEPOT:").append("\n");
         result.append(A.CYAN + "  Shelf 1:  " + A.RESET).append(shelf1).append("\n");
         result.append(A.CYAN + "  Shelf 2:  " + A.RESET).append(shelf2[0]).append(" - ").append(shelf2[1]).append("\n");
         result.append(A.CYAN + "  Shelf 3:  " + A.RESET).append(shelf3[0]).append(" - ").append(shelf3[1]).append(" - ").append(shelf3[2]).append("\n");

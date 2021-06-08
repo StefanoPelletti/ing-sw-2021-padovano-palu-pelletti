@@ -34,8 +34,9 @@ public class FaithTrackSimplified {
         StringBuilder result = new StringBuilder();
         List<PlayerSimplified> playerListSimplified;
 
-        result.append("                  FAITH TRACK: ").append("\n");
         result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append("                  FAITH TRACK: ").append("\n");
+
         playerListSimplified = game.getPlayerList();
         for (PlayerSimplified player : playerListSimplified) {
             result.append("   ").append(player.getNickname()).append(" is at position: ").append(player.getPosition()).append("\n");
@@ -43,7 +44,7 @@ public class FaithTrackSimplified {
 
 
         if (solo)
-            result.append("\n").append(" Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
+            result.append("\n").append("   Lorenzo is at position: ").append(game.getBlackCrossPosition()).append("\n");
 
 
         result.append("\n");

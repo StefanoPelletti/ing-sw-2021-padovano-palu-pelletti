@@ -23,6 +23,8 @@ public interface MarketMarble extends Serializable {
 
     String toString();
 
+    String toStringColored();
+
     /**
      * Returns an abbreviation of the selected MarketMarble.
      * Usually is a String made out of the initial character of its Color.

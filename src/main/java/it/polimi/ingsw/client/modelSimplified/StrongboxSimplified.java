@@ -23,13 +23,13 @@ public class StrongboxSimplified {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("      STRONGBOX").append("\n");
         result.append("\n").append(A.CYAN + "=====X=====X=====X=====X=====X=====X=====X=====" + A.RESET).append("\n");
+        result.append("               STRONGBOX").append("\n");
         if (resources.isEmpty()) {
-            result.append(" The Strongbox is empty. ").append("\n");
+            result.append("      The Strongbox is empty. ").append("\n");
         } else {
             for (Resource r : resources.keySet()) {
-                result.append(resources.get(r)).append(" of ").append(r.toString());
+                result.append("      " + resources.get(r)).append(" of ").append(r.toStringColored());
                 result.append("\n");
             }
         }

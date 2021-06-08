@@ -20,10 +20,10 @@ public class MSG_UPD_Player extends UpdateMessage implements Serializable {
      * It contains the internal status of the Player identified by his nickname or playerNumber.
      *
      * @param faithTrackPanels The faithTrack panels flipped.
-     * @param playerNumber The number of the player.
-     * @param nickname     The name of the player.
-     * @param position     The player position on the FaithTrack.
-     * @param leaderCards  A 2-cell array containing his Leader Card (or null if there's none).
+     * @param playerNumber     The number of the player.
+     * @param nickname         The name of the player.
+     * @param position         The player position on the FaithTrack.
+     * @param leaderCards      A 2-cell array containing his Leader Card (or null if there's none).
      */
     public MSG_UPD_Player(boolean[] faithTrackPanels, int playerNumber, String nickname, int position, LeaderCard[] leaderCards) {
         super(MessageType.MSG_UPD_Player);
