@@ -15,7 +15,7 @@ public class Player extends ModelObservable {
     private final WarehouseDepot warehouseDepot;
     private final LeaderCard[] leaderCards;
     private final DevelopmentSlot developmentSlot;
-    private int vp;
+    private final boolean[] faithTrackPanels;
     private int position;   //used for FaithTrack tracking
     private int playerNumber;
     private boolean permittedAction;
@@ -34,7 +34,7 @@ public class Player extends ModelObservable {
      */
     public Player(String nickname, int playerNumber) {
         this.nickname = nickname;
-        this.vp = 0;
+        this.faithTrackPanels = new boolean[3];
         this.position = 0;
         this.playerNumber = playerNumber;
         this.leaderCards = new LeaderCard[2];
@@ -59,6 +59,11 @@ public class Player extends ModelObservable {
         this.startingCards = startingCards;
     }
 
+    /**
+     * Returns an integer that tells how many starting resources the players is entitled to get.
+     *
+     * @return an integer that tells how many starting resources are left
+     */
     public int getStartingResources() {
         return this.startingResources;
     }
@@ -90,23 +95,23 @@ public class Player extends ModelObservable {
         return nickname;
     }
 
-    public int getVp() {
-        return vp;
+    public boolean[] getFaithTrackPanels() {
+        boolean[] result = new boolean[3];
+        System.arraycopy(this.faithTrackPanels, 0, result, 0, 3);
+        return result;
     }
 
-    public boolean setVP(int vp) {
-        if (vp < 0) return false;
-        this.vp = vp;
+    /**
+     * Sets the corresponding faithTrackPanel position to True.
+     * Positions starts at 0.
+     *
+     * @param position the position, starting at 0, of the faithTrack panel to flip
+     */
+    public void setFaithTrackPanels(int position) {
+        this.faithTrackPanels[position] = true;
         notifyObservers();
-        return true;
     }
 
-    public boolean addVP(int vp) {
-        if (vp < 0) return false;
-        this.vp = this.vp + vp;
-        notifyObservers();
-        return true;
-    }
 
     /**
      * Reminds that the Player has performed a main move and cannot do anymore.
@@ -322,7 +327,7 @@ public class Player extends ModelObservable {
         if (obj == this) return true;
         if (!(obj instanceof Player)) return false;
         Player o = (Player) obj;
-        return (this.nickname.equals(o.nickname) && this.playerNumber == o.playerNumber);
+        return (this.nickname.equals(o.nickname) && (this.playerNumber == o.playerNumber));
     }
 
     @Override
@@ -351,7 +356,7 @@ public class Player extends ModelObservable {
      */
     public MSG_UPD_Player generateMessage() {
         return new MSG_UPD_Player(
-                vp,
+                faithTrackPanels,
                 playerNumber,
                 nickname,
                 position,

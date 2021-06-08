@@ -18,7 +18,7 @@ public class PlayerSimplified {
     private final StrongboxSimplified strongbox;
     private final WarehouseDepotSimplified warehouseDepot;
     private final DevelopmentSlotSimplified developmentSlot;
-    private int vp;
+    private final boolean[] faithTrackPanels;
     private int playerNumber;
     private String nickname;
     private int position;
@@ -26,7 +26,7 @@ public class PlayerSimplified {
 
 
     public PlayerSimplified(int playerNumber) {
-        this.vp = 0;
+        this.faithTrackPanels = new boolean[3];
         this.playerNumber = playerNumber;
         this.nickname = "";
         this.position = 0;
@@ -37,13 +37,13 @@ public class PlayerSimplified {
     }
 
     public void update(MSG_UPD_Player message) {
-        int newVP = message.getVp();
+        boolean[] newFaithTrackPanels = message.getFaithTrackPanels();
         int newPlayerNumber = message.getPlayerNumber();
         String newNickname = message.getNickname();
         int newPosition = message.getPosition();
         LeaderCard[] newLeaderCards = message.getLeaderCards();
 
-        this.vp = newVP;
+        System.arraycopy(newFaithTrackPanels, 0, this.faithTrackPanels, 0, 3);
         this.playerNumber = newPlayerNumber;
         this.nickname = newNickname;
         this.position = newPosition;
@@ -90,9 +90,7 @@ public class PlayerSimplified {
         return this.playerNumber;
     }
 
-    public int getVp() {
-        return vp;
-    }
+    public boolean[] getFaithTrackPanels() { return this.faithTrackPanels; }
 
     public Map<Resource, Integer> getResources() {
         Map<Resource, Integer> resources = this.warehouseDepot.getResources();

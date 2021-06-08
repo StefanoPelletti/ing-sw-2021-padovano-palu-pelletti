@@ -235,7 +235,6 @@ class Halo {
         System.out.println("          :>  'devslot' ");
         System.out.println("          :>  'devdeck' ");
         System.out.println("          :>  'faithtrack' ");
-        System.out.println("          :>  'myvp' ");
         System.out.println("          :>  'turn' ");
         System.out.println("=> " + A.CYAN + "show" + A.PURPLE + " <nickname> <something>" + A.RESET + "     : shows one of the other players' assets.\n" +
                 "                                     Specify the nickname of the player.        ");
@@ -243,7 +242,6 @@ class Halo {
                 "                                     Specify the player's number. ");
         System.out.println(A.PURPLE + "num" + A.RESET + "       :>  1, .. , maxLobbySize ");
         System.out.println(A.PURPLE + "something" + A.RESET + " :>  'leaderCards'");
-        System.out.println("          :>  'vp'");
         System.out.println("          :>  'depot'");
         System.out.println("          :>  'strongbox'");
         System.out.println("          :>  'devslot'");
@@ -306,14 +304,6 @@ class Halo {
         return myPlayerRef.getDevelopmentSlot().toString();
     }
 
-    /**
-     * Differentiates automatically between Local Mode and Online Mode.
-     *
-     * @return The user's current victory points as a String.
-     */
-    public static String printMyVP() {
-        return " My VP : " + myPlayerRef.getVp();
-    }
 
     /**
      * Differentiates automatically between Local Mode and Online Mode.
@@ -403,9 +393,6 @@ class Halo {
                 break;
             case "faithtrack":
                 System.out.println(Halo.printFaithTrack());
-                break;
-            case "myvp":
-                System.out.println(Halo.printMyVP());
                 break;
             case "turn":
                 System.out.println(Halo.printCurrentTurn());
@@ -498,9 +485,9 @@ class Halo {
      * <li> (globally) the 'item' word does not match the permitted ones
      */
     public static boolean checkShowCommand(List<String> textList) {
-        String[] allowedKeySoloArr = {"players", "market", "depot", "strongbox", "devslot", "devdeck", "faithtrack", "myvp", "leadercards", "turn"};
+        String[] allowedKeySoloArr = {"players", "market", "depot", "strongbox", "devslot", "devdeck", "faithtrack", "leadercards", "turn"};
         List<String> allowedKeySolo = new ArrayList<String>(Arrays.asList(allowedKeySoloArr));
-        String[] allowedKeyArr = {"depot", "strongbox", "devslot", "vp", "leadercards"};
+        String[] allowedKeyArr = {"depot", "strongbox", "devslot", "leadercards"};
         List<String> allowedKey = new ArrayList<String>(Arrays.asList(allowedKeyArr));
 
         if (local) {
@@ -1653,9 +1640,6 @@ class Halo {
      */
     private static void showPlayerAsset(String key, PlayerSimplified player) {
         switch (key.toLowerCase()) {
-            case "vp":
-                System.out.println(" His/her VP : " + player.getVp());
-                break;
             case "leadercards":
                 LeaderCard[] cards = player.getLeaderCards();
                 if (cards[0] != null) {

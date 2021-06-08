@@ -77,30 +77,30 @@ public class FaithTrackManager {
         }
 
         switch (result) {
-            case 1:
-            case 2:
+            case 1: //first zone being activated
+            case 2: //second zone being activated
                 if (lorenzo) {
                     if (result == 1)
                         message.append("Lorenzo has activated the first zone! ");
                     else
                         message = new StringBuilder("Lorenzo has activated the second zone! ");
-                    message.append("\n Points have been awarded: ");
+                    message.append("\n FaithTrack Panels have been flipped: ");
                     faithTrack.advanceLorenzo();
                 } else {
                     if (result == 1)
                         message.append(player.getNickname()).append(" has activated the first zone! ");
                     else
                         message.append(player.getNickname()).append(" has activated the second zone! ");
-                    message.append("\n Points have been awarded: ");
+                    message.append("\n FaithTrack Panels have been flipped: ");
                     faithTrack.advance(player);
                 }
-                message.append(returnAddedPoints(players));
+                message.append(returnFlippedZones(players, result-1));
                 faithTrack.setZones(result - 1, true);
                 break;
             case 3:
                 if (lorenzo) {
                     message = new StringBuilder("Lorenzo has activated the last zone! ");
-                    message.append("\n Points have been awarded, but Gameover!: ");
+                    message.append("\n FaithTrack Panels have been flipped, but Gameover!: ");
                     faithTrack.advanceLorenzo();
                     gameManager.setStatus(Status.GAME_OVER);
                     if (gameManager.getSoloWinner() == null)
@@ -109,9 +109,9 @@ public class FaithTrackManager {
                 } else {
                     message.append(player.getNickname()).append(" has activated the third zone! ");
                     if (!gameManager.getSolo())
-                        message.append("\n Points have been awarded: ");
+                        message.append("\n FaithTrack Panels have been flipped: ");
                     else
-                        message.append("\n It's Game Over. end the turn to finish him!").append("\n Points have been awarded: ");
+                        message.append("\n It's Game Over. end the turn to finish him!").append("\n FaithTrack Panels have been flipped: ");
                     faithTrack.advance(player);
                     if (gameManager.getSolo()) {
                         gameManager.setStatus(Status.GAME_OVER);
@@ -121,7 +121,7 @@ public class FaithTrackManager {
                         gameManager.setStatus(Status.LAST_TURN);
                     }
                 }
-                message.append(returnAddedPoints(players));
+                message.append(returnFlippedZones(players, 2));
                 faithTrack.setZones(2, true);
                 break;
             case 0:
@@ -165,20 +165,21 @@ public class FaithTrackManager {
     }
 
     /**
-     * Generates a String containing the points awarded to the Players for activating a Zone.
-     * Points are awarded based on position,
+     * Generates a String containing the faithTrackPanel flipped to the Players for activating a Zone.
      *
      * @param players The list of Players playing the Game.
+     * @param zone the zone being activated
      * @return A List of points awarded to the corresponding players.
      * @see it.polimi.ingsw.server.model.FaithTrack for better understanding.
      */
-    private String returnAddedPoints(List<Player> players) {
+    private String returnFlippedZones(List<Player> players, int zone) {
         StringBuilder message = new StringBuilder();
         for (Player p : players) {
             if (faithTrack.calculateVP(p) > 0) {
-                p.addVP(faithTrack.calculateVP(p));
+                p.setFaithTrackPanels(zone);
                 message.append("\n ").append(p.getNickname());
-                message.append("  ").append(faithTrack.calculateVP(p));
+                message.append(" zone ").append(zone+1);
+                message.append(" - ").append(faithTrack.calculateVP(p)).append(" points ");
             }
         }
         return message.toString();

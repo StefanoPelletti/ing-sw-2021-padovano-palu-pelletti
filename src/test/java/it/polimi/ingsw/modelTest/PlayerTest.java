@@ -43,50 +43,13 @@ public class PlayerTest {
         assertNotNull(player.getWarehouseDepot());
         assertNotNull(player.getStrongbox());
         assertNull(player.getStartingCards());
-        assertEquals(player.getVp(), 0);
+        assertFalse(player.getFaithTrackPanels()[0]);
+        assertFalse(player.getFaithTrackPanels()[1]);
+        assertFalse(player.getFaithTrackPanels()[2]);
         assertEquals(player.getPosition(), 0);
     }
 
-    //verifies that the method setVP(VP) does not accept negative parameter
-    @Test
-    public void setNegativeVP() {
-        assertFalse(player.setVP(-1));
-    }
 
-    //verifies that the method setVP(VP) returns true if VP>0
-    @Test
-    public void setOkVP() {
-        assertTrue(player.setVP(1));
-    }
-
-    //verifies that the method setVP(VP) works properly
-    @Test
-    public void setVPTest() {
-        player.setVP(2);
-        assertEquals(player.getVp(), 2);
-    }
-
-    //verifies that the method addVP(VP) does not accept negative parameter
-    @Test
-    public void addNegativeVP() {
-        assertFalse(player.addVP(-1));
-    }
-
-    //verifies that the method setVP(VP) returns true if VP>0
-    @Test
-    public void addOkVP() {
-        assertTrue(player.addVP(1));
-    }
-
-    //verifies that the method addVP(VP) works properly
-    @Test
-    public void addVPTest() {
-        player.setVP(2);
-        player.addVP(200);
-        assertEquals(player.getVp(), 202);
-        player.addVP(0);
-        assertEquals(player.getVp(), 202);
-    }
 
     //verifies that method setPositionTest works properly
     @Test
