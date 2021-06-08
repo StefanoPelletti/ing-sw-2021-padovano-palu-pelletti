@@ -82,11 +82,14 @@ public class Board implements Runnable {
     static final String VENDOR = "Development Cards Vendor";
     Vendor_Panel vendor_panel;
 
+    static final String PRODUCTION = "Production";
+    Production_Panel production_panel;
+
     //fonts
     static final String TIMES = "Times New Roman";
     static final String PAP = "Papyrus";
-
-
+    static final String PRODSELECTION = "Production Selection";
+    ProductionSelection_Panel productionSelection_panel;
     //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
     //LEFT PANEL
     JButton quit_Button;
@@ -128,8 +131,8 @@ public class Board implements Runnable {
         cardLayoutRight.show(centralRightPanel, DISCARDLEADERCARD);
         cardLayoutLeft.show(centralLeftPanel, Ark.nickname);
     };
-    ActionListener show_activateProduction_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, Ark.nickname);
+    ActionListener show_ProductionSelection_actionListener = e -> {
+        cardLayoutRight.show(centralRightPanel, PRODSELECTION);
     };
     ActionListener back_show_DevDeck_actionListener = e -> {
         cardLayoutRight.show(centralRightPanel, lastRightCard);
@@ -210,7 +213,6 @@ public class Board implements Runnable {
 
         int slotNumber = source.getPosition();
         int cardNumber = vendor_panel.getCurrentCard();
-
     };
 
 
@@ -576,6 +578,7 @@ public class Board implements Runnable {
                 resourcePicker_panel.update();
                 marketHelper_panel.update();
                 vendor_panel.update();
+                productionSelection_panel.update();
             }
 
             lastRightCard = Ark.nickname;
@@ -1016,7 +1019,7 @@ public class Board implements Runnable {
                 this.add(buy_DevCard_Button, c);
 
                 activate_Production_Button = new JButton("produce");
-                activate_Production_Button.addActionListener(show_activateProduction_actionListener);
+                activate_Production_Button.addActionListener(show_ProductionSelection_actionListener);
                 activate_Production_Button.setPreferredSize(new Dimension(145, 60));
                 activate_Production_Button.setFont(new Font(PAP, Font.BOLD, 18));
                 activate_Production_Button.setBackground(new Color(231, 210, 181));
@@ -1527,7 +1530,10 @@ public class Board implements Runnable {
             this.add(marketHelper_panel, MARKETHELPER);
             vendor_panel = new Vendor_Panel();
             this.add(vendor_panel, VENDOR);
-
+            productionSelection_panel = new ProductionSelection_Panel();
+            this.add(productionSelection_panel, PRODSELECTION);
+            production_panel = new Production_Panel();
+            this.add(production_panel, PRODUCTION);
             for (PlayerSimplified player : Ark.game.getPlayerList()) {
                 if (player.getNickname().equals(Ark.nickname)) continue;
                 Others_DevSlot_Panel panel = new Others_DevSlot_Panel(player.getNickname());
@@ -3249,11 +3255,11 @@ public class Board implements Runnable {
     }
 
     class Vendor_Panel extends JPanel {
-        JLabel devCard;
-        SlotButton slot1;
-        SlotButton slot2;
-        SlotButton slot3;
-        int currentCard;
+        private JLabel devCard;
+        private SlotButton slot1;
+        private SlotButton slot2;
+        private SlotButton slot3;
+        private int currentCard;
         ActionListener next_ActionListener = e -> {
             if (Ark.game.getDevelopmentCardsVendor().isEnabled()) {
                 currentCard++;
@@ -3383,8 +3389,6 @@ public class Board implements Runnable {
             c.weightx = 0.3;
             c.weighty = 0.3;
             this.add(slot3, c);
-
-
         }
 
         public void update() {
@@ -3415,10 +3419,203 @@ public class Board implements Runnable {
                 super(text);
                 this.position = position;
             }
-
             public int getPosition() {
                 return position;
             }
         }
     }
+
+    class ProductionSelection_Panel extends JPanel {
+        private final JToggleButton leaderCard1;
+        private final JToggleButton leaderCard2;
+        private final JToggleButton basicProduction;
+        private final JToggleButton devCard1;
+        private JToggleButton devCard2;
+        private JToggleButton devCard3;
+
+        ActionListener confirm_ProductionSelection_Panel = e -> {
+            cardLayoutRight.show(centralRightPanel, PRODUCTION);
+            //production.update();
+        };
+
+        public ProductionSelection_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
+            addPadding(this, 599, 946, 10, 12);
+
+            JButton back_ProductionSelection_Button = new JButton("Back");
+            back_ProductionSelection_Button.addActionListener(back_activateLeaderCard_actionListener); //da cambiare il back
+            back_ProductionSelection_Button.setPreferredSize(new Dimension(120, 40));
+            back_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.gridwidth = 1;
+            c.gridheight = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.insets = new Insets(5, 5, 0, 0);
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            this.add(back_ProductionSelection_Button, c);
+
+            JButton confirm_ProductionSelection_Button = new JButton("confirm!");
+            confirm_ProductionSelection_Button.addActionListener(confirm_ProductionSelection_Panel);
+            confirm_ProductionSelection_Button.setPreferredSize(new Dimension(150, 50));
+            confirm_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 28));
+            confirm_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 5;
+            c.gridy = 5;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            c.gridwidth = 2;
+            c.insets = new Insets(0, 0, 10, 10);
+            c.anchor = GridBagConstraints.LAST_LINE_END;
+            this.add(confirm_ProductionSelection_Button, c);
+
+            leaderCard1 = new JToggleButton("LeaderCard 1");
+            leaderCard1.setPreferredSize(new Dimension(210, 50));
+            leaderCard1.setFont(new Font(PAP, Font.BOLD, 24));
+            leaderCard1.setBackground(new Color(231,210,181));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            this.add(leaderCard1, c);
+
+            leaderCard2 = new JToggleButton("LeaderCard 2");
+            leaderCard2.setPreferredSize(new Dimension(210, 50));
+            leaderCard2.setFont(new Font(PAP, Font.BOLD, 24));
+            leaderCard2.setBackground(new Color(231,210,181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            this.add(leaderCard2, c);
+
+            basicProduction = new JToggleButton();
+            ImageIcon basicProd = scaleImage(new ImageIcon("resources/punchboard/basic_production.png"), 150);
+            basicProduction.setIcon(basicProd);
+            basicProduction.setBackground(new Color(231, 210, 181));
+            basicProduction.setPreferredSize(new Dimension(150, 150));
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            this.add(basicProduction, c);
+
+            devCard1 = new JToggleButton();
+            devCard1.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            this.add(devCard1, c);
+
+            devCard2 = new JToggleButton();
+            devCard2.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            this.add(devCard2, c);
+
+            devCard3 = new JToggleButton();
+            devCard3.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 4;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            this.add(devCard3, c);
+        }
+
+        public void update() {
+            DevelopmentCard[] topCards = Ark.myPlayerRef.getDevelopmentSlot().getTopCards();
+            LeaderCard[] leaderCards = Ark.myPlayerRef.getLeaderCards();
+
+            if(!leaderCards[0].isEnabled() || !leaderCards[1].getSpecialAbility().isProduction()) {
+                leaderCard1.setEnabled(false);
+            }
+            if(!leaderCards[1].isEnabled() || !leaderCards[2].getSpecialAbility().isProduction()) {
+                leaderCard2.setEnabled(false);
+            }
+
+            for(int i = 0; i < 3; i++) {
+                if(i == 0 && topCards[i] == null) {
+                    ImageIcon dCard1 = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 200);
+                    devCard1.setIcon(dCard1);
+                    devCard1.setEnabled(false);
+                } else if (i == 0 && topCards[i] != null) {
+                    ImageIcon dCard1 = scaleImage(new ImageIcon(topCards[i].getFrontPath()), 200);
+                    devCard1.setIcon(dCard1);
+                }
+                if(i == 1 && topCards[i] == null) {
+                    ImageIcon dCard2 = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 200);
+                    devCard2.setIcon(dCard2);
+                    devCard2.setEnabled(false);
+                } else if (i == 1 && topCards[i] != null){
+                    ImageIcon dCard2 = scaleImage(new ImageIcon(topCards[i].getFrontPath()), 200);
+                    devCard2.setIcon(dCard2);
+                }
+                if(i == 2 && topCards[i] == null) {
+                    ImageIcon dCard3 = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 200);
+                    devCard3.setIcon(dCard3);
+                    devCard3.setEnabled(false);
+                } else if (i == 2 && topCards[i] != null){
+                    ImageIcon dCard3 = scaleImage(new ImageIcon(topCards[i].getFrontPath()), 200);
+                    devCard3.setIcon(dCard3);
+                }
+            }
+        }
+        /*
+        public JToggleButton getLeaderCard1() {
+            return leaderCard1;
+        }
+
+        public JToggleButton getLeaderCard2() {
+            return leaderCard2;
+        }
+
+        public JToggleButton getBasicProduction() {
+            return basicProduction;
+        }
+
+        public JToggleButton getDevCard1() {
+            return devCard1;
+        }
+
+        public JToggleButton getDevCard2() {
+            return devCard2;
+        }
+
+        public JToggleButton getDevCard3() {
+            return devCard3;
+        }*/
+    }
+
+    class Production_Panel extends JPanel {
+
+        public Production_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
+            addPadding(this, 599, 946, 10, 12);
+
+        }
+
+        public void update() {
+
+        }
+    }
+
 }
