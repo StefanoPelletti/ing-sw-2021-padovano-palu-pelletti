@@ -33,8 +33,8 @@ import java.util.*;
 public class Board implements Runnable {
     CardLayout cardLayoutLeft;
     CardLayout cardLayoutRight;
-    CentralLeftPanel centralLeftPanel; // <- parent for cardlayout left
-    CentralRightPanel centralRightPanel; // <- parent for cardlayout right
+    CentralLeftPanel centralLeftPanel;                                                                  //<-- updatable (see the update() methods it offers)
+    CentralRightPanel centralRightPanel;                                                                //<-- updatable (see the update() methods it offers)
 
     JFrame mainFrame;
     MainPanel mainPanel;
@@ -48,68 +48,77 @@ public class Board implements Runnable {
     */
     String lastRightCard;
 
-    //static final String SELF = Ark.nickname, OTHERS = player.getNickname()  <- this is a placeholder to remind that the card below is called like this
-    Self_DevSlot_Panel self_devSlot_panel;
-    Others_DevSlot_Panel others_devSlot_panel;
-
     static final String DEVDECK = "Development Cards Deck";
-    DevDeck_Panel devDeck_panel; //<- updatable after a devdeck update
+    DevDeck_Panel devDeck_panel;                                                                    //<- updatable after a devdeck update
 
     static final String MARKET = "Market";
-    Market_Panel market_panel; //<- updatable after a market update
+    Market_Panel market_panel;                                                                      //<- updatable
 
     static final String GETMARKETRESOURCES = "Get Market Resources";
-    GetMarketResource_Panel getMarketResource_panel;
+    GetMarketResource_Panel getMarketResource_panel;                                                //<- updatable
 
     static final String LEADERCARDSPICKER = "Leader Cards Picker";
-    LeaderCardsPicker_Panel leaderCardsPicker_panel; //<- updatable after a leadercards picker update
+    LeaderCardsPicker_Panel leaderCardsPicker_panel;                                                //<- updatable
 
     static final String RESOURCEPICKER = "Resource Picker";
-    ResourcePicker_Panel resourcePicker_panel;
+    ResourcePicker_Panel resourcePicker_panel;                                                      //<- updatable
 
     static final String CHANGEDEPOTCONFIG = "Change Depot Configuration";
-    ChangeDepotConfig_Panel changeDepotConfig_panel;
+    ChangeDepotConfig_Panel changeDepotConfig_panel;                                                //<- updatable
 
     static final String DISCARDLEADERCARD = "Discard LeaderCard";
-    DiscardLeaderCard_Panel discardLeaderCard_panel;
+    DiscardLeaderCard_Panel discardLeaderCard_panel;                                                //<- updatable
 
     static final String ACTIVATELEADERCARD = "Activate Leader Card";
-    ActivateLeaderCard_Panel activateLeaderCard_panel;
+    ActivateLeaderCard_Panel activateLeaderCard_panel;                                              //<- updatable
 
     static final String MARKETHELPER = "Market Helper";
-    MarketHelper_Panel marketHelper_panel;
+    MarketHelper_Panel marketHelper_panel;                                                          //<- updatable
 
     static final String VENDOR = "Development Cards Vendor";
-    Vendor_Panel vendor_panel;
+    Vendor_Panel vendor_panel;                                                                      //<- updatable
 
     static final String PRODUCTION = "Production";
-    Production_Panel production_panel;
+    Production_Panel production_panel;                                                              //<- updatable
+
+    static final String PRODSELECTION = "Production Selection";
+    ProductionSelection_Panel productionSelection_panel;                                            //<- updatable
+
+
 
     //fonts
     static final String TIMES = "Times New Roman";
     static final String PAP = "Papyrus";
-    static final String PRODSELECTION = "Production Selection";
-    ProductionSelection_Panel productionSelection_panel;
+
+
+
+
     //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
     //LEFT PANEL
-    JButton quit_Button;
-    JLabel turnLabel, turnOf; //<- updatable, but not with a custom method
-    JTextArea notificationsArea; //<- updatable, but not with a custom method
-    MyLeaderCardsPanel myLeaderCardsPanel; //<- updatable for leaderCards of this player and extradepot with a single update()
+    LeftPanel leftPanel;                                                                            //<-- updatable (see the update() methods it offers)
     JButton show_DevDeck_Button;
     JButton show_Market_Button;
     //BOTTOM PANEL
     JButton activate_LeaderCards_Button, change_Depot_Config_Button, get_MarketResource_Button;
     JButton discard_LeaderCard_Button, buy_DevCard_Button, activate_Production_Button;
-    PlayersRecapPanel playersRecapPanel; //<- updatable after any other players gets a resource update with a single update()
+    BottomPanel bottomPanel;                                                                        //<-- updatable (see the update() methods it offers)
     JButton endTurn_Button;
     //TOP PANEL
-    TopPanel topPanel;
+    TopPanel topPanel;                                                                              //<-- updatable (see the update() methods it offers)
 
 
     //ACTION LISTENERS
     ActionListener quit_actionListener = e -> {
-        notificationsArea.append("\nword");
+        leftPanel.updateNotification(" testo di prova per vedere se il testo va a capo automaticamente wtf aiuto");
+        leftPanel.updateNotification(" This helps, but if the users clicks anywhere other than after the end of the last line the auto scrolling stops. This is not intuitive. It would be nice if the usual behaviour worked, just by scrolling to the bottom the auto-scroll is reactivated.");
+        leftPanel.updateNotification("A work around is possible: you can declare that listener as a class then instantiate it on the event where it is needed. After which you can remove the class after forcing a repaint of the screen. Works like a charm");
+        leftPanel.updateNotification("verticalScrollBarMaximumValue = scrollPane.getVerticalScrollBar().getMaximum();");
+        leftPanel.updateNotification("I admit that that a method to filter events without extra variables could be found, and would appreciate if somebody post it");
+        leftPanel.updateNotification("The Pane then is scrolled down only when vertical scroll bar is expanding, in response to appended lines of text");
+        leftPanel.updateNotification("And remember, it's important to shutdown the executor when you've finished. The shutdown() method will cleanly shut down the thread pool when the last task has completed, and will block until this happens. shutdownNow() will terminate the thread pool immediately");
+        leftPanel.updateNotification("As a variation of @tangens answer: if you can't wait for the garbage collector to clean up your thread, cancel the timer at the end of your run method");
+        leftPanel.updateNotification("Your original question mentions the Swing Timer. If in fact your question is related to SWing, then you should be using the Swing Timer and NOT the util.Timer");
+
     };
     ActionListener show_DevDeck_actionListener = e -> {
         cardLayoutRight.show(centralRightPanel, DEVDECK);
@@ -238,7 +247,6 @@ public class Board implements Runnable {
         // you can write here shortcuts, like going directly to the Settings and opening multiple frames
         // only if called by the main, otherwise it must be empty
         // new MainMenu();
-        // cl.show(cardPanel, CREATE);
 
 
         Ark.solo = false;
@@ -466,6 +474,14 @@ public class Board implements Runnable {
         object.add(Box.createVerticalStrut(height),c);
     }
 
+    public void changeLeftCard(String newCard) {
+        this.cardLayoutLeft.show(centralLeftPanel, newCard);
+    }
+
+    public void changeRightCard(String newCard) {
+        this.cardLayoutRight.show(centralRightPanel, newCard);
+    }
+
     public void run() {
         //empty to implement run method
     }
@@ -493,7 +509,7 @@ public class Board implements Runnable {
         String result = "";
         switch (resource) {
             case COIN:
-                result += "Stone";
+                result += "Coin";
                 break;
             case SHIELD:
                 result += "Shield";
@@ -530,7 +546,8 @@ public class Board implements Runnable {
                 c.gridy = 0;
                 c.gridwidth = 1;
                 c.gridheight = 2;
-                this.add(new LeftPanel(), c);
+                leftPanel = new LeftPanel();
+                this.add(leftPanel, c);
 
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -545,7 +562,8 @@ public class Board implements Runnable {
                 c.gridy = 2;
                 c.gridwidth = 3;
                 c.gridheight = 1;
-                this.add(new BottomPanel(), c);
+                bottomPanel = new BottomPanel();
+                this.add(bottomPanel, c);
 
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -566,8 +584,8 @@ public class Board implements Runnable {
 
             //INITIAL UPDATE (?)
             {
-                myLeaderCardsPanel.update();
-                playersRecapPanel.update();
+                leftPanel.updateAll();
+                bottomPanel.update();
                 devDeck_panel.update();
                 for (PlayerSimplified player : Ark.game.getPlayerList()) {
                     centralLeftPanel.update(player.getNickname());
@@ -591,7 +609,7 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
-            cardLayoutRight.show(centralRightPanel, PRODSELECTION);
+            changeRightCard(Ark.nickname);
         }
 
         @Override
@@ -604,6 +622,11 @@ public class Board implements Runnable {
 
     //LEFT PANEL
     class LeftPanel extends JPanel {
+
+        JLabel turnLabel, turnOf; //<- updatable, but not with a custom method
+        JTextArea notificationsArea; //<- updatable, but not with a custom method
+        MyLeaderCardsPanel myLeaderCardsPanel; //<- updatable for leaderCards of this player and extradepot with a single update()
+
         public LeftPanel() {
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
@@ -614,7 +637,7 @@ public class Board implements Runnable {
             //addPadding(this, 839, 458, 3, 6);
             addPadding(this, 839, 458, 3, 6);
 
-            quit_Button = new JButton("Quit");
+            JButton quit_Button = new JButton("Quit");
             quit_Button.addActionListener(quit_actionListener);
             quit_Button.setPreferredSize(new Dimension(120, 60));
             quit_Button.setFont(new Font(PAP, Font.BOLD, 20));
@@ -632,7 +655,6 @@ public class Board implements Runnable {
 
             turnLabel = new JLabel();
             turnLabel.setOpaque(false);
-            turnLabel.setText("Turn 5");
             turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
             turnLabel.setFont(new Font(PAP, Font.BOLD, 20));
             c = new GridBagConstraints();
@@ -648,7 +670,6 @@ public class Board implements Runnable {
 
             turnOf = new JLabel();
             turnOf.setOpaque(false);
-            turnOf.setText("Turn of " + Ark.game.getCurrentPlayerName());
             turnOf.setHorizontalAlignment(SwingConstants.CENTER);
             turnOf.setFont(new Font(PAP, Font.BOLD, 20));
             c = new GridBagConstraints();
@@ -662,13 +683,19 @@ public class Board implements Runnable {
             this.add(turnOf, c);
 
             notificationsArea = new JTextArea();
-            notificationsArea.setText("text");
             notificationsArea.setFont(new Font(TIMES, Font.BOLD, 20));
             notificationsArea.setBackground(new Color(231, 210, 181));
             notificationsArea.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
             JScrollPane scrollPane = new JScrollPane(notificationsArea);
             scrollPane.setPreferredSize(new Dimension(400, 200));
+            scrollPane.getHorizontalScrollBar().setBackground(new Color(222, 209, 156));
+            scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+                @Override
+                protected void configureScrollBarColors() {
+                    this.thumbColor = new Color(178, 49, 35);
+                }
+            });
             scrollPane.getVerticalScrollBar().setBackground(new Color(222, 209, 156));
             scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
                 @Override
@@ -743,6 +770,51 @@ public class Board implements Runnable {
                 c.anchor = GridBagConstraints.PAGE_END;
                 this.add(showButtonsPanel, c);
             } //showDevDeck and showMarket buttons Panel
+        }
+
+        public void updateAll() {
+            this.update();
+            this.updateTurnOf();
+            this.updateCurrentTurn();
+        }
+
+        public void update() {
+            this.myLeaderCardsPanel.update();
+        }
+
+        public void updateTurnOf() {
+            this.turnOf.setText("Turn of " + Ark.game.getCurrentPlayerName());
+        }
+
+        public void updateCurrentTurn() {
+            this.turnLabel.setText("Turn " + Ark.game.getTurn());
+        }
+
+        public void updateNotification(String message) {
+            Formatter formate;
+            Calendar gfg_calender = Calendar.getInstance();
+            formate = new Formatter();
+            formate.format("%tl:%tM", gfg_calender, gfg_calender);
+
+            // Printing the current hour and minute
+            notificationsArea.append("\n" + formate + " - ");
+
+            int i = 7;
+
+            List<String> textList;
+            textList = new ArrayList<>((Arrays.asList(message.split("\\s+"))));
+            Optional<Integer> length = textList.stream().map(String::length).reduce(Integer::sum);
+            if (length.isPresent()) {
+                for (String s : textList) {
+                    if ((s.length() + i) > 35) {
+                        i = s.length();
+                        notificationsArea.append("\n" + s + " ");
+                    } else {
+                        i += s.length();
+                        notificationsArea.append(s + " ");
+                    }
+                }
+            }
         }
     }
 
@@ -934,6 +1006,9 @@ public class Board implements Runnable {
 
     //BOTTOM PANEL
     class BottomPanel extends JPanel {
+
+        PlayersRecapPanel playersRecapPanel;
+
         public BottomPanel() {
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
@@ -1067,9 +1142,14 @@ public class Board implements Runnable {
             c.insets = new Insets(0, 0, 0, 2);
             this.add(endTurn_Button, c);
         }
+
+        public void update() {
+            if(!Ark.solo) {
+                this.playersRecapPanel.update();
+            }
+        }
     }
 
-    //TODO solo mode
     class PlayersRecapPanel extends JPanel {
         private Map<String, java.util.List<JLabel>> map;
 
@@ -1092,7 +1172,7 @@ public class Board implements Runnable {
 
                     JPanel playerPanel = new JPanel(new GridBagLayout());
                     playerPanel.setOpaque(false);
-                    playerPanel.setBorder(BorderFactory.createLineBorder(new Color(79, 66, 34), 2));
+                    playerPanel.setBorder(BorderFactory.createLineBorder(new Color(79, 66, 34), 1));
 
                     JLabel nicknameLabel = new JLabel("" + player.getPlayerNumber() + " - " + player.getNickname());
                     nicknameLabel.setFont(new Font(PAP, Font.BOLD, 24));
@@ -1108,6 +1188,7 @@ public class Board implements Runnable {
                     playerPanel.add(nicknameLabel, c);
 
                     JLabel coinLabel = new JLabel();
+                    coinLabel.setForeground(Color.DARK_GRAY);
                     coinLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(coinLabel);
                     c = new GridBagConstraints();
@@ -1122,6 +1203,7 @@ public class Board implements Runnable {
                     playerPanel.add(coinLabel, c);
 
                     JLabel shieldLabel = new JLabel();
+                    shieldLabel.setForeground(Color.DARK_GRAY);
                     shieldLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(shieldLabel);
                     c = new GridBagConstraints();
@@ -1136,6 +1218,7 @@ public class Board implements Runnable {
                     playerPanel.add(shieldLabel, c);
 
                     JLabel stoneLabel = new JLabel();
+                    stoneLabel.setForeground(Color.DARK_GRAY);
                     stoneLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(stoneLabel);
                     c = new GridBagConstraints();
@@ -1150,6 +1233,7 @@ public class Board implements Runnable {
                     playerPanel.add(stoneLabel, c);
 
                     JLabel servantLabel = new JLabel();
+                    servantLabel.setForeground(Color.DARK_GRAY);
                     servantLabel.setFont(new Font(TIMES, Font.BOLD, 20));
                     labelList.add(servantLabel);
                     c = new GridBagConstraints();
@@ -1172,8 +1256,10 @@ public class Board implements Runnable {
                         cardLayoutLeft.show(centralLeftPanel, playerName);
                         cardLayoutRight.show(centralRightPanel, playerName);
                     });
+
+
                     button.setFont(new Font(PAP, Font.BOLD, 20));
-                    button.setMinimumSize(new Dimension(140, 100));
+                    button.setPreferredSize(new Dimension(150, 70));
                     button.setBackground(new Color(231, 210, 181));
                     c = new GridBagConstraints();
                     c.gridx = 1;
@@ -1195,7 +1281,97 @@ public class Board implements Runnable {
                     this.add(playerPanel, c);
                 }
             } else {
-                //TODO solo mode for bottom panel
+                JPanel lorenzoPanel = new JPanel(new GridBagLayout());
+                lorenzoPanel.setBorder(BorderFactory.createLineBorder(new Color(79, 66, 34),1));
+                lorenzoPanel.setOpaque(false);
+
+                JLabel lorenzoLabel = new JLabel("Lorenzo");
+                lorenzoLabel.setFont(new Font(PAP, Font.BOLD, 24));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weightx = 0.2;
+                c.weighty = 0.2;
+                lorenzoPanel.add(lorenzoLabel,c);
+
+                JLabel lorenzoFace = new JLabel();
+                lorenzoFace.setIcon(scaleImage(new ImageIcon("resources/punchboard/lorenzo.png"),110));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weightx = 0.2;
+                c.weighty = 0.2;
+                lorenzoPanel.add(lorenzoFace,c);
+
+                JPanel spacer = new JPanel(new GridBagLayout());
+                spacer.setBorder(BorderFactory.createLineBorder(new Color(155, 129, 66),1));
+                c = new GridBagConstraints();
+                spacer.add(Box.createHorizontalStrut(1),c);
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = 0;
+                c.gridheight = 2;
+                c.weightx = 0;
+                c.weighty = 0;
+                c.fill = GridBagConstraints.VERTICAL;
+                lorenzoPanel.add(spacer,c);
+
+                JPanel tokenPanel = new JPanel(new GridBagLayout());
+                tokenPanel.setOpaque(false);
+
+                JLabel possibleActions = new JLabel("Lorenzo tokens");
+                possibleActions.setFont(new Font(PAP, Font.BOLD, 24));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 0;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                tokenPanel.add(possibleActions,c);
+
+                JPanel tokenSlideshow = new JPanel(new FlowLayout());
+                tokenSlideshow.setOpaque(false);
+
+                for(int i=0; i<7; i++) {
+                    String path = "resources/punchboard/cerchio";
+                    path += "" + (i+1) + ".png";
+
+                    JLabel label = new JLabel();
+                    label.setIcon(scaleImage(new ImageIcon(path),65));
+                    tokenSlideshow.add(label);
+                }
+
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 1;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                tokenPanel.add(tokenSlideshow,c);
+
+                JLabel check = new JLabel("Check notification area in-game");
+                check.setFont(new Font(PAP, Font.BOLD, 24));
+                c = new GridBagConstraints();
+                c.gridx = 0;
+                c.gridy = 2;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                tokenPanel.add(check,c);
+
+                c = new GridBagConstraints();
+                c.gridx = 2;
+                c.gridy = 0;
+                c.gridheight = 2;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                c.fill = GridBagConstraints.BOTH;
+                lorenzoPanel.add(tokenPanel,c);
+
+
+
+                c = new GridBagConstraints();
+                c.fill = GridBagConstraints.BOTH;
+                c.weightx = 0.5;
+                c.weighty = 0.5;
+                this.add(lorenzoPanel, c);
             }
         }
 
@@ -1225,8 +1401,6 @@ public class Board implements Runnable {
                         }
                     }
                 }
-            } else {
-                //TODO solo mode update for bottom panel
             }
         }
 
@@ -1993,6 +2167,7 @@ public class Board implements Runnable {
     class CentralRightPanel extends JPanel {
 
         private final java.util.List<Others_DevSlot_Panel> othersDevSlotList;
+        private final Self_DevSlot_Panel self_devSlot_panel;
 
         public CentralRightPanel() {
             cardLayoutRight = new CardLayout();
@@ -2036,11 +2211,15 @@ public class Board implements Runnable {
 
         public void update(String name) {
             if (name.equals(Ark.nickname))
-                self_devSlot_panel.update();
+                this.self_devSlot_panel.update();
             else {
                 Optional<Others_DevSlot_Panel> result = othersDevSlotList.stream().filter(p -> p.panelName.equals(name)).findFirst();
                 result.ifPresent(Others_DevSlot_Panel::update);
             }
+        }
+
+        public void updateCurrentPlayer() {
+            this.update(Ark.game.getCurrentPlayerName());
         }
 
     }
@@ -2486,32 +2665,61 @@ public class Board implements Runnable {
             c.gridy = 1;
             c.gridwidth = 1;
             c.gridheight = 1;
-            c.weightx = 4.20;
-            c.weighty = 11.00;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
             this.add(back_ShowMarket_Button, c);
 
-            ImageIcon slideMarble = scaleImage(new ImageIcon("resources/punchboard/purple_marble.png"), 64);
-            labelSlide.setIcon(slideMarble);
+            JPanel topPadding = new JPanel();
+            topPadding.setOpaque(false);
+            topPadding.add(Box.createVerticalStrut(95));
             c = new GridBagConstraints();
-            c.gridx = 5;
-            c.gridy = 2;
-            c.gridwidth = 1;
-            c.gridheight = 1;
-            c.weightx = 1.01;
-            c.weighty = 1.01;
-            this.add(labelSlide, c);
+            c.gridx = 2;
+            c.gridy = 1;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(topPadding, c);
 
-            JLabel label1 = new JLabel();
+            JPanel leftPadding = new JPanel();
+            leftPadding.setOpaque(false);
+            leftPadding.add(Box.createHorizontalStrut(177));
             c = new GridBagConstraints();
-            c.gridx = 50;
-            c.gridy = 50;
-            c.gridwidth = 1;
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(leftPadding, c);
+
+            JPanel rightPadding = new JPanel();
+            rightPadding.setOpaque(false);
+            rightPadding.add(Box.createHorizontalStrut(463));
+            c = new GridBagConstraints();
+            c.gridx = 6;
+            c.gridy = 3;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(rightPadding, c);
+
+            JPanel bottomPadding = new JPanel();
+            bottomPadding.setOpaque(false);
+            bottomPadding.add(Box.createVerticalStrut(191));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 6;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(bottomPadding, c);
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.gridwidth = 4;
             c.gridheight = 1;
-            c.weightx = 30.51;
-            c.weighty = 30.51;
-            this.add(label1, c);
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(0,160,0,0);
+            this.add(labelSlide, c);
 
             for (int col = 0; col < 4; col++) {
                 for (int row = 0; row < 3; row++) {
@@ -2519,8 +2727,8 @@ public class Board implements Runnable {
                     c = new GridBagConstraints();
                     c.gridx = col + 2;
                     c.gridy = row + 3;
-                    c.weightx = 0.4;
-                    c.weighty = 1.5;
+                    c.weightx = 0.3;
+                    c.weighty = 0.3;
                     this.add(label, c);
                     this.labelGrid[row][col] = label;
                 }
@@ -2533,10 +2741,10 @@ public class Board implements Runnable {
 
             for (int col = 0; col < 4; col++) {
                 for (int row = 0; row < 3; row++) {
-                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 64));
+                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 67));
                 }
             }
-            labelSlide.setIcon(scaleImage(new ImageIcon(slide.getPath()), 64));
+            labelSlide.setIcon(scaleImage(new ImageIcon(slide.getPath()), 67));
         }
 
         @Override
@@ -2793,72 +3001,106 @@ public class Board implements Runnable {
             c.gridy = 1;
             c.gridwidth = 1;
             c.gridheight = 1;
-            c.weightx = 5.00;
-            c.weighty = 15.00;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
             this.add(back_GetMarketResource_Button, c);
 
-            ImageIcon slideMarble = scaleImage(new ImageIcon("resources/punchboard/purple_marble.png"), 64);
-            labelSlide.setIcon(slideMarble);
+            JPanel topPadding = new JPanel();
+            topPadding.setOpaque(false);
+            topPadding.add(Box.createVerticalStrut(95));
             c = new GridBagConstraints();
-            c.gridx = 5;
+            c.gridx = 2;
+            c.gridy = 1;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(topPadding, c);
+
+            JPanel leftPadding = new JPanel();
+            leftPadding.setOpaque(false);
+            leftPadding.add(Box.createHorizontalStrut(177));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(leftPadding, c);
+
+            JPanel rightPadding = new JPanel();
+            rightPadding.setOpaque(false);
+            rightPadding.add(Box.createHorizontalStrut(412));
+            c = new GridBagConstraints();
+            c.gridx = 7;
+            c.gridy = 3;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(rightPadding, c);
+
+            JPanel bottomPadding = new JPanel();
+            bottomPadding.setOpaque(false);
+            bottomPadding.add(Box.createVerticalStrut(140));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 7;
+            c.weightx = 0;
+            c.weighty = 0;
+            this.add(bottomPadding, c);
+
+            c = new GridBagConstraints();
+            c.gridx = 2;
             c.gridy = 2;
-            c.gridwidth = 1;
+            c.gridwidth = 4;
             c.gridheight = 1;
-            c.weightx = 1.01;
-            c.weighty = 1.01;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(0,160,0,0);
             this.add(labelSlide, c);
 
-            JLabel label1 = new JLabel();
-            c = new GridBagConstraints();
-            c.gridx = 50;
-            c.gridy = 50;
-            c.gridwidth = 1;
-            c.gridheight = 1;
-            c.weightx = 30.51;
-            c.weighty = 30.51;
-            this.add(label1, c);
-
-            for (int row = 0; row < 4; row++) {
-                for (int col = 0; col < 5; col++) {
-                    if (col == 4 && row != 3) {
-                        MarketButton button = new MarketButton(row, false);
-                        button.setText("" + (row + 1));
-                        button.addActionListener(action_getMarketResource_actionListener);
-                        button.setPreferredSize(new Dimension(47, 47));
-                        button.setFont(new Font(PAP, Font.BOLD, 20));
-                        button.setBackground(new Color(231, 210, 181));
-                        c = new GridBagConstraints();
-                        c.gridx = col + 2;
-                        c.gridy = row + 3;
-                        c.weightx = 0.4;
-                        c.weighty = 1.5;
-                        this.add(button, c);
-                    } else if (row == 3 && col != 4) {
-                        MarketButton button = new MarketButton(col, true);
-                        button.setText("" + (col + 1));
-                        button.addActionListener(action_getMarketResource_actionListener);
-                        button.setPreferredSize(new Dimension(47, 47));
-                        button.setFont(new Font(PAP, Font.BOLD, 20));
-                        button.setBackground(new Color(231, 210, 181));
-                        c = new GridBagConstraints();
-                        c.gridx = col + 2;
-                        c.gridy = row + 3;
-                        c.weightx = 0.4;
-                        c.weighty = 1.5;
-                        this.add(button, c);
-                    } else if (row < 3 && col < 4) {
-                        JLabel label = new JLabel();
-                        c = new GridBagConstraints();
-                        c.gridx = col + 2;
-                        c.gridy = row + 3;
-                        c.weightx = 0.4;
-                        c.weighty = 1.5;
-                        this.add(label, c);
-                        this.labelGrid[row][col] = label;
-                    }
+            for(int i=0; i<3; i++) {
+                for( int j=0; j<4; j++) {
+                    JLabel label = new JLabel();
+                    c = new GridBagConstraints();
+                    c.gridx = j+2;
+                    c.gridy = i+3;
+                    c.weightx = 0.3;
+                    c.weighty = 0.3;
+                    this.add(label, c);
+                    this.labelGrid[i][j] = label;
                 }
+            }
+            int buttonSize = 45;
+
+            for( int y = 3; y<=5;y++) {
+                MarketButton button = new MarketButton(y-3, false);
+                button.setText("" + (y-2));
+                button.addActionListener(action_getMarketResource_actionListener);
+                button.setPreferredSize(new Dimension(buttonSize, buttonSize));
+                button.setFont(new Font(TIMES, Font.BOLD, 22));
+                button.setBackground(new Color(231, 210, 181));
+                c = new GridBagConstraints();
+                c.gridx = 6;
+                c.gridy = y;
+                c.weightx = 0.3;
+                c.weighty = 0.3;
+                c.insets = new Insets(5,0,0,0);
+                this.add(button, c);
+            }
+
+            for( int x=2; x<=5; x++) {
+                MarketButton button = new MarketButton(x-2, true);
+                button.setText("" + (x-1));
+                button.addActionListener(action_getMarketResource_actionListener);
+                button.setPreferredSize(new Dimension(buttonSize, buttonSize));
+                button.setFont(new Font(TIMES, Font.BOLD, 22));
+                button.setBackground(new Color(231, 210, 181));
+                c = new GridBagConstraints();
+                c.gridx = x;
+                c.gridy = 6;
+                c.weightx = 0.3;
+                c.weighty = 0.3;
+                c.insets = new Insets(0,5,0,0);
+                this.add(button, c);
             }
         }
 
@@ -2868,10 +3110,10 @@ public class Board implements Runnable {
 
             for (int col = 0; col < 4; col++) {
                 for (int row = 0; row < 3; row++) {
-                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 64));
+                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 67));
                 }
             }
-            labelSlide.setIcon(scaleImage(new ImageIcon(slideMarble.getPath()), 64));
+            labelSlide.setIcon(scaleImage(new ImageIcon(slideMarble.getPath()), 67));
         }
 
         @Override
