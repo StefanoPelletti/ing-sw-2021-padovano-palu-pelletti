@@ -23,9 +23,21 @@ import java.util.*;
 
 
 public class ActionManager {
+    /**
+     * the reference to the GameManager
+     */
     private final GameManager gameManager;
+    /**
+     * the reference to the faithTrackManager
+     */
     private final FaithTrackManager faithTrackManager;
+    /**
+     * the reference to the model entry point
+     */
     private final Game game;
+    /**
+     * the reference to the messageHelper, which provides many broadcasting services
+     */
     private final MessageHelper messageHelper;
 
     /**

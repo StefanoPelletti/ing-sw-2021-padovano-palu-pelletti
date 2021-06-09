@@ -1822,8 +1822,8 @@ class MenuPhase {
             if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
                 MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
                 System.out.println(A.GREEN + " <<>> RE - Connected! " + A.RESET);
-                System.out.println(A.GREEN + " <> Your assigned nickname is " + msg.getNickname() + A.RESET);
-                Halo.myNickname = msg.getNickname();
+                System.out.println(A.GREEN + " <> Your assigned nickname is " + msg.getAssignedNickname() + A.RESET);
+                Halo.myNickname = msg.getAssignedNickname();
                 Halo.solo = false;
                 Halo.defaultAddress = ip;
                 Halo.reconnected = true;
