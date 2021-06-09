@@ -4559,6 +4559,7 @@ public class Board implements Runnable {
             c.gridheight = 2;
             c.weightx = 0.9;
             c.weighty = 0.3;
+            c.insets = new Insets(0,0,0,100);
             c.anchor = GridBagConstraints.WEST;
             this.add(next3, c);
 
@@ -4627,13 +4628,13 @@ public class Board implements Runnable {
 
             JButton confirm_Production_Button = new JButton("confirm!");
             //confirm_Production_Button.addActionListener(confirm_Production_Panel);
-            confirm_Production_Button.setPreferredSize(new Dimension(150, 60));
+            confirm_Production_Button.setPreferredSize(new Dimension(200, 60));
             confirm_Production_Button.setFont(new Font(PAP, Font.BOLD, 28));
             confirm_Production_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
-            c.gridx = 7;
+            c.gridx = 1;
             c.gridy = 7;
-            c.gridwidth = 2;
+            c.gridwidth = 10;
             c.weightx = 0.5;
             c.weighty = 0.4;
             c.anchor = GridBagConstraints.PAGE_END;
