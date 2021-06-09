@@ -4179,7 +4179,11 @@ public class Board implements Runnable {
 
         ActionListener confirm_ProductionSelection_Panel = e -> {
             cardLayoutRight.show(centralRightPanel, PRODUCTION);
-            //production.update();
+            production_panel.update();
+        };
+
+        ActionListener back_ProductionSelection_actionListener = e -> {
+            cardLayoutRight.show(centralRightPanel, Ark.nickname);
         };
 
         public ProductionSelection_Panel() {
@@ -4193,7 +4197,7 @@ public class Board implements Runnable {
             addPadding(this, 599, 946, 10, 12);
 
             JButton back_ProductionSelection_Button = new JButton("Back");
-            back_ProductionSelection_Button.addActionListener(back_activateLeaderCard_actionListener); //da cambiare il back
+            back_ProductionSelection_Button.addActionListener(back_ProductionSelection_actionListener); //da cambiare il back
             back_ProductionSelection_Button.setPreferredSize(new Dimension(120, 40));
             back_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
@@ -4339,13 +4343,13 @@ public class Board implements Runnable {
                 }
             }
         }
-        /*
+
         public JToggleButton getLeaderCard1() {
-            return leaderCard1;
+            return leaderCardButton[0];
         }
 
         public JToggleButton getLeaderCard2() {
-            return leaderCard2;
+            return leaderCardButton[1];
         }
 
         public JToggleButton getBasicProduction() {
@@ -4353,19 +4357,33 @@ public class Board implements Runnable {
         }
 
         public JToggleButton getDevCard1() {
-            return devCard1;
+            return devCardButton[0];
         }
 
         public JToggleButton getDevCard2() {
-            return devCard2;
+            return devCardButton[1];
         }
 
         public JToggleButton getDevCard3() {
-            return devCard3;
-        }*/
+            return devCardButton[2];
+        }
     }
 
     class Production_Panel extends JPanel {
+        JLabel basicFirstChoice;
+        JLabel basicSecondChoice;
+        JLabel basicOutputChoice;
+        JLabel lc1OutputChoice;
+        JLabel lc2OutputChoice;
+        int currentResource;
+
+        Resource[] resources;
+
+        JButton next1, next2, next3, next4, next5;
+
+        ActionListener back_production_actionListener = e -> {
+            cardLayoutRight.show(centralRightPanel, Ark.nickname);
+        };
 
         public Production_Panel() {
             GridBagConstraints c;
@@ -4374,10 +4392,299 @@ public class Board implements Runnable {
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
             addPadding(this, 599, 946, 10, 12);
 
+            currentResource = 0;
+
+            resources = new Resource[4];
+            resources[0] = Resource.COIN;
+            resources[1] = Resource.SHIELD;
+            resources[2] = Resource.STONE;
+            resources[3] = Resource.SERVANT;
+
+
+            JButton back_ProductionSelection_Button = new JButton("Back");
+            back_ProductionSelection_Button.addActionListener(back_production_actionListener);
+            back_ProductionSelection_Button.setPreferredSize(new Dimension(120, 40));
+            back_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.insets = new Insets(5, 5, 0, 0);
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            this.add(back_ProductionSelection_Button, c);
+
+            JLabel titleLabel = new JLabel("Choose the resources!");
+            titleLabel.setFont(new Font(PAP, Font.BOLD, 35));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 1;
+            c.gridwidth = 5;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(titleLabel, c);
+
+            JLabel basicProduction = new JLabel("Basic Production:");
+            basicProduction.setFont(new Font(PAP, Font.BOLD, 25));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 2;
+            c.gridheight = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(0,22,0,0);
+            this.add(basicProduction, c);
+
+            JLabel emptySpace = new JLabel();
+            emptySpace.setOpaque(false);
+            emptySpace.setHorizontalAlignment(SwingConstants.CENTER);
+            emptySpace.setFont(new Font(PAP, Font.BOLD, 20));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 4;
+            c.gridwidth = 8;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(20, 0, 0, 0);
+            this.add(emptySpace, c);
+
+            JLabel lc1 = new JLabel("Leader card 1:");
+            lc1.setFont(new Font(PAP, Font.BOLD, 25));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 5;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(lc1, c);
+
+            JLabel lc2 = new JLabel("Leader card 2:");
+            lc2.setFont(new Font(PAP, Font.BOLD, 25));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 6;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(lc2, c);
+
+            JLabel input1 = new JLabel("input 1: ");
+            input1.setFont(new Font(PAP, Font.BOLD, 25));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(0,10,0,0);
+            this.add(input1, c);
+
+            basicFirstChoice = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(basicFirstChoice, c);
+
+            next1 = new JButton(">");
+            next1.addActionListener(new resourceChanger(basicFirstChoice));
+            next1.setPreferredSize(new Dimension(45, 45));
+            next1.setFont(new Font(PAP, Font.BOLD, 15));
+            next1.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 2;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.anchor = GridBagConstraints.WEST;
+            this.add(next1, c);
+
+            JLabel input2 = new JLabel("input 2: ");
+            input2.setFont(new Font(PAP, Font.BOLD, 25));
+            c = new GridBagConstraints();
+            c.gridx = 2;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            c.insets = new Insets(0,10,0,0);
+            this.add(input2, c);
+
+            basicSecondChoice = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 3;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(basicSecondChoice, c);
+
+            next2 = new JButton(">");
+            next2.addActionListener(new resourceChanger(basicSecondChoice));
+            next2.setPreferredSize(new Dimension(45, 45));
+            next2.setFont(new Font(PAP, Font.BOLD, 15));
+            next2.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 3;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.anchor = GridBagConstraints.WEST;
+            this.add(next2, c);
+
+            JLabel output = new JLabel("output: ");
+            output.setFont(new Font(PAP, Font.BOLD, 25));
+            c = new GridBagConstraints();
+            c.gridx = 5;
+            c.gridy = 2;
+            c.gridheight = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+            this.add(output, c);
+
+            basicOutputChoice = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 6;
+            c.gridy = 2;
+            c.gridheight = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(basicOutputChoice, c);
+
+            next3 = new JButton(">");
+            next3.addActionListener(new resourceChanger(basicOutputChoice));
+            next3.setPreferredSize(new Dimension(45, 45));
+            next3.setFont(new Font(PAP, Font.BOLD, 15));
+            next3.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 7;
+            c.gridy = 2;
+            c.gridheight = 2;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.anchor = GridBagConstraints.WEST;
+            this.add(next3, c);
+
+            lc1OutputChoice = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 5;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(lc1OutputChoice, c);
+
+            next4 = new JButton(">");
+            next4.addActionListener(new resourceChanger(lc1OutputChoice));
+            next4.setPreferredSize(new Dimension(45, 45));
+            next4.setFont(new Font(PAP, Font.BOLD, 15));
+            next4.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 5;
+            c.gridy = 5;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.anchor = GridBagConstraints.WEST;
+            this.add(next4, c);
+
+            lc2OutputChoice = new JLabel();
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 6;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(lc2OutputChoice, c);
+
+            next5 = new JButton(">");
+            next5.addActionListener(new resourceChanger(lc2OutputChoice));
+            next5.setPreferredSize(new Dimension(45, 45));
+            next5.setFont(new Font(PAP, Font.BOLD, 15));
+            next5.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 5;
+            c.gridy = 6;
+            c.weightx = 0.9;
+            c.weighty = 0.3;
+            c.anchor = GridBagConstraints.WEST;
+            this.add(next5, c);
+
+            ImageIcon cross = scaleImage(new ImageIcon("resources/punchboard/faith.png"), 80);
+            JLabel faithPoint1 = new JLabel("+");
+            faithPoint1.setIcon(cross);
+            faithPoint1.setFont(new Font(PAP, Font.BOLD, 35));
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 5;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(faithPoint1, c);
+
+            JLabel faithPoint2 = new JLabel("+");
+            faithPoint2.setIcon(cross);
+            faithPoint2.setFont(new Font(PAP, Font.BOLD, 35));
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 6;
+            c.weightx = 0.5;
+            c.weighty = 0.2;
+            this.add(faithPoint2, c);
+
+            JButton confirm_Production_Button = new JButton("confirm!");
+            //confirm_Production_Button.addActionListener(confirm_Production_Panel);
+            confirm_Production_Button.setPreferredSize(new Dimension(150, 60));
+            confirm_Production_Button.setFont(new Font(PAP, Font.BOLD, 28));
+            confirm_Production_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 7;
+            c.gridy = 7;
+            c.gridwidth = 2;
+            c.weightx = 0.5;
+            c.weighty = 0.4;
+            c.anchor = GridBagConstraints.PAGE_END;
+            c.insets = new Insets(0,0,10,0);
+            this.add(confirm_Production_Button, c);
         }
 
         public void update() {
+            if(!productionSelection_panel.getBasicProduction().isSelected()) {
+                next1.setEnabled(false);
+                next2.setEnabled(false);
+                next3.setEnabled(false);
+            } else if(productionSelection_panel.getBasicProduction().isSelected()){
+                next1.setEnabled(true);
+                next2.setEnabled(true);
+                next3.setEnabled(true);
+            }
+            if(!productionSelection_panel.getLeaderCard1().isSelected()) {
+                next4.setEnabled(false);
+            } else if(productionSelection_panel.getLeaderCard1().isSelected()) {
+                next4.setEnabled(true);
+            }
+            if(!productionSelection_panel.getLeaderCard2().isSelected()) {
+                next5.setEnabled(false);
+            } else if(productionSelection_panel.getLeaderCard2().isSelected()) {
+                next5.setEnabled(true);
+            }
 
+            ImageIcon icon = scaleImage(new ImageIcon(resources[currentResource].getPathBig()), 80);
+            basicFirstChoice.setIcon(icon);
+            basicSecondChoice.setIcon(icon);
+            basicOutputChoice.setIcon(icon);
+            lc1OutputChoice.setIcon(icon);
+            lc2OutputChoice.setIcon(icon);
+        }
+
+        class resourceChanger implements ActionListener {
+            JLabel managedLabel;
+
+            public resourceChanger(JLabel managedLabel) {
+                this.managedLabel = managedLabel;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentResource++;
+                if(currentResource > 3) {
+                    currentResource = 0;
+                }
+                managedLabel.setIcon(scaleImage(new ImageIcon(resources[currentResource].getPathBig()), 80));
+            }
         }
     }
 
