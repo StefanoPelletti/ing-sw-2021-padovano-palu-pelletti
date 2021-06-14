@@ -248,37 +248,16 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
-     *
-     * @return The MarketHelper toString() as a String.
-     */
-    public static String printMarketHelper() {
-        return game.getMarketHelper().toString();
-    }
-
-    /**
-     * Differentiates automatically between Local Mode and Online Mode.
-     *
-     * @return The DevelopmentCardsVendor toString() as a String.
-     */
-    public static String printDevelopmentCardsVendor() {
-        return game.getDevelopmentCardsVendor().toString();
-    }
-
-    /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints the market.
      *
      * @return The Market toString() as a String.
      */
     public static String printMarket() {
-        if (Halo.local)
-            return game.getMarket().toString();
-        else
             return game.getMarket().toString();
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints the warehouse depot
      *
      * @return The user's WarehouseDepot toString() as a String.
      */
@@ -287,7 +266,7 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints this Player's strongbox.
      *
      * @return The user's Strongbox toString() as a String.
      */
@@ -296,7 +275,7 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints this Player's development slot.
      *
      * @return The user's DevelopmentSlot toString() as a String.
      */
@@ -306,7 +285,7 @@ class Halo {
 
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints a list of Players followed by their numbers.
      *
      * @return A String representing a list of the players followed by their number.
      */
@@ -321,7 +300,7 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints the Development Cards Deck.
      *
      * @return The DevelopmentCardsDeck toString() as a String.
      */
@@ -330,7 +309,7 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints a summary of the FaithTrack
      *
      * @return The FaithTrack toString() as a String.
      */
@@ -339,7 +318,7 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints the current turn
      *
      * @return A String showing the current turn.
      */
@@ -348,7 +327,7 @@ class Halo {
     }
 
     /**
-     * Differentiates automatically between Local Mode and Online Mode.
+     * Prints this Player's leader cards
      *
      * @return A String showing the user's Leader Cards.
      */
@@ -2035,19 +2014,7 @@ class MenuPhase {
         List<String> list = new ArrayList<>();
 
         list.add("\n");
-        list.add("      ___           ___           ___       ___     ");
-        list.add("     /\\__\\         /\\  \\         /\\__\\     /\\  \\    ");
-        list.add("    /:/  /        /::\\  \\       /:/  /    /::\\  \\   ");
-        list.add("   /:/__/        /:/\\:\\  \\     /:/  /    /:/\\:\\  \\  ");
-        list.add("  /::\\  \\ ___   /::\\~\\:\\  \\   /:/  /    /:/  \\:\\  \\ ");
-        list.add(" /:/\\:\\  /\\__\\ /:/\\:\\ \\:\\__\\ /:/__/    /:/__/ \\:\\__\\");
-        list.add(" \\/__\\:\\/:/  / \\/__\\:\\/:/  / \\:\\  \\    \\:\\  \\ /:/  /");
-        list.add("      \\::/  /       \\::/  /   \\:\\  \\    \\:\\  /:/  / ");
-        list.add("      /:/  /        /:/  /     \\:\\  \\    \\:\\/:/  /  ");
-        list.add("     /:/  /        /:/  /       \\:\\__\\    \\::/  /   ");
-        list.add("     \\/__/         \\/__/         \\/__/     \\/__/ ");
-        list.add(" ");
-        /*
+
         list.add("░░░░░░░░░░░▓▓▓███████████████████████▓▓▓░░░░░░░░░░░");
         list.add("░░░░░░░░░▓▓▓░█░░░░░░░░▓░░░░░▓░░░░░░░░█░▓▓▓░░░░░░░░░");
         list.add("░░░░░░░▓▓▓░██░░░░░░░░▓░░░░░░░▓░░░░░░░░██░▓▓▓░░░░░░░");
@@ -2071,7 +2038,7 @@ class MenuPhase {
         list.add("░░░░░░░░░░░░░█▓▓░░░░█░░░░░░░░░█░░░░▓▓█░░░░░░░░░░░░░");
         list.add("░░░░░░░░░░░░░░░█░░░░█░░░░░░░░░█░░░░█░░░░░░░░░░░░░░░");
         list.add("░░░░░░░░░░░░░░░░██████▓▓▓▓▓▓▓██████░░░░░░░░░░░░░░░░");
-        */
+
 
 
         for (String s : list) {
@@ -2091,7 +2058,7 @@ class OnlinePhase {
      * The OnlinePhase manages the Client in a Network scenario.
      * The run() method can only build Network Messages and showing assets with a show().
      * When called, GameSimplified instance is created, and a MSG_UPD_Full is expected from the Server.
-     * After that, a UpdateHandler will be launched and the Thread will wait on the System.in.
+     * After that, a UpdateHandlerGUI will be launched and the Thread will wait on the System.in.
      * If any network error occurs, the Client will be brought back to the Main Menu.
      *
      * @return MAIN_MENU if the Game ends correctly, ERROR if any network error occurs.
@@ -2304,7 +2271,7 @@ class LocalPhase {
      * The LocalPhase run() is essentially a stripped-off version of the OnlinePhase run().
      * Some action can not (and should not) be available in this Mode.
      * The Network part is non-existent.
-     * This method should be caller after initializating the Local Mode using init().
+     * This method should be caller after initializing the Local Mode using init().
      *
      * @return The next Phase, which would be MAIN_MENU.
      */

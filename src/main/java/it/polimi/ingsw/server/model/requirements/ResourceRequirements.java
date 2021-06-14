@@ -35,7 +35,7 @@ public class ResourceRequirements implements Requirement, Serializable {
     public String toString() {
         StringBuilder result = new StringBuilder();
         Integer numOfResources = requirements.values().stream().reduce(0, Integer::sum);
-        result.append(A.CYAN + "   REQUIREMENTS: " + A.RESET).append("\n");
+        result.append(A.RED + "   REQUIREMENTS: " + A.RESET).append("\n");
         result.append("    You need ").append(numOfResources);
         if (numOfResources > 1)
             result.append(" resources, in this way: ").append("\n");
@@ -44,7 +44,7 @@ public class ResourceRequirements implements Requirement, Serializable {
 
         for (Resource r : requirements.keySet()) {
             //   STONE : numOf
-            result.append("     ").append(requirements.get(r)).append(": ").append(r).append("\n");
+            result.append("     ").append(requirements.get(r)).append(": ").append(r.toStringColored()).append("\n");
         }
         return result.toString();
 

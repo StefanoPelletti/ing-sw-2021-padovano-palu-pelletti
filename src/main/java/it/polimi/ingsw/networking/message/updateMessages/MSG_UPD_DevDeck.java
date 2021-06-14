@@ -1,6 +1,7 @@
 package it.polimi.ingsw.networking.message.updateMessages;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
+import it.polimi.ingsw.client.gui.UpdateHandlerGUI;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.server.model.DevelopmentCard;
 
@@ -36,7 +37,7 @@ public class MSG_UPD_DevDeck extends UpdateMessage implements Serializable {
     }
 
     @Override
-    public void executeGUI() {
-
+    public void executeGUI(UpdateHandlerGUI updateHandler) {
+        updateHandler.updateDevDeck(this);
     }
 }

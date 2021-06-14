@@ -41,7 +41,7 @@ public class CardRequirements implements Requirement, Serializable {
         StringBuilder result = new StringBuilder();
         Integer numOfCards = requirements.values().stream().map(ReqValue::getReqNumCard).reduce(0, Integer::sum);
 
-        result.append(A.CYAN + "   REQUIREMENTS: " + A.RESET).append("\n");
+        result.append(A.RED + "   REQUIREMENTS: " + A.RESET).append("\n");
         result.append("    You need ").append(numOfCards);
         if (numOfCards > 1)
             result.append(" cards, with these stats: ").append("\n");

@@ -4,7 +4,8 @@ import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.client.modelSimplified.StrongboxSimplified;
 import it.polimi.ingsw.client.modelSimplified.WarehouseDepotSimplified;
-import it.polimi.ingsw.networking.message.actionMessages.MSG_ACTION_GET_MARKET_RESOURCES;
+import it.polimi.ingsw.networking.message.Message;
+import it.polimi.ingsw.networking.message.actionMessages.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
@@ -38,7 +39,6 @@ public class Board implements Runnable {
 
     JFrame mainFrame;
     MainPanel mainPanel;
-    Dimension frameDimension;
 
     //CENTRAL LEFT PANEL CARDS <- each card is followed by its necessary contents
     String lastLeftCard;
@@ -91,8 +91,6 @@ public class Board implements Runnable {
     static final String PAP = "Papyrus";
 
 
-
-
     //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
     //LEFT PANEL
     LeftPanel leftPanel;                                                                            //<-- updatable (see the update() methods it offers)
@@ -109,16 +107,9 @@ public class Board implements Runnable {
 
     //ACTION LISTENERS
     ActionListener quit_actionListener = e -> {
-        leftPanel.updateNotification(" testo di prova per vedere se il testo va a capo automaticamente wtf aiuto");
-        leftPanel.updateNotification(" This helps, but if the users clicks anywhere other than after the end of the last line the auto scrolling stops. This is not intuitive. It would be nice if the usual behaviour worked, just by scrolling to the bottom the auto-scroll is reactivated.");
-        leftPanel.updateNotification("A work around is possible: you can declare that listener as a class then instantiate it on the event where it is needed. After which you can remove the class after forcing a repaint of the screen. Works like a charm");
-        leftPanel.updateNotification("verticalScrollBarMaximumValue = scrollPane.getVerticalScrollBar().getMaximum();");
-        leftPanel.updateNotification("I admit that that a method to filter events without extra variables could be found, and would appreciate if somebody post it");
-        leftPanel.updateNotification("The Pane then is scrolled down only when vertical scroll bar is expanding, in response to appended lines of text");
-        leftPanel.updateNotification("And remember, it's important to shutdown the executor when you've finished. The shutdown() method will cleanly shut down the thread pool when the last task has completed, and will block until this happens. shutdownNow() will terminate the thread pool immediately");
-        leftPanel.updateNotification("As a variation of @tangens answer: if you can't wait for the garbage collector to clean up your thread, cancel the timer at the end of your run method");
-        leftPanel.updateNotification("Your original question mentions the Swing Timer. If in fact your question is related to SWing, then you should be using the Swing Timer and NOT the util.Timer");
-
+        Ark.sweep();
+        mainFrame.dispose();
+        SwingUtilities.invokeLater(new MainMenu());
     };
     ActionListener show_DevDeck_actionListener = e -> {
         cardLayoutRight.show(centralRightPanel, DEVDECK);
@@ -171,19 +162,30 @@ public class Board implements Runnable {
         int firstCard = leaderCardsPicker_panel.getFirst();
         int secondCard = leaderCardsPicker_panel.getSecond();
 
+        MSG_INIT_CHOOSE_LEADERCARDS message = new MSG_INIT_CHOOSE_LEADERCARDS(firstCard, secondCard);
+
+        send(message);
     };
+
     ActionListener init_resourcePicker_actionListener = e -> {
         ResourcePicker_Panel.CustomResourceButton source = (ResourcePicker_Panel.CustomResourceButton) e.getSource();
-        Resource resource = source.getResource();
 
+        Resource resource = source.getResource();
         int resourceLeft = Ark.game.getResourcePicker().getNumOfResources();
 
+        MSG_INIT_CHOOSE_RESOURCE message = new MSG_INIT_CHOOSE_RESOURCE(resource);
+
+        send(message);
     };
     ActionListener action_endTurn_actionListener = e -> {
+        MSG_ACTION_ENDTURN message = new MSG_ACTION_ENDTURN();
 
+        send(message);
     };
     ActionListener action_buyDevCard_actionListener = e -> {
+        MSG_ACTION_BUY_DEVELOPMENT_CARD message = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
 
+        send(message);
     };
     ActionListener action_changeDepotConfig_actionListener = e -> {
         Resource shelf1 = changeDepotConfig_panel.getShelf1();
@@ -193,6 +195,9 @@ public class Board implements Runnable {
         int extraDepot1 = changeDepotConfig_panel.getFirstDepotQuantity();
         int extraDepot2 = changeDepotConfig_panel.getSecondDepotQuantity();
 
+        MSG_ACTION_CHANGE_DEPOT_CONFIG message = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, extraDepot1, extraDepot2);
+
+        send(message);
     };
     ActionListener action_getMarketResource_actionListener = e -> {
         GetMarketResource_Panel.MarketButton source = (GetMarketResource_Panel.MarketButton) e.getSource();
@@ -200,30 +205,53 @@ public class Board implements Runnable {
         int number = source.getNum();
         boolean column = source.isColumn();
 
+        MSG_ACTION_GET_MARKET_RESOURCES message = new MSG_ACTION_GET_MARKET_RESOURCES(column, number);
+
+        send(message);
     };
     ActionListener action_newMarketChoice_actionListener = e -> {
         MarketHelper_Panel.ChoiceButton source = (MarketHelper_Panel.ChoiceButton) e.getSource();
 
         int choiceNumber = source.getChoiceNumber();
 
+        MSG_ACTION_MARKET_CHOICE message = new MSG_ACTION_MARKET_CHOICE(choiceNumber);
+
+        send(message);
     };
+
     ActionListener action_activateLeaderCard_actionListener = e -> {
         ActivateLeaderCard_Panel.ChooseLeaderCardButton source = (ActivateLeaderCard_Panel.ChooseLeaderCardButton) e.getSource();
 
         int cardNumber = source.getNumber();
 
+        MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(cardNumber);
+
+        send(message);
     };
     ActionListener action_discardLeaderCard_actionListener = e -> {
         DiscardLeaderCard_Panel.ChooseLeaderCardButton source = (DiscardLeaderCard_Panel.ChooseLeaderCardButton) e.getSource();
 
         int cardNumber = source.getNumber();
 
+        MSG_ACTION_DISCARD_LEADERCARD message = new MSG_ACTION_DISCARD_LEADERCARD(cardNumber);
+
+        send(message);
     };
+
     ActionListener action_chooseDevCard_actionListener = e -> {
         Vendor_Panel.SlotButton source = (Vendor_Panel.SlotButton) e.getSource();
 
         int slotNumber = source.getPosition();
         int cardNumber = vendor_panel.getCurrentCard();
+
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message;
+
+        if(slotNumber == -1)
+            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
+        else
+            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(slotNumber, cardNumber);
+
+        send(message);
     };
 
 
@@ -235,10 +263,8 @@ public class Board implements Runnable {
 
         mainFrame.pack();
 
-        //frameDimension = new Dimension(1630, 1030);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //mainFrame.setMinimumSize(frameDimension);
-
+        mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
     }
@@ -451,29 +477,6 @@ public class Board implements Runnable {
 
     }
 
-    //HELPER METHODS (graphics)
-    public static void addPadding(JComponent object, int height, int width, int maximumWidth, int maximumHeight) {
-        GridBagConstraints c;
-
-        c = new GridBagConstraints(); //padding horizontal
-        c.gridx = 1;
-        c.gridy = 0;
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridheight = 1;
-        c.gridwidth = maximumWidth;
-        object.add(Box.createHorizontalStrut(width),c);
-
-        c = new GridBagConstraints(); //padding vertical
-        c.gridx = 0;
-        c.gridy = 1;
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridheight = maximumHeight;
-        c.gridwidth = 1;
-        object.add(Box.createVerticalStrut(height),c);
-    }
-
     public void changeLeftCard(String newCard) {
         this.cardLayoutLeft.show(centralLeftPanel, newCard);
     }
@@ -484,47 +487,10 @@ public class Board implements Runnable {
 
     public void run() {
         //empty to implement run method
+        // updateHandler?
     }
 
-    public ImageIcon scaleImage(ImageIcon icon, int squareDimension) {
-        return scaleImage(icon, squareDimension, squareDimension);
-    }
 
-    public ImageIcon scaleImage(ImageIcon icon, int width, int height) {
-        int newWidth = icon.getIconWidth();
-        int newHeight = icon.getIconHeight();
-        if (icon.getIconWidth() > width) {
-            newWidth = width;
-            newHeight = (newWidth * icon.getIconHeight()) / icon.getIconWidth();
-        }
-        if (newHeight > height) {
-            newHeight = height;
-            newWidth = (icon.getIconWidth() * newHeight) / icon.getIconHeight();
-        }
-        return new ImageIcon(icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
-    }
-
-    //HELPER METHODS (non Graphics)
-    public String resourceToString(Resource resource, boolean plural) {
-        String result = "";
-        switch (resource) {
-            case COIN:
-                result += "Coin";
-                break;
-            case SHIELD:
-                result += "Shield";
-                break;
-            case STONE:
-                result += "Stone";
-                break;
-            case SERVANT:
-                result += "Servant";
-                break;
-        }
-        if (plural)
-            result += "s";
-        return result;
-    }
 
     // this is the custom, new contentPane to set in the mainFrame.
     class MainPanel extends JPanel {
@@ -609,6 +575,8 @@ public class Board implements Runnable {
             lastLeftCard = Ark.nickname;
 
             //controls for first player, eg leadercardpicker enabled
+
+            changeLeftCard(Ark.nickname);
             changeRightCard(Ark.nickname);
         }
 
@@ -634,8 +602,8 @@ public class Board implements Runnable {
             this.setBackground(new Color(215, 200, 145));
             this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 1, new Color(62, 43, 9)));
 
-            //addPadding(this, 839, 458, 3, 6);
-            addPadding(this, 839, 458, 3, 6);
+            //Ark.addPadding(this, 839, 458, 3, 6);
+            Ark.addPadding(this, 839, 458, 3, 6);
 
             JButton quit_Button = new JButton("Quit");
             quit_Button.addActionListener(quit_actionListener);
@@ -797,7 +765,7 @@ public class Board implements Runnable {
             formate.format("%tl:%tM", gfg_calender, gfg_calender);
 
             // Printing the current hour and minute
-            notificationsArea.append("\n" + formate + " - ");
+            notificationsArea.append("\n\n" + formate + " - ");
 
             int i = 7;
 
@@ -1016,7 +984,7 @@ public class Board implements Runnable {
             this.setBackground(new Color(215, 200, 145));
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
 
-            addPadding(this, 158, 1678, 6, 3);
+            Ark.addPadding(this, 158, 1678, 6, 3);
 
             {
                 activate_LeaderCards_Button = new JButton("activate card");
@@ -1253,8 +1221,8 @@ public class Board implements Runnable {
                         ShowPlayerButton b = (ShowPlayerButton) e.getSource();
                         String playerName = b.getPlayerName();
 
-                        cardLayoutLeft.show(centralLeftPanel, playerName);
-                        cardLayoutRight.show(centralRightPanel, playerName);
+                        changeLeftCard(playerName);
+                        changeRightCard(playerName);
                     });
 
 
@@ -1438,7 +1406,7 @@ public class Board implements Runnable {
             }
             this.setLayout(new GridBagLayout());
 
-            addPadding(this, 239, 1221, 4, 4);
+            Ark.addPadding(this, 239, 1221, 4, 4);
 
             c = new GridBagConstraints(); //left padding
             c.weightx = 0;
@@ -1778,8 +1746,7 @@ public class Board implements Runnable {
             g.drawImage(image, 0, 0, this);
         }
 
-        public ImageIcon getNewIcon(int selectedPosition, int[] intmap)
-        {
+        public ImageIcon getNewIcon(int selectedPosition, int[] intmap) {
             String output = "";
 
             if(Ark.solo) {
@@ -1989,7 +1956,7 @@ public class Board implements Runnable {
 
             GridBagConstraints c;
 
-            addPadding(this, 601, 273, 5, 6);
+            Ark.addPadding(this, 601, 273, 5, 6);
 
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -2239,7 +2206,7 @@ public class Board implements Runnable {
             } catch (IOException e) {
             }
 
-            addPadding(this, 601, 948, 6, 5);
+            Ark.addPadding(this, 601, 948, 6, 5);
 
             this.grid = new JLabel[3][3];
 
@@ -2346,7 +2313,7 @@ public class Board implements Runnable {
             } catch (IOException ignored) {
             }
 
-            addPadding(this, 601, 273, 5, 6);
+            Ark.addPadding(this, 601, 273, 5, 6);
 
             this.devGrid = new JLabel[3];
             this.leadGrid = new JLabel[2];
@@ -2500,7 +2467,7 @@ public class Board implements Runnable {
 
             this.labels = new JLabel[3][4];
 
-            addPadding(this, 599, 946, 6, 5);
+            Ark.addPadding(this, 599, 946, 6, 5);
 
             JLabel level3CardLabel = new JLabel("Level 3");
             level3CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
@@ -2653,7 +2620,7 @@ public class Board implements Runnable {
             } catch (IOException e) {
             }
 
-            addPadding(this, 599, 946, 100, 100);
+            Ark.addPadding(this, 599, 946, 100, 100);
 
             JButton back_ShowMarket_Button = new JButton("Back");
             back_ShowMarket_Button.addActionListener(back_show_Market_actionListener);
@@ -2769,7 +2736,7 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
 
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 5, 5);
+            Ark.addPadding(this, 599, 946, 5, 5);
 
             this.labelCards = new JLabel[4];
             this.checkBoxes = new CustomCheckbox[4];
@@ -2896,7 +2863,7 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
 
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 5, 5);
+            Ark.addPadding(this, 599, 946, 5, 5);
 
             JLabel titleLabel = new JLabel("Pick your Resources!");
             titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
@@ -2989,7 +2956,7 @@ public class Board implements Runnable {
             } catch (IOException ignored) {
             }
 
-            addPadding(this, 599, 946, 100, 100);
+            Ark.addPadding(this, 599, 946, 100, 100);
 
             JButton back_GetMarketResource_Button = new JButton("Back");
             back_GetMarketResource_Button.addActionListener(back_getMarketResource_actionListener);
@@ -3151,7 +3118,7 @@ public class Board implements Runnable {
             this.setOpaque(false);
             this.setLayout(new GridBagLayout());
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 100, 100);
+            Ark.addPadding(this, 599, 946, 100, 100);
 
             leaderCardButton = new ChooseLeaderCardButton[2];
             labelsUnderTheLeaderCard = new JLabel[2];
@@ -3288,7 +3255,7 @@ public class Board implements Runnable {
             this.setOpaque(false);
             this.setLayout(new GridBagLayout());
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 100, 100);
+            Ark.addPadding(this, 599, 946, 100, 100);
 
             leaderCardButtons = new ChooseLeaderCardButton[2];
             labelsUnderTheLeaderCard = new JLabel[2];
@@ -3430,7 +3397,7 @@ public class Board implements Runnable {
             this.setOpaque(false);
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
 
-            addPadding(this, 599, 946, 3, 7);
+            Ark.addPadding(this, 599, 946, 3, 7);
 
             shelf1type = new Resource[1];
             shelf2type = new Resource[2];
@@ -3871,7 +3838,7 @@ public class Board implements Runnable {
             this.setOpaque(false);
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
 
-            addPadding(this, 599, 946, 4, 12);
+            Ark.addPadding(this, 599, 946, 4, 12);
 
             choiceButtons = new ChoiceButton[8];
             resourceLabel = new JLabel[4];
@@ -3889,7 +3856,7 @@ public class Board implements Runnable {
 
 
             JPanel flowResource = new JPanel(new GridBagLayout());
-            addPadding(flowResource, 46, 920, 7, 2);
+            Ark.addPadding(flowResource, 46, 920, 7, 2);
             flowResource.setBorder(BorderFactory.createLineBorder(new Color(175, 154, 121), 1));
             flowResource.setBackground(new Color(214, 189, 148));
 
@@ -4003,6 +3970,7 @@ public class Board implements Runnable {
 
     class Vendor_Panel extends JPanel {
         private JLabel devCard;
+        private SlotButton cancel;
         private SlotButton slot1;
         private SlotButton slot2;
         private SlotButton slot3;
@@ -4040,9 +4008,24 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 10, 12);
+            Ark.addPadding(this, 599, 946, 10, 12);
 
             currentCard = 0;
+
+            cancel = new SlotButton("cancel", -1);
+            cancel.addActionListener(action_chooseDevCard_actionListener);
+            cancel.setPreferredSize(new Dimension(120, 40));
+            cancel.setFont(new Font(PAP, Font.BOLD, 20));
+            cancel.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.insets = new Insets(5, 5, 0, 0);
+            this.add(cancel, c);
+
 
             JLabel title = new JLabel("Select a card to buy it!");
             title.setFont(new Font(PAP, Font.BOLD, 40));
@@ -4194,7 +4177,7 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 10, 12);
+            Ark.addPadding(this, 599, 946, 10, 12);
 
             JButton back_ProductionSelection_Button = new JButton("Back");
             back_ProductionSelection_Button.addActionListener(back_ProductionSelection_actionListener); //da cambiare il back
@@ -4370,16 +4353,16 @@ public class Board implements Runnable {
     }
 
     class Production_Panel extends JPanel {
-        JLabel basicFirstChoice;
-        JLabel basicSecondChoice;
-        JLabel basicOutputChoice;
-        JLabel lc1OutputChoice;
-        JLabel lc2OutputChoice;
-        int currentResource;
+        private JLabel basicFirstChoice;
+        private JLabel basicSecondChoice;
+        private JLabel basicOutputChoice;
+        private JLabel lc1OutputChoice;
+        private JLabel lc2OutputChoice;
+        private int currentResource;
 
-        Resource[] resources;
+        private Resource[] resources;
 
-        JButton next1, next2, next3, next4, next5;
+        private JButton next1, next2, next3, next4, next5;
 
         ActionListener back_production_actionListener = e -> {
             cardLayoutRight.show(centralRightPanel, Ark.nickname);
@@ -4390,7 +4373,7 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
             this.setOpaque(false);
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-            addPadding(this, 599, 946, 10, 12);
+            Ark.addPadding(this, 599, 946, 10, 12);
 
             currentResource = 0;
 
@@ -4686,6 +4669,93 @@ public class Board implements Runnable {
                 }
                 managedLabel.setIcon(scaleImage(new ImageIcon(resources[currentResource].getPathBig()), 80));
             }
+        }
+    }
+
+
+    //HELPER METHODS (Graphics)
+    public void disableBottomButtons() {
+        activate_LeaderCards_Button.setEnabled(false);
+        change_Depot_Config_Button.setEnabled(false);
+        get_MarketResource_Button.setEnabled(false);
+        discard_LeaderCard_Button.setEnabled(false);
+        buy_DevCard_Button.setEnabled(false);
+        activate_Production_Button.setEnabled(false);
+        endTurn_Button.setEnabled(false);
+    }
+
+    public void enableAllBottomButtons() {
+        activate_LeaderCards_Button.setEnabled(true);
+        change_Depot_Config_Button.setEnabled(true);
+        get_MarketResource_Button.setEnabled(true);
+        discard_LeaderCard_Button.setEnabled(true);
+        buy_DevCard_Button.setEnabled(true);
+        activate_Production_Button.setEnabled(true);
+        endTurn_Button.setEnabled(true);
+    }
+
+    public void enableActionBottomButtons() {
+        if(!Ark.action) {
+            enableAllBottomButtons();
+        }
+        else {
+            activate_LeaderCards_Button.setEnabled(true);
+            change_Depot_Config_Button.setEnabled(true);
+            get_MarketResource_Button.setEnabled(false);
+            discard_LeaderCard_Button.setEnabled(true);
+            buy_DevCard_Button.setEnabled(false);
+            activate_Production_Button.setEnabled(false);
+            endTurn_Button.setEnabled(true);
+        }
+    }
+
+    public ImageIcon scaleImage(ImageIcon icon, int squareDimension) {
+        return scaleImage(icon, squareDimension, squareDimension);
+    }
+
+    public ImageIcon scaleImage(ImageIcon icon, int width, int height) {
+        int newWidth = icon.getIconWidth();
+        int newHeight = icon.getIconHeight();
+        if (icon.getIconWidth() > width) {
+            newWidth = width;
+            newHeight = (newWidth * icon.getIconHeight()) / icon.getIconWidth();
+        }
+        if (newHeight > height) {
+            newHeight = height;
+            newWidth = (icon.getIconWidth() * newHeight) / icon.getIconHeight();
+        }
+        return new ImageIcon(icon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
+    }
+
+    //HELPER METHODS (non Graphics)
+    public String resourceToString(Resource resource, boolean plural) {
+        String result = "";
+        switch (resource) {
+            case COIN:
+                result += "Coin";
+                break;
+            case SHIELD:
+                result += "Shield";
+                break;
+            case STONE:
+                result += "Stone";
+                break;
+            case SERVANT:
+                result += "Servant";
+                break;
+        }
+        if (plural)
+            result += "s";
+        return result;
+    }
+
+    public void send(Message message) {
+        try {
+            Ark.send(message);
+        }
+        catch (IOException e)
+        {
+            leftPanel.updateNotification("You were disconnected. Please quit");
         }
     }
 

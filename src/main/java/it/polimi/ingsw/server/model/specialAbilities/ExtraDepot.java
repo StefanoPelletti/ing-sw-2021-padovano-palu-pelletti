@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.specialAbilities;
 
 import it.polimi.ingsw.networking.message.updateMessages.playerUpdate.MSG_UPD_Extradepot;
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.utils.A;
 import it.polimi.ingsw.server.utils.ModelObservable;
 
 import java.io.Serializable;
@@ -109,8 +110,8 @@ public class ExtraDepot extends ModelObservable implements SpecialAbility, Seria
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("\u001B[31m" + "   SPECIAL ABILITY: " + "\u001B[0m").append("\n");
-        result.append("    You have 2 more slots for ").append(resource).append("\n");
+        result.append(A.RED + "   SPECIAL ABILITY: " + A.RESET).append("\n");
+        result.append("    You have 2 more slots for ").append(resource.toStringColored()).append("\n");
         if (number > 0) result.append("    There is/are ").append(number).append("!").append("\n");
         return result.toString();
     }

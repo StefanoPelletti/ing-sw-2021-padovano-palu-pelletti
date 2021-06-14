@@ -6,6 +6,7 @@ import it.polimi.ingsw.networking.message.initMessages.MSG_CREATE_LOBBY;
 import it.polimi.ingsw.networking.message.initMessages.MSG_JOIN_LOBBY;
 import it.polimi.ingsw.networking.message.initMessages.MSG_REJOIN_LOBBY;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
+import it.polimi.ingsw.server.controller.GameManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,6 +19,8 @@ import java.net.Socket;
 import java.util.Arrays;
 
 public class MainMenu implements Runnable {
+
+    //card names
     static final String MENU = "Main Menu";
     static final String SETTINGS = "Settings";
     static final String ONLINE = "Online Game";
@@ -26,55 +29,41 @@ public class MainMenu implements Runnable {
     static final String JOIN = "Join Lobby";
     static final String REJOIN = "Reconnect to Lobby";
     static final String LOADING = "Loading";
+
+
     static final int MIN = 1;
     static final int MAX = 4;
     static final int DEFAULT = 3;
     //fonts
     static final String TIMES = "Times New Roman";
     static final String PAP = "Papyrus";
+
+
     CardLayout cl;
     JFrame mainFrame;
     JPanel cardPanel;
     Dimension frameDimension;
+
     //shared objects
     JLabel top_Update_Label;
     JLabel bottom_Update_Label;
     //card 1 (menu card)
-    JButton online_Menu_Button;
-    JButton local_Menu_Button;
-    JButton settings_Menu_Button;
-    JButton quit_Menu_Button;
     //card 2 (settings card)
     JTextField ipAddress_Settings_Field;
     JTextField port_Settings_Field;
     JTextField nickname_Settings_Field;
-    JButton apply_Settings_Button;
-    JButton back_Settings_Button;
     //card 3 (online game card)
-    JButton create_Online_Button;
-    JButton join_Online_Button;
-    JButton rejoin_Online_Button;
-    JButton back_Online_Button;
     //card 4 (create card)
-    JButton confirm_Create_Button;
-    JButton settings_Create_Button;
-    JButton back_Create_Button;
     JLabel recap1_Create_Label;
     JLabel recap2_Create_Label;
     JLabel recap3_Create_Label;
     JSlider numberOfPlayersSlider;
     //card 5 (join card)
-    JButton confirm_Join_Button;
-    JButton settings_Join_Button;
-    JButton back_Join_Button;
     JLabel recap1_Join_Label;
     JLabel recap2_Join_Label;
     JLabel recap3_Join_Label;
     JTextField lobbyNumber_Join_Field;
     //card 6 (rejoin card)
-    JButton confirm_Rejoin_Button;
-    JButton settings_Rejoin_Button;
-    JButton back_Rejoin_Button;
     JLabel recap1_Rejoin_Label;
     JLabel recap2_Rejoin_Label;
     JLabel recap3_Rejoin_Label;
@@ -84,23 +73,79 @@ public class MainMenu implements Runnable {
     JLabel messageLabel;
     JProgressBar progressBar;
     JButton back_Loading_Button;
+
+    private String lastCard = MENU;
+    //ACTION LISTENERS
+
+
+    //card 1 (menu)
     ActionListener quit_Menu_Button_actionListener = e -> {
         mainFrame.dispose();
     };
-    private String lastCard = MENU;
-    //ACTION LISTENERS
-    //card 1 (menu)
     ActionListener online_Menu_Button_actionListener = e -> {
         cl.show(cardPanel, ONLINE);
         lastCard = MENU;
         top_Update_Label.setText(ONLINE);
         bottom_Update_Label.setText("Lorenzo, Lorenzo");
     };
-    //TODO
     ActionListener local_Menu_Button_actionListener = e -> {
+        cl.show(cardPanel, LOADING);
+        lastCard = MENU;
+        progressLabel.setText("starting the game");
+        messageLabel.setText("hol'up");
+        progressBar.setValue(10);
+
+
+        Ark.nickname = "Player";
+        Ark.solo = true;
+        Ark.local = true;
+
+        Ark.myPlayerNumber = 1;
+
+        messageLabel.setText("instantiating MVC");
+        Ark.gameManager = new GameManager(1);
+        Ark.actionManager = Ark.gameManager.getActionManager();
+
+        progressBar.setValue(50);
+        messageLabel.setText("adding player");
+
+        Ark.gameManager.getGame().addPlayer(Ark.nickname, Ark.myPlayerNumber);
+
+        progressBar.setValue(60);
+        messageLabel.setText("setting up");
+
+        Ark.gameManager.getGame().setLeaderCardsPickerCards(Ark.gameManager.getGame().getCurrentPlayerStartingCards());
+        Ark.gameManager.getGame().setLeaderCardsPickerEnabled(true);
+
+        progressBar.setValue(60);
+        messageLabel.setText("writing game");
+
+        MSG_UPD_Full message = Ark.gameManager.getFullModel();
+        Ark.game = new GameSimplified();
+        Ark.game.updateAll(message);
+        Ark.myPlayerRef = Ark.game.getCurrentPlayerRef();
+
+        progressBar.setValue(100);
+        progressLabel.setText("launching game");
+        messageLabel.setText("good luck");
+
+        Board board = new Board();
+        board.changeRightCard(Board.LEADERCARDSPICKER);
+        board.lastRightCard = Board.LEADERCARDSPICKER;
+        board.lastLeftCard = Ark.nickname;
+        board.disableBottomButtons();
+
+        UpdateHandlerGUI updateHandler = new UpdateHandlerGUI(board);
+        Ark.yourTurn = true;
+
+        Ark.gameManager.addAllObserver(updateHandler);
+
+        SwingUtilities.invokeLater(board);
+        mainFrame.dispose();
 
         //load directly the game?
-        lastCard = MENU;
+
+
     };
     ActionListener Settings_Menu_Button_actionListener = e -> {
         cl.show(cardPanel, SETTINGS);
@@ -531,44 +576,7 @@ public class MainMenu implements Runnable {
         mainFrame = new JFrame(" Masters of Renaissance, GUI-edition! ");
         mainFrame.setContentPane(new mainPanel());
 
-        //ACTION LISTENERS assignment
-        //card 1 (menu)
-        online_Menu_Button.addActionListener(online_Menu_Button_actionListener);
-        local_Menu_Button.addActionListener(local_Menu_Button_actionListener);
-        settings_Menu_Button.addActionListener(Settings_Menu_Button_actionListener);
-        quit_Menu_Button.addActionListener(quit_Menu_Button_actionListener);
-
-        //card2 (settings)
-        back_Settings_Button.addActionListener(back_Settings_Button_actionListener);
-        apply_Settings_Button.addActionListener(apply_Settings_Button_actionListener);
-
-        //card 3 (online)
-        create_Online_Button.addActionListener(create_Online_Button_actionListener);
-        join_Online_Button.addActionListener(join_Online_Button_actionListener);
-        rejoin_Online_Button.addActionListener(rejoin_Online_Button_actionListener);
-        back_Online_Button.addActionListener(back_Online_Button_actionListener);
-
-        //card 4 (create)
-        confirm_Create_Button.addActionListener(confirm_Create_Button_actionListener);
-        settings_Create_Button.addActionListener(settings_Create_Button_actionListener);
-        back_Create_Button.addActionListener(back_Create_Button_actionListener);
-
-        //card 5 (join)
-        confirm_Join_Button.addActionListener(confirm_Join_Button_actionListener);
-        settings_Join_Button.addActionListener(settings_Join_Button_actionListener);
-        back_Join_Button.addActionListener(back_Join_Button_actionListener);
-
-        //card 6 (rejoin)
-        confirm_Rejoin_Button.addActionListener(confirm_Rejoin_Button_actionListener);
-        settings_Rejoin_Button.addActionListener(settings_Rejoin_Button_actionListener);
-        back_Rejoin_Button.addActionListener(back_Rejoin_Button_actionListener);
-
-        //card 7 (loading screen)
-        back_Loading_Button.addActionListener(back_Loading_Button_actionListener);
-
-
         mainFrame.pack();
-        //frameDimension = new Dimension(mainFrame.getWidth(), mainFrame.getHeight());
         frameDimension = new Dimension(1290, 980);
         mainFrame.setMinimumSize(frameDimension);
         mainFrame.setResizable(false);
@@ -636,12 +644,12 @@ public class MainMenu implements Runnable {
         GridBagConstraints c;
         /*
             card 1: Main Menu things.
-
          */
         JPanel card1 = new JPanel(new GridBagLayout());
         card1.setOpaque(false);
 
-        online_Menu_Button = new JButton(ONLINE);
+        JButton online_Menu_Button = new JButton(ONLINE);
+        online_Menu_Button.addActionListener(online_Menu_Button_actionListener);
         online_Menu_Button.setPreferredSize(new Dimension(200, 50));
         online_Menu_Button.setFont(new Font(PAP, Font.BOLD, 20));
         online_Menu_Button.setBackground(new Color(231, 210, 181));
@@ -653,7 +661,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 0, 5, 0);
         card1.add(online_Menu_Button, c);
 
-        local_Menu_Button = new JButton(LOCAL);
+        JButton local_Menu_Button = new JButton(LOCAL);
+        local_Menu_Button.addActionListener(local_Menu_Button_actionListener);
         local_Menu_Button.setPreferredSize(new Dimension(200, 50));
         local_Menu_Button.setFont(new Font(PAP, Font.BOLD, 20));
         local_Menu_Button.setBackground(new Color(231, 210, 181));
@@ -676,7 +685,8 @@ public class MainMenu implements Runnable {
         c.weighty = 1;
         card1.add(emptyLabel, c);
 
-        quit_Menu_Button = new JButton("Quit");
+        JButton quit_Menu_Button = new JButton("Quit");
+        quit_Menu_Button.addActionListener(quit_Menu_Button_actionListener);
         quit_Menu_Button.setPreferredSize(new Dimension(120, 40));
         quit_Menu_Button.setFont(new Font(PAP, Font.BOLD, 20));
         quit_Menu_Button.setBackground(new Color(231, 210, 181));
@@ -688,7 +698,8 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LAST_LINE_START;
         card1.add(quit_Menu_Button, c);
 
-        settings_Menu_Button = new JButton(SETTINGS);
+        JButton settings_Menu_Button = new JButton(SETTINGS);
+        settings_Menu_Button.addActionListener(Settings_Menu_Button_actionListener);
         settings_Menu_Button.setPreferredSize(new Dimension(120, 40));
         settings_Menu_Button.setFont(new Font(PAP, Font.BOLD, 20));
         settings_Menu_Button.setBackground(new Color(231, 210, 181));
@@ -709,7 +720,6 @@ public class MainMenu implements Runnable {
 
         /*
             card 2: Settings
-
          */
         JPanel card2 = new JPanel(new GridBagLayout());
         card2.setOpaque(false);
@@ -806,7 +816,8 @@ public class MainMenu implements Runnable {
         c.weighty = 1;
         card2.add(emptyLabel, c);
 
-        back_Settings_Button = new JButton("Back");
+        JButton back_Settings_Button = new JButton("Back");
+        back_Settings_Button.addActionListener(back_Settings_Button_actionListener);
         back_Settings_Button.setPreferredSize(new Dimension(120, 40));
         back_Settings_Button.setFont(new Font(PAP, Font.BOLD, 20));
         back_Settings_Button.setBackground(new Color(231, 210, 181));
@@ -819,7 +830,8 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LAST_LINE_START;
         card2.add(back_Settings_Button, c);
 
-        apply_Settings_Button = new JButton("Apply");
+        JButton apply_Settings_Button = new JButton("Apply");
+        apply_Settings_Button.addActionListener(apply_Settings_Button_actionListener);
         apply_Settings_Button.setPreferredSize(new Dimension(120, 40));
         apply_Settings_Button.setFont(new Font(PAP, Font.BOLD, 20));
         apply_Settings_Button.setBackground(new Color(231, 210, 181));
@@ -840,13 +852,13 @@ public class MainMenu implements Runnable {
         GridBagConstraints c;
         /*
             card 3: online game
-
          */
 
         JPanel card3 = new JPanel(new GridBagLayout());
         card3.setOpaque(false);
 
-        create_Online_Button = new JButton("Create a new Lobby");
+        JButton create_Online_Button = new JButton("Create a new Lobby");
+        create_Online_Button.addActionListener(create_Online_Button_actionListener);
         create_Online_Button.setPreferredSize(new Dimension(250, 50));
         create_Online_Button.setFont(new Font(PAP, Font.BOLD, 20));
         create_Online_Button.setBackground(new Color(231, 210, 181));
@@ -858,7 +870,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 0, 0, 0);
         card3.add(create_Online_Button, c);
 
-        join_Online_Button = new JButton("Join an existing Lobby");
+        JButton join_Online_Button = new JButton("Join an existing Lobby");
+        join_Online_Button.addActionListener(join_Online_Button_actionListener);
         join_Online_Button.setPreferredSize(new Dimension(250, 50));
         join_Online_Button.setFont(new Font(PAP, Font.BOLD, 20));
         join_Online_Button.setBackground(new Color(231, 210, 181));
@@ -870,7 +883,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(5, 0, 0, 0);
         card3.add(join_Online_Button, c);
 
-        rejoin_Online_Button = new JButton("Reconnect to a game");
+        JButton rejoin_Online_Button = new JButton("Reconnect to a game");
+        rejoin_Online_Button.addActionListener(rejoin_Online_Button_actionListener);
         rejoin_Online_Button.setPreferredSize(new Dimension(250, 50));
         rejoin_Online_Button.setFont(new Font(PAP, Font.BOLD, 20));
         rejoin_Online_Button.setBackground(new Color(231, 210, 181));
@@ -892,7 +906,8 @@ public class MainMenu implements Runnable {
         c.weighty = 1;
         card3.add(emptyLabel, c);
 
-        back_Online_Button = new JButton("Back");
+        JButton back_Online_Button = new JButton("Back");
+        back_Online_Button.addActionListener(back_Online_Button_actionListener);
         back_Online_Button.setPreferredSize(new Dimension(120, 40));
         back_Online_Button.setFont(new Font(PAP, Font.BOLD, 20));
         back_Online_Button.setBackground(new Color(231, 210, 181));
@@ -1022,7 +1037,8 @@ public class MainMenu implements Runnable {
         c.gridwidth = 1;
         card4.add(numberOfPlayersSlider, c);
 
-        settings_Create_Button = new JButton("Settings");
+        JButton settings_Create_Button = new JButton("Settings");
+        settings_Create_Button.addActionListener(settings_Create_Button_actionListener);
         settings_Create_Button.setPreferredSize(new Dimension(120, 40));
         settings_Create_Button.setFont(new Font(PAP, Font.BOLD, 20));
         settings_Create_Button.setBackground(new Color(231, 210, 181));
@@ -1035,7 +1051,8 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_START;
         card4.add(settings_Create_Button, c);
 
-        confirm_Create_Button = new JButton("Confirm");
+        JButton confirm_Create_Button = new JButton("Confirm");
+        confirm_Create_Button.addActionListener(confirm_Create_Button_actionListener);
         confirm_Create_Button.setPreferredSize(new Dimension(120, 40));
         confirm_Create_Button.setFont(new Font(PAP, Font.BOLD, 20));
         confirm_Create_Button.setBackground(new Color(231, 210, 181));
@@ -1060,7 +1077,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 160, 0, 160);
         card4.add(emptyLabel, c);
 
-        back_Create_Button = new JButton("Back");
+        JButton back_Create_Button = new JButton("Back");
+        back_Create_Button.addActionListener(back_Create_Button_actionListener);
         back_Create_Button.setPreferredSize(new Dimension(120, 40));
         back_Create_Button.setFont(new Font(PAP, Font.BOLD, 20));
         back_Create_Button.setBackground(new Color(231, 210, 181));
@@ -1081,7 +1099,6 @@ public class MainMenu implements Runnable {
         GridBagConstraints c;
          /*
             card 5: join
-
          */
         JPanel card5 = new JPanel(new GridBagLayout());
         card5.setOpaque(false);
@@ -1190,7 +1207,8 @@ public class MainMenu implements Runnable {
         c.gridwidth = 1;
         card5.add(lobbyNumber_Join_Field, c);
 
-        settings_Join_Button = new JButton("Settings");
+        JButton settings_Join_Button = new JButton("Settings");
+        settings_Join_Button.addActionListener(settings_Join_Button_actionListener);
         settings_Join_Button.setPreferredSize(new Dimension(120, 40));
         settings_Join_Button.setFont(new Font(PAP, Font.BOLD, 20));
         settings_Join_Button.setBackground(new Color(231, 210, 181));
@@ -1203,7 +1221,8 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_START;
         card5.add(settings_Join_Button, c);
 
-        confirm_Join_Button = new JButton("Confirm");
+        JButton confirm_Join_Button = new JButton("Confirm");
+        confirm_Join_Button.addActionListener(confirm_Join_Button_actionListener);
         confirm_Join_Button.setPreferredSize(new Dimension(120, 40));
         confirm_Join_Button.setFont(new Font(PAP, Font.BOLD, 20));
         confirm_Join_Button.setBackground(new Color(231, 210, 181));
@@ -1228,7 +1247,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 160, 0, 160);
         card5.add(emptyLabel, c);
 
-        back_Join_Button = new JButton("Back");
+        JButton back_Join_Button = new JButton("Back");
+        back_Join_Button.addActionListener(back_Join_Button_actionListener);
         back_Join_Button.setPreferredSize(new Dimension(120, 40));
         back_Join_Button.setFont(new Font(PAP, Font.BOLD, 20));
         back_Join_Button.setBackground(new Color(231, 210, 181));
@@ -1247,7 +1267,6 @@ public class MainMenu implements Runnable {
         GridBagConstraints c;
          /*
             card 6: rejoin
-
          */
         JPanel card6 = new JPanel(new GridBagLayout());
         card6.setOpaque(false);
@@ -1356,7 +1375,8 @@ public class MainMenu implements Runnable {
         c.gridwidth = 1;
         card6.add(lobbyNumber_Rejoin_Field, c);
 
-        settings_Rejoin_Button = new JButton("Settings");
+        JButton settings_Rejoin_Button = new JButton("Settings");
+        settings_Rejoin_Button.addActionListener(settings_Rejoin_Button_actionListener);
         settings_Rejoin_Button.setPreferredSize(new Dimension(120, 40));
         settings_Rejoin_Button.setFont(new Font(PAP, Font.BOLD, 20));
         settings_Rejoin_Button.setBackground(new Color(231, 210, 181));
@@ -1369,7 +1389,8 @@ public class MainMenu implements Runnable {
         c.anchor = GridBagConstraints.LINE_START;
         card6.add(settings_Rejoin_Button, c);
 
-        confirm_Rejoin_Button = new JButton("Confirm");
+        JButton confirm_Rejoin_Button = new JButton("Confirm");
+        confirm_Rejoin_Button.addActionListener(confirm_Rejoin_Button_actionListener);
         confirm_Rejoin_Button.setPreferredSize(new Dimension(120, 40));
         confirm_Rejoin_Button.setFont(new Font(PAP, Font.BOLD, 20));
         confirm_Rejoin_Button.setBackground(new Color(231, 210, 181));
@@ -1394,7 +1415,8 @@ public class MainMenu implements Runnable {
         c.insets = new Insets(0, 160, 0, 160);
         card6.add(emptyLabel, c);
 
-        back_Rejoin_Button = new JButton("Back");
+        JButton back_Rejoin_Button = new JButton("Back");
+        back_Rejoin_Button.addActionListener(back_Rejoin_Button_actionListener);
         back_Rejoin_Button.setPreferredSize(new Dimension(120, 40));
         back_Rejoin_Button.setFont(new Font(PAP, Font.BOLD, 20));
         back_Rejoin_Button.setBackground(new Color(231, 210, 181));
@@ -1413,7 +1435,6 @@ public class MainMenu implements Runnable {
         GridBagConstraints c;
          /*
             card 6: rejoin
-
          */
         JPanel card7 = new JPanel(new GridBagLayout());
         card7.setOpaque(false);
@@ -1465,6 +1486,7 @@ public class MainMenu implements Runnable {
         card7.add(emptyLabel, c);
 
         back_Loading_Button = new JButton("Back");
+        back_Loading_Button.addActionListener(back_Loading_Button_actionListener);
         back_Loading_Button.setPreferredSize(new Dimension(120, 40));
         back_Loading_Button.setFont(new Font(PAP, Font.BOLD, 20));
         back_Loading_Button.setBackground(new Color(231, 210, 181));

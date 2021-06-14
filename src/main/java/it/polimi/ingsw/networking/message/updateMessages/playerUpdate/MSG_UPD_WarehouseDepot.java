@@ -1,6 +1,7 @@
 package it.polimi.ingsw.networking.message.updateMessages.playerUpdate;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
+import it.polimi.ingsw.client.gui.UpdateHandlerGUI;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.enumerators.Resource;
@@ -53,7 +54,7 @@ public class MSG_UPD_WarehouseDepot extends UpdateMessage implements Serializabl
     }
 
     @Override
-    public void executeGUI() {
-
+    public void executeGUI(UpdateHandlerGUI updateHandler) {
+        updateHandler.updateCurrentPlayerDepot(this);
     }
 }

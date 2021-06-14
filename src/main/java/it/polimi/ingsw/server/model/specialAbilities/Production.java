@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.specialAbilities;
 
 import it.polimi.ingsw.server.model.enumerators.Resource;
+import it.polimi.ingsw.server.utils.A;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -53,8 +54,8 @@ public class Production implements SpecialAbility, Serializable {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append("\u001B[31m" + "   SPECIAL ABILITY: " + "\u001B[0m").append("\n");
-        result.append("    You can transform any ").append(input).append(" in Faith and something else you wish!").append("\n");
+        result.append(A.RED + "   SPECIAL ABILITY: " + A.RESET).append("\n");
+        result.append("    You can transform any ").append(input.toStringColored()).append(" in Faith and something else you wish!").append("\n");
         return result.toString();
     }
 }

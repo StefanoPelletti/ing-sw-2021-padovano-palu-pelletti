@@ -16,11 +16,14 @@ import java.io.IOException;
 
 public class UpdateHandler implements Runnable, ModelObserver {
 
-    boolean still = false;
+    /**
+     * Used to tell when it's "still" this Player turn in a multi-move turn
+     */
+    private boolean still = false;
 
     /**
-     * The UpdateHandler updates a GameSimplified instance which is supposed to be already present in the Halo.
-     * The UpdateHandler is also able to show real time messages, from both the Server and the Simplified Model which is updated by Update messages.
+     * The UpdateHandlerGUI updates a GameSimplified instance which is supposed to be already present in the Halo.
+     * The UpdateHandlerGUI is also able to show real time messages, from both the Server and the Simplified Model which is updated by Update messages.
      * Also treats the Halo.action field, which indicates if the user has already done a main move.
      */
     @Override

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.networking.message.updateMessages.middlesUpdate;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
+import it.polimi.ingsw.client.gui.UpdateHandlerGUI;
 import it.polimi.ingsw.networking.message.MessageType;
 import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 import it.polimi.ingsw.server.model.LeaderCard;
@@ -45,7 +46,7 @@ public class MSG_UPD_LeaderCardsPicker extends UpdateMessage implements Serializ
     }
 
     @Override
-    public void executeGUI() {
-
+    public void executeGUI(UpdateHandlerGUI updateHandler) {
+        updateHandler.updateLeaderCardPicker(this);
     }
 }

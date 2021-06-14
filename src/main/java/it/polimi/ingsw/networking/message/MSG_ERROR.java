@@ -1,6 +1,7 @@
 package it.polimi.ingsw.networking.message;
 
 import it.polimi.ingsw.client.cli.UpdateHandler;
+import it.polimi.ingsw.client.gui.UpdateHandlerGUI;
 import it.polimi.ingsw.networking.message.updateMessages.UpdateMessage;
 
 import java.io.Serializable;
@@ -37,7 +38,7 @@ public class MSG_ERROR extends UpdateMessage implements Serializable {
     }
 
     @Override
-    public void executeGUI() {
-
+    public void executeGUI(UpdateHandlerGUI updateHandler) {
+        updateHandler.printError(this);
     }
 }
