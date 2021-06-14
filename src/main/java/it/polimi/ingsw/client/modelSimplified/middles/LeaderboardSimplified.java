@@ -22,16 +22,18 @@ public class LeaderboardSimplified {
         this.board = new TreeMap<>(newLeaderboard);
     }
 
-    /**
-     * Returns the Leaderboard status, with a prompt that tells a specified Player if he won, lost, or tied.
-     * This method also works in Solo mode by specifying it.
-     *
-     * @return A String with the result, personalized in base of the type of game (multiplayer or Solo) and the player.
-     */
+
     public Map<String, Integer> getBoard() {
         return this.board;
     }
 
+
+    /**
+     * Returns the Leaderboard status, with a prompt that tells a specified Player if he won, lost, or tied. <p>
+     * This method also works in Solo mode, but it must be specified by parameter.
+     *
+     * @return a String with the result, personalized in base of the type of game (multiplayer or Solo) and the player
+     */
     public String toResult(String thisPlayer, boolean solo) {
         StringBuilder result = new StringBuilder();
         if (!enabled) return result.append("Empty LeaderboardSimplified.").toString();

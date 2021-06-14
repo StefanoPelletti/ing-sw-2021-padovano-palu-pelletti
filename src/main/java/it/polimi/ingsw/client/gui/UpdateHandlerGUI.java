@@ -102,6 +102,7 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
 
         String name = Ark.game.getCurrentPlayerName();
         board.centralLeftPanel.update(name);
+        board.bottomPanel.update();
     }
 
     public void updateCurrentPlayerDevSlot(MSG_UPD_DevSlot message) {
@@ -109,6 +110,7 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
 
         String name = Ark.game.getCurrentPlayerName();
         board.centralRightPanel.update(name);
+        board.bottomPanel.update();
     }
 
     public void updateCurrentPlayerExtraDepot(MSG_UPD_Extradepot message) {
@@ -160,8 +162,11 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
                     Ark.action = false;
             }
             Ark.game.updateGame(message);
+
             board.leftPanel.updateTurnOf();
             board.leftPanel.updateCurrentTurn();
+            if(Ark.solo)
+                board.topPanel.update();
         }
     }
 
@@ -241,13 +246,8 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
             Ark.yourTurn = false;
 
             board.disableBottomButtons();
-
-            //TODO
-            /*
-            System.out.println(A.YELLOW + " <> Game over : " + A.RESET + Ark.game.getLeaderBoard().toResult(Ark.myNickname, Ark.solo));
-            System.out.println(" > " + A.UL + "Please write quit to go back to the Main Menu." + A.RESET);
-
-             */
+            board.leaderboard_panel.update();
+            board.changeRightCard(Board.LEADERBOARD);
         }
         throw new IllegalArgumentException();
     }

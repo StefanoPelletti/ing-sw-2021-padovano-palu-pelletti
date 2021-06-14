@@ -42,8 +42,8 @@ public class Leaderboard extends ModelObservable {
      * If absent, the player is added with the given score.
      * If present, the previous score of the player is summed with the given quantity.
      *
-     * @param nickname The name of player associated with the score.
-     * @param score    The score of the player.
+     * @param nickname the name of player associated with the score
+     * @param score    the score of the player
      */
     public void addScore(String nickname, Integer score) {
         if (this.board == null) {

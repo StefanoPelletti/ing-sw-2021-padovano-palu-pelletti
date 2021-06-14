@@ -7,6 +7,7 @@ import it.polimi.ingsw.client.modelSimplified.WarehouseDepotSimplified;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.actionMessages.*;
 import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
+import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderBoard;
 import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
@@ -34,8 +35,8 @@ import java.util.*;
 public class Board implements Runnable {
     CardLayout cardLayoutLeft;
     CardLayout cardLayoutRight;
-    CentralLeftPanel centralLeftPanel;                                                                  //<-- updatable (see the update() methods it offers)
-    CentralRightPanel centralRightPanel;                                                                //<-- updatable (see the update() methods it offers)
+    CentralLeftPanel centralLeftPanel;                                                             //<-- updatable (see the update() methods it offers)
+    CentralRightPanel centralRightPanel;                                                           //<-- updatable (see the update() methods it offers)
 
     JFrame mainFrame;
     MainPanel mainPanel;
@@ -84,6 +85,9 @@ public class Board implements Runnable {
     static final String PRODSELECTION = "Production Selection";
     ProductionSelection_Panel productionSelection_panel;                                            //<- updatable
 
+    static final String LEADERBOARD = "Leader Board";
+    Leaderboard_Panel leaderboard_panel;
+
 
 
     //fonts
@@ -112,51 +116,80 @@ public class Board implements Runnable {
         SwingUtilities.invokeLater(new MainMenu());
     };
     ActionListener show_DevDeck_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, DEVDECK);
-        cardLayoutLeft.show(centralLeftPanel, Ark.nickname);
+        changeRightCard(DEVDECK);
+        changeLeftCard(Ark.nickname);
     };
     ActionListener show_Market_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, MARKET);
-        cardLayoutLeft.show(centralLeftPanel, Ark.nickname);
+        changeRightCard(MARKET);
+        changeLeftCard(Ark.nickname);
     };
     ActionListener show_activateLeaderCard_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, ACTIVATELEADERCARD);
+        changeRightCard(ACTIVATELEADERCARD);
+        changeLeftCard(Ark.nickname);
     };
     ActionListener show_changeDepotConfig_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, CHANGEDEPOTCONFIG);
+        changeRightCard(CHANGEDEPOTCONFIG);
+        changeLeftCard(Ark.nickname);
     };
     ActionListener show_getMarketResource_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, GETMARKETRESOURCES);
-        cardLayoutLeft.show(centralLeftPanel, Ark.nickname);
+        changeRightCard(GETMARKETRESOURCES);
+        changeLeftCard(Ark.nickname);
     };
     ActionListener show_discardLeaderCard_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, DISCARDLEADERCARD);
-        cardLayoutLeft.show(centralLeftPanel, Ark.nickname);
+        changeRightCard(DISCARDLEADERCARD);
+        changeLeftCard(Ark.nickname);
     };
     ActionListener show_ProductionSelection_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, PRODSELECTION);
+        changeRightCard(PRODSELECTION);
+        changeLeftCard(Ark.nickname);
     };
+
+    /**
+     * ActionListener for a generic Back button. <p>
+     * Basically sends the two Central panels back to the Last valid Card.
+     */
+    ActionListener genericBack_actionListener = e -> {
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
+    };
+    ////////////maybe they're going to be deleted
     ActionListener back_show_DevDeck_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, lastRightCard);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
     ActionListener back_show_Market_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, lastRightCard);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
     ActionListener back_getMarketResource_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, lastRightCard);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
     ActionListener back_discardLeaderCard_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, lastRightCard);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
     ActionListener back_activateLeaderCard_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, lastRightCard);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
     ActionListener back_changeDepotConfig_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, lastRightCard);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
     ActionListener back_othersDevSlot_actionListener = e -> {
-        cardLayoutRight.show(centralRightPanel, Ark.nickname);
+        changeRightCard(lastRightCard);
+        changeLeftCard(lastLeftCard);
     };
+
+    /* *
+    * ACTION LISTENERS FOR ACTIONS
+    * */
+    /**
+     * ActionListener for the Choose LeaderCard action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.LeaderCardsPicker_Panel the panel that uses that actionListener
+     */
     ActionListener init_leaderCardsPicker_actionListener = e -> {
 
         int firstCard = leaderCardsPicker_panel.getFirst();
@@ -167,6 +200,11 @@ public class Board implements Runnable {
         send(message);
     };
 
+    /**
+     * ActionListener for the Choose Resource action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.ResourcePicker_Panel the panel that uses that actionListener
+     */
     ActionListener init_resourcePicker_actionListener = e -> {
         ResourcePicker_Panel.CustomResourceButton source = (ResourcePicker_Panel.CustomResourceButton) e.getSource();
 
@@ -177,16 +215,32 @@ public class Board implements Runnable {
 
         send(message);
     };
+
+    /**
+     * ActionListener for the End Turn action. <p>
+     * Basically composes a message and sends it.
+     */
     ActionListener action_endTurn_actionListener = e -> {
         MSG_ACTION_ENDTURN message = new MSG_ACTION_ENDTURN();
 
         send(message);
     };
+
+    /**
+     * ActionListener for the Buy Dev Card action. <p>
+     * Basically creates a message and sends it.
+     */
     ActionListener action_buyDevCard_actionListener = e -> {
         MSG_ACTION_BUY_DEVELOPMENT_CARD message = new MSG_ACTION_BUY_DEVELOPMENT_CARD();
 
         send(message);
     };
+
+    /**
+     * ActionListener for the Change Depot Config action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.ChangeDepotConfig_Panel the panel that uses that actionListener
+     */
     ActionListener action_changeDepotConfig_actionListener = e -> {
         Resource shelf1 = changeDepotConfig_panel.getShelf1();
         Resource[] shelf2 = changeDepotConfig_panel.getShelf2();
@@ -199,6 +253,12 @@ public class Board implements Runnable {
 
         send(message);
     };
+
+    /**
+     * ActionListener for the Get Market Resources action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.GetMarketResource_Panel the panel that uses that actionListener
+     */
     ActionListener action_getMarketResource_actionListener = e -> {
         GetMarketResource_Panel.MarketButton source = (GetMarketResource_Panel.MarketButton) e.getSource();
 
@@ -209,6 +269,12 @@ public class Board implements Runnable {
 
         send(message);
     };
+
+    /**
+     * ActionListener for the Market Helper choice action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.MarketHelper_Panel the panel that uses that actionListener
+     */
     ActionListener action_newMarketChoice_actionListener = e -> {
         MarketHelper_Panel.ChoiceButton source = (MarketHelper_Panel.ChoiceButton) e.getSource();
 
@@ -219,6 +285,11 @@ public class Board implements Runnable {
         send(message);
     };
 
+    /**
+     * ActionListener for the activateLeaderCard action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.ActivateLeaderCard_Panel the panel that uses that actionListener
+     */
     ActionListener action_activateLeaderCard_actionListener = e -> {
         ActivateLeaderCard_Panel.ChooseLeaderCardButton source = (ActivateLeaderCard_Panel.ChooseLeaderCardButton) e.getSource();
 
@@ -228,6 +299,12 @@ public class Board implements Runnable {
 
         send(message);
     };
+
+    /**
+     * ActionListener for the discardLeaderCard action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.DiscardLeaderCard_Panel the panel that uses that actionListener
+     */
     ActionListener action_discardLeaderCard_actionListener = e -> {
         DiscardLeaderCard_Panel.ChooseLeaderCardButton source = (DiscardLeaderCard_Panel.ChooseLeaderCardButton) e.getSource();
 
@@ -238,6 +315,11 @@ public class Board implements Runnable {
         send(message);
     };
 
+    /**
+     * ActionListener for the choose Development Card action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.Vendor_Panel the panel that uses that actionListener
+     */
     ActionListener action_chooseDevCard_actionListener = e -> {
         Vendor_Panel.SlotButton source = (Vendor_Panel.SlotButton) e.getSource();
 
@@ -256,7 +338,7 @@ public class Board implements Runnable {
 
 
     public Board() {
-        mainFrame = new JFrame("Huh?");
+        mainFrame = new JFrame("Halo Medieval Alpha 0.0.2");
         mainPanel = new MainPanel();
         mainFrame.setContentPane(mainPanel);
 
@@ -280,6 +362,8 @@ public class Board implements Runnable {
         Ark.myPlayerNumber = 1;
         Ark.game = new GameSimplified();
 
+
+
         Ark.gameManager = new GameManager(4);
         Ark.actionManager = Ark.gameManager.getActionManager();
         Game game = Ark.gameManager.getGame();
@@ -291,7 +375,7 @@ public class Board implements Runnable {
         Player B = game.getPlayer("B");
         Player C = game.getPlayer("C");
         Player D = game.getPlayer("D");
-        game.setLeaderCardsPickerCards(new java.util.ArrayList<LeaderCard>());
+        game.setLeaderCardsPickerCards(new java.util.ArrayList<>());
         Ark.gameManager.getFaithTrackManager().advance(A);
         Ark.gameManager.getFaithTrackManager().advance(A);
         for (int i = 0; i < 4; i++) {
@@ -303,6 +387,13 @@ public class Board implements Runnable {
         for (int i = 0; i < 15; i++) {
             Ark.gameManager.getFaithTrackManager().advance(D);
         }
+
+
+        game.getLeaderBoard().addScore("B", 8);
+        game.getLeaderBoard().addScore("C", 16);
+        game.getLeaderBoard().addScore("A", 778);
+        game.getLeaderBoard().addScore("D", 777);
+        game.getLeaderBoard().setEnabled(true);
 
         List<VendorCard> buyable = new ArrayList<>();
         buyable.add(new VendorCard(new DevelopmentCard(1, it.polimi.ingsw.server.model.enumerators.Color.GREEN, 12,
@@ -469,9 +560,11 @@ public class Board implements Runnable {
 
         game.setLeaderCardsPickerCards(game.getCurrentPlayerStartingCards());
 
+        MSG_UPD_LeaderBoard m = game.getLeaderBoard().generateMessage();
         Ark.game = new GameSimplified();
         MSG_UPD_Full message = Ark.gameManager.getFullModel();
         Ark.game.updateAll(message);
+        Ark.game.updateLeaderBoard(m);
         Ark.myPlayerRef = Ark.game.getPlayerRef(1);
         SwingUtilities.invokeLater(new Board());
 
@@ -500,7 +593,7 @@ public class Board implements Runnable {
         public MainPanel() {
             try {
                 image = ImageIO.read(new File("resources/images/board_bg.png"));
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
 
             {
@@ -573,8 +666,6 @@ public class Board implements Runnable {
 
             lastRightCard = Ark.nickname;
             lastLeftCard = Ark.nickname;
-
-            //controls for first player, eg leadercardpicker enabled
 
             changeLeftCard(Ark.nickname);
             changeRightCard(Ark.nickname);
@@ -1732,8 +1823,10 @@ public class Board implements Runnable {
             }
 
             if(Ark.solo) {
-                if(this.positions[Ark.game.getBlackCrossPosition()].isEmpty)
+                if(this.positions[Ark.game.getBlackCrossPosition()].isEmpty) {
                     this.positions[Ark.game.getBlackCrossPosition()].setIcon(scaleImage(new ImageIcon("resources/FaithTrackIcons/L.png"), 40));
+                    this.positions[Ark.game.getBlackCrossPosition()].isEmpty = false;
+                }
             }
 
         }
@@ -2168,8 +2261,11 @@ public class Board implements Runnable {
             this.add(productionSelection_panel, PRODSELECTION);
             production_panel = new Production_Panel();
             this.add(production_panel, PRODUCTION);
+            leaderboard_panel = new Leaderboard_Panel();
+            this.add(leaderboard_panel, LEADERBOARD);
             for (PlayerSimplified player : Ark.game.getPlayerList()) {
                 if (player.getNickname().equals(Ark.nickname)) continue;
+
                 Others_DevSlot_Panel panel = new Others_DevSlot_Panel(player.getNickname());
                 this.add(panel, player.getNickname());
                 othersDevSlotList.add(panel);
@@ -2320,7 +2416,8 @@ public class Board implements Runnable {
             this.leadLabel = new JLabel[2];
 
             JButton back_OthersDevSlot = new JButton("Back");
-            back_OthersDevSlot.addActionListener(back_othersDevSlot_actionListener);
+            //back_OthersDevSlot.addActionListener(back_othersDevSlot_actionListener);
+            back_OthersDevSlot.addActionListener(genericBack_actionListener);
             back_OthersDevSlot.setPreferredSize(new Dimension(120, 40));
             back_OthersDevSlot.setFont(new Font(PAP, Font.BOLD, 20));
             back_OthersDevSlot.setBackground(new Color(231, 210, 181));
@@ -2509,7 +2606,8 @@ public class Board implements Runnable {
             this.add(level1CardLabel, c);
 
             JButton back_DevDeck_Button = new JButton("Back");
-            back_DevDeck_Button.addActionListener(back_show_DevDeck_actionListener);
+            //back_DevDeck_Button.addActionListener(back_show_DevDeck_actionListener);
+            back_DevDeck_Button.addActionListener(genericBack_actionListener);
             back_DevDeck_Button.setPreferredSize(new Dimension(120, 40));
             back_DevDeck_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_DevDeck_Button.setBackground(new Color(231, 210, 181));
@@ -2623,7 +2721,8 @@ public class Board implements Runnable {
             Ark.addPadding(this, 599, 946, 100, 100);
 
             JButton back_ShowMarket_Button = new JButton("Back");
-            back_ShowMarket_Button.addActionListener(back_show_Market_actionListener);
+            //back_ShowMarket_Button.addActionListener(back_show_Market_actionListener);
+            back_ShowMarket_Button.addActionListener(genericBack_actionListener);
             back_ShowMarket_Button.setPreferredSize(new Dimension(120, 40));
             back_ShowMarket_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_ShowMarket_Button.setBackground(new Color(231, 210, 181));
@@ -2959,7 +3058,8 @@ public class Board implements Runnable {
             Ark.addPadding(this, 599, 946, 100, 100);
 
             JButton back_GetMarketResource_Button = new JButton("Back");
-            back_GetMarketResource_Button.addActionListener(back_getMarketResource_actionListener);
+            //back_GetMarketResource_Button.addActionListener(back_getMarketResource_actionListener);
+            back_GetMarketResource_Button.addActionListener(genericBack_actionListener);
             back_GetMarketResource_Button.setPreferredSize(new Dimension(120, 40));
             back_GetMarketResource_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_GetMarketResource_Button.setBackground(new Color(231, 210, 181));
@@ -3124,7 +3224,8 @@ public class Board implements Runnable {
             labelsUnderTheLeaderCard = new JLabel[2];
 
             JButton back_DiscardLeaderCard_Button = new JButton("Back");
-            back_DiscardLeaderCard_Button.addActionListener(back_discardLeaderCard_actionListener);
+            //back_DiscardLeaderCard_Button.addActionListener(back_discardLeaderCard_actionListener);
+            back_DiscardLeaderCard_Button.addActionListener(genericBack_actionListener);
             back_DiscardLeaderCard_Button.setPreferredSize(new Dimension(120, 40));
             back_DiscardLeaderCard_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_DiscardLeaderCard_Button.setBackground(new Color(231, 210, 181));
@@ -3261,7 +3362,8 @@ public class Board implements Runnable {
             labelsUnderTheLeaderCard = new JLabel[2];
 
             JButton back_ActivateLeaderCard_Button = new JButton("Back");
-            back_ActivateLeaderCard_Button.addActionListener(back_activateLeaderCard_actionListener);
+            //back_ActivateLeaderCard_Button.addActionListener(back_activateLeaderCard_actionListener);
+            back_ActivateLeaderCard_Button.addActionListener(genericBack_actionListener);
             back_ActivateLeaderCard_Button.setPreferredSize(new Dimension(120, 40));
             back_ActivateLeaderCard_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_ActivateLeaderCard_Button.setBackground(new Color(231, 210, 181));
@@ -3409,7 +3511,8 @@ public class Board implements Runnable {
             depotQuantity = new int[2];
 
             JButton back_ChangeDepotConfig_Card_Button = new JButton("Back");
-            back_ChangeDepotConfig_Card_Button.addActionListener(back_changeDepotConfig_actionListener);
+            //back_ChangeDepotConfig_Card_Button.addActionListener(back_changeDepotConfig_actionListener);
+            back_ChangeDepotConfig_Card_Button.addActionListener(genericBack_actionListener);
             back_ChangeDepotConfig_Card_Button.setPreferredSize(new Dimension(120, 40));
             back_ChangeDepotConfig_Card_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_ChangeDepotConfig_Card_Button.setBackground(new Color(231, 210, 181));
@@ -4353,20 +4456,22 @@ public class Board implements Runnable {
     }
 
     class Production_Panel extends JPanel {
-        private JLabel basicFirstChoice;
-        private JLabel basicSecondChoice;
-        private JLabel basicOutputChoice;
-        private JLabel lc1OutputChoice;
-        private JLabel lc2OutputChoice;
+        private final JLabel basicFirstChoice;
+        private final JLabel basicSecondChoice;
+        private final JLabel basicOutputChoice;
+        private final JLabel lc1OutputChoice;
+        private final JLabel lc2OutputChoice;
         private int currentResource;
 
-        private Resource[] resources;
+        private final Resource[] resources;
 
-        private JButton next1, next2, next3, next4, next5;
+        private final JButton next1;
+        private final JButton next2;
+        private final JButton next3;
+        private final JButton next4;
+        private final JButton next5;
 
-        ActionListener back_production_actionListener = e -> {
-            cardLayoutRight.show(centralRightPanel, Ark.nickname);
-        };
+
 
         public Production_Panel() {
             GridBagConstraints c;
@@ -4383,9 +4488,12 @@ public class Board implements Runnable {
             resources[2] = Resource.STONE;
             resources[3] = Resource.SERVANT;
 
+            ActionListener back_ProductionSelection_actionListener = e -> {
+                changeRightCard(PRODSELECTION);
+            };
 
             JButton back_ProductionSelection_Button = new JButton("Back");
-            back_ProductionSelection_Button.addActionListener(back_production_actionListener);
+            back_ProductionSelection_Button.addActionListener(back_ProductionSelection_actionListener);
             back_ProductionSelection_Button.setPreferredSize(new Dimension(120, 40));
             back_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 20));
             back_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
@@ -4672,8 +4780,119 @@ public class Board implements Runnable {
         }
     }
 
+    class Leaderboard_Panel extends JPanel {
+        private final JLabel resultLabel;
+        private final JLabel[] entries;
+
+        static final int LINES = 4;
+
+        public Leaderboard_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
+            Ark.addPadding(this, 599, 946, 1, 5);
+
+            this.entries = new JLabel[LINES];
+
+            JButton back_Leaderboard_Button = new JButton("Back");
+            back_Leaderboard_Button.addActionListener(genericBack_actionListener);
+            back_Leaderboard_Button.setPreferredSize(new Dimension(120, 40));
+            back_Leaderboard_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_Leaderboard_Button.setBackground(new Color(231, 210, 181));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.insets = new Insets(5, 5, 0, 0);
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            this.add(back_Leaderboard_Button, c);
+
+
+            resultLabel = new JLabel();
+            resultLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.insets = new Insets(60, 0, 30, 0);
+            c.anchor = GridBagConstraints.PAGE_START;
+            this.add(resultLabel, c);
+
+            for(int i=0; i<LINES; i++) {
+                this.entries[i] = new JLabel();
+                this.entries[i].setFont(new Font(PAP, Font.BOLD, 34));
+                this.entries[i].setHorizontalAlignment(SwingConstants.CENTER);
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = i+2;
+                c.weightx = 0.1;
+                c.weighty = 0.5;
+                if(i==LINES-1)
+                    c.insets = new Insets(0,0,50,0);
+                else
+                    c.insets = new Insets(0, 0, 0, 0);
+                c.anchor = GridBagConstraints.PAGE_START;
+                this.add(this.entries[i], c);
+
+            }
+        }
+
+        public void update() {
+            if(Ark.game.isLeaderBoardEnabled()) {
+                Map<String, Integer> board = Ark.game.getLeaderBoard().getBoard();
+                boolean tie = false;
+                Integer maxValue = 0;
+                for (String nickname : board.keySet()) {
+                    if (board.get(nickname) > maxValue) maxValue = board.get(nickname);
+                }
+
+                if (Ark.solo) {
+                    String key = "Lorenzo";
+                    entries[0].setText("" + Ark.nickname + " - " + board.get(Ark.nickname) + " points");
+                    if (board.get(key) == 1) //lorenzo Lost
+                        resultLabel.setText("You made it!");
+                    if (board.get(key) == 2) //lorenzo won
+                        resultLabel.setText("Lorenzo won!");
+                } else {
+                    if (board.get(Ark.nickname).equals(maxValue)) {
+                        for (String nickname : board.keySet()) {
+                            if (nickname.equals(Ark.nickname))
+                                continue;
+                            if (maxValue.equals(board.get(nickname)))
+                                tie = true;
+                        }
+                        if (tie)
+                            resultLabel.setText("Did you just Tied?");
+                        else
+                            resultLabel.setText("You made it!");
+                    } else
+                        resultLabel.setText("You lost!");
+                }
+
+                String entry;
+                List<PlayerSimplified> playerList = Ark.game.getPlayerSimplifiedList();
+                for (int i = 0; i < playerList.size(); i++) {
+                    entry = "";
+                    entry += playerList.get(i).getNickname();
+                    entry += " - ";
+                    entry += board.get(playerList.get(i).getNickname());
+                    entry += " points";
+                    this.entries[i].setText(entry);
+                }
+            }
+        }
+    }
+
 
     //HELPER METHODS (Graphics)
+
+    /**
+     * Disables all the buttons on the Bottom Panel.
+     */
     public void disableBottomButtons() {
         activate_LeaderCards_Button.setEnabled(false);
         change_Depot_Config_Button.setEnabled(false);
@@ -4684,6 +4903,9 @@ public class Board implements Runnable {
         endTurn_Button.setEnabled(false);
     }
 
+    /**
+     * Enables all the buttons on the Bottom Panel.
+     */
     public void enableAllBottomButtons() {
         activate_LeaderCards_Button.setEnabled(true);
         change_Depot_Config_Button.setEnabled(true);
@@ -4694,6 +4916,9 @@ public class Board implements Runnable {
         endTurn_Button.setEnabled(true);
     }
 
+    /**
+     * Enables certain buttons on the Bottom Panel, after checking if the Player can still do the related actions.
+     */
     public void enableActionBottomButtons() {
         if(!Ark.action) {
             enableAllBottomButtons();
@@ -4709,10 +4934,30 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Scales a given ImageIcon by imposing a square around the icon.
+     * <p>
+     *     Uses the function below.
+     *
+     * @param icon the ImageIcon being scaled
+     * @param squareDimension the desired squared dimension
+     * @return a scaled ImageIcon from the input one
+     * @see #scaleImage(ImageIcon, int, int)
+     */
     public ImageIcon scaleImage(ImageIcon icon, int squareDimension) {
         return scaleImage(icon, squareDimension, squareDimension);
     }
 
+    /**
+     * Scales a give ImageIcon by imposing a desired rectangle dimension.
+     * <p>
+     *     Maintains the aspect ratio, looking at the minimum dimension from height or width.
+     *     By default scales using a SCALE_SMOOTH algorithm. See code.
+     * @param icon the ImageIcon being scaled
+     * @param width the desired width in pixel
+     * @param height the desired height in pixel
+     * @return a scaled ImageIcon from the input one
+     */
     public ImageIcon scaleImage(ImageIcon icon, int width, int height) {
         int newWidth = icon.getIconWidth();
         int newHeight = icon.getIconHeight();
@@ -4728,6 +4973,17 @@ public class Board implements Runnable {
     }
 
     //HELPER METHODS (non Graphics)
+
+    /**
+     * Converts a Resource Type to the corresponding word.
+     * <p>
+     *     Instead of writing STONE, it results in Stone.
+     *     If specified, can even add the s at the end of the word: Stones.
+     *
+     * @param resource  the Resource to be parsed
+     * @param plural    True if you want to add an s at the end, False otherwise
+     * @return          a very normal String
+     */
     public String resourceToString(Resource resource, boolean plural) {
         String result = "";
         switch (resource) {
@@ -4749,6 +5005,12 @@ public class Board implements Runnable {
         return result;
     }
 
+    /**
+     * Tries to send a message by forwarding the message to the Ark. <p>
+     *     There it could go in Internet or go directly through the controller.
+     *     If an exception gets thrown, the Player will be asked to quit
+     * @param message the message that is being sent
+     */
     public void send(Message message) {
         try {
             Ark.send(message);
@@ -4756,7 +5018,8 @@ public class Board implements Runnable {
         catch (IOException e)
         {
             leftPanel.updateNotification("You were disconnected. Please quit");
+            Ark.yourTurn = false;
+            disableBottomButtons();
         }
     }
-
 }
