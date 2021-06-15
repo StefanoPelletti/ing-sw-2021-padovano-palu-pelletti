@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -258,8 +259,11 @@ public class MainMenu implements Runnable {
             if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
                 MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
                 Ark.solo = solo;
+                Ark.local = false;
+
                 progressBar.setIndeterminate(true);
                 progressLabel.setText("waiting other players");
+
                 Ark.nickname = msg.getAssignedNickname();
                 messageLabel.setText("Lobby Number is " + msg.getLobbyNumber());
 
@@ -273,6 +277,7 @@ public class MainMenu implements Runnable {
 
                     Ark.game = new GameSimplified();
                     Ark.game.updateAll((MSG_UPD_Full) message);
+                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
 
                     progressBar.setValue(100);
                     progressLabel.setText("launching game");
@@ -340,7 +345,6 @@ public class MainMenu implements Runnable {
         String nickname = Ark.nickname;
         String address = Ark.defaultAddress;
         int port = Ark.defaultPort;
-        boolean solo = false;
 
         lastCard = JOIN;
         cl.show(cardPanel, LOADING);
@@ -371,7 +375,8 @@ public class MainMenu implements Runnable {
                 MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
 
                 Ark.nickname = msg.getAssignedNickname();
-                Ark.solo = solo;
+                Ark.solo = false;
+                Ark.local = false;
 
                 progressBar.setIndeterminate(true);
                 progressLabel.setText("waiting other players");
@@ -387,6 +392,7 @@ public class MainMenu implements Runnable {
 
                     Ark.game = new GameSimplified();
                     Ark.game.updateAll((MSG_UPD_Full) message);
+                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
 
                     progressBar.setValue(100);
                     progressLabel.setText("launching game");
@@ -455,7 +461,6 @@ public class MainMenu implements Runnable {
         String nickname = Ark.nickname;
         String address = Ark.defaultAddress;
         int port = Ark.defaultPort;
-        boolean solo = false;
 
         lastCard = REJOIN;
         cl.show(cardPanel, LOADING);
@@ -486,7 +491,8 @@ public class MainMenu implements Runnable {
                 MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
 
                 Ark.nickname = msg.getAssignedNickname();
-                Ark.solo = solo;
+                Ark.solo = false;
+                Ark.local = false;
 
                 progressBar.setIndeterminate(true);
                 progressLabel.setText("waiting other players");
@@ -502,6 +508,7 @@ public class MainMenu implements Runnable {
 
                     Ark.game = new GameSimplified();
                     Ark.game.updateAll((MSG_UPD_Full) message);
+                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
 
                     progressBar.setValue(100);
                     progressLabel.setText("launching game");
@@ -1524,7 +1531,7 @@ public class MainMenu implements Runnable {
 
         public mainPanel() {
             try {
-                image = ImageIO.read(MainMenu.class.getClassLoader().getResourceAsStream("images/main_menu_bg.jpg"));
+                image = ImageIO.read(new File("resources/images/main_menu_bg.jpg"));
             } catch (IOException ignored) {
             }
 
