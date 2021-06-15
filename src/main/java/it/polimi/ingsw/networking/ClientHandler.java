@@ -113,6 +113,7 @@ public class ClientHandler implements Runnable, ModelObserver {
         }
 
 //all players connected, lobby init OR timeout
+
         if (lobby.isDeleted()) //if timeout occurred
         {
             phase = Phase.TIME_OUT;
@@ -461,6 +462,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
             do {
                 //i = random.nextInt(lobbyMaxSize);
+                //TODO
                 i = 0; //delete this when OK
                 found = Lobby.checkLobbies(i);
             } while (found);
@@ -479,7 +481,9 @@ public class ClientHandler implements Runnable, ModelObserver {
                     lobby.init();
                 } else {
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Created a lobby, waiting on lobby " + i);
-                    while (!lobby.isStarted()) lobby.wait();
+                    while(!lobby.isDeleted())
+                        if(!lobby.isStarted())
+                            lobby.wait();
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + i);
                 }
             }

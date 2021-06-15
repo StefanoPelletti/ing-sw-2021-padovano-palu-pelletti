@@ -31,9 +31,17 @@ public class MainMenu implements Runnable {
     static final String REJOIN = "Reconnect to Lobby";
     static final String LOADING = "Loading";
 
-
+    /**
+     * Min is the minimum number of Players. It should be 1 by design.
+     */
     static final int MIN = 1;
+    /**
+     * Max is the maximum number of Players. It should be 4 by design.
+     */
     static final int MAX = 4;
+    /**
+     * Default is the default number of Players that is set in the Slider, Create page.
+     */
     static final int DEFAULT = 3;
     //fonts
     static final String TIMES = "Times New Roman";
@@ -92,61 +100,13 @@ public class MainMenu implements Runnable {
     ActionListener local_Menu_Button_actionListener = e -> {
         cl.show(cardPanel, LOADING);
         lastCard = MENU;
-        progressLabel.setText("starting the game");
-        messageLabel.setText("hol'up");
-        progressBar.setValue(10);
 
+        progressLabel.setText("starting");
+        messageLabel.setText("local mode");
+        top_Update_Label.setText("writing game");
+        bottom_Update_Label.setText("hold on");
 
-        Ark.nickname = "Player";
-        Ark.solo = true;
-        Ark.local = true;
-
-        Ark.myPlayerNumber = 1;
-
-        messageLabel.setText("instantiating MVC");
-        Ark.gameManager = new GameManager(1);
-        Ark.actionManager = Ark.gameManager.getActionManager();
-
-        progressBar.setValue(50);
-        messageLabel.setText("adding player");
-
-        Ark.gameManager.getGame().addPlayer(Ark.nickname, Ark.myPlayerNumber);
-
-        progressBar.setValue(60);
-        messageLabel.setText("setting up");
-
-        Ark.gameManager.getGame().setLeaderCardsPickerCards(Ark.gameManager.getGame().getCurrentPlayerStartingCards());
-        Ark.gameManager.getGame().setLeaderCardsPickerEnabled(true);
-
-        progressBar.setValue(60);
-        messageLabel.setText("writing game");
-
-        MSG_UPD_Full message = Ark.gameManager.getFullModel();
-        Ark.game = new GameSimplified();
-        Ark.game.updateAll(message);
-        Ark.myPlayerRef = Ark.game.getCurrentPlayerRef();
-
-        progressBar.setValue(100);
-        progressLabel.setText("launching game");
-        messageLabel.setText("good luck");
-
-        Board board = new Board();
-        board.changeRightCard(Board.LEADERCARDSPICKER);
-        board.lastRightCard = Board.LEADERCARDSPICKER;
-        board.lastLeftCard = Ark.nickname;
-        board.disableBottomButtons();
-
-        UpdateHandlerGUI updateHandler = new UpdateHandlerGUI(board);
-        Ark.yourTurn = true;
-
-        Ark.gameManager.addAllObserver(updateHandler);
-
-        SwingUtilities.invokeLater(board);
-        mainFrame.dispose();
-
-        //load directly the game?
-
-
+        SwingUtilities.invokeLater(new LocalThread());
     };
     ActionListener Settings_Menu_Button_actionListener = e -> {
         cl.show(cardPanel, SETTINGS);
@@ -166,7 +126,7 @@ public class MainMenu implements Runnable {
         boolean error = false;
         int newPort = 0;
         String newNickname = "";
-        if (isValidInet4Address(ipAddress_Settings_Field.getText()) || Ark.defaultAddress.equals(ipAddress_Settings_Field.getText())) {
+        if (isValidInet4Address(ipAddress_Settings_Field.getText()) || ipAddress_Settings_Field.getText().equals("localhost")) {
             try {
                 newPort = Integer.parseInt(port_Settings_Field.getText());
                 if (newPort < 1024 || newPort > 65535) {
@@ -236,85 +196,9 @@ public class MainMenu implements Runnable {
         cl.show(cardPanel, LOADING);
         top_Update_Label.setText(LOADING);
         bottom_Update_Label.setText("Sit tight");
+        progressBar.setValue(10);
 
-        try {
-            Ark.socket = new Socket(address, port);
-
-            progressBar.setValue(15);
-            progressLabel.setText("connection established");
-            messageLabel.setText("sending the request");
-
-            Ark.outputStream = Ark.socket.getOutputStream();
-            Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
-            Ark.inputStream = Ark.socket.getInputStream();
-            Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
-
-            Message message = new MSG_CREATE_LOBBY(numberOfPlayers, nickname);
-
-            Ark.send(message);
-
-            messageLabel.setText("waiting for response");
-            message = (Message) Ark.objectInputStream.readObject();
-
-            if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
-                MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
-                Ark.solo = solo;
-                Ark.local = false;
-
-                progressBar.setIndeterminate(true);
-                progressLabel.setText("waiting other players");
-
-                Ark.nickname = msg.getAssignedNickname();
-                messageLabel.setText("Lobby Number is " + msg.getLobbyNumber());
-
-                message = (Message) Ark.objectInputStream.readObject();
-
-                if (message.getMessageType() == MessageType.MSG_UPD_Full) {
-                    progressBar.setIndeterminate(false);
-                    progressBar.setValue(90);
-                    progressLabel.setText("players connected");
-                    messageLabel.setText("writing game");
-
-                    Ark.game = new GameSimplified();
-                    Ark.game.updateAll((MSG_UPD_Full) message);
-                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
-
-                    progressBar.setValue(100);
-                    progressLabel.setText("launching game");
-                    messageLabel.setText("good luck");
-
-                    SwingUtilities.invokeLater(new Board());
-                    mainFrame.dispose();
-                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
-                    progressBar.setValue(100);
-                    progressLabel.setText("error! message from the server:");
-                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
-                    back_Loading_Button.setEnabled(true);
-                } else {
-                    progressBar.setValue(100);
-                    progressLabel.setText("received unexpected message");
-                    messageLabel.setText("" + message.getMessageType());
-                    back_Loading_Button.setEnabled(true);
-                }
-
-            } else if (message.getMessageType() == MessageType.MSG_ERROR) {
-                progressBar.setValue(100);
-                progressLabel.setText("error! message from the server:");
-                messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
-                back_Loading_Button.setEnabled(true);
-            }
-
-        } catch (IOException | ClassNotFoundException ex) {
-            progressBar.setValue(100);
-            progressLabel.setText("a network error occurred!");
-            messageLabel.setText("please go back");
-            back_Loading_Button.setEnabled(true);
-        } catch (IllegalArgumentException ex) {
-            progressBar.setValue(100);
-            progressLabel.setText("We failed to build the message");
-            messageLabel.setText("please go back");
-            back_Loading_Button.setEnabled(true);
-        }
+        SwingUtilities.invokeLater(new CreateThread(address, port, nickname, numberOfPlayers, solo));
     };
     ActionListener settings_Create_Button_actionListener = e -> {
         cl.show(cardPanel, SETTINGS);
@@ -351,86 +235,7 @@ public class MainMenu implements Runnable {
         top_Update_Label.setText(LOADING);
         bottom_Update_Label.setText("Sit tight");
 
-        try {
-            Ark.socket = new Socket(address, port);
-
-            progressBar.setValue(15);
-            progressLabel.setText("connection established");
-            messageLabel.setText("sending the request");
-
-            Ark.outputStream = Ark.socket.getOutputStream();
-            Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
-            Ark.inputStream = Ark.socket.getInputStream();
-            Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
-
-            Message message = new MSG_JOIN_LOBBY(nickname, lobbyNumber);
-
-            Ark.send(message);
-
-            messageLabel.setText("waiting for response");
-
-            message = (Message) Ark.objectInputStream.readObject();
-
-            if (message.getMessageType() == MessageType.MSG_OK_JOIN) {
-                MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
-
-                Ark.nickname = msg.getAssignedNickname();
-                Ark.solo = false;
-                Ark.local = false;
-
-                progressBar.setIndeterminate(true);
-                progressLabel.setText("waiting other players");
-                messageLabel.setText("you'll enter as: " + Ark.nickname + " ");
-
-                message = (Message) Ark.objectInputStream.readObject();
-
-                if (message.getMessageType() == MessageType.MSG_UPD_Full) {
-                    progressBar.setIndeterminate(false);
-                    progressBar.setValue(90);
-                    progressLabel.setText("players connected");
-                    messageLabel.setText("writing game");
-
-                    Ark.game = new GameSimplified();
-                    Ark.game.updateAll((MSG_UPD_Full) message);
-                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
-
-                    progressBar.setValue(100);
-                    progressLabel.setText("launching game");
-                    messageLabel.setText("good luck");
-
-                    SwingUtilities.invokeLater(new Board());
-                    mainFrame.dispose();
-                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
-                    progressBar.setValue(100);
-                    progressLabel.setText("error! message from the server:");
-                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
-                    back_Loading_Button.setEnabled(true);
-                } else {
-                    progressBar.setValue(100);
-                    progressLabel.setText("received unexpected message");
-                    messageLabel.setText("" + message.getMessageType());
-                    back_Loading_Button.setEnabled(true);
-                }
-
-            } else if (message.getMessageType() == MessageType.MSG_ERROR) {
-                progressBar.setValue(100);
-                progressLabel.setText("error! message from the server:");
-                messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
-                back_Loading_Button.setEnabled(true);
-            }
-
-        } catch (IOException | ClassNotFoundException ex) {
-            progressBar.setValue(100);
-            progressLabel.setText("a network error occurred!");
-            messageLabel.setText("please go back");
-            back_Loading_Button.setEnabled(true);
-        } catch (IllegalArgumentException ex) {
-            progressBar.setValue(100);
-            progressLabel.setText("We failed to build the message");
-            messageLabel.setText("please go back");
-            back_Loading_Button.setEnabled(true);
-        }
-
+        SwingUtilities.invokeLater(new JoinThread(address, port, nickname, lobbyNumber));
     };
     ActionListener settings_Join_Button_actionListener = e -> {
         cl.show(cardPanel, SETTINGS);
@@ -467,86 +272,7 @@ public class MainMenu implements Runnable {
         top_Update_Label.setText(LOADING);
         bottom_Update_Label.setText("Sit tight");
 
-        try {
-            Ark.socket = new Socket(address, port);
-
-            progressBar.setValue(15);
-            progressLabel.setText("connection established");
-            messageLabel.setText("sending the request");
-
-            Ark.outputStream = Ark.socket.getOutputStream();
-            Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
-            Ark.inputStream = Ark.socket.getInputStream();
-            Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
-
-            Message message = new MSG_REJOIN_LOBBY(nickname, lobbyNumber);
-
-            Ark.send(message);
-
-            messageLabel.setText("waiting for response");
-
-            message = (Message) Ark.objectInputStream.readObject();
-
-            if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
-                MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
-
-                Ark.nickname = msg.getAssignedNickname();
-                Ark.solo = false;
-                Ark.local = false;
-
-                progressBar.setIndeterminate(true);
-                progressLabel.setText("waiting other players");
-                messageLabel.setText("you'll enter as: " + Ark.nickname + " ");
-
-                message = (Message) Ark.objectInputStream.readObject();
-
-                if (message.getMessageType() == MessageType.MSG_UPD_Full) {
-                    progressBar.setIndeterminate(false);
-                    progressBar.setValue(90);
-                    progressLabel.setText("players connected");
-                    messageLabel.setText("writing game");
-
-                    Ark.game = new GameSimplified();
-                    Ark.game.updateAll((MSG_UPD_Full) message);
-                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
-
-                    progressBar.setValue(100);
-                    progressLabel.setText("launching game");
-                    messageLabel.setText("good luck");
-
-                    SwingUtilities.invokeLater(new Board());
-                    mainFrame.dispose();
-                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
-                    progressBar.setValue(100);
-                    progressLabel.setText("error! message from the server:");
-                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
-                    back_Loading_Button.setEnabled(true);
-                } else {
-                    progressBar.setValue(100);
-                    progressLabel.setText("received unexpected message");
-                    messageLabel.setText("" + message.getMessageType());
-                    back_Loading_Button.setEnabled(true);
-                }
-
-            } else if (message.getMessageType() == MessageType.MSG_ERROR) {
-                progressBar.setValue(100);
-                progressLabel.setText("error! message from the server:");
-                messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
-                back_Loading_Button.setEnabled(true);
-            }
-
-        } catch (IOException | ClassNotFoundException ex) {
-            progressBar.setValue(100);
-            progressLabel.setText("a network error occurred!");
-            messageLabel.setText("please go back");
-            back_Loading_Button.setEnabled(true);
-        } catch (IllegalArgumentException ex) {
-            progressBar.setValue(100);
-            progressLabel.setText("We failed to build the message");
-            messageLabel.setText("please go back");
-            back_Loading_Button.setEnabled(true);
-        }
-
+        SwingUtilities.invokeLater(new RejoinThread(address, port, nickname, lobbyNumber));
     };
     ActionListener settings_Rejoin_Button_actionListener = e -> {
         cl.show(cardPanel, SETTINGS);
@@ -575,9 +301,271 @@ public class MainMenu implements Runnable {
         if(testTimer.isRunning())
             testTimer.stop();
         */
-        progressBar.setValue(0);
         progressLabel.setText("Again here?");
     };
+
+    class LocalThread implements Runnable {
+
+        @Override
+        public void run() {
+            Ark.nickname = "Player";
+            Ark.solo = true;
+            Ark.local = true;
+
+            Ark.myPlayerNumber = 1;
+
+            Ark.gameManager = new GameManager(1);
+            Ark.actionManager = Ark.gameManager.getActionManager();
+
+            Ark.gameManager.getGame().addPlayer(Ark.nickname, Ark.myPlayerNumber);
+
+            Ark.gameManager.getGame().setLeaderCardsPickerCards(Ark.gameManager.getGame().getCurrentPlayerStartingCards());
+            Ark.gameManager.getGame().setLeaderCardsPickerEnabled(true);
+
+            MSG_UPD_Full message = Ark.gameManager.getFullModel();
+            Ark.game = new GameSimplified();
+            Ark.game.updateAll(message);
+            Ark.myPlayerRef = Ark.game.getCurrentPlayerRef();
+
+            Board board = new Board();
+            board.changeRightCard(Board.LEADERCARDSPICKER);
+            board.lastRightCard = Board.LEADERCARDSPICKER;
+            board.lastLeftCard = Ark.nickname;
+            board.disableBottomButtons();
+
+            UpdateHandlerGUI updateHandler = new UpdateHandlerGUI(board);
+            Ark.yourTurn = true;
+
+            Ark.gameManager.addAllObserver(updateHandler);
+
+            SwingUtilities.invokeLater(board);
+            mainFrame.dispose();
+        }
+    }
+
+    class SecondPartThread implements Runnable {
+        @Override
+        public void run() {
+            Message message;
+            try {
+                message = (Message) Ark.objectInputStream.readObject();
+                if (message.getMessageType() == MessageType.MSG_UPD_Full) {
+
+                    Ark.game = new GameSimplified();
+                    Ark.game.updateAll((MSG_UPD_Full) message);
+                    Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
+
+                    SwingUtilities.invokeLater(new Board());
+                    mainFrame.dispose();
+                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                    progressBar.setIndeterminate(false);
+                    progressBar.setValue(100);
+                    progressLabel.setText("error");
+                    messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
+                    bottom_Update_Label.setText("we're sorry");
+                    back_Loading_Button.setEnabled(true);
+                    new Thread(new ErrorThread(((MSG_ERROR) message).getErrorMessage())).run();
+                    SwingUtilities.invokeLater(new ErrorThread(((MSG_ERROR) message).getErrorMessage()));
+                } else {
+                    SwingUtilities.invokeLater(new ErrorThread("received unexpected message"));
+                }
+            }  catch (IOException | ClassNotFoundException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("network error occurred"));
+            } catch (IllegalArgumentException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("failed to build the message"));
+            }
+        }
+    }
+
+    class CreateThread implements Runnable {
+        private final String address;
+        private final int port;
+        private final String nickname;
+        private final int numberOfPlayers;
+        private final boolean solo;
+
+        public CreateThread(String address, int port, String nickname, int numberOfPlayers, boolean solo) {
+            this.address = address;
+            this.port = port;
+            this.nickname = nickname;
+            this.numberOfPlayers = numberOfPlayers;
+            this.solo = solo;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Ark.socket = new Socket(address, port);
+
+                Ark.outputStream = Ark.socket.getOutputStream();
+                Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
+                Ark.inputStream = Ark.socket.getInputStream();
+                Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
+
+                Message message = new MSG_CREATE_LOBBY(numberOfPlayers, nickname);
+
+                Ark.send(message);
+
+                message = (Message) Ark.objectInputStream.readObject();
+
+                if (message.getMessageType() == MessageType.MSG_OK_CREATE) {
+                    MSG_OK_CREATE msg = (MSG_OK_CREATE) message;
+
+                    Ark.solo = solo;
+                    Ark.local = false;
+                    Ark.nickname = msg.getAssignedNickname();
+
+                    progressBar.setIndeterminate(true);
+                    progressLabel.setText("connected");
+                    bottom_Update_Label.setText("waiting for players");
+                    messageLabel.setText("Lobby number is: "+msg.getLobbyNumber());
+
+                    new Thread(new SecondPartThread()).start();
+                   // SwingUtilities.invokeLater(new SecondPartThread());
+
+                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                    SwingUtilities.invokeLater(new ErrorThread(((MSG_ERROR) message).getErrorMessage()));
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("network error occurred"));
+            } catch (IllegalArgumentException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("failed to build the message"));
+            }
+        }
+
+    }
+
+    class JoinThread implements Runnable {
+        private final String address;
+        private final int port;
+        private final String nickname;
+        private final int lobbyNumber;
+
+        public JoinThread(String address, int port, String nickname, int lobbyNumber) {
+            this.address = address;
+            this.port = port;
+            this.nickname = nickname;
+            this.lobbyNumber = lobbyNumber;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Ark.socket = new Socket(address, port);
+
+                Ark.outputStream = Ark.socket.getOutputStream();
+                Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
+                Ark.inputStream = Ark.socket.getInputStream();
+                Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
+
+                Message message = new MSG_JOIN_LOBBY(nickname, lobbyNumber);
+
+                Ark.send(message);
+
+                messageLabel.setText("waiting for response");
+
+                message = (Message) Ark.objectInputStream.readObject();
+
+                if (message.getMessageType() == MessageType.MSG_OK_JOIN) {
+                    MSG_OK_JOIN msg = (MSG_OK_JOIN) message;
+
+                    Ark.nickname = msg.getAssignedNickname();
+                    Ark.solo = false;
+                    Ark.local = false;
+
+                    progressBar.setIndeterminate(true);
+                    progressLabel.setText("connected");
+                    bottom_Update_Label.setText("waiting for players");
+                    messageLabel.setText("you'll enter as: " + Ark.nickname);
+                    back_Loading_Button.setEnabled(true);
+
+                    new Thread(new SecondPartThread()).start();
+                    // SwingUtilities.invokeLater(new SecondPartThread());
+
+                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                    SwingUtilities.invokeLater(new ErrorThread(((MSG_ERROR) message).getErrorMessage()));
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("network error occurred"));
+            } catch (IllegalArgumentException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("failed to build the message"));
+            }
+        }
+    }
+
+    class RejoinThread implements Runnable {
+        private final String address;
+        private final int port;
+        private final String nickname;
+        private final int lobbyNumber;
+
+        public RejoinThread(String address, int port, String nickname, int lobbyNumber) {
+            this.address = address;
+            this.port = port;
+            this.nickname = nickname;
+            this.lobbyNumber = lobbyNumber;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Ark.socket = new Socket(address, port);
+
+                Ark.outputStream = Ark.socket.getOutputStream();
+                Ark.objectOutputStream = new ObjectOutputStream(Ark.outputStream);
+                Ark.inputStream = Ark.socket.getInputStream();
+                Ark.objectInputStream = new ObjectInputStream(Ark.inputStream);
+
+                Message message = new MSG_REJOIN_LOBBY(nickname, lobbyNumber);
+
+                Ark.send(message);
+
+                messageLabel.setText("waiting for response");
+
+                message = (Message) Ark.objectInputStream.readObject();
+
+                if (message.getMessageType() == MessageType.MSG_OK_REJOIN) {
+                    MSG_OK_REJOIN msg = (MSG_OK_REJOIN) message;
+
+                    Ark.nickname = msg.getAssignedNickname();
+                    Ark.solo = false;
+                    Ark.local = false;
+
+                    progressBar.setIndeterminate(true);
+                    progressLabel.setText("connected");
+                    bottom_Update_Label.setText("waiting");
+                    messageLabel.setText("you'll enter as: " + Ark.nickname);
+
+                    new Thread(new SecondPartThread()).start();
+                    // SwingUtilities.invokeLater(new SecondPartThread());
+
+                } else if (message.getMessageType() == MessageType.MSG_ERROR) {
+                    SwingUtilities.invokeLater(new ErrorThread(((MSG_ERROR) message).getErrorMessage()));
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("network error occurred"));
+            } catch (IllegalArgumentException ex) {
+                SwingUtilities.invokeLater(new ErrorThread("failed to build the message"));
+            }
+        }
+    }
+
+    class ErrorThread implements Runnable {
+        private final String reason;
+        public ErrorThread(String reason) {
+            this.reason = reason;
+        }
+
+        @Override
+        public void run() {
+            progressBar.setIndeterminate(false);
+            progressBar.setValue(100);
+            progressLabel.setText("error");
+            messageLabel.setText(this.reason);
+            bottom_Update_Label.setText("we're sorry");
+            back_Loading_Button.setEnabled(true);
+        }
+    }
 
     public MainMenu() {
         mainFrame = new JFrame(" Masters of Renaissance, GUI-edition! ");
@@ -611,7 +599,7 @@ public class MainMenu implements Runnable {
 
         try {
             return Arrays.stream(groups)
-                    .filter(s -> s.length() > 1)
+                    .filter(s -> s.length() >= 1)
                     .map(Integer::parseInt)
                     .filter(i -> (i >= 0 && i <= 255))
                     .count() == 4;

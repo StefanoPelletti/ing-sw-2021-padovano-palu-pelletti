@@ -33,20 +33,61 @@ import java.util.List;
 import java.util.*;
 
 public class Board implements Runnable {
+    /**
+     * Card Layout for the Left Panel.
+     * @see #centralLeftPanel
+     */
     CardLayout cardLayoutLeft;
+    /**
+     * Card Layout for the Right Panel.
+     * @see #centralRightPanel
+     */
     CardLayout cardLayoutRight;
-    CentralLeftPanel centralLeftPanel;                                                             //<-- updatable (see the update() methods it offers)
-    CentralRightPanel centralRightPanel;                                                           //<-- updatable (see the update() methods it offers)
+    /**
+     * The Central Left Panel is used to show the Player's Depots and Strongboxes. <p>
+     *     It is used with the cardLeftLayout, and its cards are named after the Players' names.
+     *     It is updatable with an update(name) method.
+     */
+    CentralLeftPanel centralLeftPanel;
+    /**
+     * The Central Right Panel is used to house the main tabs of the game. <ul>
+     *     <li>                       This Player's Development Slot                    (updatable)
+     *     <li>                       Other Players' Development Slot and Leader Cards  (updatable)
+     *     <li>                       The Market Panel                                  (updatable)
+     *     <li>                       The Development Cards Deck                        (updatable)
+     *     <li> The middle object   : LeaderCards Picker                                (updatable)
+     *     <li> The middle object   : Resource Picker                                   (updatable)
+     *     <li> The middle object   : Market Helper                                     (updatable)
+     *     <li> The middle object   : Card Vendor                                       (updatable)
+     *     <li> The action          : get Market Resources                              (updatable)
+     *     <li> The action          : activate Leader Card                              (updatable)
+     *     <li> The action          : change Depot config                               (updatable)
+     *     <li> The action          : production selection                              (updatable)
+     *     <li> The action          : activate production
+     *     <li> Finally             : The Leaderboard                                   (updatable)
+     */
+    CentralRightPanel centralRightPanel;
 
+    /**
+     * Reference to the mainFrame of the Board
+     */
     JFrame mainFrame;
+
+    /**
+     * Reference to the mainPanel. The mainPanel is the new ContentPane of the mainFrame.
+     */
     MainPanel mainPanel;
 
-    //CENTRAL LEFT PANEL CARDS <- each card is followed by its necessary contents
+    /**
+     * The last valid Left Card of the central Left Panel. <p>
+     * By default it should always be Ark.nickname
+     */
     String lastLeftCard;
 
-    /*
-    //CARDS (CENTRAL RIGHT PANEL)  <- each card is followed by its necessary contents
-    */
+    /**
+     * The last valid Right Card of the central Right Panel. <p>
+     * It is changed based on runtime actions.
+     */
     String lastRightCard;
 
     static final String DEVDECK = "Development Cards Deck";
@@ -92,21 +133,35 @@ public class Board implements Runnable {
 
     //fonts
     static final String TIMES = "Times New Roman";
-    static final String PAP = "Papyrus";
+    static final String PAPYRUS = "Papyrus";
 
 
-    //STATIC PANELS VARs (LEFT, TOP, BOTTOM)
-    //LEFT PANEL
-    LeftPanel leftPanel;                                                                            //<-- updatable (see the update() methods it offers)
-    JButton show_DevDeck_Button;
-    JButton show_Market_Button;
-    //BOTTOM PANEL
+    /**
+     * The Left Panel houses the notification pane, the turnOf label, the turn label, the leaderCards of this Player and 2 always-on buttons. <p>
+     *     It is updatable by the method it offers. Go check them.
+     */
+    LeftPanel leftPanel;
+
+    /**
+     * The Bottom Panel houses the actions buttons and the Players Recap panel. <p>
+     *     The Players Recap panel is only available in multiplayer mode. Otherwise, a possible set of actions by Lorenzo is shown.
+     *     It is updatable and modifiable by default update() and disable/enableButtons() methods.
+     */
+    BottomPanel bottomPanel;
+
+    /**
+     * These buttons are located in the bottom Panel. <p>
+     *     Their reference is saved because they can also be disabled.
+     */
     JButton activate_LeaderCards_Button, change_Depot_Config_Button, get_MarketResource_Button;
     JButton discard_LeaderCard_Button, buy_DevCard_Button, activate_Production_Button;
-    BottomPanel bottomPanel;                                                                        //<-- updatable (see the update() methods it offers)
     JButton endTurn_Button;
-    //TOP PANEL
-    TopPanel topPanel;                                                                              //<-- updatable (see the update() methods it offers)
+
+    /**
+     * The Top Panel houses the Faith Track. <p>
+     *     It offers an update() method which will automatically update the FaithTrack and the FaithZones. Works in both Solo and Multiplayer mode.
+     */
+    TopPanel topPanel;
 
 
     //ACTION LISTENERS
@@ -222,35 +277,42 @@ public class Board implements Runnable {
         }
         else {
             Ark.triedAction = true;
-            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNumber, slotNumber -1);
+            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNumber, slotNumber);
         }
 
         send(message);
     };
 
+    /**
+     * ActionListener for the activate Production action. <p>
+     * Basically gathers information from the panel(s), composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.Production_Panel the panel that uses that actionListener
+     */
     ActionListener action_activateProduction_actionListener = e -> {
         boolean[] standardProduction = new boolean[3];
+        boolean basicProduction;
+        boolean[] leaderCardOutput = new boolean[2];
+        List<Resource> basicInput = new ArrayList<>();
+
         Ark.triedAction = true;
 
-        standardProduction[0] = productionSelection_panel.getDevCard1().isSelected();
-        standardProduction[1] = productionSelection_panel.getDevCard2().isSelected();
-        standardProduction[2] = productionSelection_panel.getDevCard3().isSelected();
-        boolean basicProduction = productionSelection_panel.getBasicProduction().isSelected();
+        for(int i=0; i<3; i++)
+            standardProduction[i] = productionSelection_panel.devCardButton[i].isSelected();
 
-        boolean[] lc = new boolean[2];
-        lc[0] = productionSelection_panel.getLeaderCard1().isSelected();
-        lc[1] = productionSelection_panel.getLeaderCard2().isSelected();
+        basicProduction = productionSelection_panel.getBasicProduction().isSelected();
 
-        List<Resource> basicInput = new ArrayList<>();
-        basicInput.add(production_panel.resources[production_panel.currentResourceFirstIn]);
-        basicInput.add(production_panel.resources[production_panel.currentResourceSecondIn]);
+        leaderCardOutput[0] = productionSelection_panel.getLeaderCard1().isSelected();
+        leaderCardOutput[1] = productionSelection_panel.getLeaderCard2().isSelected();
 
-        Resource basicOutput = production_panel.resources[production_panel.currentResourceBasicOut];
+        basicInput.add(production_panel.resources[0]);
+        basicInput.add(production_panel.resources[1]);
 
-        Resource lc1Output = production_panel.resources[production_panel.currentResourceLC1];
-        Resource lc2Output = production_panel.resources[production_panel.currentResourceLC2];
+        Resource basicOutput = production_panel.resources[2];
 
-        MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(standardProduction, basicProduction, lc, basicInput,basicOutput,lc1Output, lc2Output);
+        Resource lc1Output = production_panel.resources[3];
+        Resource lc2Output = production_panel.resources[4];
+
+        MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(standardProduction, basicProduction, leaderCardOutput, basicInput,basicOutput,lc1Output, lc2Output);
         send(message);
     };
 
@@ -581,20 +643,30 @@ public class Board implements Runnable {
 
     }
 
+    /**
+     * Shortcut method for changing the central Left Panel
+     * @param newCard the keyword that points to the next card
+     */
     public void changeLeftCard(String newCard) {
         this.cardLayoutLeft.show(centralLeftPanel, newCard);
     }
 
+    /**
+     * Shortcut method for changing the central Right Panel
+     * @param newCard the keyword that points to the next card
+     */
     public void changeRightCard(String newCard) {
         this.cardLayoutRight.show(centralRightPanel, newCard);
     }
 
     public void run() {
         //empty to implement run method
-        // updateHandler?
     }
 
-    // this is the custom, new contentPane to set in the mainFrame.
+    /**
+     * The MainPanel class is the new contentPane of the MainFrame. <p>
+     *     It constructs the entire page, composed by 5 panels, and performs a first update.
+     */
     class MainPanel extends JPanel {
 
         private Image image;
@@ -650,7 +722,7 @@ public class Board implements Runnable {
                 this.add(centralRightPanel, c);
             }
 
-            //INITIAL UPDATE (?)
+            // INITIAL UPDATE
             {
                 leftPanel.updateAll();
                 bottomPanel.update();
@@ -688,12 +760,15 @@ public class Board implements Runnable {
 
     }
 
-    //LEFT PANEL
+    /**
+     * Class of the Left Panel.
+     * @see #leftPanel
+     */
     class LeftPanel extends JPanel {
 
-        JLabel turnLabel, turnOf; //<- updatable, but not with a custom method
-        JTextArea notificationsArea; //<- updatable, but not with a custom method
-        MyLeaderCardsPanel myLeaderCardsPanel; //<- updatable for leaderCards of this player and extradepot with a single update()
+        private final JLabel                turnLabel,     turnOf;
+        private final JTextArea             notificationsArea;
+        private final MyLeaderCardsPanel    myLeaderCardsPanel;
 
         public LeftPanel() {
             GridBagConstraints c;
@@ -702,14 +777,13 @@ public class Board implements Runnable {
             this.setBackground(new Color(215, 200, 145));
             this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 1, new Color(62, 43, 9)));
 
-            //Ark.addPadding(this, 839, 458, 3, 6);
             Ark.addPadding(this, 839, 458, 3, 6);
 
-            JButton quit_Button = new JButton("Quit");
-            quit_Button.addActionListener(quit_actionListener);
-            quit_Button.setPreferredSize(new Dimension(120, 60));
-            quit_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            quit_Button.setBackground(new Color(231, 210, 181));
+            JButton quitButton = new JButton("Quit");
+            quitButton.addActionListener(quit_actionListener);
+            quitButton.setPreferredSize(new Dimension(120, 60));
+            quitButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            quitButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -719,12 +793,12 @@ public class Board implements Runnable {
             c.weighty = 0.5;
             c.anchor = GridBagConstraints.FIRST_LINE_START;
             c.insets = new Insets(20, 20, 0, 0);
-            this.add(quit_Button, c);
+            this.add(quitButton, c);
 
             turnLabel = new JLabel();
             turnLabel.setOpaque(false);
             turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            turnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            turnLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 1;
@@ -739,7 +813,7 @@ public class Board implements Runnable {
             turnOf = new JLabel();
             turnOf.setOpaque(false);
             turnOf.setHorizontalAlignment(SwingConstants.CENTER);
-            turnOf.setFont(new Font(PAP, Font.BOLD, 20));
+            turnOf.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 2;
@@ -800,11 +874,11 @@ public class Board implements Runnable {
                 showButtonsPanel.setOpaque(false);
                 showButtonsPanel.setLayout(new GridBagLayout());
 
-                show_DevDeck_Button = new JButton("show DevDeck");
-                show_DevDeck_Button.addActionListener(show_DevDeck_actionListener);
-                show_DevDeck_Button.setPreferredSize(new Dimension(200, 70));
-                show_DevDeck_Button.setFont(new Font(PAP, Font.BOLD, 20));
-                show_DevDeck_Button.setBackground(new Color(231, 210, 181));
+                JButton showDevDeckButton = new JButton("show DevDeck");
+                showDevDeckButton.addActionListener(show_DevDeck_actionListener);
+                showDevDeckButton.setPreferredSize(new Dimension(200, 70));
+                showDevDeckButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+                showDevDeckButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 0;
@@ -812,13 +886,13 @@ public class Board implements Runnable {
                 c.weighty = 0.5;
                 c.insets = new Insets(5, 5, 20, 12);
                 c.anchor = GridBagConstraints.LINE_START;
-                showButtonsPanel.add(show_DevDeck_Button, c);
+                showButtonsPanel.add(showDevDeckButton, c);
 
-                show_Market_Button = new JButton("show Market");
-                show_Market_Button.addActionListener(show_Market_actionListener);
-                show_Market_Button.setPreferredSize(new Dimension(200, 70));
-                show_Market_Button.setFont(new Font(PAP, Font.BOLD, 20));
-                show_Market_Button.setBackground(new Color(231, 210, 181));
+                JButton showMarketButton = new JButton("show Market");
+                showMarketButton.addActionListener(show_Market_actionListener);
+                showMarketButton.setPreferredSize(new Dimension(200, 70));
+                showMarketButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+                showMarketButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 0;
@@ -826,7 +900,7 @@ public class Board implements Runnable {
                 c.weighty = 0.5;
                 c.insets = new Insets(5, 12, 20, 5);
                 c.anchor = GridBagConstraints.LINE_END;
-                showButtonsPanel.add(show_Market_Button, c);
+                showButtonsPanel.add(showMarketButton, c);
 
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -840,24 +914,40 @@ public class Board implements Runnable {
             } //showDevDeck and showMarket buttons Panel
         }
 
+        /**
+         * Offered by the leftPanel, updates the LeaderCards panel and the turn labels.
+         */
         public void updateAll() {
             this.update();
             this.updateTurnOf();
             this.updateCurrentTurn();
         }
 
+        /**
+         * Offered by the leftPanel, updates this Player's Leader Cards.
+         */
         public void update() {
             this.myLeaderCardsPanel.update();
         }
 
+        /**
+         * Offered by the leftPanel, updates the label of the current Player.
+         */
         public void updateTurnOf() {
             this.turnOf.setText("Turn of " + Ark.game.getCurrentPlayerName());
         }
 
+        /**
+         * Offered by the leftPanel, updates the label of the current Turn.
+         */
         public void updateCurrentTurn() {
             this.turnLabel.setText("Turn " + Ark.game.getTurn());
         }
 
+        /**
+         * Offered by the leftPanel, displays a given message into the notification pane.
+         * @param message the String to be displayed
+         */
         public void updateNotification(String message) {
             Formatter formate;
             Calendar gfg_calender = Calendar.getInstance();
@@ -886,12 +976,16 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * This Panel houses this Player's LeaderCards. <p>
+     *     It is updatable, but updates should be performed using its parent, the leftPanel.
+     */
     class MyLeaderCardsPanel extends JPanel {
 
-        JLabel leaderCardLabel1, leaderCardLabel2;
-        JLabel extraResource1_LeaderCard1_Label, extraResource2_LeaderCard1_Label;
-        JLabel extraResource1_LeaderCard2_Label, extraResource2_LeaderCard2_Label;
-        JLabel labelUnderLeaderCard1, labelUnderLeaderCard2;
+        private final JLabel leaderCardLabel1,                  leaderCardLabel2;
+        private final JLabel extraResource1_LeaderCard1_Label,  extraResource2_LeaderCard1_Label;
+        private final JLabel extraResource1_LeaderCard2_Label,  extraResource2_LeaderCard2_Label;
+        private final JLabel labelUnderLeaderCard1,             labelUnderLeaderCard2;
 
         public MyLeaderCardsPanel() {
             GridBagConstraints c;
@@ -902,7 +996,7 @@ public class Board implements Runnable {
             leaderCardLabel1text.setText("Leader Card");
             leaderCardLabel1text.setOpaque(false);
             leaderCardLabel1text.setHorizontalAlignment(SwingConstants.CENTER);
-            leaderCardLabel1text.setFont(new Font(PAP, Font.BOLD, 20));
+            leaderCardLabel1text.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 0;
@@ -916,7 +1010,7 @@ public class Board implements Runnable {
             leaderCardLabel1text1.setText("#1");
             leaderCardLabel1text1.setOpaque(false);
             leaderCardLabel1text1.setHorizontalAlignment(SwingConstants.CENTER);
-            leaderCardLabel1text1.setFont(new Font(PAP, Font.BOLD, 22));
+            leaderCardLabel1text1.setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 1;
@@ -930,7 +1024,7 @@ public class Board implements Runnable {
             leaderCardLabel2text.setText("Leader Card");
             leaderCardLabel2text.setOpaque(false);
             leaderCardLabel2text.setHorizontalAlignment(SwingConstants.CENTER);
-            leaderCardLabel2text.setFont(new Font(PAP, Font.BOLD, 20));
+            leaderCardLabel2text.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 0;
@@ -944,7 +1038,7 @@ public class Board implements Runnable {
             leaderCardLabel2text2.setText("#2");
             leaderCardLabel2text2.setOpaque(false);
             leaderCardLabel2text2.setHorizontalAlignment(SwingConstants.CENTER);
-            leaderCardLabel2text2.setFont(new Font(PAP, Font.BOLD, 22));
+            leaderCardLabel2text2.setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 1;
@@ -977,7 +1071,7 @@ public class Board implements Runnable {
             labelUnderLeaderCard1 = new JLabel();
             labelUnderLeaderCard1.setOpaque(false);
             labelUnderLeaderCard1.setHorizontalAlignment(SwingConstants.CENTER);
-            labelUnderLeaderCard1.setFont(new Font(PAP, Font.BOLD, 22));
+            labelUnderLeaderCard1.setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 3;
@@ -1007,7 +1101,7 @@ public class Board implements Runnable {
             labelUnderLeaderCard2 = new JLabel();
             labelUnderLeaderCard2.setOpaque(false);
             labelUnderLeaderCard2.setHorizontalAlignment(SwingConstants.CENTER);
-            labelUnderLeaderCard2.setFont(new Font(PAP, Font.BOLD, 22));
+            labelUnderLeaderCard2.setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 3;
@@ -1026,14 +1120,28 @@ public class Board implements Runnable {
             this.add(spacer, c);
         }
 
+        /**
+         * Updates both Leader Cards.
+         */
         public void update() {
-            LeaderCard l1 = Ark.myPlayerRef.getLeaderCards()[0];
-            updateSpecificCard(l1, labelUnderLeaderCard1, leaderCardLabel1, extraResource1_LeaderCard1_Label, extraResource2_LeaderCard1_Label);
+            LeaderCard l;
 
-            LeaderCard l2 = Ark.myPlayerRef.getLeaderCards()[1];
-            updateSpecificCard(l2, labelUnderLeaderCard2, leaderCardLabel2, extraResource1_LeaderCard2_Label, extraResource2_LeaderCard2_Label);
+            l = Ark.myPlayerRef.getLeaderCards()[0];
+            updateSpecificCard(l, labelUnderLeaderCard1, leaderCardLabel1, extraResource1_LeaderCard1_Label, extraResource2_LeaderCard1_Label);
+
+            l = Ark.myPlayerRef.getLeaderCards()[1];
+            updateSpecificCard(l, labelUnderLeaderCard2, leaderCardLabel2, extraResource1_LeaderCard2_Label, extraResource2_LeaderCard2_Label);
         }
 
+        /**
+         * Updates a specific leader Card, either the first or the second. <p>
+         *     Displays if a card is enabled, an image representing it, the actual extradepot (if it is), or the back of the card.
+         * @param leaderCard            the Leader Card model reference
+         * @param labelUnderLeaderCard  the reference to the Label under that LeaderCardLabel
+         * @param leaderCardLabel       the reference to the LeaderCard Label
+         * @param extraDepotLabel1      the reference to the first extra Depot label
+         * @param extraDepotLabel2      the reference to the second extra Depot label
+         */
         private void updateSpecificCard(LeaderCard leaderCard, JLabel labelUnderLeaderCard, JLabel leaderCardLabel, JLabel extraDepotLabel1, JLabel extraDepotLabel2) {
             ImageIcon t;
             if (leaderCard != null) {
@@ -1049,10 +1157,6 @@ public class Board implements Runnable {
                         ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()), 50);
                         ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()), 50);
                         switch (num) {
-                            case 0:
-                                extraDepotLabel1.setIcon(noneIcon);
-                                extraDepotLabel2.setIcon(noneIcon);
-                                break;
                             case 1:
                                 extraDepotLabel1.setIcon(presentIcon);
                                 extraDepotLabel2.setIcon(noneIcon);
@@ -1060,6 +1164,10 @@ public class Board implements Runnable {
                             case 2:
                                 extraDepotLabel1.setIcon(presentIcon);
                                 extraDepotLabel2.setIcon(presentIcon);
+                                break;
+                            default:
+                                extraDepotLabel1.setIcon(noneIcon);
+                                extraDepotLabel2.setIcon(noneIcon);
                                 break;
                         }
                     }
@@ -1072,10 +1180,13 @@ public class Board implements Runnable {
         }
     }
 
-    //BOTTOM PANEL
+    /**
+     * Class of Bottom Panel.
+     * @see #bottomPanel
+     */
     class BottomPanel extends JPanel {
 
-        PlayersRecapPanel playersRecapPanel;
+        private final PlayersRecapPanel playersRecapPanel;
 
         public BottomPanel() {
             GridBagConstraints c;
@@ -1090,7 +1201,7 @@ public class Board implements Runnable {
                 activate_LeaderCards_Button = new JButton("activate card");
                 activate_LeaderCards_Button.addActionListener(show_activateLeaderCard_actionListener);
                 activate_LeaderCards_Button.setPreferredSize(new Dimension(145, 60));
-                activate_LeaderCards_Button.setFont(new Font(PAP, Font.BOLD, 18));
+                activate_LeaderCards_Button.setFont(new Font(PAPYRUS, Font.BOLD, 18));
                 activate_LeaderCards_Button.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -1105,7 +1216,7 @@ public class Board implements Runnable {
                 change_Depot_Config_Button = new JButton("modify depot");
                 change_Depot_Config_Button.addActionListener(show_changeDepotConfig_actionListener);
                 change_Depot_Config_Button.setPreferredSize(new Dimension(145, 60));
-                change_Depot_Config_Button.setFont(new Font(PAP, Font.BOLD, 18));
+                change_Depot_Config_Button.setFont(new Font(PAPYRUS, Font.BOLD, 18));
                 change_Depot_Config_Button.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 2;
@@ -1120,7 +1231,7 @@ public class Board implements Runnable {
                 get_MarketResource_Button = new JButton("go to market");
                 get_MarketResource_Button.addActionListener(show_getMarketResource_actionListener);
                 get_MarketResource_Button.setPreferredSize(new Dimension(145, 60));
-                get_MarketResource_Button.setFont(new Font(PAP, Font.BOLD, 18));
+                get_MarketResource_Button.setFont(new Font(PAPYRUS, Font.BOLD, 18));
                 get_MarketResource_Button.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 3;
@@ -1138,7 +1249,7 @@ public class Board implements Runnable {
                 discard_LeaderCard_Button = new JButton("discard card");
                 discard_LeaderCard_Button.addActionListener(show_discardLeaderCard_actionListener);
                 discard_LeaderCard_Button.setPreferredSize(new Dimension(145, 60));
-                discard_LeaderCard_Button.setFont(new Font(PAP, Font.BOLD, 18));
+                discard_LeaderCard_Button.setFont(new Font(PAPYRUS, Font.BOLD, 18));
                 discard_LeaderCard_Button.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -1154,7 +1265,7 @@ public class Board implements Runnable {
                 buy_DevCard_Button = new JButton("buy card");
                 buy_DevCard_Button.addActionListener(action_buyDevCard_actionListener);
                 buy_DevCard_Button.setPreferredSize(new Dimension(145, 60));
-                buy_DevCard_Button.setFont(new Font(PAP, Font.BOLD, 18));
+                buy_DevCard_Button.setFont(new Font(PAPYRUS, Font.BOLD, 18));
                 buy_DevCard_Button.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 2;
@@ -1170,7 +1281,7 @@ public class Board implements Runnable {
                 activate_Production_Button = new JButton("produce");
                 activate_Production_Button.addActionListener(show_ProductionSelection_actionListener);
                 activate_Production_Button.setPreferredSize(new Dimension(145, 60));
-                activate_Production_Button.setFont(new Font(PAP, Font.BOLD, 18));
+                activate_Production_Button.setFont(new Font(PAPYRUS, Font.BOLD, 18));
                 activate_Production_Button.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 3;
@@ -1198,7 +1309,7 @@ public class Board implements Runnable {
             endTurn_Button = new JButton("end Turn");
             endTurn_Button.addActionListener(action_endTurn_actionListener);
             endTurn_Button.setPreferredSize(new Dimension(145, 140));
-            endTurn_Button.setFont(new Font(PAP, Font.BOLD, 24));
+            endTurn_Button.setFont(new Font(PAPYRUS, Font.BOLD, 24));
             endTurn_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 5;
@@ -1211,6 +1322,9 @@ public class Board implements Runnable {
             this.add(endTurn_Button, c);
         }
 
+        /**
+         * If the mode is Multiplayer, updates the Players Recap Panel.
+         */
         public void update() {
             if(!Ark.solo) {
                 this.playersRecapPanel.update();
@@ -1218,6 +1332,9 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of Players Recap Panel, which is inside the BottomPanel.
+     */
     class PlayersRecapPanel extends JPanel {
         private Map<String, java.util.List<JLabel>> map;
 
@@ -1243,7 +1360,7 @@ public class Board implements Runnable {
                     playerPanel.setBorder(BorderFactory.createLineBorder(new Color(79, 66, 34), 1));
 
                     JLabel nicknameLabel = new JLabel("" + player.getPlayerNumber() + " - " + player.getNickname());
-                    nicknameLabel.setFont(new Font(PAP, Font.BOLD, 24));
+                    nicknameLabel.setFont(new Font(PAPYRUS, Font.BOLD, 24));
                     c = new GridBagConstraints();
                     c.gridx = 0;
                     c.gridy = 0;
@@ -1326,7 +1443,7 @@ public class Board implements Runnable {
                     });
 
 
-                    button.setFont(new Font(PAP, Font.BOLD, 20));
+                    button.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                     button.setPreferredSize(new Dimension(150, 70));
                     button.setBackground(new Color(231, 210, 181));
                     c = new GridBagConstraints();
@@ -1354,7 +1471,7 @@ public class Board implements Runnable {
                 lorenzoPanel.setOpaque(false);
 
                 JLabel lorenzoLabel = new JLabel("Lorenzo");
-                lorenzoLabel.setFont(new Font(PAP, Font.BOLD, 24));
+                lorenzoLabel.setFont(new Font(PAPYRUS, Font.BOLD, 24));
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 0;
@@ -1388,7 +1505,7 @@ public class Board implements Runnable {
                 tokenPanel.setOpaque(false);
 
                 JLabel possibleActions = new JLabel("Lorenzo tokens");
-                possibleActions.setFont(new Font(PAP, Font.BOLD, 24));
+                possibleActions.setFont(new Font(PAPYRUS, Font.BOLD, 24));
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 0;
@@ -1416,7 +1533,7 @@ public class Board implements Runnable {
                 tokenPanel.add(tokenSlideshow,c);
 
                 JLabel check = new JLabel("Check notification area in-game");
-                check.setFont(new Font(PAP, Font.BOLD, 24));
+                check.setFont(new Font(PAPYRUS, Font.BOLD, 24));
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 2;
@@ -1472,6 +1589,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Custom Button that stores a String with a Player's name.
+         */
         class ShowPlayerButton extends JButton {
             private final String playerName;
 
@@ -1486,7 +1606,10 @@ public class Board implements Runnable {
         }
     }
 
-    //TOP PANEL
+    /**
+     * Class of Top Panel.
+     * @see #topPanel
+     */
     class TopPanel extends JPanel {
 
         private Image image;
@@ -1702,7 +1825,9 @@ public class Board implements Runnable {
             }
         }
 
-
+        /**
+         * Custom Panel that self constructs. Used for the faith Zones.
+         */
         class ZonePanel extends JPanel {
 
             static final int boxSize = 112;
@@ -1744,11 +1869,15 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Custom Panel that self constructs, and goes in the grid of labels. <p>
+         *     It also stores a public boolean that tells if this cell is empty or not.
+         */
         class CellPanel extends JPanel {
 
-            static final int boxSize = 54;
+            static final int BOXSIZE = 54;
             private final JLabel label;
-            boolean isEmpty;
+            public boolean isEmpty;
 
             public CellPanel(boolean useful) {
                 this.isEmpty = true;
@@ -1761,14 +1890,14 @@ public class Board implements Runnable {
                 c.gridy = 0;
                 c.weightx = 0;
                 c.weighty = 0;
-                this.add(Box.createHorizontalStrut(boxSize),c);
+                this.add(Box.createHorizontalStrut(BOXSIZE),c);
 
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 1;
                 c.weightx = 0;
                 c.weighty = 0;
-                this.add(Box.createVerticalStrut(boxSize),c);
+                this.add(Box.createVerticalStrut(BOXSIZE),c);
 
                 if (useful) {
                     this.label = new JLabel();
@@ -1792,6 +1921,10 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Offered by the Top Panel, updates the entire faith Track.
+         * <p> Works in both Solo and Multiplayer mode.
+         */
         public void update() {
             boolean[] flippedZones = Ark.myPlayerRef.getFaithTrackPanels();
             if(flippedZones[0])
@@ -1848,6 +1981,14 @@ public class Board implements Runnable {
             g.drawImage(image, 0, 0, this);
         }
 
+        /**
+         * Returns the icon that should be used in a cell on the faithTrack.
+         * <p> Works by sending a intmap containing the position of the players, and performing a logic matrix combination.
+         * That combination corresponds to a single image.</p>
+         * @param selectedPosition the current position of the intmap
+         * @param intmap an intmap containing the Player's positions
+         * @return an image that shows which players are on that cell
+         */
         public ImageIcon getNewIcon(int selectedPosition, int[] intmap) {
             String output = "";
 
@@ -1902,10 +2043,16 @@ public class Board implements Runnable {
             return scaleImage(new ImageIcon(output), 40);
         }
 
-        public boolean isUseful(int row, int col) {
+        /**
+         * Tells if a cell in a 3x19 grid is on the faithTrack (useful) or not (not useful)
+         * @param row the row being tested
+         * @param column the column being tested
+         * @return True if the specified cell is on the faithTrack, False otherwise
+         */
+        public boolean isUseful(int row, int column) {
             switch (row) {
                 case 0:
-                    switch (col) {
+                    switch (column) {
                         case 2:
                         case 3:
                         case 4:
@@ -1924,7 +2071,7 @@ public class Board implements Runnable {
                             return false;
                     }
                 case 1:
-                    switch (col) {
+                    switch (column) {
                         case 2:
                         case 7:
                         case 12:
@@ -1933,7 +2080,7 @@ public class Board implements Runnable {
                             return false;
                     }
                 case 2:
-                    switch (col) {
+                    switch (column) {
                         case 0:
                         case 1:
                         case 2:
@@ -1952,10 +2099,18 @@ public class Board implements Runnable {
             }
         }
 
-        public int pos(int row, int col ) {
+        /**
+         * Tells the position that a cell in a 3x19 grid corresponds to on the faithTrack.
+         * <p>
+         *     It maps every useful cell on a position >= 0 and <=24
+         * @param row the row being tested
+         * @param column the column being testes
+         * @return an int, position of that cell on the faithTrack. (between 0 and 24) (-1 if it is not on the faithTrack).
+         */
+        public int pos(int row, int column ) {
             switch (row) {
                 case 0:
-                    switch (col) {
+                    switch (column) {
                         case 2:  return 4;
                         case 3:  return 5;
                         case 4:  return 6;
@@ -1972,14 +2127,14 @@ public class Board implements Runnable {
                         default: return -1;
                     }
                 case 1:
-                    switch (col) {
+                    switch (column) {
                         case 2:  return 3;
                         case 7:  return 10;
                         case 12: return 17;
                         default: return -1;
                     }
                 case 2:
-                    switch (col) {
+                    switch (column) {
                         case 0:  return 0;
                         case 1:  return 1;
                         case 2:  return 2;
@@ -1998,7 +2153,10 @@ public class Board implements Runnable {
     }
 
     /**
-     * CENTRAL LEFT PANEL <- CARDLAYOUTLEFT
+     * Class of the Central Left Panel.
+     * Managed by the cardLayoutLeft.
+     * @see #centralLeftPanel
+     * @see #cardLayoutLeft
      */
     class CentralLeftPanel extends JPanel {
         java.util.List<DepotAndStrongbox_Card_Panel> depotAndStrongboxCardPanelList;
@@ -2022,6 +2180,10 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Updates the DepotAndStrongbox_Card_Panel that has the specified name.
+         * @param name the name of the Panel that you want to update
+         */
         public void update(String name) {
             Optional<DepotAndStrongbox_Card_Panel> result = depotAndStrongboxCardPanelList.stream().filter(p -> p.panelName.equals(name)).findFirst();
             result.ifPresent(DepotAndStrongbox_Card_Panel::update);
@@ -2034,14 +2196,16 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of DepotAndStrongbox Panel, which is inside the LeftPanel.
+     */
     class DepotAndStrongbox_Card_Panel extends JPanel {
-        JLabel shelf1;
-        JLabel[] shelf2;
-        JLabel[] shelf3;
-        JLabel[] strongbox; //coin shield stone servant
-        private final String panelName;
+        private final JLabel    shelf1;
+        private final JLabel[]  shelf2;
+        private final JLabel[]  shelf3;
+        private final JLabel[]  strongbox; //coin shield stone servant
+        private final String    panelName;
 
-        //many labels
         public DepotAndStrongbox_Card_Panel(String panelName) {
             super();
             this.panelName = panelName;
@@ -2136,7 +2300,7 @@ public class Board implements Runnable {
 
             {
                 strongbox[0] = new JLabel(); //coin //shield //stone //servant
-                strongbox[0].setFont(new Font(PAP, Font.BOLD, 20));
+                strongbox[0].setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 4;
@@ -2149,7 +2313,7 @@ public class Board implements Runnable {
             } //coin
             {
                 strongbox[1] = new JLabel();  //shield //stone //servant
-                strongbox[1].setFont(new Font(PAP, Font.BOLD, 20));
+                strongbox[1].setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 c = new GridBagConstraints();
                 c.gridx = 2;
                 c.gridy = 4;
@@ -2162,7 +2326,7 @@ public class Board implements Runnable {
             } //shield
             {
                 strongbox[2] = new JLabel();  //stone //servant
-                strongbox[2].setFont(new Font(PAP, Font.BOLD, 20));
+                strongbox[2].setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 5;
@@ -2175,7 +2339,7 @@ public class Board implements Runnable {
             } //stone
             {
                 strongbox[3] = new JLabel();  //servant
-                strongbox[3].setFont(new Font(PAP, Font.BOLD, 20));
+                strongbox[3].setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 c = new GridBagConstraints();
                 c.gridx = 2;
                 c.gridy = 5;
@@ -2189,6 +2353,12 @@ public class Board implements Runnable {
 
         }
 
+        /**
+         * Updates the Strongbox and Depot of a this Player.
+         * <p>
+         *     It should be called by the centralLeftPanel, and not directly.
+         * </p>
+         */
         public void update() {
             PlayerSimplified playerRef = Ark.game.getPlayerRef(this.panelName);
             WarehouseDepotSimplified depotRef = playerRef.getWarehouseDepot();
@@ -2231,7 +2401,10 @@ public class Board implements Runnable {
     }
 
     /**
-     * CENTRAL RIGHT PANEL <- CARDLAYOUTRIGHT
+     * Class of the Central Right Panel.
+     * Managed by the cardLayoutRight.
+     * @see #centralRightPanel
+     * @see #cardLayoutRight
      */
     class CentralRightPanel extends JPanel {
 
@@ -2296,6 +2469,10 @@ public class Board implements Runnable {
 
     }
 
+    /**
+     * Class of Self_DevSlot_Panel, which is inside the CentralRightPanel.
+     * <p> updatable by calling the update(String) method in the centralRightPanel. </p>
+     */
     class Self_DevSlot_Panel extends JPanel { //this card is called by Ark.nickname
 
         private final JLabel[][] grid;
@@ -2361,6 +2538,9 @@ public class Board implements Runnable {
 
         }
 
+        /**
+         * Updates this Player's Development Slot
+         */
         public void update() {
             DevelopmentCard[][] ref = Ark.myPlayerRef.getDevelopmentSlot().getCards();
             DevelopmentCard temp;
@@ -2401,6 +2581,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of Others_DevSlot_Panel, which is inside the CentralRightPanel.
+     * <p> updatable by calling the update(String) method in the centralRightPanel. </p>
+     */
     class Others_DevSlot_Panel extends JPanel {
         private Image image;
         private final String panelName;
@@ -2428,7 +2612,7 @@ public class Board implements Runnable {
             //back_OthersDevSlot.addActionListener(back_othersDevSlot_actionListener);
             back_OthersDevSlot.addActionListener(genericBack_actionListener);
             back_OthersDevSlot.setPreferredSize(new Dimension(120, 40));
-            back_OthersDevSlot.setFont(new Font(PAP, Font.BOLD, 20));
+            back_OthersDevSlot.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             back_OthersDevSlot.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -2454,7 +2638,7 @@ public class Board implements Runnable {
                 if (i == 0) label.setText("Leader Card #1");
                 else label.setText("Leader Card #2");
                 label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setFont(new Font(PAP, Font.BOLD, 20));
+                label.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 c = new GridBagConstraints();
                 c.gridy = 0;
                 c.weighty = 0.3;
@@ -2471,7 +2655,7 @@ public class Board implements Runnable {
                 leadPanel.add(this.leadGrid[i], c);
 
                 this.leadLabel[i] = new JLabel();
-                this.leadLabel[i].setFont(new Font(PAP, Font.BOLD, 20));
+                this.leadLabel[i].setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 this.leadLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
 
                 c.gridy = 2;
@@ -2526,6 +2710,9 @@ public class Board implements Runnable {
 
         }
 
+        /**
+         * Updates this Player's DevelopmentSlot and Leader Cards.
+         */
         public void update() {
 
             PlayerSimplified player = Ark.game.getPlayerRef(this.panelName);
@@ -2561,6 +2748,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of DevDeck Panel, which is inside the CentralRightpanel.
+     * @see #devDeck_panel
+     */
     class DevDeck_Panel extends JPanel { //this card is called by DEVDECK
 
         private final JLabel[][] labels;
@@ -2576,7 +2767,7 @@ public class Board implements Runnable {
             Ark.addPadding(this, 599, 946, 6, 5);
 
             JLabel level3CardLabel = new JLabel("Level 3");
-            level3CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            level3CardLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 2;
@@ -2589,7 +2780,7 @@ public class Board implements Runnable {
             this.add(level3CardLabel, c);
 
             JLabel level2CardLabel = new JLabel("Level 2");
-            level2CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            level2CardLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 3;
@@ -2602,7 +2793,7 @@ public class Board implements Runnable {
             this.add(level2CardLabel, c);
 
             JLabel level1CardLabel = new JLabel("Level 1");
-            level1CardLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            level1CardLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 4;
@@ -2614,12 +2805,11 @@ public class Board implements Runnable {
             c.insets = new Insets(0, 0, 0, 0);
             this.add(level1CardLabel, c);
 
-            JButton back_DevDeck_Button = new JButton("Back");
-            //back_DevDeck_Button.addActionListener(back_show_DevDeck_actionListener);
-            back_DevDeck_Button.addActionListener(genericBack_actionListener);
-            back_DevDeck_Button.setPreferredSize(new Dimension(120, 40));
-            back_DevDeck_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_DevDeck_Button.setBackground(new Color(231, 210, 181));
+            JButton backDevDeckButton = new JButton("Back");
+            backDevDeckButton.addActionListener(genericBack_actionListener);
+            backDevDeckButton.setPreferredSize(new Dimension(120, 40));
+            backDevDeckButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backDevDeckButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -2628,10 +2818,10 @@ public class Board implements Runnable {
             c.weightx = 0.01;
             c.weighty = 0.01;
             c.insets = new Insets(5, 5, 0, 0);
-            this.add(back_DevDeck_Button, c);
+            this.add(backDevDeckButton, c);
 
             JLabel greenCardColumnLabel = new JLabel("green");
-            greenCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            greenCardColumnLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 1;
@@ -2643,7 +2833,7 @@ public class Board implements Runnable {
             this.add(greenCardColumnLabel, c);
 
             JLabel blueCardColumnLabel = new JLabel("blue");
-            blueCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            blueCardColumnLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 3;
             c.gridy = 1;
@@ -2655,7 +2845,7 @@ public class Board implements Runnable {
             this.add(blueCardColumnLabel, c);
 
             JLabel yellowCardColumnLabel = new JLabel("yellow");
-            yellowCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            yellowCardColumnLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 4;
             c.gridy = 1;
@@ -2667,7 +2857,7 @@ public class Board implements Runnable {
             this.add(yellowCardColumnLabel, c);
 
             JLabel purpleCardColumnLabel = new JLabel("purple");
-            purpleCardColumnLabel.setFont(new Font(PAP, Font.BOLD, 20));
+            purpleCardColumnLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 5;
             c.gridy = 1;
@@ -2692,6 +2882,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Updates the grid of Development Cards.
+         */
         public void update() {
             DevelopmentCard[][] cards = Ark.game.getDevDeck().getCards();
 
@@ -2708,6 +2901,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of Market Panel, which is inside the CentralRightPanel.
+     * @see #market_panel
+     */
     class Market_Panel extends JPanel {
         private final JLabel[][] labelGrid; //<- contains the labels for the marblegrid
         private final JLabel labelSlide; //<- contains the label for the slidemarble
@@ -2733,7 +2930,7 @@ public class Board implements Runnable {
             //back_ShowMarket_Button.addActionListener(back_show_Market_actionListener);
             back_ShowMarket_Button.addActionListener(genericBack_actionListener);
             back_ShowMarket_Button.setPreferredSize(new Dimension(120, 40));
-            back_ShowMarket_Button.setFont(new Font(PAP, Font.BOLD, 20));
+            back_ShowMarket_Button.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             back_ShowMarket_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -2829,6 +3026,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of LeaderCardsPicker Panel, which is inside the CentralRightPanel.
+     * @see #leaderCardsPicker_panel
+     */
     class LeaderCardsPicker_Panel extends JPanel implements ItemListener {
         private final JLabel[] labelCards;
         private final CustomCheckbox[] checkBoxes;
@@ -2850,7 +3051,7 @@ public class Board implements Runnable {
             this.checkBoxes = new CustomCheckbox[4];
 
             JLabel titleLabel = new JLabel("Pick your two Cards!");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -2886,7 +3087,7 @@ public class Board implements Runnable {
             confirm_LeaderCardsPicker_Button.addActionListener(init_leaderCardsPicker_actionListener);
             confirm_LeaderCardsPicker_Button.setEnabled(false);
             confirm_LeaderCardsPicker_Button.setPreferredSize(new Dimension(200, 60));
-            confirm_LeaderCardsPicker_Button.setFont(new Font(PAP, Font.BOLD, 28));
+            confirm_LeaderCardsPicker_Button.setFont(new Font(PAPYRUS, Font.BOLD, 28));
             confirm_LeaderCardsPicker_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -2899,19 +3100,35 @@ public class Board implements Runnable {
             this.add(confirm_LeaderCardsPicker_Button, c);
         }
 
+        /**
+         * Returns the number of the first chosen Leader Card.
+         * @return the number of the first chosen Leader Card
+         */
         public int getFirst() {
             return this.first;
         }
 
+        /**
+         * Returns the number of the second chosen Leader Card.
+         * @return the number of the second chosen Leader Card
+         */
         public int getSecond() {
             return this.second;
         }
 
+        /**
+         * Updates the row of LeaderCards with new images
+         */
         public void update() {
             for (int i = 0; i < 4; i++)
                 labelCards[i].setIcon(scaleImage(new ImageIcon(Ark.game.getLeaderCardsPicker().getCard(i).getFrontPath()), 300));
         }
 
+        /**
+         * Code of the changeListener used by the LeaderCards checkboxes.
+         * <p> It allows to have a maximum of two selected checkboxes in parallel.</p>
+         * @param e the event source (a CustomCheckbox)
+         */
         @Override
         public void itemStateChanged(ItemEvent e) {
             CustomCheckbox source = (CustomCheckbox) e.getSource();
@@ -2947,6 +3164,9 @@ public class Board implements Runnable {
             }
         } //checkBoxes listener, allows for two and only two checks
 
+        /**
+         * Custom Checkbox that can store an int.
+         */
         class CustomCheckbox extends JCheckBox {
             private final int number;
 
@@ -2961,6 +3181,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of ResourcePicker Panel, which is inside the CentralRightPanel.
+     * @see #resourcePicker_panel
+     */
     class ResourcePicker_Panel extends JPanel {
 
         private final JLabel subtitleLabel;
@@ -2974,7 +3198,7 @@ public class Board implements Runnable {
             Ark.addPadding(this, 599, 946, 5, 5);
 
             JLabel titleLabel = new JLabel("Pick your Resources!");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -2984,7 +3208,7 @@ public class Board implements Runnable {
             this.add(titleLabel, c);
 
             subtitleLabel = new JLabel();
-            subtitleLabel.setFont(new Font(PAP, Font.BOLD, 40));
+            subtitleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 40));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 2;
@@ -3017,6 +3241,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Updates the label that tells how many resources are left
+         */
         public void update() {
             switch (Ark.game.getResourcePicker().getNumOfResources()) {
                 case 2:
@@ -3045,6 +3272,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of action: getMarketResource Panel, which is inside the CentralRightPanel.
+     * @see #getMarketResource_panel
+     */
     class GetMarketResource_Panel extends JPanel {
         private final JLabel[][] labelGrid; //<- contains the labels for the marblegrid
         private final JLabel labelSlide; //<- contains the label for the slidemarble
@@ -3066,12 +3297,11 @@ public class Board implements Runnable {
 
             Ark.addPadding(this, 599, 946, 100, 100);
 
-            JButton back_GetMarketResource_Button = new JButton("Back");
-            //back_GetMarketResource_Button.addActionListener(back_getMarketResource_actionListener);
-            back_GetMarketResource_Button.addActionListener(genericBack_actionListener);
-            back_GetMarketResource_Button.setPreferredSize(new Dimension(120, 40));
-            back_GetMarketResource_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_GetMarketResource_Button.setBackground(new Color(231, 210, 181));
+            JButton backGetMarketResourceButton = new JButton("Back");
+            backGetMarketResourceButton.addActionListener(genericBack_actionListener);
+            backGetMarketResourceButton.setPreferredSize(new Dimension(120, 40));
+            backGetMarketResourceButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backGetMarketResourceButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3081,7 +3311,7 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            this.add(back_GetMarketResource_Button, c);
+            this.add(backGetMarketResourceButton, c);
 
             JPanel topPadding = new JPanel();
             topPadding.setOpaque(false);
@@ -3180,6 +3410,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Updates the inside Market.
+         */
         public void update() {
             MarketMarble[][] grid = Ark.game.getMarket().getGrid();
             MarketMarble slideMarble = Ark.game.getMarket().getSlideMarble();
@@ -3198,6 +3431,9 @@ public class Board implements Runnable {
             g.drawImage(image, 0, 0, this);
         }
 
+        /**
+         * A Custom Button that can store a boolean and an int.
+         */
         class MarketButton extends JButton {
             private final int num;
             private final boolean column;
@@ -3218,6 +3454,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of action: discardLeaderCard Panel, which inside the CentralRightPanel.
+     * @see #discardLeaderCard_panel
+     */
     class DiscardLeaderCard_Panel extends JPanel {
         private final ChooseLeaderCardButton[] leaderCardButton;
         private final JLabel[] labelsUnderTheLeaderCard;
@@ -3232,12 +3472,11 @@ public class Board implements Runnable {
             leaderCardButton = new ChooseLeaderCardButton[2];
             labelsUnderTheLeaderCard = new JLabel[2];
 
-            JButton back_DiscardLeaderCard_Button = new JButton("Back");
-            //back_DiscardLeaderCard_Button.addActionListener(back_discardLeaderCard_actionListener);
-            back_DiscardLeaderCard_Button.addActionListener(genericBack_actionListener);
-            back_DiscardLeaderCard_Button.setPreferredSize(new Dimension(120, 40));
-            back_DiscardLeaderCard_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_DiscardLeaderCard_Button.setBackground(new Color(231, 210, 181));
+            JButton backDiscardLeaderCardButton = new JButton("Back");
+            backDiscardLeaderCardButton.addActionListener(genericBack_actionListener);
+            backDiscardLeaderCardButton.setPreferredSize(new Dimension(120, 40));
+            backDiscardLeaderCardButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backDiscardLeaderCardButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3247,10 +3486,10 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            this.add(back_DiscardLeaderCard_Button, c);
+            this.add(backDiscardLeaderCardButton, c);
 
             JLabel titleLabel = new JLabel("Select a card to be discarded");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3261,7 +3500,7 @@ public class Board implements Runnable {
 
 
             JLabel labelOverLeaderCard1 = new JLabel("Leader Card #1");
-            labelOverLeaderCard1.setFont(new Font(PAP, Font.BOLD, 26));
+            labelOverLeaderCard1.setFont(new Font(PAPYRUS, Font.BOLD, 26));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 2;
@@ -3270,7 +3509,7 @@ public class Board implements Runnable {
             this.add(labelOverLeaderCard1, c);
 
             JLabel labelOverLeaderCard2 = new JLabel("Leader Card #2");
-            labelOverLeaderCard2.setFont(new Font(PAP, Font.BOLD, 26));
+            labelOverLeaderCard2.setFont(new Font(PAPYRUS, Font.BOLD, 26));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 2;
@@ -3301,7 +3540,7 @@ public class Board implements Runnable {
             this.add(leaderCardButton[1], c);
 
             labelsUnderTheLeaderCard[0] = new JLabel();
-            labelsUnderTheLeaderCard[0].setFont(new Font(PAP, Font.BOLD, 22));
+            labelsUnderTheLeaderCard[0].setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 4;
@@ -3312,7 +3551,7 @@ public class Board implements Runnable {
 
 
             labelsUnderTheLeaderCard[1] = new JLabel();
-            labelsUnderTheLeaderCard[1].setFont(new Font(PAP, Font.BOLD, 22));
+            labelsUnderTheLeaderCard[1].setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 4;
@@ -3323,6 +3562,9 @@ public class Board implements Runnable {
 
         }
 
+        /**
+         * Updates the two Leader Cards that are shown, disabling the buttons if a card is already enabled or discarded.
+         */
         public void update() {
             LeaderCard[] cards = Ark.myPlayerRef.getLeaderCards();
             for (int i = 0; i < 2; i++) {
@@ -3341,6 +3583,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * A Custom Button that can store an int.
+         */
         class ChooseLeaderCardButton extends JButton {
             private final int number;
 
@@ -3355,10 +3600,14 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of action: activateLeaderCard Panel, which inside the CentralRightPanel.
+     * @see #activateLeaderCard_panel
+     */
     class ActivateLeaderCard_Panel extends JPanel {
 
-        private final ChooseLeaderCardButton[] leaderCardButtons;
-        private final JLabel[] labelsUnderTheLeaderCard;
+        private final ChooseLeaderCardButton[]  leaderCardButtons;
+        private final JLabel[]                  labelsUnderTheLeaderCard;
 
         public ActivateLeaderCard_Panel() {
             GridBagConstraints c;
@@ -3367,15 +3616,14 @@ public class Board implements Runnable {
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
             Ark.addPadding(this, 599, 946, 100, 100);
 
-            leaderCardButtons = new ChooseLeaderCardButton[2];
-            labelsUnderTheLeaderCard = new JLabel[2];
+            this.leaderCardButtons = new ChooseLeaderCardButton[2];
+            this.labelsUnderTheLeaderCard = new JLabel[2];
 
-            JButton back_ActivateLeaderCard_Button = new JButton("Back");
-            //back_ActivateLeaderCard_Button.addActionListener(back_activateLeaderCard_actionListener);
-            back_ActivateLeaderCard_Button.addActionListener(genericBack_actionListener);
-            back_ActivateLeaderCard_Button.setPreferredSize(new Dimension(120, 40));
-            back_ActivateLeaderCard_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_ActivateLeaderCard_Button.setBackground(new Color(231, 210, 181));
+            JButton backActivateLeaderCardButton = new JButton("Back");
+            backActivateLeaderCardButton.addActionListener(genericBack_actionListener);
+            backActivateLeaderCardButton.setPreferredSize(new Dimension(120, 40));
+            backActivateLeaderCardButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backActivateLeaderCardButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3385,10 +3633,10 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            this.add(back_ActivateLeaderCard_Button, c);
+            this.add(backActivateLeaderCardButton, c);
 
             JLabel titleLabel = new JLabel("Select a card to be activated");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3398,7 +3646,7 @@ public class Board implements Runnable {
             this.add(titleLabel, c);
 
             JLabel labelOverLeaderCard1 = new JLabel("Leader Card #1");
-            labelOverLeaderCard1.setFont(new Font(PAP, Font.BOLD, 26));
+            labelOverLeaderCard1.setFont(new Font(PAPYRUS, Font.BOLD, 26));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 2;
@@ -3407,7 +3655,7 @@ public class Board implements Runnable {
             this.add(labelOverLeaderCard1, c);
 
             JLabel labelOverLeaderCard2 = new JLabel("Leader Card #2");
-            labelOverLeaderCard2.setFont(new Font(PAP, Font.BOLD, 26));
+            labelOverLeaderCard2.setFont(new Font(PAPYRUS, Font.BOLD, 26));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 2;
@@ -3438,7 +3686,7 @@ public class Board implements Runnable {
             this.add(leaderCardButtons[1], c);
 
             labelsUnderTheLeaderCard[0] = new JLabel();
-            labelsUnderTheLeaderCard[0].setFont(new Font(PAP, Font.BOLD, 22));
+            labelsUnderTheLeaderCard[0].setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 4;
@@ -3448,7 +3696,7 @@ public class Board implements Runnable {
             this.add(labelsUnderTheLeaderCard[0], c);
 
             labelsUnderTheLeaderCard[1] = new JLabel();
-            labelsUnderTheLeaderCard[1].setFont(new Font(PAP, Font.BOLD, 22));
+            labelsUnderTheLeaderCard[1].setFont(new Font(PAPYRUS, Font.BOLD, 22));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 4;
@@ -3458,6 +3706,9 @@ public class Board implements Runnable {
             this.add(labelsUnderTheLeaderCard[1], c);
         }
 
+        /**
+         * Updates the two Leader Cards that are shown, disabling the buttons if a card is already enabled or discarded.
+         */
         public void update() {
             LeaderCard[] cards = Ark.myPlayerRef.getLeaderCards();
             for (int i = 0; i < 2; i++) {
@@ -3477,6 +3728,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * A Custom Button that can store an int.
+         */
         class ChooseLeaderCardButton extends JButton {
             private final int number;
 
@@ -3491,6 +3745,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of action: changeDepotConfig Panel, which is inside the CentralRightpanel.
+     * @see #changeDepotConfig_panel
+     */
     class ChangeDepotConfig_Panel extends JPanel {
         private final Resource[] shelf1type;
         private final Resource[] shelf2type;
@@ -3519,12 +3777,11 @@ public class Board implements Runnable {
 
             depotQuantity = new int[2];
 
-            JButton back_ChangeDepotConfig_Card_Button = new JButton("Back");
-            //back_ChangeDepotConfig_Card_Button.addActionListener(back_changeDepotConfig_actionListener);
-            back_ChangeDepotConfig_Card_Button.addActionListener(genericBack_actionListener);
-            back_ChangeDepotConfig_Card_Button.setPreferredSize(new Dimension(120, 40));
-            back_ChangeDepotConfig_Card_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_ChangeDepotConfig_Card_Button.setBackground(new Color(231, 210, 181));
+            JButton backChangeDepotConfigCardButton = new JButton("Back");
+            backChangeDepotConfigCardButton.addActionListener(genericBack_actionListener);
+            backChangeDepotConfigCardButton.setPreferredSize(new Dimension(120, 40));
+            backChangeDepotConfigCardButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backChangeDepotConfigCardButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3532,10 +3789,10 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.anchor = GridBagConstraints.FIRST_LINE_START;
             c.insets = new Insets(5, 5, 0, 0);
-            this.add(back_ChangeDepotConfig_Card_Button, c);
+            this.add(backChangeDepotConfigCardButton, c);
 
             JLabel titleLabel = new JLabel("Change depot configuration");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3551,7 +3808,7 @@ public class Board implements Runnable {
                 firstShelf.setOpaque(false);
 
                 JLabel firstLabel = new JLabel("first shelf:   ");
-                firstLabel.setFont(new Font(PAP, Font.BOLD, 28));
+                firstLabel.setFont(new Font(PAPYRUS, Font.BOLD, 28));
                 c = new GridBagConstraints();
                 c.weightx = 0.3;
                 firstShelf.add(firstLabel, c);
@@ -3569,7 +3826,7 @@ public class Board implements Runnable {
                 c.weightx = 0.3;
                 c.insets = new Insets(0, 2, 0, 20);
                 resourceChangerButton.addActionListener(new resourceChanger(shelf1label, shelf1type, 0));
-                resourceChangerButton.setFont(new Font(PAP, Font.BOLD, 20));
+                resourceChangerButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 resourceChangerButton.setBackground(new Color(231, 210, 181));
                 firstShelf.add(resourceChangerButton, c);
 
@@ -3587,7 +3844,7 @@ public class Board implements Runnable {
                 secondShelf.setOpaque(false);
 
                 JLabel secondLabel = new JLabel("second shelf:   ");
-                secondLabel.setFont(new Font(PAP, Font.BOLD, 28));
+                secondLabel.setFont(new Font(PAPYRUS, Font.BOLD, 28));
                 c = new GridBagConstraints();
                 c.weightx = 0.3;
                 secondShelf.add(secondLabel, c);
@@ -3601,7 +3858,7 @@ public class Board implements Runnable {
 
                 resourceChangerButton = new JButton(">");
                 resourceChangerButton.addActionListener(new resourceChanger(shelf2label[0], shelf2type, 0));
-                resourceChangerButton.setFont(new Font(PAP, Font.BOLD, 20));
+                resourceChangerButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 resourceChangerButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 2;
@@ -3618,7 +3875,7 @@ public class Board implements Runnable {
 
                 resourceChangerButton = new JButton(">");
                 resourceChangerButton.addActionListener(new resourceChanger(shelf2label[1], shelf2type, 1));
-                resourceChangerButton.setFont(new Font(PAP, Font.BOLD, 20));
+                resourceChangerButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 resourceChangerButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 4;
@@ -3640,7 +3897,7 @@ public class Board implements Runnable {
                 thirdShelf.setOpaque(false);
 
                 JLabel thirdLabel = new JLabel("third shelf:   ");
-                thirdLabel.setFont(new Font(PAP, Font.BOLD, 28));
+                thirdLabel.setFont(new Font(PAPYRUS, Font.BOLD, 28));
                 c = new GridBagConstraints();
                 c.weightx = 0.3;
                 thirdShelf.add(thirdLabel, c);
@@ -3654,7 +3911,7 @@ public class Board implements Runnable {
 
                 resourceChangerButton = new JButton(">");
                 resourceChangerButton.addActionListener(new resourceChanger(shelf3label[0], shelf3type, 0));
-                resourceChangerButton.setFont(new Font(PAP, Font.BOLD, 20));
+                resourceChangerButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 resourceChangerButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 2;
@@ -3671,7 +3928,7 @@ public class Board implements Runnable {
 
                 resourceChangerButton = new JButton(">");
                 resourceChangerButton.addActionListener(new resourceChanger(shelf3label[1], shelf3type, 1));
-                resourceChangerButton.setFont(new Font(PAP, Font.BOLD, 20));
+                resourceChangerButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 resourceChangerButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 4;
@@ -3688,7 +3945,7 @@ public class Board implements Runnable {
 
                 resourceChangerButton = new JButton(">");
                 resourceChangerButton.addActionListener(new resourceChanger(shelf3label[2], shelf3type, 2));
-                resourceChangerButton.setFont(new Font(PAP, Font.BOLD, 20));
+                resourceChangerButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 resourceChangerButton.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 6;
@@ -3724,11 +3981,11 @@ public class Board implements Runnable {
             c.gridwidth = 1;
             this.add(secondExtraDepotPanel, c);
 
-            JButton confirm_ChangeDepotConfig_Button = new JButton("confirm!");
-            confirm_ChangeDepotConfig_Button.addActionListener(action_changeDepotConfig_actionListener);
-            confirm_ChangeDepotConfig_Button.setPreferredSize(new Dimension(200, 60));
-            confirm_ChangeDepotConfig_Button.setFont(new Font(PAP, Font.BOLD, 28));
-            confirm_ChangeDepotConfig_Button.setBackground(new Color(231, 210, 181));
+            JButton confirmChangeDepotConfigButton = new JButton("confirm!");
+            confirmChangeDepotConfigButton.addActionListener(action_changeDepotConfig_actionListener);
+            confirmChangeDepotConfigButton.setPreferredSize(new Dimension(200, 60));
+            confirmChangeDepotConfigButton.setFont(new Font(PAPYRUS, Font.BOLD, 28));
+            confirmChangeDepotConfigButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 6;
@@ -3737,7 +3994,7 @@ public class Board implements Runnable {
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.PAGE_END;
             c.insets = new Insets(0, 0, 10, 0);
-            this.add(confirm_ChangeDepotConfig_Button, c);
+            this.add(confirmChangeDepotConfigButton, c);
         }
 
         public Resource getShelf1() {
@@ -3760,6 +4017,9 @@ public class Board implements Runnable {
             return this.depotQuantity[1];
         }
 
+        /**
+         * Updates the depot and extraDepot shown to reflect the model status.
+         */
         public void update() {
             Resource shelf1r = Ark.myPlayerRef.getWarehouseDepot().getShelf1();
             Resource[] shelf2r = Ark.myPlayerRef.getWarehouseDepot().getShelf2();
@@ -3783,23 +4043,10 @@ public class Board implements Runnable {
 
         }
 
-        private Resource nextResource(Resource currentResource) {
-            switch (currentResource) { //none coin shield stone servant
-                case NONE:
-                    return Resource.COIN;
-                case COIN:
-                    return Resource.SHIELD;
-                case SHIELD:
-                    return Resource.STONE;
-                case STONE:
-                    return Resource.SERVANT;
-                case SERVANT:
-                    return Resource.NONE;
-                default:
-                    return Resource.NONE;
-            }
-        }
-
+        /**
+         * A Class that contains the lower ExtraDepot labels, buttons, and information.
+         * <p> Used inside the Change Depot Config.</p>
+         */
         class ExtraDepotPanel extends JPanel {
             private final JLabel label;
             private JLabel number;
@@ -3827,7 +4074,7 @@ public class Board implements Runnable {
                 this.setOpaque(false);
 
                 JLabel fixedLabel = new JLabel();
-                fixedLabel.setFont(new Font(PAP, Font.BOLD, 20));
+                fixedLabel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 fixedLabel.setText("   Leader Card #" + (lcnum + 1) + "   ");
                 c = new GridBagConstraints();
                 c.gridx = 0;
@@ -3837,7 +4084,7 @@ public class Board implements Runnable {
                 this.add(fixedLabel, c);
 
                 label = new JLabel();
-                label.setFont(new Font(PAP, Font.BOLD, 22));
+                label.setFont(new Font(PAPYRUS, Font.BOLD, 22));
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 1;
@@ -3846,7 +4093,7 @@ public class Board implements Runnable {
                 this.add(label, c);
 
                 number = new JLabel();
-                number.setFont(new Font(PAP, Font.BOLD, 28));
+                number.setFont(new Font(PAPYRUS, Font.BOLD, 28));
                 c = new GridBagConstraints();
                 c.gridx = 1;
                 c.gridy = 0;
@@ -3858,7 +4105,7 @@ public class Board implements Runnable {
 
                 less = new JButton("<");
                 less.addActionListener(less_ActionListener);
-                less.setFont(new Font(PAP, Font.BOLD, 20));
+                less.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 less.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 2;
@@ -3870,7 +4117,7 @@ public class Board implements Runnable {
 
                 more = new JButton(">");
                 more.addActionListener(more_ActionListener);
-                more.setFont(new Font(PAP, Font.BOLD, 20));
+                more.setFont(new Font(PAPYRUS, Font.BOLD, 20));
                 more.setBackground(new Color(231, 210, 181));
                 c = new GridBagConstraints();
                 c.gridx = 3;
@@ -3881,6 +4128,9 @@ public class Board implements Runnable {
                 this.add(more, c);
             }
 
+            /**
+             * Updates the values used to choose an extra Depot configuration.
+             */
             public void updateValues() {
                 LeaderCard l = Ark.myPlayerRef.getLeaderCards()[lcnum];
                 if (l == null) {
@@ -3918,11 +4168,15 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * A Custom ActionListener that permits to cycle through a defined set of Resources.
+         * <p> Manages a single Label, and changes the value in a specified array at a specified position.</p>
+         */
         class resourceChanger implements ActionListener {
 
-            JLabel managedLabel;
-            Resource[] arraySource;
-            int index;
+            private final JLabel managedLabel;
+            private final Resource[] arraySource;
+            private final int index;
 
             public resourceChanger(JLabel managedLabel, Resource[] arraySource, int index) {
                 this.managedLabel = managedLabel;
@@ -3936,9 +4190,28 @@ public class Board implements Runnable {
                 arraySource[index] = nextResource;
                 managedLabel.setIcon(scaleImage(new ImageIcon(nextResource.getPathBig()), 100));
             }
+
+            private Resource nextResource(Resource currentResource) {
+                switch (currentResource) { //none coin shield stone servant
+                    case NONE:
+                        return Resource.COIN;
+                    case COIN:
+                        return Resource.SHIELD;
+                    case SHIELD:
+                        return Resource.STONE;
+                    case STONE:
+                        return Resource.SERVANT;
+                    default:
+                        return Resource.NONE;
+                }
+            }
         }
     }
 
+    /**
+     * Class of middle object : Market Helper, which is inside the CentralRightPanel.
+     * @see #marketHelper_panel
+     */
     class MarketHelper_Panel extends JPanel {
 
         private final JButton[] choiceButtons;
@@ -3956,7 +4229,7 @@ public class Board implements Runnable {
             resourceLabel = new JLabel[4];
 
             JLabel titleLabel = new JLabel("Market Helper is here!");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -3973,7 +4246,7 @@ public class Board implements Runnable {
             flowResource.setBackground(new Color(214, 189, 148));
 
             JLabel resourceRemaining = new JLabel("remaining resources: ");
-            resourceRemaining.setFont(new Font(PAP, Font.BOLD, 26));
+            resourceRemaining.setFont(new Font(PAPYRUS, Font.BOLD, 26));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -4004,7 +4277,7 @@ public class Board implements Runnable {
                 button.setPreferredSize(new Dimension(700, 46));
                 button.addActionListener(action_newMarketChoice_actionListener);
                 button.setBackground(new Color(231, 210, 181));
-                button.setFont(new Font(PAP, Font.BOLD, 24));
+                button.setFont(new Font(PAPYRUS, Font.BOLD, 24));
                 button.setEnabled(false);
 
                 if (i == 2) button.setText("discard that resource");
@@ -4025,6 +4298,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Updates the MarketHelper panel with the current options, disabling the options that are not available.
+         */
         public void update() {
             boolean enabled = Ark.game.isMarketHelperEnabled();
             boolean[] choices = Ark.game.getMarketHelper().getChoices();
@@ -4066,6 +4342,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * A Custom Button that can store an int.
+         */
         class ChoiceButton extends JButton {
             private final int choiceNumber;
 
@@ -4080,13 +4359,20 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of middle object : Vendor Panel, which is inside the CentralRightPanel.
+     * @see #vendor_panel
+     */
     class Vendor_Panel extends JPanel {
         private JLabel devCard;
-        private SlotButton cancel;
         private SlotButton slot1;
         private SlotButton slot2;
         private SlotButton slot3;
         private int currentCard;
+
+        /**
+         * Custom ActionListener that goes forward in the Vendor Card "applet".
+         */
         ActionListener next_ActionListener = e -> {
             if (Ark.game.getDevelopmentCardsVendor().isEnabled()) {
                 currentCard++;
@@ -4101,6 +4387,9 @@ public class Board implements Runnable {
                 slot3.setEnabled(devCards.get(currentCard).isSlot3());
             }
         };
+        /**
+         * Custom ActionListener that goes backwards in the Vendor Card "applet".
+         */
         ActionListener prev_ActionListener = e -> {
             if (Ark.game.getDevelopmentCardsVendor().isEnabled()) {
                 currentCard--;
@@ -4124,10 +4413,10 @@ public class Board implements Runnable {
 
             currentCard = 0;
 
-            cancel = new SlotButton("cancel", -1);
+            SlotButton cancel = new SlotButton("cancel", -1);
             cancel.addActionListener(action_chooseDevCard_actionListener);
             cancel.setPreferredSize(new Dimension(120, 40));
-            cancel.setFont(new Font(PAP, Font.BOLD, 20));
+            cancel.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             cancel.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -4140,7 +4429,7 @@ public class Board implements Runnable {
 
 
             JLabel title = new JLabel("Select a card to buy it!");
-            title.setFont(new Font(PAP, Font.BOLD, 40));
+            title.setFont(new Font(PAPYRUS, Font.BOLD, 40));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -4153,7 +4442,7 @@ public class Board implements Runnable {
             JButton prev = new JButton("<");
             prev.addActionListener(prev_ActionListener);
             prev.setPreferredSize(new Dimension(80, 250));
-            prev.setFont(new Font(PAP, Font.BOLD, 20));
+            prev.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             prev.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -4176,7 +4465,7 @@ public class Board implements Runnable {
             JButton next = new JButton(">");
             next.addActionListener(next_ActionListener);
             next.setPreferredSize(new Dimension(80, 250));
-            next.setFont(new Font(PAP, Font.BOLD, 20));
+            next.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             next.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 3;
@@ -4188,7 +4477,7 @@ public class Board implements Runnable {
             this.add(next, c);
 
             JLabel position = new JLabel("Slot?");
-            position.setFont(new Font(PAP, Font.BOLD, 30));
+            position.setFont(new Font(PAPYRUS, Font.BOLD, 30));
             c = new GridBagConstraints();
             c.gridx = 4;
             c.gridy = 2;
@@ -4196,9 +4485,9 @@ public class Board implements Runnable {
             c.weighty = 0.001;
             this.add(position, c);
 
-            slot1 = new SlotButton("1", 1);
+            slot1 = new SlotButton("1", 0);
             slot1.setPreferredSize(new Dimension(120, 120));
-            slot1.setFont(new Font(PAP, Font.BOLD, 30));
+            slot1.setFont(new Font(PAPYRUS, Font.BOLD, 30));
             slot1.setBackground(new Color(231, 210, 181));
             slot1.addActionListener(action_chooseDevCard_actionListener);
             c = new GridBagConstraints();
@@ -4208,9 +4497,9 @@ public class Board implements Runnable {
             c.weighty = 0.3;
             this.add(slot1, c);
 
-            slot2 = new SlotButton("2", 2);
+            slot2 = new SlotButton("2", 1);
             slot2.setPreferredSize(new Dimension(120, 120));
-            slot2.setFont(new Font(PAP, Font.BOLD, 30));
+            slot2.setFont(new Font(PAPYRUS, Font.BOLD, 30));
             slot2.setBackground(new Color(231, 210, 181));
             slot2.addActionListener(action_chooseDevCard_actionListener);
             c = new GridBagConstraints();
@@ -4220,9 +4509,9 @@ public class Board implements Runnable {
             c.weighty = 0.3;
             this.add(slot2, c);
 
-            slot3 = new SlotButton("3", 3);
+            slot3 = new SlotButton("3", 2);
             slot3.setPreferredSize(new Dimension(120, 120));
-            slot3.setFont(new Font(PAP, Font.BOLD, 30));
+            slot3.setFont(new Font(PAPYRUS, Font.BOLD, 30));
             slot3.setBackground(new Color(231, 210, 181));
             slot3.addActionListener(action_chooseDevCard_actionListener);
             c = new GridBagConstraints();
@@ -4233,20 +4522,17 @@ public class Board implements Runnable {
             this.add(slot3, c);
         }
 
+        /**
+         * Sets up the first card from the Vendor, enabling the buttons slots that are available to be chosen.
+         */
         public void update() {
             if (Ark.game.getDevelopmentCardsVendor().isEnabled()) {
                 List<VendorCard> devCards = Ark.game.getDevelopmentCardsVendor().getCards();
                 devCard.setIcon(scaleImage(new ImageIcon(devCards.get(0).getCard().getFrontPath()), 450));
-
-                if (!devCards.get(0).isSlot1()) {
-                    slot1.setEnabled(false);
-                }
-                if (!devCards.get(0).isSlot2()) {
-                    slot2.setEnabled(false);
-                }
-                if (!devCards.get(0).isSlot3()) {
-                    slot3.setEnabled(false);
-                }
+                currentCard = 0;
+                slot1.setEnabled(devCards.get(0).isSlot1());
+                slot2.setEnabled(devCards.get(0).isSlot2());
+                slot3.setEnabled(devCards.get(0).isSlot3());
             }
         }
 
@@ -4254,8 +4540,11 @@ public class Board implements Runnable {
             return currentCard;
         }
 
+        /**
+         * A Custom Button that can store an int.
+         */
         class SlotButton extends JButton {
-            int position;
+            private final int position;
 
             public SlotButton(String text, int position) {
                 super(text);
@@ -4267,23 +4556,18 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of action : Production (part 1), which is inside the CentralRightPanel.
+     * @see #productionSelection_panel
+     */
     class ProductionSelection_Panel extends JPanel {
-        private final JToggleButton[] leaderCardButton;
-        private final JToggleButton[] devCardButton;
-        private final JToggleButton basicProduction;
-
-        ActionListener confirm_ProductionSelection_Panel = e -> {
-            cardLayoutRight.show(centralRightPanel, PRODUCTION);
-            production_panel.update();
-        };
-
-        ActionListener back_ProductionSelection_actionListener = e -> {
-            cardLayoutRight.show(centralRightPanel, Ark.nickname);
-        };
+        private final JToggleButton[]   leaderCardButton;
+        private final JToggleButton[]   devCardButton;
+        private final JToggleButton     basicProduction;
 
         public ProductionSelection_Panel() {
-            leaderCardButton = new JToggleButton[2];
-            devCardButton = new JToggleButton[3];
+            this.leaderCardButton = new JToggleButton[2];
+            this.devCardButton = new JToggleButton[3];
 
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
@@ -4291,11 +4575,11 @@ public class Board implements Runnable {
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
             Ark.addPadding(this, 599, 946, 10, 12);
 
-            JButton back_ProductionSelection_Button = new JButton("Back");
-            back_ProductionSelection_Button.addActionListener(back_ProductionSelection_actionListener); //da cambiare il back
-            back_ProductionSelection_Button.setPreferredSize(new Dimension(120, 40));
-            back_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
+            JButton backProductionSelectionButton = new JButton("Back");
+            backProductionSelectionButton.addActionListener(genericBack_actionListener);
+            backProductionSelectionButton.setPreferredSize(new Dimension(120, 40));
+            backProductionSelectionButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backProductionSelectionButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -4303,10 +4587,10 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            this.add(back_ProductionSelection_Button, c);
+            this.add(backProductionSelectionButton, c);
 
             JLabel titleLabel = new JLabel("Choose your productions");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -4323,7 +4607,7 @@ public class Board implements Runnable {
                 this.leaderCardButton[i] = new JToggleButton();
                 this.leaderCardButton[i].setText("Leader Card #"+(i+1));
                 this.leaderCardButton[i].setPreferredSize(new Dimension(240, 60));
-                this.leaderCardButton[i].setFont(new Font(PAP, Font.BOLD, 24));
+                this.leaderCardButton[i].setFont(new Font(PAPYRUS, Font.BOLD, 24));
                 this.leaderCardButton[i].setBackground(new Color(231,210,181));
 
                 c = new GridBagConstraints();
@@ -4349,7 +4633,7 @@ public class Board implements Runnable {
             upperPanel.add(basicProduction, c);
 
             JLabel basicProductionLabel = new JLabel("basic production");
-            basicProductionLabel.setFont(new Font(PAP, Font.BOLD, 24));
+            basicProductionLabel.setFont(new Font(PAPYRUS, Font.BOLD, 24));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 0;
@@ -4394,11 +4678,14 @@ public class Board implements Runnable {
             this.add(stdProductionPanel, c);
 
 
-            JButton confirm_ProductionSelection_Button = new JButton("confirm!");
-            confirm_ProductionSelection_Button.addActionListener(confirm_ProductionSelection_Panel);
-            confirm_ProductionSelection_Button.setPreferredSize(new Dimension(200, 60));
-            confirm_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 28));
-            confirm_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
+            JButton confirmProductionSelectionButton = new JButton("confirm!");
+            confirmProductionSelectionButton.addActionListener(e -> {
+                production_panel.update();
+                cardLayoutRight.show(centralRightPanel, PRODUCTION);
+            });
+            confirmProductionSelectionButton.setPreferredSize(new Dimension(200, 60));
+            confirmProductionSelectionButton.setFont(new Font(PAPYRUS, Font.BOLD, 28));
+            confirmProductionSelectionButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 5;
@@ -4407,12 +4694,13 @@ public class Board implements Runnable {
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.PAGE_END;
             c.insets = new Insets(0,0,10,0);
-            this.add(confirm_ProductionSelection_Button, c);
+            this.add(confirmProductionSelectionButton, c);
 
         }
 
-
-
+        /**
+         * Updates the page to allow selection of possible production items.
+         */
         public void update() {
             DevelopmentCard[] topCards = Ark.myPlayerRef.getDevelopmentSlot().getTopCards();
             LeaderCard[] leaderCards = Ark.myPlayerRef.getLeaderCards();
@@ -4464,6 +4752,10 @@ public class Board implements Runnable {
         }
     }
 
+    /**
+     * Class of action : Production (part 2), which is inside the CentralRightPanel.
+     * @see #production_panel
+     */
     class Production_Panel extends JPanel {
         private final JLabel basicFirstChoice;
         private final JLabel basicSecondChoice;
@@ -4471,17 +4763,9 @@ public class Board implements Runnable {
         private final JLabel lc1OutputChoice;
         private final JLabel lc2OutputChoice;
 
-        private int currentResourceFirstIn;
-        private int currentResourceSecondIn;
-        private int currentResourceBasicOut;
-        private int currentResourceLC1;
-        private int currentResourceLC2;
-
-        private Resource[] basicInput;
-        private Resource basicOutput;
-        private Resource lc1output;
-        private Resource lc2output;
-
+        /**
+         * 0: basic input 1, 1: basic input 2, 2: basic output, 3: leaderCard 1, 4: leaderCard 2
+         */
         private final Resource[] resources;
 
         private final JButton next1;
@@ -4490,8 +4774,6 @@ public class Board implements Runnable {
         private final JButton next4;
         private final JButton next5;
 
-
-
         public Production_Panel() {
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
@@ -4499,34 +4781,13 @@ public class Board implements Runnable {
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
             Ark.addPadding(this, 599, 946, 10, 12);
 
-            currentResourceFirstIn = 0;
-            currentResourceSecondIn = 0;
-            currentResourceBasicOut = 0;
-            currentResourceLC1 = 0;
-            currentResourceLC2 = 0;
+            this.resources = new Resource[5];
 
-            basicInput = new Resource[2];
-            basicOutput = Resource.NONE;
-            lc1output = Resource.NONE;
-            lc2output = Resource.NONE;
-
-
-
-            resources = new Resource[4];
-            resources[0] = Resource.COIN;
-            resources[1] = Resource.SHIELD;
-            resources[2] = Resource.STONE;
-            resources[3] = Resource.SERVANT;
-
-            ActionListener back_ProductionSelection_actionListener = e -> {
-                changeRightCard(PRODSELECTION);
-            };
-
-            JButton back_ProductionSelection_Button = new JButton("Back");
-            back_ProductionSelection_Button.addActionListener(back_ProductionSelection_actionListener);
-            back_ProductionSelection_Button.setPreferredSize(new Dimension(120, 40));
-            back_ProductionSelection_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_ProductionSelection_Button.setBackground(new Color(231, 210, 181));
+            JButton backProductionSelectionButton = new JButton("Back");
+            backProductionSelectionButton.addActionListener(e -> changeRightCard(PRODSELECTION));
+            backProductionSelectionButton.setPreferredSize(new Dimension(120, 40));
+            backProductionSelectionButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backProductionSelectionButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -4534,10 +4795,10 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            this.add(back_ProductionSelection_Button, c);
+            this.add(backProductionSelectionButton, c);
 
             JLabel titleLabel = new JLabel("Choose the resources!");
-            titleLabel.setFont(new Font(PAP, Font.BOLD, 35));
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 35));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 1;
@@ -4547,7 +4808,7 @@ public class Board implements Runnable {
             this.add(titleLabel, c);
 
             JLabel basicProduction = new JLabel("Basic Production:");
-            basicProduction.setFont(new Font(PAP, Font.BOLD, 25));
+            basicProduction.setFont(new Font(PAPYRUS, Font.BOLD, 25));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 2;
@@ -4560,7 +4821,7 @@ public class Board implements Runnable {
             JLabel emptySpace = new JLabel();
             emptySpace.setOpaque(false);
             emptySpace.setHorizontalAlignment(SwingConstants.CENTER);
-            emptySpace.setFont(new Font(PAP, Font.BOLD, 20));
+            emptySpace.setFont(new Font(PAPYRUS, Font.BOLD, 20));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 4;
@@ -4571,7 +4832,7 @@ public class Board implements Runnable {
             this.add(emptySpace, c);
 
             JLabel lc1 = new JLabel("Leader card 1:");
-            lc1.setFont(new Font(PAP, Font.BOLD, 25));
+            lc1.setFont(new Font(PAPYRUS, Font.BOLD, 25));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 5;
@@ -4580,7 +4841,7 @@ public class Board implements Runnable {
             this.add(lc1, c);
 
             JLabel lc2 = new JLabel("Leader card 2:");
-            lc2.setFont(new Font(PAP, Font.BOLD, 25));
+            lc2.setFont(new Font(PAPYRUS, Font.BOLD, 25));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 6;
@@ -4589,7 +4850,7 @@ public class Board implements Runnable {
             this.add(lc2, c);
 
             JLabel input1 = new JLabel("input 1: ");
-            input1.setFont(new Font(PAP, Font.BOLD, 25));
+            input1.setFont(new Font(PAPYRUS, Font.BOLD, 25));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 2;
@@ -4607,9 +4868,9 @@ public class Board implements Runnable {
             this.add(basicFirstChoice, c);
 
             next1 = new JButton(">");
-            next1.addActionListener(new resourceChanger(basicFirstChoice, currentResourceFirstIn));
+            next1.addActionListener(new resourceChanger(basicFirstChoice, this.resources, 0));
             next1.setPreferredSize(new Dimension(45, 45));
-            next1.setFont(new Font(PAP, Font.BOLD, 15));
+            next1.setFont(new Font(PAPYRUS, Font.BOLD, 15));
             next1.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 4;
@@ -4620,7 +4881,7 @@ public class Board implements Runnable {
             this.add(next1, c);
 
             JLabel input2 = new JLabel("input 2: ");
-            input2.setFont(new Font(PAP, Font.BOLD, 25));
+            input2.setFont(new Font(PAPYRUS, Font.BOLD, 25));
             c = new GridBagConstraints();
             c.gridx = 2;
             c.gridy = 3;
@@ -4638,9 +4899,9 @@ public class Board implements Runnable {
             this.add(basicSecondChoice, c);
 
             next2 = new JButton(">");
-            next2.addActionListener(new resourceChanger(basicSecondChoice, currentResourceSecondIn));
+            next2.addActionListener(new resourceChanger(basicSecondChoice, this.resources, 1));
             next2.setPreferredSize(new Dimension(45, 45));
-            next2.setFont(new Font(PAP, Font.BOLD, 15));
+            next2.setFont(new Font(PAPYRUS, Font.BOLD, 15));
             next2.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 4;
@@ -4651,7 +4912,7 @@ public class Board implements Runnable {
             this.add(next2, c);
 
             JLabel output = new JLabel("output: ");
-            output.setFont(new Font(PAP, Font.BOLD, 25));
+            output.setFont(new Font(PAPYRUS, Font.BOLD, 25));
             c = new GridBagConstraints();
             c.gridx = 5;
             c.gridy = 2;
@@ -4670,9 +4931,9 @@ public class Board implements Runnable {
             this.add(basicOutputChoice, c);
 
             next3 = new JButton(">");
-            next3.addActionListener(new resourceChanger(basicOutputChoice, currentResourceBasicOut));
+            next3.addActionListener(new resourceChanger(basicOutputChoice, this.resources, 2));
             next3.setPreferredSize(new Dimension(45, 45));
-            next3.setFont(new Font(PAP, Font.BOLD, 15));
+            next3.setFont(new Font(PAPYRUS, Font.BOLD, 15));
             next3.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 7;
@@ -4693,9 +4954,9 @@ public class Board implements Runnable {
             this.add(lc1OutputChoice, c);
 
             next4 = new JButton(">");
-            next4.addActionListener(new resourceChanger(lc1OutputChoice, currentResourceLC1));
+            next4.addActionListener(new resourceChanger(lc1OutputChoice, this.resources, 3));
             next4.setPreferredSize(new Dimension(45, 45));
-            next4.setFont(new Font(PAP, Font.BOLD, 15));
+            next4.setFont(new Font(PAPYRUS, Font.BOLD, 15));
             next4.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 5;
@@ -4714,9 +4975,9 @@ public class Board implements Runnable {
             this.add(lc2OutputChoice, c);
 
             next5 = new JButton(">");
-            next5.addActionListener(new resourceChanger(lc2OutputChoice, currentResourceLC2));
+            next5.addActionListener(new resourceChanger(lc2OutputChoice, this.resources, 4));
             next5.setPreferredSize(new Dimension(45, 45));
-            next5.setFont(new Font(PAP, Font.BOLD, 15));
+            next5.setFont(new Font(PAPYRUS, Font.BOLD, 15));
             next5.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 5;
@@ -4729,7 +4990,7 @@ public class Board implements Runnable {
             ImageIcon cross = scaleImage(new ImageIcon("resources/punchboard/faith.png"), 80);
             JLabel faithPoint1 = new JLabel("+");
             faithPoint1.setIcon(cross);
-            faithPoint1.setFont(new Font(PAP, Font.BOLD, 35));
+            faithPoint1.setFont(new Font(PAPYRUS, Font.BOLD, 35));
             c = new GridBagConstraints();
             c.gridx = 3;
             c.gridy = 5;
@@ -4739,7 +5000,7 @@ public class Board implements Runnable {
 
             JLabel faithPoint2 = new JLabel("+");
             faithPoint2.setIcon(cross);
-            faithPoint2.setFont(new Font(PAP, Font.BOLD, 35));
+            faithPoint2.setFont(new Font(PAPYRUS, Font.BOLD, 35));
             c = new GridBagConstraints();
             c.gridx = 3;
             c.gridy = 6;
@@ -4748,9 +5009,9 @@ public class Board implements Runnable {
             this.add(faithPoint2, c);
 
             JButton confirm_Production_Button = new JButton("confirm!");
-            //confirm_Production_Button.addActionListener(confirm_Production_ActionListener);
+            confirm_Production_Button.addActionListener(action_activateProduction_actionListener);
             confirm_Production_Button.setPreferredSize(new Dimension(200, 60));
-            confirm_Production_Button.setFont(new Font(PAP, Font.BOLD, 28));
+            confirm_Production_Button.setFont(new Font(PAPYRUS, Font.BOLD, 28));
             confirm_Production_Button.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -4763,70 +5024,76 @@ public class Board implements Runnable {
             this.add(confirm_Production_Button, c);
         }
 
+        /**
+         * Updates this page based on the items that were selected in the production selection panel.
+         */
         public void update() {
-            if(!productionSelection_panel.getBasicProduction().isSelected()) {
-                next1.setEnabled(false);
-                next2.setEnabled(false);
-                next3.setEnabled(false);
-            } else if(productionSelection_panel.getBasicProduction().isSelected()){
-                next1.setEnabled(true);
-                next2.setEnabled(true);
-                next3.setEnabled(true);
-            }
-            if(!productionSelection_panel.getLeaderCard1().isSelected()) {
-                next4.setEnabled(false);
-            } else if(productionSelection_panel.getLeaderCard1().isSelected()) {
-                next4.setEnabled(true);
-            }
-            if(!productionSelection_panel.getLeaderCard2().isSelected()) {
-                next5.setEnabled(false);
-            } else if(productionSelection_panel.getLeaderCard2().isSelected()) {
-                next5.setEnabled(true);
-            }
+            next1.setEnabled(productionSelection_panel.getBasicProduction().isSelected());
+            next2.setEnabled(productionSelection_panel.getBasicProduction().isSelected());
+            next3.setEnabled(productionSelection_panel.getBasicProduction().isSelected());
+            next4.setEnabled(productionSelection_panel.getLeaderCard1().isSelected());
+            next5.setEnabled(productionSelection_panel.getLeaderCard2().isSelected());
 
-            ImageIcon icon = scaleImage(new ImageIcon(resources[currentResourceFirstIn].getPathBig()), 80);
-            basicFirstChoice.setIcon(icon);
-            basicSecondChoice.setIcon(icon);
-            basicOutputChoice.setIcon(icon);
-            lc1OutputChoice.setIcon(icon);
-            lc2OutputChoice.setIcon(icon);
+            basicFirstChoice.setIcon(scaleImage(new ImageIcon(Resource.STONE.getPathBig()), 80));
+            basicSecondChoice.setIcon(scaleImage(new ImageIcon(Resource.COIN.getPathBig()), 80));
+            basicOutputChoice.setIcon(scaleImage(new ImageIcon(Resource.SHIELD.getPathBig()), 80));
+            lc1OutputChoice.setIcon(scaleImage(new ImageIcon(Resource.COIN.getPathBig()), 80));
+            lc2OutputChoice.setIcon(scaleImage(new ImageIcon(Resource.SERVANT.getPathBig()), 80));
+
+            this.resources[0] = Resource.STONE;
+            this.resources[1] = Resource.COIN;
+            this.resources[2] = Resource.SHIELD;
+            this.resources[3] = Resource.COIN;
+            this.resources[4] = Resource.SERVANT;
         }
 
+        /**
+         * A Custom ActionListener that permits to cycle between a defined set of Resources.
+         */
         class resourceChanger implements ActionListener {
-            JLabel managedLabel;
-            int currentResource;
+            private final JLabel managedLabel;
+            private final Resource[] arrayRef;
+            private final int index;
 
-            public resourceChanger(JLabel managedLabel, int currentResource) {
+            public resourceChanger(JLabel managedLabel, Resource[] arrayRef, int index) {
                 this.managedLabel = managedLabel;
-                this.currentResource = currentResource;
+                this.arrayRef = arrayRef;
+                this.index = index;
             }
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                currentResource++;
-                if(currentResource > 3) {
-                    currentResource = 0;
-                }
-                managedLabel.setIcon(scaleImage(new ImageIcon(resources[currentResource].getPathBig()), 80));
+                Resource nextResource = nextResource(arrayRef[index]);
+                arrayRef[index] = nextResource;
+                managedLabel.setIcon(scaleImage(new ImageIcon(nextResource.getPathBig()), 80));
+            }
 
-                if(managedLabel.equals(basicFirstChoice))
-                    basicInput[0] = resources[currentResource];
-                else if(managedLabel.equals(basicSecondChoice))
-                    basicInput[1] = resources[currentResource];
-                else if(managedLabel.equals(basicOutputChoice))
-                    basicOutput = resources[currentResource];
-                else if(managedLabel.equals(lc1OutputChoice))
-                    lc1output = resources[currentResource];
-                else if(managedLabel.equals(lc2OutputChoice))
-                    lc2output = resources[currentResource];
+            private Resource nextResource(Resource currentResource) {
+                switch (currentResource) { // coin shield stone servant
+                    case COIN:
+                        return Resource.SHIELD;
+                    case SHIELD:
+                        return Resource.STONE;
+                    case STONE:
+                        return Resource.SERVANT;
+                    default:
+                        return Resource.COIN;
+                }
             }
         }
     }
 
+    /**
+     * Class of LeaderBoard Panel, which is inside the CentralRightPanel.
+     * @see #leaderboard_panel
+     */
     class Leaderboard_Panel extends JPanel {
         private final JLabel resultLabel;
         private final JLabel[] entries;
 
+        /**
+         * Maximum lines of the leaderboard, by design is 4. (== Maximum Players)
+         */
         static final int LINES = 4;
 
         public Leaderboard_Panel() {
@@ -4838,11 +5105,11 @@ public class Board implements Runnable {
 
             this.entries = new JLabel[LINES];
 
-            JButton back_Leaderboard_Button = new JButton("Back");
-            back_Leaderboard_Button.addActionListener(genericBack_actionListener);
-            back_Leaderboard_Button.setPreferredSize(new Dimension(120, 40));
-            back_Leaderboard_Button.setFont(new Font(PAP, Font.BOLD, 20));
-            back_Leaderboard_Button.setBackground(new Color(231, 210, 181));
+            JButton backLeaderboardButton = new JButton("Back");
+            backLeaderboardButton.addActionListener(genericBack_actionListener);
+            backLeaderboardButton.setPreferredSize(new Dimension(120, 40));
+            backLeaderboardButton.setFont(new Font(PAPYRUS, Font.BOLD, 20));
+            backLeaderboardButton.setBackground(new Color(231, 210, 181));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
@@ -4850,11 +5117,11 @@ public class Board implements Runnable {
             c.weighty = 0.1;
             c.insets = new Insets(5, 5, 0, 0);
             c.anchor = GridBagConstraints.FIRST_LINE_START;
-            this.add(back_Leaderboard_Button, c);
+            this.add(backLeaderboardButton, c);
 
 
             resultLabel = new JLabel();
-            resultLabel.setFont(new Font(PAP, Font.BOLD, 50));
+            resultLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
             resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
             c = new GridBagConstraints();
             c.gridx = 1;
@@ -4867,7 +5134,7 @@ public class Board implements Runnable {
 
             for(int i=0; i<LINES; i++) {
                 this.entries[i] = new JLabel();
-                this.entries[i].setFont(new Font(PAP, Font.BOLD, 34));
+                this.entries[i].setFont(new Font(PAPYRUS, Font.BOLD, 34));
                 this.entries[i].setHorizontalAlignment(SwingConstants.CENTER);
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -4884,6 +5151,10 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * Updates this page to show the final result of this Game.
+         * <p> Works even in Solo mode and Multiplayer mode</p>
+         */
         public void update() {
             if(Ark.game.isLeaderBoardEnabled()) {
                 Map<String, Integer> board = Ark.game.getLeaderBoard().getBoard();
