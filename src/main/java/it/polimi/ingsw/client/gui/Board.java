@@ -127,6 +127,10 @@ public class Board implements Runnable {
         changeRightCard(ACTIVATELEADERCARD);
         changeLeftCard(Ark.nickname);
     };
+    ActionListener show_discardLeaderCard_actionListener = e -> {
+        changeRightCard(DISCARDLEADERCARD);
+        changeLeftCard(Ark.nickname);
+    };
     ActionListener show_changeDepotConfig_actionListener = e -> {
         changeRightCard(CHANGEDEPOTCONFIG);
         changeLeftCard(Ark.nickname);
@@ -134,14 +138,12 @@ public class Board implements Runnable {
     ActionListener show_getMarketResource_actionListener = e -> {
         changeRightCard(GETMARKETRESOURCES);
         changeLeftCard(Ark.nickname);
-    };
-    ActionListener show_discardLeaderCard_actionListener = e -> {
-        changeRightCard(DISCARDLEADERCARD);
-        changeLeftCard(Ark.nickname);
+        Ark.triedAction = true;
     };
     ActionListener show_ProductionSelection_actionListener = e -> {
         changeRightCard(PRODSELECTION);
         changeLeftCard(Ark.nickname);
+        Ark.triedAction = true;
     };
 
     /**
@@ -152,36 +154,6 @@ public class Board implements Runnable {
         changeRightCard(lastRightCard);
         changeLeftCard(lastLeftCard);
     };
-    ////////////maybe they're going to be deleted
-    ActionListener back_show_DevDeck_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-    ActionListener back_show_Market_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-    ActionListener back_getMarketResource_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-    ActionListener back_discardLeaderCard_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-    ActionListener back_activateLeaderCard_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-    ActionListener back_changeDepotConfig_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-    ActionListener back_othersDevSlot_actionListener = e -> {
-        changeRightCard(lastRightCard);
-        changeLeftCard(lastLeftCard);
-    };
-
     /* *
     * ACTION LISTENERS FOR ACTIONS
     * */
@@ -198,6 +170,9 @@ public class Board implements Runnable {
         MSG_INIT_CHOOSE_LEADERCARDS message = new MSG_INIT_CHOOSE_LEADERCARDS(firstCard, secondCard);
 
         send(message);
+
+        changeRightCard(Ark.nickname);
+        lastRightCard = Ark.nickname;
     };
 
     /**
@@ -209,19 +184,8 @@ public class Board implements Runnable {
         ResourcePicker_Panel.CustomResourceButton source = (ResourcePicker_Panel.CustomResourceButton) e.getSource();
 
         Resource resource = source.getResource();
-        int resourceLeft = Ark.game.getResourcePicker().getNumOfResources();
 
         MSG_INIT_CHOOSE_RESOURCE message = new MSG_INIT_CHOOSE_RESOURCE(resource);
-
-        send(message);
-    };
-
-    /**
-     * ActionListener for the End Turn action. <p>
-     * Basically composes a message and sends it.
-     */
-    ActionListener action_endTurn_actionListener = e -> {
-        MSG_ACTION_ENDTURN message = new MSG_ACTION_ENDTURN();
 
         send(message);
     };
@@ -237,6 +201,31 @@ public class Board implements Runnable {
     };
 
     /**
+     * ActionListener for the choose Development Card action. <p>
+     * Basically gathers information from the panel or the source, composes a message and sends it.
+     * @see it.polimi.ingsw.client.gui.Board.Vendor_Panel the panel that uses that actionListener
+     */
+    ActionListener action_chooseDevCard_actionListener = e -> {
+        Vendor_Panel.SlotButton source = (Vendor_Panel.SlotButton) e.getSource();
+
+        int slotNumber = source.getPosition();
+        int cardNumber = vendor_panel.getCurrentCard();
+
+        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message;
+
+        if(slotNumber == -1) {
+            Ark.triedAction = false;
+            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
+        }
+        else {
+            Ark.triedAction = true;
+            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(slotNumber, cardNumber);
+        }
+
+        send(message);
+    };
+
+    /**
      * ActionListener for the Change Depot Config action. <p>
      * Basically gathers information from the panel or the source, composes a message and sends it.
      * @see it.polimi.ingsw.client.gui.Board.ChangeDepotConfig_Panel the panel that uses that actionListener
@@ -245,12 +234,12 @@ public class Board implements Runnable {
         Resource shelf1 = changeDepotConfig_panel.getShelf1();
         Resource[] shelf2 = changeDepotConfig_panel.getShelf2();
         Resource[] shelf3 = changeDepotConfig_panel.getShelf3();
-
         int extraDepot1 = changeDepotConfig_panel.getFirstDepotQuantity();
         int extraDepot2 = changeDepotConfig_panel.getSecondDepotQuantity();
 
-        MSG_ACTION_CHANGE_DEPOT_CONFIG message = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, extraDepot1, extraDepot2);
+        Ark.triedAction = false;
 
+        MSG_ACTION_CHANGE_DEPOT_CONFIG message = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, extraDepot1, extraDepot2);
         send(message);
     };
 
@@ -261,12 +250,12 @@ public class Board implements Runnable {
      */
     ActionListener action_getMarketResource_actionListener = e -> {
         GetMarketResource_Panel.MarketButton source = (GetMarketResource_Panel.MarketButton) e.getSource();
-
         int number = source.getNum();
         boolean column = source.isColumn();
 
-        MSG_ACTION_GET_MARKET_RESOURCES message = new MSG_ACTION_GET_MARKET_RESOURCES(column, number);
+        Ark.triedAction = true;
 
+        MSG_ACTION_GET_MARKET_RESOURCES message = new MSG_ACTION_GET_MARKET_RESOURCES(column, number);
         send(message);
     };
 
@@ -292,11 +281,11 @@ public class Board implements Runnable {
      */
     ActionListener action_activateLeaderCard_actionListener = e -> {
         ActivateLeaderCard_Panel.ChooseLeaderCardButton source = (ActivateLeaderCard_Panel.ChooseLeaderCardButton) e.getSource();
-
         int cardNumber = source.getNumber();
 
-        MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(cardNumber);
+        Ark.triedAction = false;
 
+        MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(cardNumber);
         send(message);
     };
 
@@ -307,32 +296,24 @@ public class Board implements Runnable {
      */
     ActionListener action_discardLeaderCard_actionListener = e -> {
         DiscardLeaderCard_Panel.ChooseLeaderCardButton source = (DiscardLeaderCard_Panel.ChooseLeaderCardButton) e.getSource();
-
         int cardNumber = source.getNumber();
 
-        MSG_ACTION_DISCARD_LEADERCARD message = new MSG_ACTION_DISCARD_LEADERCARD(cardNumber);
+        Ark.triedAction = false;
 
+        MSG_ACTION_DISCARD_LEADERCARD message = new MSG_ACTION_DISCARD_LEADERCARD(cardNumber);
         send(message);
     };
 
     /**
-     * ActionListener for the choose Development Card action. <p>
-     * Basically gathers information from the panel or the source, composes a message and sends it.
-     * @see it.polimi.ingsw.client.gui.Board.Vendor_Panel the panel that uses that actionListener
+     * ActionListener for the End Turn action. <p>
+     * Basically composes a message and sends it.
      */
-    ActionListener action_chooseDevCard_actionListener = e -> {
-        Vendor_Panel.SlotButton source = (Vendor_Panel.SlotButton) e.getSource();
+    ActionListener action_endTurn_actionListener = e -> {
 
-        int slotNumber = source.getPosition();
-        int cardNumber = vendor_panel.getCurrentCard();
+        Ark.triedAction = false;
+        Ark.action = false;
 
-        MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message;
-
-        if(slotNumber == -1)
-            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
-        else
-            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(slotNumber, cardNumber);
-
+        MSG_ACTION_ENDTURN message = new MSG_ACTION_ENDTURN();
         send(message);
     };
 
@@ -349,6 +330,7 @@ public class Board implements Runnable {
         mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
+
     }
 
     public static void main(String[] args) {
@@ -582,8 +564,6 @@ public class Board implements Runnable {
         //empty to implement run method
         // updateHandler?
     }
-
-
 
     // this is the custom, new contentPane to set in the mainFrame.
     class MainPanel extends JPanel {
@@ -865,7 +845,7 @@ public class Board implements Runnable {
             Optional<Integer> length = textList.stream().map(String::length).reduce(Integer::sum);
             if (length.isPresent()) {
                 for (String s : textList) {
-                    if ((s.length() + i) > 35) {
+                    if ((s.length() + i) > 34) {
                         i = s.length();
                         notificationsArea.append("\n" + s + " ");
                     } else {
@@ -4894,26 +4874,26 @@ public class Board implements Runnable {
      * Disables all the buttons on the Bottom Panel.
      */
     public void disableBottomButtons() {
-        activate_LeaderCards_Button.setEnabled(false);
-        change_Depot_Config_Button.setEnabled(false);
-        get_MarketResource_Button.setEnabled(false);
-        discard_LeaderCard_Button.setEnabled(false);
-        buy_DevCard_Button.setEnabled(false);
-        activate_Production_Button.setEnabled(false);
-        endTurn_Button.setEnabled(false);
+        activate_LeaderCards_Button .setEnabled(false);
+        change_Depot_Config_Button  .setEnabled(false);
+        get_MarketResource_Button   .setEnabled(false);
+        discard_LeaderCard_Button   .setEnabled(false);
+        buy_DevCard_Button          .setEnabled(false);
+        activate_Production_Button  .setEnabled(false);
+        endTurn_Button              .setEnabled(false);
     }
 
     /**
      * Enables all the buttons on the Bottom Panel.
      */
     public void enableAllBottomButtons() {
-        activate_LeaderCards_Button.setEnabled(true);
-        change_Depot_Config_Button.setEnabled(true);
-        get_MarketResource_Button.setEnabled(true);
-        discard_LeaderCard_Button.setEnabled(true);
-        buy_DevCard_Button.setEnabled(true);
-        activate_Production_Button.setEnabled(true);
-        endTurn_Button.setEnabled(true);
+        activate_LeaderCards_Button .setEnabled(true);
+        change_Depot_Config_Button  .setEnabled(true);
+        get_MarketResource_Button   .setEnabled(true);
+        discard_LeaderCard_Button   .setEnabled(true);
+        buy_DevCard_Button          .setEnabled(true);
+        activate_Production_Button  .setEnabled(true);
+        endTurn_Button              .setEnabled(true);
     }
 
     /**
@@ -4922,15 +4902,16 @@ public class Board implements Runnable {
     public void enableActionBottomButtons() {
         if(!Ark.action) {
             enableAllBottomButtons();
+           // endTurn_Button              .setEnabled(false); //TODO remove comment bracket (save line) (please)
         }
         else {
-            activate_LeaderCards_Button.setEnabled(true);
-            change_Depot_Config_Button.setEnabled(true);
-            get_MarketResource_Button.setEnabled(false);
-            discard_LeaderCard_Button.setEnabled(true);
-            buy_DevCard_Button.setEnabled(false);
-            activate_Production_Button.setEnabled(false);
-            endTurn_Button.setEnabled(true);
+            activate_LeaderCards_Button .setEnabled(true);
+            change_Depot_Config_Button  .setEnabled(true);
+            get_MarketResource_Button   .setEnabled(false);
+            discard_LeaderCard_Button   .setEnabled(true);
+            buy_DevCard_Button          .setEnabled(false);
+            activate_Production_Button  .setEnabled(false);
+            endTurn_Button              .setEnabled(true);
         }
     }
 

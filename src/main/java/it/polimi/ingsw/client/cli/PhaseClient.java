@@ -2391,7 +2391,7 @@ class LocalPhase {
                                             }
                                             break actionLoop;
                                         }
-//ACTION BUY DEV CARDS
+//ACTION END TURN
                                         case 7: {
                                             /*if(!Halo.action){  //TODO
                                                 System.out.println("You must do a main action before ending the turn");
