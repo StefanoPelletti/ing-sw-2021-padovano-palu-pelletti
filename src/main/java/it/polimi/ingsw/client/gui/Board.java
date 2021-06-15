@@ -211,6 +211,9 @@ public class Board implements Runnable {
         int slotNumber = source.getPosition();
         int cardNumber = vendor_panel.getCurrentCard();
 
+        System.out.println("Slot number: " + slotNumber);
+        System.out.println("Card number: " + cardNumber);
+
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message;
 
         if(slotNumber == -1) {
@@ -219,9 +222,35 @@ public class Board implements Runnable {
         }
         else {
             Ark.triedAction = true;
-            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(slotNumber, cardNumber);
+            message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNumber, slotNumber -1);
         }
 
+        send(message);
+    };
+
+    ActionListener action_activateProduction_actionListener = e -> {
+        boolean[] standardProduction = new boolean[3];
+        Ark.triedAction = true;
+
+        standardProduction[0] = productionSelection_panel.getDevCard1().isSelected();
+        standardProduction[1] = productionSelection_panel.getDevCard2().isSelected();
+        standardProduction[2] = productionSelection_panel.getDevCard3().isSelected();
+        boolean basicProduction = productionSelection_panel.getBasicProduction().isSelected();
+
+        boolean[] lc = new boolean[2];
+        lc[0] = productionSelection_panel.getLeaderCard1().isSelected();
+        lc[1] = productionSelection_panel.getLeaderCard2().isSelected();
+
+        List<Resource> basicInput = new ArrayList<>();
+        basicInput.add(production_panel.resources[production_panel.currentResourceFirstIn]);
+        basicInput.add(production_panel.resources[production_panel.currentResourceSecondIn]);
+
+        Resource basicOutput = production_panel.resources[production_panel.currentResourceBasicOut];
+
+        Resource lc1Output = production_panel.resources[production_panel.currentResourceLC1];
+        Resource lc2Output = production_panel.resources[production_panel.currentResourceLC2];
+
+        MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(standardProduction, basicProduction, lc, basicInput,basicOutput,lc1Output, lc2Output);
         send(message);
     };
 
@@ -4441,7 +4470,17 @@ public class Board implements Runnable {
         private final JLabel basicOutputChoice;
         private final JLabel lc1OutputChoice;
         private final JLabel lc2OutputChoice;
-        private int currentResource;
+
+        private int currentResourceFirstIn;
+        private int currentResourceSecondIn;
+        private int currentResourceBasicOut;
+        private int currentResourceLC1;
+        private int currentResourceLC2;
+
+        private Resource[] basicInput;
+        private Resource basicOutput;
+        private Resource lc1output;
+        private Resource lc2output;
 
         private final Resource[] resources;
 
@@ -4460,7 +4499,18 @@ public class Board implements Runnable {
             this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
             Ark.addPadding(this, 599, 946, 10, 12);
 
-            currentResource = 0;
+            currentResourceFirstIn = 0;
+            currentResourceSecondIn = 0;
+            currentResourceBasicOut = 0;
+            currentResourceLC1 = 0;
+            currentResourceLC2 = 0;
+
+            basicInput = new Resource[2];
+            basicOutput = Resource.NONE;
+            lc1output = Resource.NONE;
+            lc2output = Resource.NONE;
+
+
 
             resources = new Resource[4];
             resources[0] = Resource.COIN;
@@ -4557,7 +4607,7 @@ public class Board implements Runnable {
             this.add(basicFirstChoice, c);
 
             next1 = new JButton(">");
-            next1.addActionListener(new resourceChanger(basicFirstChoice));
+            next1.addActionListener(new resourceChanger(basicFirstChoice, currentResourceFirstIn));
             next1.setPreferredSize(new Dimension(45, 45));
             next1.setFont(new Font(PAP, Font.BOLD, 15));
             next1.setBackground(new Color(231, 210, 181));
@@ -4588,7 +4638,7 @@ public class Board implements Runnable {
             this.add(basicSecondChoice, c);
 
             next2 = new JButton(">");
-            next2.addActionListener(new resourceChanger(basicSecondChoice));
+            next2.addActionListener(new resourceChanger(basicSecondChoice, currentResourceSecondIn));
             next2.setPreferredSize(new Dimension(45, 45));
             next2.setFont(new Font(PAP, Font.BOLD, 15));
             next2.setBackground(new Color(231, 210, 181));
@@ -4620,7 +4670,7 @@ public class Board implements Runnable {
             this.add(basicOutputChoice, c);
 
             next3 = new JButton(">");
-            next3.addActionListener(new resourceChanger(basicOutputChoice));
+            next3.addActionListener(new resourceChanger(basicOutputChoice, currentResourceBasicOut));
             next3.setPreferredSize(new Dimension(45, 45));
             next3.setFont(new Font(PAP, Font.BOLD, 15));
             next3.setBackground(new Color(231, 210, 181));
@@ -4643,7 +4693,7 @@ public class Board implements Runnable {
             this.add(lc1OutputChoice, c);
 
             next4 = new JButton(">");
-            next4.addActionListener(new resourceChanger(lc1OutputChoice));
+            next4.addActionListener(new resourceChanger(lc1OutputChoice, currentResourceLC1));
             next4.setPreferredSize(new Dimension(45, 45));
             next4.setFont(new Font(PAP, Font.BOLD, 15));
             next4.setBackground(new Color(231, 210, 181));
@@ -4664,7 +4714,7 @@ public class Board implements Runnable {
             this.add(lc2OutputChoice, c);
 
             next5 = new JButton(">");
-            next5.addActionListener(new resourceChanger(lc2OutputChoice));
+            next5.addActionListener(new resourceChanger(lc2OutputChoice, currentResourceLC2));
             next5.setPreferredSize(new Dimension(45, 45));
             next5.setFont(new Font(PAP, Font.BOLD, 15));
             next5.setBackground(new Color(231, 210, 181));
@@ -4698,7 +4748,7 @@ public class Board implements Runnable {
             this.add(faithPoint2, c);
 
             JButton confirm_Production_Button = new JButton("confirm!");
-            //confirm_Production_Button.addActionListener(confirm_Production_Panel);
+            //confirm_Production_Button.addActionListener(confirm_Production_ActionListener);
             confirm_Production_Button.setPreferredSize(new Dimension(200, 60));
             confirm_Production_Button.setFont(new Font(PAP, Font.BOLD, 28));
             confirm_Production_Button.setBackground(new Color(231, 210, 181));
@@ -4734,7 +4784,7 @@ public class Board implements Runnable {
                 next5.setEnabled(true);
             }
 
-            ImageIcon icon = scaleImage(new ImageIcon(resources[currentResource].getPathBig()), 80);
+            ImageIcon icon = scaleImage(new ImageIcon(resources[currentResourceFirstIn].getPathBig()), 80);
             basicFirstChoice.setIcon(icon);
             basicSecondChoice.setIcon(icon);
             basicOutputChoice.setIcon(icon);
@@ -4744,9 +4794,11 @@ public class Board implements Runnable {
 
         class resourceChanger implements ActionListener {
             JLabel managedLabel;
+            int currentResource;
 
-            public resourceChanger(JLabel managedLabel) {
+            public resourceChanger(JLabel managedLabel, int currentResource) {
                 this.managedLabel = managedLabel;
+                this.currentResource = currentResource;
             }
 
             @Override
@@ -4756,6 +4808,17 @@ public class Board implements Runnable {
                     currentResource = 0;
                 }
                 managedLabel.setIcon(scaleImage(new ImageIcon(resources[currentResource].getPathBig()), 80));
+
+                if(managedLabel.equals(basicFirstChoice))
+                    basicInput[0] = resources[currentResource];
+                else if(managedLabel.equals(basicSecondChoice))
+                    basicInput[1] = resources[currentResource];
+                else if(managedLabel.equals(basicOutputChoice))
+                    basicOutput = resources[currentResource];
+                else if(managedLabel.equals(lc1OutputChoice))
+                    lc1output = resources[currentResource];
+                else if(managedLabel.equals(lc2OutputChoice))
+                    lc2output = resources[currentResource];
             }
         }
     }
