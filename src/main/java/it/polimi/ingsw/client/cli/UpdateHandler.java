@@ -14,6 +14,10 @@ import it.polimi.ingsw.server.utils.ModelObserver;
 
 import java.io.IOException;
 
+/**
+ * The UpdateHandler updates a GameSimplified instance which is supposed to be already present in the Halo.
+ * The UpdateHandler is also able to show real time messages, from both the Server and the Simplified Model which is updated by Update messages.
+ */
 public class UpdateHandler implements Runnable, ModelObserver {
 
     /**
@@ -22,9 +26,9 @@ public class UpdateHandler implements Runnable, ModelObserver {
     private boolean still = false;
 
     /**
-     * The UpdateHandlerGUI updates a GameSimplified instance which is supposed to be already present in the Halo.
-     * The UpdateHandlerGUI is also able to show real time messages, from both the Server and the Simplified Model which is updated by Update messages.
-     * Also treats the Halo.action field, which indicates if the user has already done a main move.
+     * Main execution body of the UpdateHandler, is simply composed of two parts: <ul>
+     *     <li> on initialization, it could write some "welcome" messages for the player</li>
+     *     <li> later on, cycles indefinitely on the socket to capture UpdateMessages and execute() them. This will terminate when a MSG_Stop is caught.</li>
      */
     @Override
     public void run() {
@@ -66,58 +70,103 @@ public class UpdateHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * This method allows the bypassing of the Network Layer. Update messages from the model are directly caught and executed() by the UpdateHandler.
+     * @param message the UpdateMessage generated from the Model
+     */
     @Override
     public void update(Message message) {
         UpdateMessage msg = (UpdateMessage) message;
         msg.executeCLI(this);
     }
 
+    /**
+     * Passes the MSG_UPD_Player message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_Player update message
+     */
     public void updatePlayer(MSG_UPD_Player message) {
         synchronized (Halo.game) {
             Halo.game.updatePlayer(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_WarehouseDepot message to the Game instance, which performs the update on the Current Player.
+     * @param message the MSG_UPD_WarehouseDepot update message
+     */
     public void updateCurrentPlayerDepot(MSG_UPD_WarehouseDepot message) {
         Halo.game.updateCurrentPlayerDepot(message);
     }
 
+    /**
+     * Passes the MSG_UPD_DevSlot message to the Game instance, which performs the update on the Current Player.
+     * @param message the MSG_UPD_DevSlot update message
+     */
     public void updateCurrentPlayerDevSlot(MSG_UPD_DevSlot message) {
         Halo.game.updateCurrentPlayerDevSlot(message);
     }
 
+    /**
+     * Passes the MSG_UPD_Extradepot message to the Game instance, which performs the update on the Current Player.
+     * @param message the MSG_UPD_Extradepot update message
+     */
     public void updateCurrentPlayerExtraDepot(MSG_UPD_Extradepot message) {
         Halo.game.updateCurrentPlayerExtraDepot(message);
     }
 
+    /**
+     * Passes the MSG_UPD_Strongbox message to the Game instance, which performs the update on the Current Player.
+     * @param message the MSG_UPD_Strongbox update message
+     */
     public void updateCurrentPlayerStrongbox(MSG_UPD_Strongbox message) {
         Halo.game.updateCurrentPlayerStrongbox(message);
     }
 
+    /**
+     * Passes the MSG_UPD_DevCardsVendor message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_DevCardsVendor update message
+     */
     public void updateDevCardVendor(MSG_UPD_DevCardsVendor message) {
         synchronized (Halo.game) {
             Halo.game.updateDevelopmentCardsVendor(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_LeaderCardsPicker message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_LeaderCardsPicker update message
+     */
     public void updateLeaderCardPicker(MSG_UPD_LeaderCardsPicker message) {
         synchronized (Halo.game) {
             Halo.game.updateLeaderCardsPicker(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_ResourcePicker message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_ResourcePicker update message
+     */
     public void updateResourcePicker(MSG_UPD_ResourcePicker message) {
         synchronized (Halo.game) {
             Halo.game.updateResourcePicker(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_MarketHelper message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_MarketHelper update message
+     */
     public void updateMarketHelper(MSG_UPD_MarketHelper message) {
         synchronized (Halo.game) {
             Halo.game.updateMarketHelper(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_Game message to the Game instance, which performs the update.
+     * <p> In solo mode, it automatically resets the Halo.action field if a new Turn has passed. </p>
+     * @param message the MSG_UPD_Game update message
+     */
     public void updateGame(MSG_UPD_Game message) {
         synchronized (Halo.game) {
             if (Halo.solo) {
@@ -127,24 +176,42 @@ public class UpdateHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * Passes the MSG_UPD_Market message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_Market update message
+     */
     public void updateMarket(MSG_UPD_Market message) {
         synchronized (Halo.game) {
             Halo.game.updateMarket(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_DevDeck message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_DevDeck update message
+     */
     public void updateDevDeck(MSG_UPD_DevDeck message) {
         synchronized (Halo.game) {
             Halo.game.updateDevelopmentCardsDeck(message);
         }
     }
 
+    /**
+     * Passes the MSG_UPD_FaithTrack message to the Game instance, which performs the update.
+     * @param message the MSG_UPD_FaithTrack update message
+     */
     public void updateFaithTrack(MSG_UPD_FaithTrack message) {
         synchronized (Halo.game) {
             Halo.game.updateFaithTrack(message);
         }
     }
 
+
+    /**
+     * When a MSG_UPD_End message gets executes, a new Player may be the Current Player.
+     * <p> In that case, the UpdateHandler can printout a message if a middle-object is enabled. </p>
+     * @param message the MSG_UPD_End update message, which is ignored because it contains nothing interesting.
+     */
     public void updateEnd(MSG_UPD_End message) {
         synchronized (Halo.game) {
             Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
@@ -191,6 +258,11 @@ public class UpdateHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * Passes the MSG_UPD_LeaderBoard message to the Game instance, which performs the update.
+     * Also sets the yourTurn field to false, denying the player of furthers actions.
+     * @param message the MSG_UPD_LeaderBoard update message
+     */
     public void updateLeaderBoard(MSG_UPD_LeaderBoard message) {
         synchronized (Halo.game) {
             Halo.game.updateLeaderBoard(message);
@@ -201,6 +273,10 @@ public class UpdateHandler implements Runnable, ModelObserver {
         throw new IllegalArgumentException();
     }
 
+    /**
+     * Writes on the console the content of the Notification message.
+     * @param message the MSG_NOTIFICATION update message
+     */
     public void notify(MSG_NOTIFICATION message) {
         synchronized (Halo.game) {
             System.out.println();
@@ -208,6 +284,10 @@ public class UpdateHandler implements Runnable, ModelObserver {
         }
     }
 
+    /**
+     * Writes on the console the content of the Error message.
+     * @param message the MSG_ERROR update message
+     */
     public void printError(MSG_ERROR message) {
         synchronized (Halo.game) {
             if (Halo.yourTurn)
@@ -217,5 +297,4 @@ public class UpdateHandler implements Runnable, ModelObserver {
             System.out.println(A.RED + " <> " + message.getErrorMessage() + A.RESET);
         }
     }
-
 }

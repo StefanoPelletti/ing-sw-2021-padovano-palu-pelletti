@@ -60,6 +60,11 @@ public class GameSimplified {
         return this.resourcePickerSimplified.isEnabled();
     }
 
+    /**
+     * Updates this Game to reflect the same status inside the server model.
+     *
+     * @param message the UpdateMessage that will update this Object internal status.
+     */
     public void updateGame(MSG_UPD_Game message) {
         int newTurn = message.getTurn();
         int newCurrentPlayer = message.getCurrentPlayer();
@@ -75,39 +80,84 @@ public class GameSimplified {
         return result.orElse(null);
     }
 
+    /**
+     * Invokes the Market update() method.
+     *
+     * @param message the MSG_UPD_Market update message
+     */
     public void updateMarket(MSG_UPD_Market message) {
         this.market.update(message);
     }
 
+    /**
+     * Invokes the Development Cards Deck update() method.
+     *
+     * @param message the MSG_UPD_DevDeck update message
+     */
     public void updateDevelopmentCardsDeck(MSG_UPD_DevDeck message) {
         this.devDeck.update(message);
     }
 
+    /**
+     * Invokes the FaithTrack update() method.
+     *
+     * @param message the MSG_UPD_FaithTrack update message
+     */
     public void updateFaithTrack(MSG_UPD_FaithTrack message) {
         this.faithTrack.update(message);
     }
 
-    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) {
-        this.developmentCardsVendorSimplified.update(message);
-    }
 
+    /**
+     * Invokes the LeaderCardsPicker update() method.
+     *
+     * @param message the MSG_UPD_LeaderCardsPicker update message
+     */
     public void updateLeaderCardsPicker(MSG_UPD_LeaderCardsPicker message) {
         this.leaderCardsPickerSimplified.update(message);
     }
 
-    public void updateMarketHelper(MSG_UPD_MarketHelper message) {
-        this.marketHelperSimplified.update(message);
-    }
-
+    /**
+     * Invokes the ResourcePicker update() method.
+     *
+     * @param message the MSG_UPD_ResourcePicker update message
+     */
     public void updateResourcePicker(MSG_UPD_ResourcePicker message) {
         this.resourcePickerSimplified.update(message);
     }
 
+    /**
+     * Invokes the MarketHelper update() method.
+     *
+     * @param message the MSG_UPD_MarketHelper update message
+     */
+    public void updateMarketHelper(MSG_UPD_MarketHelper message) {
+        this.marketHelperSimplified.update(message);
+    }
+
+    /**
+     * Invokes the DevelopmentCardsVendor update() method.
+     *
+     * @param message the MSG_UPD_DevCardsVendor update message
+     */
+    public void updateDevelopmentCardsVendor(MSG_UPD_DevCardsVendor message) {
+        this.developmentCardsVendorSimplified.update(message);
+    }
+
+    /**
+     * Invokes the LeaderBoard update() method.
+     *
+     * @param message the MSG_UPD_LeaderBoard update message
+     */
     public void updateLeaderBoard(MSG_UPD_LeaderBoard message) {
         this.leaderboardSimplified.update(message);
     }
 
-    // absolutely needs testing
+    /**
+     * Updates the entire Game status to the latest, given by the server.
+     *
+     * @param message the MSG_UPD_Full update message
+     */
     public void updateAll(MSG_UPD_Full message) {
         this.updateGame(message.getGame());
 
@@ -153,7 +203,11 @@ public class GameSimplified {
         }
     }
 
-    //?? 100% would not work for some reason.
+    /**
+     * Updates one of the CurrentPlayer Objects to the latest version, given by the server.
+     *
+     * @param message the Update message
+     */
     public void updateCurrentPlayer(Message message) {
         switch (message.getMessageType()) {
             case MSG_UPD_Player:
@@ -174,18 +228,38 @@ public class GameSimplified {
         }
     }
 
+    /**
+     * Invokes the CurrentPlayer updateWarehouseDepot() method.
+     *
+     * @param message the MSG_UPD_WarehouseDepot update message
+     */
     public void updateCurrentPlayerDepot(MSG_UPD_WarehouseDepot message) {
         getCurrentPlayerRef().updateWarehouseDepot(message);
     }
 
+    /**
+     * Invokes the CurrentPlayer updateDevelopmentSlot() method.
+     *
+     * @param message the MSG_UPD_DevSlot update message
+     */
     public void updateCurrentPlayerDevSlot(MSG_UPD_DevSlot message) {
         getCurrentPlayerRef().updateDevelopmentSlot(message);
     }
 
+    /**
+     * Invokes the CurrentPlayer updateExtradepot() method.
+     *
+     * @param message the MSG_UPD_Extradepot update message
+     */
     public void updateCurrentPlayerExtraDepot(MSG_UPD_Extradepot message) {
         getCurrentPlayerRef().updateExtradepot(message);
     }
 
+    /**
+     * Invokes the CurrentPlayer updateStrongbox() method.
+     *
+     * @param message the MSG_UPD_Strongbox update message
+     */
     public void updateCurrentPlayerStrongbox(MSG_UPD_Strongbox message) {
         getCurrentPlayerRef().updateStrongbox(message);
     }
@@ -282,7 +356,7 @@ public class GameSimplified {
     }
 
     public boolean isMiddleActive() {
-        return isLeaderCardsPickerEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled() || isResourcePickerEnabled();
+        return (isLeaderCardsPickerEnabled() || isDevelopmentCardsVendorEnabled() || isMarketHelperEnabled() || isLeaderBoardEnabled() || isResourcePickerEnabled());
     }
 
     public boolean isLeaderBoardEnabled() {

@@ -42,11 +42,13 @@ public class Ark {
     static GameManager gameManager;
     static ActionManager actionManager;
 
+    private Ark() {
+    }
 
     public static void sweep() {
         //shared var
         myPlayerNumber = 0;
-        nickname = System.getProperty("user.name");;
+        nickname = System.getProperty("user.name");
         yourTurn = false;
         local = false;
         action = false;
@@ -83,12 +85,11 @@ public class Ark {
 
     public static void send(Message message) throws IOException {
 
-        if(!Ark.local) {
+        if (!Ark.local) {
             Ark.objectOutputStream.reset();
             Ark.objectOutputStream.writeObject(message);
             Ark.objectOutputStream.flush();
-        }
-        else {
+        } else {
             Ark.actionManager.onMessage((ActionMessage) message);
         }
     }
@@ -104,7 +105,7 @@ public class Ark {
         c.weighty = 0;
         c.gridheight = 1;
         c.gridwidth = maximumWidth;
-        object.add(Box.createHorizontalStrut(width),c);
+        object.add(Box.createHorizontalStrut(width), c);
 
         c = new GridBagConstraints(); //padding vertical
         c.gridx = 0;
@@ -113,6 +114,6 @@ public class Ark {
         c.weighty = 0;
         c.gridheight = maximumHeight;
         c.gridwidth = 1;
-        object.add(Box.createVerticalStrut(height),c);
+        object.add(Box.createVerticalStrut(height), c);
     }
 }

@@ -15,6 +15,11 @@ public class LeaderCardsPickerSimplified {
         return enabled;
     }
 
+    /**
+     * Updates this LeaderCards Picker to reflect the same status inside the server model.
+     *
+     * @param message the MSG_UPD_LeaderCardsPicker that will update this Object internal status.
+     */
     public void update(MSG_UPD_LeaderCardsPicker message) {
         boolean newEnabled = message.getEnabled();
         List<LeaderCard> newCards = message.getCards();

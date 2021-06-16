@@ -10,7 +10,7 @@ public class FaithTrackSimplified {
     private final GameSimplified game;
 
     public FaithTrackSimplified(GameSimplified game) {
-        zones = new boolean[3];
+        this.zones = new boolean[3];
         this.game = game;
     }
 
@@ -20,16 +20,17 @@ public class FaithTrackSimplified {
         System.arraycopy(newZones, 0, this.zones, 0, 3);
     }
 
-    /**
-     * Returns a String that represents the current status of FaithTrack, with the zones and the position of the Players.
-     * Can work in Solo mode.
-     *
-     * @return A String representing the current status of the FaithTrack.
-     */
+
     public boolean[] getZones() {
         return this.zones;
     }
 
+    /**
+     * Returns a String that represents the current status of FaithTrack, with the zones and the position of the Players.
+     * Can work in Solo mode by specifying it.
+     *
+     * @return A String representing the current status of the FaithTrack.
+     */
     public String toString(boolean solo) {
         StringBuilder result = new StringBuilder();
         List<PlayerSimplified> playerListSimplified;

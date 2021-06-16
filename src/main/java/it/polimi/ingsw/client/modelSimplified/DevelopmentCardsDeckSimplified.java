@@ -11,6 +11,11 @@ public class DevelopmentCardsDeckSimplified {
         cards = new DevelopmentCard[3][4];
     }
 
+    /**
+     * Updates this Development Cards Deck to reflect the same status inside the server model.
+     *
+     * @param message the UpdateMessage that will update this Object internal status.
+     */
     public void update(MSG_UPD_DevDeck message) {
         DevelopmentCard[][] newCards = message.getCards();
         for (int i = 0; i < 3; i++) {

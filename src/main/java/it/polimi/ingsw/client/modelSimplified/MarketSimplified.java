@@ -19,6 +19,11 @@ public class MarketSimplified {
         slideMarble = null;
     }
 
+    /**
+     * Updates this Market to reflect the same status inside the server model.
+     *
+     * @param message the UpdateMessage that will update this Object internal status.
+     */
     public void update(MSG_UPD_Market message) {
         MarketMarble newSlideMarble = message.getSlideMarble();
         MarketMarble[][] newGrid = message.getGrid();

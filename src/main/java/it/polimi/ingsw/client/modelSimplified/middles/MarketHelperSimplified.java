@@ -18,6 +18,11 @@ public class MarketHelperSimplified {
         return enabled;
     }
 
+    /**
+     * Updates this Market Helper to reflect the same status inside the server model.
+     *
+     * @param message the MSG_UPD_MarketHelper that will update this Object internal status.
+     */
     public void update(MSG_UPD_MarketHelper message) {
         boolean newEnabled = message.getEnabled();
         List<Resource> newResources = message.getResources();

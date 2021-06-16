@@ -66,6 +66,11 @@ public class WarehouseDepotSimplified {
         return result;
     }
 
+    /**
+     * Updates this Warehouse Depot to reflect the same status inside the server model.
+     *
+     * @param message the UpdateMessage that will update this Object internal status.
+     */
     public void update(MSG_UPD_WarehouseDepot message) {
         Resource newShelf1 = message.getShelf1();
         Resource[] newShelf2 = new Resource[2];

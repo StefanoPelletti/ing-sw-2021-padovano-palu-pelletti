@@ -19,7 +19,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
     /**
      * an object on which any entity syncs on when using the send() method of this ClientHandler
-     * */
+     */
     private final Object outputLock;
     /**
      * an object on which this ClientHandler waits when it goes in a Disconnected/Pending status
@@ -481,8 +481,8 @@ public class ClientHandler implements Runnable, ModelObserver {
                     lobby.init();
                 } else {
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Created a lobby, waiting on lobby " + i);
-                    while(!lobby.isDeleted())
-                        if(!lobby.isStarted())
+                    while (!lobby.isDeleted())
+                        if (!lobby.isStarted())
                             lobby.wait();
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + i);
                 }

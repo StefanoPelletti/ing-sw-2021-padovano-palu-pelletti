@@ -9,9 +9,9 @@ import it.polimi.ingsw.server.model.middles.MessageHelper;
 /**
  * The ActionMessage abstract class categorizes the Messages that the ActionManager uses to decide which specific method to invoke.
  * <p>
- *     Possible methods are the actions_ methods and init_ methods.
- *     No further requirement is asked.
- *     This is a consequence of OOP programming.
+ * Possible methods are the actions_ methods and init_ methods.
+ * No further requirement is asked.
+ * This is a consequence of OOP programming.
  * </p>
  */
 public abstract class ActionMessage extends Message {
@@ -31,7 +31,7 @@ public abstract class ActionMessage extends Message {
     /**
      * Returns a String recapping the Action that was just performed on the Action Manager.
      *
-     * @param nickname the nickname of the Player who just performed the Action
+     * @param nickname      the nickname of the Player who just performed the Action
      * @param messageHelper the reference to the messageHelper model object
      * @return a recap of the Action
      */

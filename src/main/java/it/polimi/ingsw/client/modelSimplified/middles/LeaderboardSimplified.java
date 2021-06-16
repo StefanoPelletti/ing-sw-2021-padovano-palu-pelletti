@@ -14,6 +14,11 @@ public class LeaderboardSimplified {
         return this.enabled;
     }
 
+    /**
+     * Updates this LeaderBoard to reflect the same status inside the server model.
+     *
+     * @param message the MSG_UPD_LeaderBoard that will update this Object internal status.
+     */
     public void update(MSG_UPD_LeaderBoard message) {
         boolean newEnabled = message.getEnabled();
         Map<String, Integer> newLeaderboard = message.getLeaderboard();

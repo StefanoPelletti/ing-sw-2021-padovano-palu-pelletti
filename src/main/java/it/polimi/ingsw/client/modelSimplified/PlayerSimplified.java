@@ -20,7 +20,7 @@ public class PlayerSimplified {
     private final DevelopmentSlotSimplified developmentSlot;
     private final boolean[] faithTrackPanels;
     private int playerNumber;
-    private String nickname;
+    private final String nickname;
     private int position;
     private LeaderCard[] leaderCards;
 
@@ -36,6 +36,11 @@ public class PlayerSimplified {
         this.developmentSlot = new DevelopmentSlotSimplified();
     }
 
+    /**
+     * Updates this Player to reflect the same status inside the server model.
+     *
+     * @param message the UpdateMessage that will update this Object internal status.
+     */
     public void update(MSG_UPD_Player message) {
         boolean[] newFaithTrackPanels = message.getFaithTrackPanels();
         int newPlayerNumber = message.getPlayerNumber();
@@ -45,7 +50,7 @@ public class PlayerSimplified {
 
         System.arraycopy(newFaithTrackPanels, 0, this.faithTrackPanels, 0, 3);
         this.playerNumber = newPlayerNumber;
-        this.nickname = newNickname;
+        //this.nickname = newNickname;
         this.position = newPosition;
         this.leaderCards = new LeaderCard[2];
         this.leaderCards[0] = newLeaderCards[0];

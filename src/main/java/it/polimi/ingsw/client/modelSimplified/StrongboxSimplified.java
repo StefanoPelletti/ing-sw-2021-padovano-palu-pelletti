@@ -10,6 +10,11 @@ import java.util.Map;
 public class StrongboxSimplified {
     private Map<Resource, Integer> resources;
 
+    /**
+     * Updates this Strongbox to reflect the same status inside the server model.
+     *
+     * @param message the UpdateMessage that will update this Object internal status.
+     */
     public void update(MSG_UPD_Strongbox message) {
         Map<Resource, Integer> map = message.getResources();
         this.resources = new HashMap<>(map);

@@ -16,6 +16,11 @@ public class DevelopmentCardsVendorSimplified {
         return enabled;
     }
 
+    /**
+     * Updates this Vendor to reflect the same status inside the server model.
+     *
+     * @param message the MSG_UPD_DevCardsVendor that will update this Object internal status.
+     */
     public void update(MSG_UPD_DevCardsVendor message) {
         List<VendorCard> newMap = message.getCards();
         boolean newEnable = message.getEnabled();

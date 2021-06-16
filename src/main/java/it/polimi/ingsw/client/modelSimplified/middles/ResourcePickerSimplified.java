@@ -13,6 +13,11 @@ public class ResourcePickerSimplified {
         return enabled;
     }
 
+    /**
+     * Updates this Resource Picker to reflect the same status inside the server model.
+     *
+     * @param message the MSG_UPD_ResourcePicker that will update this Object internal status.
+     */
     public void update(MSG_UPD_ResourcePicker message) {
         boolean newEnabled = message.getEnabled();
         int newNumOfResource = message.getNumOfResources();

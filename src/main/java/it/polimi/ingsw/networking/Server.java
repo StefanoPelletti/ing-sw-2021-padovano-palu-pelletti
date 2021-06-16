@@ -14,20 +14,40 @@ import java.net.Socket;
 public class Server implements Runnable {
 
     /**
-     * specifies the networking port that will be used for starting the server.
+     * specifies the networking port that will be used for starting the server. <p>
      * An incorrect value will cause an IOException and the program will terminate.
+     * Not necessarily a private attribute, since it's final. Still, not static since it's referred to this specific Server.
      */
     final int port;
 
-    public Server() { this.port = 43210; }
+    /**
+     * Default constructor, that sets the port number to the default 43210.
+     */
+    public Server() {
+        this.port = 43210;
+    }
+
+    /**
+     * Custom constructor, that sets the port number to a custom port number.
+     */
     public Server(int port) {
         this.port = port;
     }
 
+    /**
+     * Testing purposes only.
+     *
+     * @param args argument list
+     */
     public static void main(String[] args) {
         (new Server(43210)).run();
     }
 
+    /**
+     * Accepts the incoming connections and creates a new ClientHandler that handles that newly creates Socket. <p>
+     * Implements the Runnable interface.
+     */
+    @Override
     public void run() {
         Socket socket;
 

@@ -12,9 +12,9 @@ import java.util.*;
 /**
  * The Lobby handles multiple ClientHandlers.
  * <p>
- *     It gives the ClientHandler many managing services.
- *     It handles the reference to the Sole Controller and Sole Model.
- *     By design ClientHandlers are not allowed to invoke directly the Controller, and uses the Lobby to do so.
+ * It gives the ClientHandler many managing services.
+ * It handles the reference to the Sole Controller and Sole Model.
+ * By design ClientHandlers are not allowed to invoke directly the Controller, and uses the Lobby to do so.
  */
 public class Lobby {
     /**

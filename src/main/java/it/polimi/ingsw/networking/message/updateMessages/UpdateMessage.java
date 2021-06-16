@@ -26,8 +26,6 @@ public abstract class UpdateMessage extends Message {
 
     /**
      * Executes the updating routine, specific for the GUI implementation of the Game.
-     *
-     *
      */
     public abstract void executeGUI(UpdateHandlerGUI updateHandler);
 }

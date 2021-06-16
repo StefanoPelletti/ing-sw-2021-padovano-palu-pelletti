@@ -41,7 +41,7 @@ public class GameManager {
     /**
      * a Boolean which indicates the current SinglePlayer mode winner.
      * <p>
-     *     null if there's no winner yet, True if the Player is the winner, False if Lorenzo is the winner
+     * null if there's no winner yet, True if the Player is the winner, False if Lorenzo is the winner
      */
     private Boolean soloWinner;
 

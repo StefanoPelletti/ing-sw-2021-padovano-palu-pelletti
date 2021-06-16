@@ -253,7 +253,7 @@ class Halo {
      * @return The Market toString() as a String.
      */
     public static String printMarket() {
-            return game.getMarket().toString();
+        return game.getMarket().toString();
     }
 
     /**
@@ -282,7 +282,6 @@ class Halo {
     public static String printMyDevelopmentSlot() {
         return myPlayerRef.getDevelopmentSlot().toString();
     }
-
 
     /**
      * Prints a list of Players followed by their numbers.
@@ -383,6 +382,85 @@ class Halo {
                 break;
             default:
                 System.out.println(A.RED + " Somehow I reached this default. Debug ." + A.RESET);
+                System.out.println(key);
+        }
+    }
+
+    /**
+     * Shows the specified Player's (identified by his playerNumber) asset.
+     * The asset is one of the allowed item to be shown.
+     *
+     * @param key          A String representing the item that is going to be shown.
+     * @param playerNumber An int representing the number of the chosen Player.
+     * @see #checkShowCommand(List) the method that contains a List of allowed items
+     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
+     */
+    public static void showPlayerAsset(String key, int playerNumber) {
+        PlayerSimplified player = game.getPlayerRef(playerNumber);
+        if (player == null)
+            System.out.println(A.RED + " > There's no such player with that player number. " + A.RESET);
+        else
+            showPlayerAsset(key, player);
+
+    }
+
+    /**
+     * Shows the specified Player's (identified by his nickname) asset.
+     * The asset is one of the allowed item to be shown.
+     *
+     * @param key      A String representing the item that is going to be shown.
+     * @param nickname A String representing the name of the chosen Player.
+     * @see #checkShowCommand(List) the method that contains a List of allowed items
+     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
+     */
+    public static void showPlayerAsset(String key, String nickname) {
+        PlayerSimplified player = game.getPlayerRef(nickname);
+        if (player == null)
+            System.out.println(A.RED + " > There's no such player with that name. " + A.RESET);
+        else
+            showPlayerAsset(key, player);
+    }
+
+    /**
+     * Shows the specified Player's asset.
+     * This method should not directly be called, and only work in Online Game.
+     * The asset is one of the allowed item to be shown.
+     *
+     * @param key    A String representing the item that is going to be shown.
+     * @param player The reference to the PlayerSimplified.
+     * @see #checkShowCommand(List) the method that contains a List of allowed items
+     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
+     */
+    private static void showPlayerAsset(String key, PlayerSimplified player) {
+        switch (key.toLowerCase()) {
+            case "leadercards":
+                LeaderCard[] cards = player.getLeaderCards();
+                if (cards[0] != null) {
+                    if (cards[0].isEnabled())
+                        System.out.println(" Leader Card #1: \n" + cards[0].toString());
+                    else
+                        System.out.println(" Leader Card #1: covered");
+                } else
+                    System.out.println(" Leader Card #1: none");
+                if (cards[1] != null) {
+                    if (cards[1].isEnabled())
+                        System.out.println(" Leader Card #2: \n" + cards[1].toString());
+                    else
+                        System.out.println(" Leader Card #2: covered");
+                } else
+                    System.out.println(" Leader Card #2: none");
+                break;
+            case "depot":
+                System.out.println(player.getWarehouseDepot());
+                break;
+            case "strongbox":
+                System.out.println(player.getStrongbox());
+                break;
+            case "devslot":
+                System.out.println(player.getDevelopmentSlot());
+                break;
+            default:
+                System.out.println(" Somehow I reached this default. Check sequence.");
                 System.out.println(key);
         }
     }
@@ -906,6 +984,7 @@ class Halo {
         }
         return true;
     }
+
 
     //MESSAGE GENERATORS
 
@@ -1572,87 +1651,6 @@ class Halo {
         }
     }
 
-    //ONLY MULTIPLAYER METHODS
-
-    /**
-     * Shows the specified Player's (identified by his playerNumber) asset.
-     * The asset is one of the allowed item to be shown.
-     *
-     * @param key          A String representing the item that is going to be shown.
-     * @param playerNumber An int representing the number of the chosen Player.
-     * @see #checkShowCommand(List) the method that contains a List of allowed items
-     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
-     */
-    public static void showPlayerAsset(String key, int playerNumber) {
-        PlayerSimplified player = game.getPlayerRef(playerNumber);
-        if (player == null)
-            System.out.println(A.RED + " > There's no such player with that player number. " + A.RESET);
-        else
-            showPlayerAsset(key, player);
-
-    }
-
-    /**
-     * Shows the specified Player's (identified by his nickname) asset.
-     * The asset is one of the allowed item to be shown.
-     *
-     * @param key      A String representing the item that is going to be shown.
-     * @param nickname A String representing the name of the chosen Player.
-     * @see #checkShowCommand(List) the method that contains a List of allowed items
-     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
-     */
-    public static void showPlayerAsset(String key, String nickname) {
-        PlayerSimplified player = game.getPlayerRef(nickname);
-        if (player == null)
-            System.out.println(A.RED + " > There's no such player with that name. " + A.RESET);
-        else
-            showPlayerAsset(key, player);
-    }
-
-    /**
-     * Shows the specified Player's asset.
-     * This method should not directly be called, and only work in Online Game.
-     * The asset is one of the allowed item to be shown.
-     *
-     * @param key    A String representing the item that is going to be shown.
-     * @param player The reference to the PlayerSimplified.
-     * @see #checkShowCommand(List) the method that contains a List of allowed items
-     * @see #showPlayerAsset(String, PlayerSimplified) the function called by this method.
-     */
-    private static void showPlayerAsset(String key, PlayerSimplified player) {
-        switch (key.toLowerCase()) {
-            case "leadercards":
-                LeaderCard[] cards = player.getLeaderCards();
-                if (cards[0] != null) {
-                    if (cards[0].isEnabled())
-                        System.out.println(" Leader Card #1: \n" + cards[0].toString());
-                    else
-                        System.out.println(" Leader Card #1: covered");
-                } else
-                    System.out.println(" Leader Card #1: none");
-                if (cards[1] != null) {
-                    if (cards[1].isEnabled())
-                        System.out.println(" Leader Card #2: \n" + cards[1].toString());
-                    else
-                        System.out.println(" Leader Card #2: covered");
-                } else
-                    System.out.println(" Leader Card #2: none");
-                break;
-            case "depot":
-                System.out.println(player.getWarehouseDepot());
-                break;
-            case "strongbox":
-                System.out.println(player.getStrongbox());
-                break;
-            case "devslot":
-                System.out.println(player.getDevelopmentSlot());
-                break;
-            default:
-                System.out.println(" Somehow I reached this default. Check sequence.");
-                System.out.println(key);
-        }
-    }
-
     public static void send(Message message) throws IOException {
         if (!Halo.socket.isClosed()) {
             Halo.objectOutputStream.reset();
@@ -1686,7 +1684,6 @@ class MenuPhase {
         System.out.println(" >> Write " + A.CYAN + "help" + A.RESET + " for a list of commands.");
         List<String> textList = new ArrayList<>();
         String text;
-        Message message;
 
         while (true) {
             System.out.print(" Command: ");
@@ -2038,7 +2035,6 @@ class MenuPhase {
         list.add("░░░░░░░░░░░░░█▓▓░░░░█░░░░░░░░░█░░░░▓▓█░░░░░░░░░░░░░");
         list.add("░░░░░░░░░░░░░░░█░░░░█░░░░░░░░░█░░░░█░░░░░░░░░░░░░░░");
         list.add("░░░░░░░░░░░░░░░░██████▓▓▓▓▓▓▓██████░░░░░░░░░░░░░░░░");
-
 
 
         for (String s : list) {
