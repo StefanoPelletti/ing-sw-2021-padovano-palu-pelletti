@@ -2195,7 +2195,7 @@ public class Board implements Runnable {
      * @see #cardLayoutLeft
      */
     class CentralLeftPanel extends JPanel {
-        java.util.List<DepotAndStrongbox_Card_Panel> depotAndStrongboxCardPanelList;
+        private final java.util.List<DepotAndStrongbox_Panel> depotAndStrongboxCardPanelList;
         private Image image;
 
         public CentralLeftPanel() {
@@ -2210,20 +2210,20 @@ public class Board implements Runnable {
             depotAndStrongboxCardPanelList = new ArrayList<>();
 
             for (PlayerSimplified player : Ark.game.getPlayerList()) {
-                DepotAndStrongbox_Card_Panel depotAndStrongboxCardPanel = new DepotAndStrongbox_Card_Panel(player.getNickname());
+                DepotAndStrongbox_Panel depotAndStrongboxCardPanel = new DepotAndStrongbox_Panel(player.getNickname());
                 this.add(depotAndStrongboxCardPanel, player.getNickname());
                 depotAndStrongboxCardPanelList.add(depotAndStrongboxCardPanel);
             }
         }
 
         /**
-         * Updates the DepotAndStrongbox_Card_Panel that has the specified name.
+         * Updates the DepotAndStrongbox_Panel that has the specified name.
          *
          * @param name the name of the Panel that you want to update
          */
         public void update(String name) {
-            Optional<DepotAndStrongbox_Card_Panel> result = depotAndStrongboxCardPanelList.stream().filter(p -> p.panelName.equals(name)).findFirst();
-            result.ifPresent(DepotAndStrongbox_Card_Panel::update);
+            Optional<DepotAndStrongbox_Panel> result = depotAndStrongboxCardPanelList.stream().filter(p -> p.panelName.equals(name)).findFirst();
+            result.ifPresent(DepotAndStrongbox_Panel::update);
         }
 
         @Override
@@ -2236,14 +2236,14 @@ public class Board implements Runnable {
     /**
      * Class of DepotAndStrongbox Panel, which is inside the LeftPanel.
      */
-    class DepotAndStrongbox_Card_Panel extends JPanel {
+    class DepotAndStrongbox_Panel extends JPanel {
         private final JLabel shelf1;
         private final JLabel[] shelf2;
         private final JLabel[] shelf3;
         private final JLabel[] strongbox; //coin shield stone servant
         private final String panelName;
 
-        public DepotAndStrongbox_Card_Panel(String panelName) {
+        public DepotAndStrongbox_Panel(String panelName) {
             super();
             this.panelName = panelName;
             this.setOpaque(false);
@@ -3499,6 +3499,158 @@ public class Board implements Runnable {
     }
 
     /**
+     * Class of middle object : Market Helper, which is inside the CentralRightPanel.
+     *
+     * @see #marketHelper_panel
+     */
+    class MarketHelper_Panel extends JPanel {
+
+        private final JButton[] choiceButtons;
+        private final JLabel[] resourceLabel;
+
+        public MarketHelper_Panel() {
+            GridBagConstraints c;
+            this.setLayout(new GridBagLayout());
+            this.setOpaque(false);
+            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
+
+            Ark.addPadding(this, 599, 946, 4, 12);
+
+            choiceButtons = new ChoiceButton[8];
+            resourceLabel = new JLabel[4];
+
+            JLabel titleLabel = new JLabel("Market Helper is here!");
+            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.insets = new Insets(5, 0, 0, 0);
+            this.add(titleLabel, c);
+
+
+            JPanel flowResource = new JPanel(new GridBagLayout());
+            Ark.addPadding(flowResource, 46, 920, 7, 2);
+            flowResource.setBorder(BorderFactory.createLineBorder(new Color(175, 154, 121), 1));
+            flowResource.setBackground(new Color(214, 189, 148));
+
+            JLabel resourceRemaining = new JLabel("remaining resources: ");
+            resourceRemaining.setFont(new Font(PAPYRUS, Font.BOLD, 26));
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.insets = new Insets(0, 10, 0, 20);
+            flowResource.add(resourceRemaining, c);
+
+            for (int i = 0; i < 4; i++) {
+                JLabel resource = new JLabel();
+                c = new GridBagConstraints();
+                c.gridx = i + 2;
+                c.gridy = 1;
+                c.insets = new Insets(0, 8, 0, 8);
+                this.resourceLabel[i] = resource;
+                flowResource.add(resource, c);
+            }
+
+            c.gridx = 1;
+            c.gridy = 2;
+            c.gridwidth = 1;
+            c.weightx = 0.1;
+            c.weighty = 0.1;
+            c.fill = GridBagConstraints.BOTH;
+            c.anchor = GridBagConstraints.PAGE_START;
+            this.add(flowResource, c);
+
+            for (int i = 0; i < 8; i++) {
+                ChoiceButton button = new ChoiceButton(i);
+                button.setPreferredSize(new Dimension(700, 46));
+                button.addActionListener(action_newMarketChoice_actionListener);
+                button.setBackground(new Color(231, 210, 181));
+                button.setFont(new Font(PAPYRUS, Font.BOLD, 24));
+                button.setEnabled(false);
+
+                if (i == 2) button.setText("discard that resource");
+                if (i == 3) button.setText("swap the 1st and 2nd rows of your depot");
+                if (i == 4) button.setText("swap the 1st and 3rd rows of your depot");
+                if (i == 5) button.setText("swap the 2nd and 3rd rows of your depot");
+                if (i == 6) button.setText("hop to the next available resource");
+                if (i == 7) button.setText("hop back to the previous resource");
+
+                c = new GridBagConstraints();
+                c.gridx = 1;
+                c.gridy = i + 3;
+                c.gridwidth = 1;
+                c.weightx = 0.3;
+                c.weighty = 0.05;
+                this.choiceButtons[i] = button;
+                this.add(button, c);
+            }
+        }
+
+        /**
+         * Updates the MarketHelper panel with the current options, disabling the options that are not available.
+         */
+        public void update() {
+            boolean enabled = Ark.game.isMarketHelperEnabled();
+            boolean[] choices = Ark.game.getMarketHelper().getChoices();
+            Resource[] extraResources = Ark.game.getMarketHelper().getExtraResources();
+            List<Resource> resources = Ark.game.getMarketHelper().getResources();
+            int currentResource = Ark.game.getMarketHelper().getCurrentResourceInt();
+
+            for (int i = 0; i < 4; i++) {
+                this.resourceLabel[i].setBorder(null);
+
+                if (i < resources.size())
+                    this.resourceLabel[i].setIcon(scaleImage(new ImageIcon(resources.get(i).getPathLittle()), 50));
+                else
+                    this.resourceLabel[i].setIcon(null);
+            }
+
+            if (!resources.isEmpty())
+                this.resourceLabel[currentResource].setBorder(BorderFactory.createLineBorder(new Color(178, 49, 35), 2));
+
+
+            for (int i = 0; i < 8; i++) {
+                if (!enabled) {
+                    this.choiceButtons[i].setEnabled(false);
+                } else {
+                    this.choiceButtons[i].setEnabled(choices[i]);
+
+                    if (i == 0) {
+                        if (resources.get(currentResource) != Resource.EXTRA) //so it is a normal choice
+                            this.choiceButtons[0].setText("put in depot");
+                        else
+                            this.choiceButtons[0].setText("convert in " + resourceToString(extraResources[0], false));
+                    } else if (i == 1) {
+                        if (resources.get(currentResource) != Resource.EXTRA) //so it is a normal choice
+                            this.choiceButtons[1].setText("put in the extra depot");
+                        else
+                            this.choiceButtons[1].setText("convert in " + resourceToString(extraResources[1], false));
+                    }
+                }
+            }
+        }
+
+        /**
+         * A Custom Button that can store an int.
+         */
+        class ChoiceButton extends JButton {
+            private final int choiceNumber;
+
+            public ChoiceButton(int choiceNumber) {
+                super();
+                this.choiceNumber = choiceNumber;
+            }
+
+            public int getChoiceNumber() {
+                return this.choiceNumber;
+            }
+        }
+    }
+
+    /**
      * Class of action: discardLeaderCard Panel, which inside the CentralRightPanel.
      *
      * @see #discardLeaderCard_panel
@@ -4249,158 +4401,6 @@ public class Board implements Runnable {
                     default:
                         return Resource.NONE;
                 }
-            }
-        }
-    }
-
-    /**
-     * Class of middle object : Market Helper, which is inside the CentralRightPanel.
-     *
-     * @see #marketHelper_panel
-     */
-    class MarketHelper_Panel extends JPanel {
-
-        private final JButton[] choiceButtons;
-        private final JLabel[] resourceLabel;
-
-        public MarketHelper_Panel() {
-            GridBagConstraints c;
-            this.setLayout(new GridBagLayout());
-            this.setOpaque(false);
-            this.setBorder(BorderFactory.createLineBorder(new Color(62, 43, 9), 1));
-
-            Ark.addPadding(this, 599, 946, 4, 12);
-
-            choiceButtons = new ChoiceButton[8];
-            resourceLabel = new JLabel[4];
-
-            JLabel titleLabel = new JLabel("Market Helper is here!");
-            titleLabel.setFont(new Font(PAPYRUS, Font.BOLD, 50));
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 1;
-            c.weightx = 0.1;
-            c.weighty = 0.1;
-            c.anchor = GridBagConstraints.PAGE_START;
-            c.insets = new Insets(5, 0, 0, 0);
-            this.add(titleLabel, c);
-
-
-            JPanel flowResource = new JPanel(new GridBagLayout());
-            Ark.addPadding(flowResource, 46, 920, 7, 2);
-            flowResource.setBorder(BorderFactory.createLineBorder(new Color(175, 154, 121), 1));
-            flowResource.setBackground(new Color(214, 189, 148));
-
-            JLabel resourceRemaining = new JLabel("remaining resources: ");
-            resourceRemaining.setFont(new Font(PAPYRUS, Font.BOLD, 26));
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 1;
-            c.insets = new Insets(0, 10, 0, 20);
-            flowResource.add(resourceRemaining, c);
-
-            for (int i = 0; i < 4; i++) {
-                JLabel resource = new JLabel();
-                c = new GridBagConstraints();
-                c.gridx = i + 2;
-                c.gridy = 1;
-                c.insets = new Insets(0, 8, 0, 8);
-                this.resourceLabel[i] = resource;
-                flowResource.add(resource, c);
-            }
-
-            c.gridx = 1;
-            c.gridy = 2;
-            c.gridwidth = 1;
-            c.weightx = 0.1;
-            c.weighty = 0.1;
-            c.fill = GridBagConstraints.BOTH;
-            c.anchor = GridBagConstraints.PAGE_START;
-            this.add(flowResource, c);
-
-            for (int i = 0; i < 8; i++) {
-                ChoiceButton button = new ChoiceButton(i);
-                button.setPreferredSize(new Dimension(700, 46));
-                button.addActionListener(action_newMarketChoice_actionListener);
-                button.setBackground(new Color(231, 210, 181));
-                button.setFont(new Font(PAPYRUS, Font.BOLD, 24));
-                button.setEnabled(false);
-
-                if (i == 2) button.setText("discard that resource");
-                if (i == 3) button.setText("swap the 1st and 2nd rows of your depot");
-                if (i == 4) button.setText("swap the 1st and 3rd rows of your depot");
-                if (i == 5) button.setText("swap the 2nd and 3rd rows of your depot");
-                if (i == 6) button.setText("hop to the next available resource");
-                if (i == 7) button.setText("hop back to the previous resource");
-
-                c = new GridBagConstraints();
-                c.gridx = 1;
-                c.gridy = i + 3;
-                c.gridwidth = 1;
-                c.weightx = 0.3;
-                c.weighty = 0.05;
-                this.choiceButtons[i] = button;
-                this.add(button, c);
-            }
-        }
-
-        /**
-         * Updates the MarketHelper panel with the current options, disabling the options that are not available.
-         */
-        public void update() {
-            boolean enabled = Ark.game.isMarketHelperEnabled();
-            boolean[] choices = Ark.game.getMarketHelper().getChoices();
-            Resource[] extraResources = Ark.game.getMarketHelper().getExtraResources();
-            List<Resource> resources = Ark.game.getMarketHelper().getResources();
-            int currentResource = Ark.game.getMarketHelper().getCurrentResourceInt();
-
-            for (int i = 0; i < 4; i++) {
-                this.resourceLabel[i].setBorder(null);
-
-                if (i < resources.size())
-                    this.resourceLabel[i].setIcon(scaleImage(new ImageIcon(resources.get(i).getPathLittle()), 50));
-                else
-                    this.resourceLabel[i].setIcon(null);
-            }
-
-            if (!resources.isEmpty())
-                this.resourceLabel[currentResource].setBorder(BorderFactory.createLineBorder(new Color(178, 49, 35), 2));
-
-
-            for (int i = 0; i < 8; i++) {
-                if (!enabled) {
-                    this.choiceButtons[i].setEnabled(false);
-                } else {
-                    this.choiceButtons[i].setEnabled(choices[i]);
-
-                    if (i == 0) {
-                        if (resources.get(currentResource) != Resource.EXTRA) //so it is a normal choice
-                            this.choiceButtons[0].setText("put in depot");
-                        else
-                            this.choiceButtons[0].setText("convert in " + resourceToString(extraResources[0], false));
-                    } else if (i == 1) {
-                        if (resources.get(currentResource) != Resource.EXTRA) //so it is a normal choice
-                            this.choiceButtons[1].setText("put in the extra depot");
-                        else
-                            this.choiceButtons[1].setText("convert in " + resourceToString(extraResources[1], false));
-                    }
-                }
-            }
-        }
-
-        /**
-         * A Custom Button that can store an int.
-         */
-        class ChoiceButton extends JButton {
-            private final int choiceNumber;
-
-            public ChoiceButton(int choiceNumber) {
-                super();
-                this.choiceNumber = choiceNumber;
-            }
-
-            public int getChoiceNumber() {
-                return this.choiceNumber;
             }
         }
     }

@@ -235,7 +235,6 @@ public class MainMenu implements Runnable {
         bottom_Update_Label.setText(" Please don't judge me ");
     };
 
-
     /**
      * Used in the card 4 (CREATE). Invokes the procedure to connect this Client to the Server and creates a new Lobby with the specified parameters.
      *

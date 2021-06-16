@@ -31,13 +31,8 @@ public class Ark {
     static boolean action;
     static boolean triedAction;
 
-
-    static boolean goneWell;
-    static String string;
-
     static GameSimplified game;
     static PlayerSimplified myPlayerRef;
-
 
     static GameManager gameManager;
     static ActionManager actionManager;
