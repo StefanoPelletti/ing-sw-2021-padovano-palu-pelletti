@@ -183,8 +183,6 @@ public class ClientHandler implements Runnable, ModelObserver {
                 message = (ActionMessage) objectInputStream.readObject();
 
                 if (playerNumber == lobby.currentPlayer()) {
-                    //TODO threadPool
-                    //lobby.onMessage(message);
                     lobby.onMessage(message);
                 } else {
                     send(new MSG_ERROR("not your Turn!"));
@@ -444,7 +442,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
         boolean found = false;
         int i;
-        int lobbyMaxSize = 1; //TODO set to 500
+        int lobbyMaxSize = 500;
 
         try {
             if (numOfPlayers < 1 || numOfPlayers > 4) {
@@ -461,9 +459,8 @@ public class ClientHandler implements Runnable, ModelObserver {
             }
 
             do {
-                //i = random.nextInt(lobbyMaxSize);
-                //TODO remove i=0, de-comment line above
-                i = 0; //delete this when OK
+                i = random.nextInt(lobbyMaxSize);
+
                 found = Lobby.checkLobbies(i);
             } while (found);
 

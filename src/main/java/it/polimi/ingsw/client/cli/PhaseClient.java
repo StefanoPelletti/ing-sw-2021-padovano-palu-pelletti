@@ -2398,10 +2398,10 @@ class LocalPhase {
                                         }
 //ACTION END TURN
                                         case 7: {
-                                            /*if(!Halo.action){  //TODO
+                                            if(!Halo.action){
                                                 System.out.println("You must do a main action before ending the turn");
                                                 break actionLoop;
-                                            }*/
+                                            }
                                             Halo.action = false;
                                             Halo.triedAction = false;
                                             message = new MSG_ACTION_ENDTURN();

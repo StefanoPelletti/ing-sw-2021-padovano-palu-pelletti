@@ -1091,6 +1091,12 @@ public class ActionManager {
      * @see it.polimi.ingsw.server.controller.GameManager .endTurn()
      */
     public boolean endTurn(Player player, boolean notify) {
+//VALIDATION
+        if(gameManager.getStatus()==Status.STANDARD_TURN && !player.getAction()) {
+            gameManager.setErrorObject("Error! You must perform an action before ending the turn!");
+            return false;
+        }
+
         player.resetPermittedAction();
         if (notify)
             messageHelper.setNotificationMessage(player.getNickname(), new MSG_ACTION_ENDTURN());

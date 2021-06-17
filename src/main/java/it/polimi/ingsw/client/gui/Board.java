@@ -5305,7 +5305,7 @@ public class Board implements Runnable {
     public void enableActionBottomButtons() {
         if (!Ark.action) {
             enableAllBottomButtons();
-            // endTurn_Button              .setEnabled(false); //TODO remove comment bracket (save line) (please)
+            endTurn_Button.setEnabled(false);
         } else {
             activate_LeaderCards_Button.setEnabled(true);
             change_Depot_Config_Button.setEnabled(true);
