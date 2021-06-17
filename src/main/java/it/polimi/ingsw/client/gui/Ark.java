@@ -13,7 +13,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class Ark {
-    static String defaultAddress = "localhost";
+    static String defaultAddress = "25.56.114.160"; //TODO put something else
     static int defaultPort = 43210;
     static String nickname = System.getProperty("user.name");
     static int myPlayerNumber;

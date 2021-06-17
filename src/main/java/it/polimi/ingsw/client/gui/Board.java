@@ -1188,7 +1188,6 @@ public class Board implements Runnable {
                 }
                 else {
                     labelUnderLeaderCard.setText("not enabled");
-                    t = scaleImage(new ImageIcon(BACKPATH), 300);
                 }
             } else {
                 t = scaleImage(new ImageIcon(BACKPATH), 300);
