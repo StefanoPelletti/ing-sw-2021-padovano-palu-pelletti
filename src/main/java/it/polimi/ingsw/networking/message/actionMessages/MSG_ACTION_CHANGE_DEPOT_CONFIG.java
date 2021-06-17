@@ -45,10 +45,13 @@ public class MSG_ACTION_CHANGE_DEPOT_CONFIG extends ActionMessage implements Ser
             throw new IllegalArgumentException();
 
         this.slot1 = slot1;
+
         this.slot2 = new Resource[2];
         System.arraycopy(slot2, 0, this.slot2, 0, 2);
+
         this.slot3 = new Resource[3];
         System.arraycopy(slot3, 0, this.slot3, 0, 3);
+
         this.firstExtraDepot = firstExtraDepot;
         this.secondExtraDepot = secondExtraDepot;
     }

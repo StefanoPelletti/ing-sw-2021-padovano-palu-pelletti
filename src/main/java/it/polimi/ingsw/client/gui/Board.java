@@ -319,6 +319,8 @@ public class Board implements Runnable {
 
         MSG_ACTION_ACTIVATE_PRODUCTION message = new MSG_ACTION_ACTIVATE_PRODUCTION(standardProduction, basicProduction, leaderCardOutput, basicInput, basicOutput, lc1Output, lc2Output);
         send(message);
+
+        changeRightCard(Ark.nickname);
     };
 
     /**
@@ -338,6 +340,8 @@ public class Board implements Runnable {
 
         MSG_ACTION_CHANGE_DEPOT_CONFIG message = new MSG_ACTION_CHANGE_DEPOT_CONFIG(shelf1, shelf2, shelf3, extraDepot1, extraDepot2);
         send(message);
+
+        changeRightCard(Ark.nickname);
     };
 
     /**
@@ -748,7 +752,6 @@ public class Board implements Runnable {
                 changeDepotConfig_panel.update();
                 market_panel.update();
                 getMarketResource_panel.update();
-                changeDepotConfig_panel.update();
                 discardLeaderCard_panel.update();
                 activateLeaderCard_panel.update();
                 resourcePicker_panel.update();
@@ -2772,6 +2775,7 @@ public class Board implements Runnable {
                 } else {
                     this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()), 234));
                     if (l[i].isEnabled()) {
+                        this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()), 234));
                         this.leadLabel[i].setText("enabled");
                         this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
                     } else
@@ -4235,20 +4239,17 @@ public class Board implements Runnable {
 
             this.shelf1type[0] = shelf1r;
             this.shelf1label.setIcon(scaleImage(new ImageIcon(shelf1r.getPathBig()), 100));
-            this.shelf2type[0] = shelf2r[0];
-            this.shelf2label[0].setIcon(scaleImage(new ImageIcon(shelf2r[0].getPathBig()), 100));
-            this.shelf2type[1] = shelf2r[0];
-            this.shelf2label[1].setIcon(scaleImage(new ImageIcon(shelf2r[1].getPathBig()), 100));
-            this.shelf3type[0] = shelf3r[0];
-            this.shelf3label[0].setIcon(scaleImage(new ImageIcon(shelf3r[0].getPathBig()), 100));
-            this.shelf3type[1] = shelf3r[1];
-            this.shelf3label[1].setIcon(scaleImage(new ImageIcon(shelf3r[1].getPathBig()), 100));
-            this.shelf3type[2] = shelf3r[2];
-            this.shelf3label[2].setIcon(scaleImage(new ImageIcon(shelf3r[2].getPathBig()), 100));
 
+            for(int i=0; i<2; i++) {
+                this.shelf2type[i] = shelf2r[i];
+                this.shelf2label[i].setIcon(scaleImage(new ImageIcon(shelf2r[i].getPathBig()), 100));
+            }
+            for(int i=0; i<3; i++) {
+                this.shelf3type[i] = shelf3r[i];
+                this.shelf3label[i].setIcon(scaleImage(new ImageIcon(shelf3r[i].getPathBig()), 100));
+            }
             firstExtraDepotPanel.updateValues();
             secondExtraDepotPanel.updateValues();
-
         }
 
         /**

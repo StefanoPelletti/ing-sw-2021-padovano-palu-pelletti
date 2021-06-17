@@ -50,9 +50,6 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
             board.changeRightCard(Board.LEADERCARDSPICKER);
             board.lastRightCard = Board.LEADERCARDSPICKER;
         } else {
-
-
-
             if (!Ark.reconnected) {
                 board.leftPanel.updateNotification("You are player number " + Ark.myPlayerRef.getPlayerNumber() + "!");
                 String message = "Because you are player number " + Ark.myPlayerRef.getPlayerNumber() + ", you will also receive ";
