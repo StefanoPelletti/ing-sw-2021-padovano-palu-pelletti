@@ -412,7 +412,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                     send(new MSG_OK_JOIN(this.nickname));
                     System.out.println(this.nickname + " joined lobby " + lobbyNumber);
                 } else {
-                    System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " looked for a non existing lobby");
+                    System.out.println("[" + Thread.currentThread().getName() + "] - " + inputNickname + " looked for a non existing lobby");
                     send(new MSG_ERROR("Lobby full!"));
                     closeStreams();
                     return false;
@@ -424,7 +424,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                     lobby.notifyAll();
                 } else {
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " waiting on lobby " + lobbyNumber);
-                    while (!lobby.isStarted()) lobby.wait();
+                    while (!lobby.isDeleted() && !lobby.isStarted()) lobby.wait();
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + lobbyNumber);
                 }
 
@@ -444,7 +444,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
         boolean found = false;
         int i;
-        int lobbyMaxSize = 50;
+        int lobbyMaxSize = 1; //TODO set to 500
 
         try {
             if (numOfPlayers < 1 || numOfPlayers > 4) {
@@ -454,7 +454,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                 return false;
             }
             if (Lobby.getLobbies().size() >= lobbyMaxSize) {
-                System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby, but the too many lobbies");
+                System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " tried to create a lobby, but there are too many lobbies");
                 send(new MSG_ERROR("Too many lobbies!"));
                 closeStreams();
                 return false;
@@ -462,7 +462,7 @@ public class ClientHandler implements Runnable, ModelObserver {
 
             do {
                 //i = random.nextInt(lobbyMaxSize);
-                //TODO
+                //TODO remove i=0, de-comment line above
                 i = 0; //delete this when OK
                 found = Lobby.checkLobbies(i);
             } while (found);
@@ -481,9 +481,7 @@ public class ClientHandler implements Runnable, ModelObserver {
                     lobby.init();
                 } else {
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " Created a lobby, waiting on lobby " + i);
-                    while (!lobby.isDeleted())
-                        if (!lobby.isStarted())
-                            lobby.wait();
+                    while (!lobby.isDeleted() && !lobby.isStarted()) lobby.wait();
                     System.out.println("[" + Thread.currentThread().getName() + "] - " + this.nickname + " awoken on lobby " + i);
                 }
             }

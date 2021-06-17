@@ -1651,6 +1651,15 @@ class Halo {
         }
     }
 
+    /**
+     * Sends a message to the server using the Socket.
+     * <p>
+     *     The message is sent only if the Socket is not closed, and performs a reset and flush of the Stream.
+     * </p>
+     *
+     * @param message the message that will be sent
+     * @throws IOException any IOException thrown by the the objectOutputStream failures
+     */
     public static void send(Message message) throws IOException {
         if (!Halo.socket.isClosed()) {
             Halo.objectOutputStream.reset();

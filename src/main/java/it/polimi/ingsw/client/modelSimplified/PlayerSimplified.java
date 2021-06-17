@@ -20,7 +20,7 @@ public class PlayerSimplified {
     private final DevelopmentSlotSimplified developmentSlot;
     private final boolean[] faithTrackPanels;
     private int playerNumber;
-    private final String nickname;
+    private String nickname;
     private int position;
     private LeaderCard[] leaderCards;
 
@@ -50,7 +50,7 @@ public class PlayerSimplified {
 
         System.arraycopy(newFaithTrackPanels, 0, this.faithTrackPanels, 0, 3);
         this.playerNumber = newPlayerNumber;
-        //this.nickname = newNickname;
+        this.nickname = newNickname;
         this.position = newPosition;
         this.leaderCards = new LeaderCard[2];
         this.leaderCards[0] = newLeaderCards[0];
