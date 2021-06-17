@@ -387,12 +387,6 @@ public class MainMenu implements Runnable {
         progressLabel.setText("initiating request");
         messageLabel.setText("creating message");
         back_Loading_Button.setEnabled(false);
-
-        //test part
-        /*
-        if(testTimer.isRunning())
-            testTimer.stop();
-        */
         progressLabel.setText("Again here?");
     };
 
@@ -639,8 +633,17 @@ public class MainMenu implements Runnable {
                     Ark.game = new GameSimplified();
                     Ark.game.updateAll((MSG_UPD_Full) message);
                     Ark.myPlayerRef = Ark.game.getPlayerRef(Ark.nickname);
+                    Ark.myPlayerNumber = Ark.game.getMyPlayerNumber(Ark.nickname);
+                    Ark.yourTurn = Ark.game.isMyTurn(Ark.myPlayerNumber);
 
-                    SwingUtilities.invokeLater(new Board());
+                    if (Ark.myPlayerNumber == 0)
+                        SwingUtilities.invokeLater(new ErrorThread("corrupted game was written"));
+
+                    Board board = new Board();
+
+                    new Thread(new UpdateHandlerGUI(board)).start();
+                    SwingUtilities.invokeLater(board);
+
                     mainFrame.dispose();
                 } else if (message.getMessageType() == MessageType.MSG_ERROR) {
                     progressBar.setIndeterminate(false);

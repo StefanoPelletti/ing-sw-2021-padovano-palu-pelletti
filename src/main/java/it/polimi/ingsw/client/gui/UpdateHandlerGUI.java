@@ -43,9 +43,16 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
     public void run() {
         Ark.yourTurn = Ark.game.isMyTurn(Ark.myPlayerNumber);
 
+        board.disableBottomButtons();
+
         if (Ark.yourTurn) { // && Ark.game.isLeaderCardsPickerEnabled()
             board.leftPanel.updateNotification("You are the First Player!");
+            board.changeRightCard(Board.LEADERCARDSPICKER);
+            board.lastRightCard = Board.LEADERCARDSPICKER;
         } else {
+
+
+
             if (!Ark.reconnected) {
                 board.leftPanel.updateNotification("You are player number " + Ark.myPlayerRef.getPlayerNumber() + "!");
                 String message = "Because you are player number " + Ark.myPlayerRef.getPlayerNumber() + ", you will also receive ";

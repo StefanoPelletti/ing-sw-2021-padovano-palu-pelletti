@@ -33,7 +33,6 @@ public class UpdateHandler implements Runnable, ModelObserver {
     @Override
     public void run() {
 
-
         Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
         if (Halo.yourTurn) { // && Halo.game.isLeaderCardsPickerEnabled()

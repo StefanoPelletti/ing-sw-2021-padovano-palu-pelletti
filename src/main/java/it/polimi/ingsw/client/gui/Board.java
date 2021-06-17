@@ -412,6 +412,7 @@ public class Board implements Runnable {
 
         Ark.triedAction = false;
         Ark.action = false;
+        this.disableBottomButtons();
 
         MSG_ACTION_ENDTURN message = new MSG_ACTION_ENDTURN();
         send(message);

@@ -2091,9 +2091,9 @@ class OnlinePhase {
                 return Phase.ERROR;
             }
 
-            Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
             Halo.myPlayerNumber = Halo.game.getMyPlayerNumber(Halo.myNickname);
             if (Halo.myPlayerNumber == 0) return Phase.ERROR;
+            Halo.yourTurn = Halo.game.isMyTurn(Halo.myPlayerNumber);
 
             Halo.myPlayerRef = Halo.game.getPlayerRef(Halo.myPlayerNumber);
 
