@@ -117,7 +117,7 @@ public class Lobby {
      * @see #addLobby(Lobby) the method that calls this method
      */
     public static void createCountDownThread(Lobby lobby) {
-        new Thread(new CountDownThread(lobby, 30)).start();
+        new Thread(new CountDownThread(lobby, 60)).start();
     }
 
     /**

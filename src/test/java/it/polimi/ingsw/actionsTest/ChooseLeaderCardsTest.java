@@ -127,6 +127,7 @@ public class ChooseLeaderCardsTest {
         Player p2 = g.getPlayer(2);
         p2.setDisconnectedBeforeLeaderCard(true);
         g.changeStatus(Status.STANDARD_TURN);
+        p.setAction();
 
         assertTrue(am.endTurn(p, false));
         c.emptyQueue();
@@ -158,6 +159,7 @@ public class ChooseLeaderCardsTest {
         p2.setDisconnectedBeforeLeaderCard(true);
         p2.setDisconnectedBeforeResource(true);
         g.changeStatus(Status.STANDARD_TURN);
+        p.setAction();
 
         assertTrue(am.endTurn(p, false));
         c.emptyQueue();

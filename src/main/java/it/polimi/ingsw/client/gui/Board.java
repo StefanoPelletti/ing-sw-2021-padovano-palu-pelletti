@@ -2770,17 +2770,16 @@ public class Board implements Runnable {
 
             for (int i = 0; i < 2; i++) {
                 if (l[i] == null) {
-                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 234));
+                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon(BACKPATH), 234));
                     this.leadLabel[i].setText("not present");
                 } else {
-                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()), 234));
                     if (l[i].isEnabled()) {
                         this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()), 234));
                         this.leadLabel[i].setText("enabled");
                         this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
                     } else
                         this.leadLabel[i].setText("not enabled");
-                        this.leadGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 234));
+                        this.leadGrid[i].setIcon(scaleImage(new ImageIcon(BACKPATH), 234));
                 }
             }
 
@@ -4778,8 +4777,7 @@ public class Board implements Runnable {
             for (int i = 0; i < 2; i++) {
                 if (leaderCards[i] == null)
                     this.leaderCardButton[i].setEnabled(false);
-                else if (!leaderCards[i].isEnabled() || !leaderCards[i].getSpecialAbility().isProduction())
-                    this.leaderCardButton[i].setEnabled(false);
+                else this.leaderCardButton[i].setEnabled(leaderCards[i].isEnabled() && leaderCards[i].getSpecialAbility().isProduction());
             }
 
 

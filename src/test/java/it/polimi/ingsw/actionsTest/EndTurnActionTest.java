@@ -64,6 +64,8 @@ public class EndTurnActionTest {
     //this test ensures that the next player is set correctly.
     public void endTurnTest0() {
         g.changeStatus(Status.STANDARD_TURN);
+        p.setAction();
+
         assertTrue(am.endTurn(p, true));
         assertEquals(g.getCurrentPlayerInt(), 2);
         assertEquals(2, gm.currentPlayer().getPlayerNumber());
@@ -83,6 +85,7 @@ public class EndTurnActionTest {
         c.emptyQueue();
 
         //both the turn AND the currentPlayer should change
+        p.setAction();
         assertTrue(am.endTurn(p, true));
 
         //assert Model changes
@@ -166,6 +169,7 @@ public class EndTurnActionTest {
         int turn = g2.getTurn();
 
         //returns True because it needs a MSG_UPD_end message afterwards
+        p2.setAction();
         assertTrue(am2.endTurn(p2, true));
 
         //assert Model changes
