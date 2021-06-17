@@ -270,14 +270,12 @@ public class Board implements Runnable {
         int slotNumber = source.getPosition();
         int cardNumber = vendor_panel.getCurrentCard();
 
-        System.out.println("Slot number: " + slotNumber);
-        System.out.println("Card number: " + cardNumber);
-
         MSG_ACTION_CHOOSE_DEVELOPMENT_CARD message;
 
         if (slotNumber == -1) {
             Ark.triedAction = false;
             message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(-1, -1);
+            enableActionBottomButtons();
         } else {
             Ark.triedAction = true;
             message = new MSG_ACTION_CHOOSE_DEVELOPMENT_CARD(cardNumber, slotNumber);
