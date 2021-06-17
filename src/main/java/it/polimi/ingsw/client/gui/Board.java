@@ -1560,7 +1560,6 @@ public class Board implements Runnable {
                 c.fill = GridBagConstraints.BOTH;
                 lorenzoPanel.add(tokenPanel, c);
 
-
                 c = new GridBagConstraints();
                 c.fill = GridBagConstraints.BOTH;
                 c.weightx = 0.5;
@@ -1569,6 +1568,9 @@ public class Board implements Runnable {
             }
         }
 
+        /**
+         * It updates the PlayerRecap Panel, specifying the number of resources that each player has.
+         */
         public void update() {
             if (!Ark.solo) {
                 JLabel label;
@@ -4251,11 +4253,19 @@ public class Board implements Runnable {
             private final JButton more;
             private int[] depotQuantity;
             private int leaderCardNumber;
+
+            /**
+             * Custom ActionListener that decreases the number of resources in the ExtraDepot.
+             */
             ActionListener less_ActionListener = e -> {
                 if (this.depotQuantity[leaderCardNumber] == 0) return;
                 this.depotQuantity[leaderCardNumber] = this.depotQuantity[leaderCardNumber] - 1;
                 this.number.setText("" + this.depotQuantity[leaderCardNumber]);
             };
+
+            /**
+             * Custom ActionListener that increases the number of resources in the ExtraDepot.
+             */
             ActionListener more_ActionListener = e -> {
                 if (this.depotQuantity[leaderCardNumber] == 2) return;
                 this.depotQuantity[leaderCardNumber] = this.depotQuantity[leaderCardNumber] + 1;
