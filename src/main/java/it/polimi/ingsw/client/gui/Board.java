@@ -92,6 +92,9 @@ public class Board implements Runnable {
      */
     String lastRightCard;
 
+    static final String BACKPATH = "resources/cardsBack/BACK (1).png";
+
+
     static final String DEVDECK = "Development Cards Deck";
     DevDeck_Panel devDeck_panel;                                                                    //<- updatable after a devdeck update
 
@@ -384,6 +387,8 @@ public class Board implements Runnable {
 
         MSG_ACTION_ACTIVATE_LEADERCARD message = new MSG_ACTION_ACTIVATE_LEADERCARD(cardNumber);
         send(message);
+
+        changeRightCard(Ark.nickname);
     };
 
     /**
@@ -400,6 +405,8 @@ public class Board implements Runnable {
 
         MSG_ACTION_DISCARD_LEADERCARD message = new MSG_ACTION_DISCARD_LEADERCARD(cardNumber);
         send(message);
+
+        changeRightCard(Ark.nickname);
     };
 
     /**
@@ -415,7 +422,6 @@ public class Board implements Runnable {
         MSG_ACTION_ENDTURN message = new MSG_ACTION_ENDTURN();
         send(message);
     };
-
 
     public Board() {
         mainFrame = new JFrame("Halo Medieval Alpha 0.0.2");
@@ -1180,8 +1186,12 @@ public class Board implements Runnable {
                         }
                     }
                 }
+                else {
+                    labelUnderLeaderCard.setText("not enabled");
+                    t = scaleImage(new ImageIcon(BACKPATH), 300);
+                }
             } else {
-                t = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 300);
+                t = scaleImage(new ImageIcon(BACKPATH), 300);
                 labelUnderLeaderCard.setText("not present!");
             }
             leaderCardLabel.setIcon(t);
@@ -2767,6 +2777,7 @@ public class Board implements Runnable {
                         this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
                     } else
                         this.leadLabel[i].setText("not enabled");
+                        this.leadGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 234));
                 }
             }
 
