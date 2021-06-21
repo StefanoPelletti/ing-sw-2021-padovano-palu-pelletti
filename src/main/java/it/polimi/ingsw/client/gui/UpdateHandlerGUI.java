@@ -109,6 +109,7 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
             board.activateLeaderCard_panel.update();
             board.discardLeaderCard_panel.update();
             board.production_panel.update();
+            board.productionSelection_panel.update();
         } else
             board.centralRightPanel.update(name);
     }
