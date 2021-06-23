@@ -93,7 +93,7 @@ Make sure the command `java` is working in the system terminal.
 To run the program using the JAR you must:
 
 - Download and place the [jar](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/deliverables/GC31-1.0-SNAPSHOT.jar) in a folder on your computer.
-- To allow the GUI to load properly the images, you should also download the [cartella resources](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/tree/main/resources) and place it beside the JAR.
+- To allow the GUI to load properly the images, you should also download the [resource folder](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/tree/main/resources) and place it beside the JAR.
   - In the end, in that folder there should be both the `JAR` and the `resource` folder.
 
 ### run
