@@ -1,34 +1,14 @@
 package it.polimi.ingsw.server.utils;
 
-public enum A {
-
-    RESET, BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE, UL;
-
-    @Override
-    public String toString() {
-        switch (this) {
-            case RESET:
-                return "\u001b[0m";
-            case BLACK:
-                return "\u001b[30m";
-            case RED:
-                return "\u001b[31m"; //FAITH
-            case GREEN:
-                return "\u001b[32m"; //POSITIVE
-            case YELLOW:
-                return "\u001b[33m"; //NOTIFICATIONS AND COINS
-            case BLUE:
-                return "\u001b[34m"; //SHIELD
-            case PURPLE:
-                return "\u001b[35m"; //PARAMETERS, SERVANTS
-            case CYAN:
-                return "\u001b[36m"; //COMMANDS
-            case WHITE:
-                return "\u001b[37m"; //DEFAULT
-            case UL:
-                return "\u001b[4m"; //REQUESTS,
-            default:
-                return "";
-        }
-    }
+public class A {
+    public static final String BLACK = "\u001b[30m";
+    public static final String RESET = "\u001b[0m";
+    public static final String RED = "\u001b[31m";
+    public static final String GREEN = "\u001b[32m";
+    public static final String YELLOW = "\u001b[33m";
+    public static final String BLUE ="\u001b[34m";
+    public static final String PURPLE ="\u001b[35m";
+    public static final String CYAN = "\u001b[36m";
+    public static final String WHITE = "\u001b[37m";
+    public static final String UL = "\u001b[4m";
 }
