@@ -8,25 +8,25 @@ public enum A {
     public String toString() {
         switch (this) {
             case RESET:
-                return "\u001B[0m";
+                return "\u001b[0m";
             case BLACK:
-                return "\u001B[30m";
+                return "\u001b[30m";
             case RED:
-                return "\u001B[31m"; //FAITH
+                return "\u001b[31m"; //FAITH
             case GREEN:
-                return "\u001B[32m"; //POSITIVE
+                return "\u001b[32m"; //POSITIVE
             case YELLOW:
-                return "\u001B[33m"; //NOTIFICATIONS AND COINS
+                return "\u001b[33m"; //NOTIFICATIONS AND COINS
             case BLUE:
-                return "\u001B[34m"; //SHIELD
+                return "\u001b[34m"; //SHIELD
             case PURPLE:
-                return "\u001B[35m"; //PARAMETERS, SERVANTS
+                return "\u001b[35m"; //PARAMETERS, SERVANTS
             case CYAN:
-                return "\u001B[36m"; //COMMANDS
+                return "\u001b[36m"; //COMMANDS
             case WHITE:
-                return "\u001B[37m"; //DEFAULT
+                return "\u001b[37m"; //DEFAULT
             case UL:
-                return "\u001B[4m"; //REQUESTS,
+                return "\u001b[4m"; //REQUESTS,
             default:
                 return "";
         }
