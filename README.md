@@ -8,15 +8,19 @@ Uno screenshot della copertura del codice da parte dei casi di test può essere 
 
 Ultima versione del 21-jun-2021.
 
+## Test di prova
+
+Il programma è stato testato su una macchina virtuale Windows pulita con installata una JDK 11 LTS di Oracle.
+
+Non sono sorti problemi durante la prova, tuttavia non possiamo essere certi della piena compatibilità.
+
 ## Requisiti
 
 Il programma è stato scritto usando una JDK 15 Oracle. 
 
 È pertanto consigliato l'utilizzo di una JDK 15 o superiore.
 
-Il programma è stato testato su una macchina virtuale pulita con installata una JDK 11 LTS di Oracle.
-
-Non sono sorti problemi durante la prova, tuttavia non possiamo essere certi della piena compatibilità.
+Per giocare in linea di comando, è necessario utilizzare un terminale che supporti i codici colori. Mac li supporta nativamente, Windows tramite il Windows Terminal li supporta.
 
 Assicuratevi che il comando `java` sia funzionante nel terminale di sistema.
 
@@ -74,15 +78,19 @@ A screenshot regarding code coverage by the test cases can be found [here](https
 
 Last version of 21-jun-2021.
 
+## Bench test 
+
+The program was also tested on a fresh Windows VM, on which a JDK 11 by Oracle was installed.
+
+The test did not present any problem, but we cannot guarantee full compatibility for the reasons above.
+
 ## Requirements
 
 The program was coded using an Oracle JDK 15.
 
 We encourage you to utilize a JDK 15 or later.
 
-The program was also tested on a fresh VM, on which a JDK 11 by Oracle was installed.
-
-The test did not present any problem, but we cannot guarantee full compatibility for the reasons above.
+To play in command line, it is necessary to use a terminal that supports color codes. Mac supports them natively, Windows can handle them using Windows Terminal.
 
 Make sure the command `java` is working in the system terminal.
 
