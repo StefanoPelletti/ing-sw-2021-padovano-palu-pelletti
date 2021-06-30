@@ -70,8 +70,6 @@ public class PhaseClient implements Runnable {
             }
         }
     }
-
-
 }
 
 /**
@@ -545,9 +543,9 @@ class Halo {
      */
     public static boolean checkShowCommand(List<String> textList) {
         String[] allowedKeySoloArr = {"players", "market", "depot", "strongbox", "devslot", "devdeck", "faithtrack", "leadercards", "turn"};
-        List<String> allowedKeySolo = new ArrayList<String>(Arrays.asList(allowedKeySoloArr));
+        List<String> allowedKeySolo = new ArrayList<>(Arrays.asList(allowedKeySoloArr));
         String[] allowedKeyArr = {"depot", "strongbox", "devslot", "leadercards"};
-        List<String> allowedKey = new ArrayList<String>(Arrays.asList(allowedKeyArr));
+        List<String> allowedKey = new ArrayList<>(Arrays.asList(allowedKeyArr));
 
         if (local) {
             if (textList.size() != 2) {

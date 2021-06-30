@@ -652,7 +652,6 @@ public class MainMenu implements Runnable {
                     messageLabel.setText(((MSG_ERROR) message).getErrorMessage());
                     bottom_Update_Label.setText("we're sorry");
                     back_Loading_Button.setEnabled(true);
-                    new Thread(new ErrorThread(((MSG_ERROR) message).getErrorMessage())).run();
                     SwingUtilities.invokeLater(new ErrorThread(((MSG_ERROR) message).getErrorMessage()));
                 } else {
                     SwingUtilities.invokeLater(new ErrorThread("received unexpected message"));
@@ -692,7 +691,7 @@ public class MainMenu implements Runnable {
      * <p> Builds a new Frame and sets it visible. </p>
      */
     public MainMenu() {
-        mainFrame = new JFrame(" Masters of Renaissance, GUI-edition! ");
+        mainFrame = new JFrame(" Masters of Renaissance - Main Menu ");
         mainFrame.setContentPane(new mainPanel());
 
         mainFrame.pack();
