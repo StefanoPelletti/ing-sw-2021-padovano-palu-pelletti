@@ -2,6 +2,20 @@
 
 # IT
 
+## Una piccola introduzione
+
+Questo repository contiene codice sorgente e documentazione di un videogioco sviluppato in Java. Il gioco prende il nome e le caratteristiche dall'omonimo gioco da tavolo [Maestri del Rinascimento](http://www.craniocreations.it/prodotto/masters-of-renaissance/), che è implementato via software secondo un'architettura distribuita che utilizza il paradigma MVC. Il gioco può essere avviato tramite il JAR. Se si vuole importare il progetto in un IDE, le classi main da eseguire saranno il 'Server', il 'PhaseClient' per la CLI e il 'MainMenu' per la GUI.
+
+### Piccole note implementative
+
+Per creare una Lobby bisogna avviare un Server. Un client può chiedere quindi di creare una lobby di grandezza arbitraria. Gli verrà fornito il numero della stanza, che potrà fornire ai suoi amici. Se non tutti i giocatori si collegano entro un tempo prestabilito (di default 30 secondi), la Lobby viene cancellata dal Server. 
+
+Se tutti i giocatori di una Lobby si scollegano, la Lobby viene cancellata dal Server.
+
+La GUI è stata implementata usando SWING.
+
+Sono state implementate le funzionalità aggiuntive di `Partita Locale`, `Riconnessione a una partita in corso`, `Partite Multiple`.
+
 ## Copertura del codice
 
 Uno screenshot della copertura del codice da parte dei casi di test può essere trovato cliccando [qui](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/deliverables/ScreenshotTestCases.jpg).
@@ -72,6 +86,20 @@ java -jar GC31-1.0-SNAPSHOT.jar gui
 
 # EN
 
+## A short introduction
+
+This repository contains the source code and documentation of a videogame developed in Java. The game is named after the physical version of the board game [Masters of Renaissance](https://craniointernational.com/products/masters-of-renaissance/), which is implemented via software according to the MVP paradigm and using a networking, distribuited architecture. The game can be launched using the JAR. If you want to import the project in an IDE, the main classes to be executed will be the 'Server', the 'PhaseClient' for the CLI and the 'MainMenu' for the GUI.
+
+### A few implementation notes
+
+To create a Lobby a Server must be started. A client can then ask to create a Lobby of arbitrary dimension. A Lobby Number will be given to the Client, which can then share it with his friends. If not all players connect to that Lobby within a certain amount of time (by default 30 seconds), the Lobby will be deleted from the Server.
+
+If all the players of a Lobby have disconnected, the Lobby will be deleted from the Server.
+
+The GUI was implemented using SWING.
+
+Additiona functionalities of `Local Game`, `Reconnect to an existing Game`, `Multiple Games` were implemented.
+
 ## Code coverage
 
 A screenshot regarding code coverage by the test cases can be found [here](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/deliverables/ScreenshotTestCases.jpg).
@@ -139,5 +167,3 @@ To launch the client in GUI
 ```
 java -jar GC31-1.0-SNAPSHOT.jar gui
 ```
-
-
