@@ -116,7 +116,7 @@ The test did not present any problem, but we cannot guarantee full compatibility
 
 The program was coded using an Oracle JDK 15.
 
-We encourage you to utilize a JDK 15 or later.
+We encourage you to utilize a JDK 15 or later. ALso, a 1920x1080p resolution is required to use the GUI.
 
 To play in command line, it is necessary to use a terminal that supports color codes. Mac supports them natively, Windows can handle them using Windows Terminal.
 
