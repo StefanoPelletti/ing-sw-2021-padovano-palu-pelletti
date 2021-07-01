@@ -32,7 +32,7 @@ Non sono sorti problemi durante la prova, tuttavia non possiamo essere certi del
 
 Il programma è stato scritto usando una JDK 15 Oracle. 
 
-È pertanto consigliato l'utilizzo di una JDK 15 o superiore.
+È pertanto consigliato l'utilizzo di una JDK 15 o superiore. È inoltre richiesta una risoluzione dello schermo minima di 1920x1080p per l'utilizzo della GUI.
 
 Per giocare in linea di comando, è necessario utilizzare un terminale che supporti i codici colori. Mac li supporta nativamente, Windows tramite il Windows Terminal li supporta.
 
