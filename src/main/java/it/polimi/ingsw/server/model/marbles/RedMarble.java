@@ -13,7 +13,7 @@ public class RedMarble implements MarketMarble, Serializable {
     private final String path;
 
     public RedMarble() {
-        path = "resources/punchboard/red_marble.png";
+        path = "/punchboard/red_marble.png";
         color = Color.RED;
     }
 

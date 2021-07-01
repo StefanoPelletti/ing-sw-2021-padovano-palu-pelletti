@@ -13,7 +13,7 @@ public class GreyMarble implements MarketMarble, Serializable {
 
     public GreyMarble() {
         color = Color.GREY;
-        path = "resources/punchboard/grey_marble.png";
+        path = "/punchboard/grey_marble.png";
     }
 
     /**

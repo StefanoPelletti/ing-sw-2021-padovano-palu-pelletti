@@ -12,7 +12,7 @@ public class YellowMarble implements MarketMarble, Serializable {
     private final String path;
 
     public YellowMarble() {
-        path = "resources/punchboard/yellow_marble.png";
+        path = "/punchboard/yellow_marble.png";
         color = Color.YELLOW;
     }
 

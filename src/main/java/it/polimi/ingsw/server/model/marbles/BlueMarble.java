@@ -13,7 +13,7 @@ public class BlueMarble implements MarketMarble, Serializable {
 
     public BlueMarble() {
         color = Color.BLUE;
-        path = "resources/punchboard/blu_marble.png";
+        path = "/punchboard/blu_marble.png";
     }
 
     /**

@@ -12,7 +12,7 @@ public class WhiteMarble implements MarketMarble, Serializable {
     private final String path;
 
     public WhiteMarble() {
-        path = "resources/punchboard/white_marble.png";
+        path = "/punchboard/white_marble.png";
         color = Color.WHITE;
     }
 
