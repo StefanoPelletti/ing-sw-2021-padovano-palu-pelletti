@@ -103,7 +103,6 @@ public class UpdateHandlerGUI implements Runnable, ModelObserver {
         Ark.game.updatePlayer(message);
         board.topPanel.update();
 
-
         if (name.equals(Ark.nickname)) {
             board.leftPanel.update();
             board.activateLeaderCard_panel.update();
