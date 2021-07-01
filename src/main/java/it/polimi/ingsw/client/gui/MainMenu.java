@@ -730,10 +730,7 @@ public class MainMenu implements Runnable {
         private Image image;
 
         public mainPanel() {
-            try {
-                image = ImageIO.read(new File("resources/images/main_menu_bg.jpg"));
-            } catch (IOException ignored) {
-            }
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/main_menu_bg.jpg"));
 
             cl = new CardLayout();
             GridBagConstraints c;

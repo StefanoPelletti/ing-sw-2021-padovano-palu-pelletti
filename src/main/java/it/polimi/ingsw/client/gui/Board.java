@@ -1,25 +1,17 @@
 package it.polimi.ingsw.client.gui;
 
-import it.polimi.ingsw.client.modelSimplified.GameSimplified;
 import it.polimi.ingsw.client.modelSimplified.PlayerSimplified;
 import it.polimi.ingsw.client.modelSimplified.StrongboxSimplified;
 import it.polimi.ingsw.client.modelSimplified.WarehouseDepotSimplified;
 import it.polimi.ingsw.networking.message.Message;
 import it.polimi.ingsw.networking.message.actionMessages.*;
-import it.polimi.ingsw.networking.message.updateMessages.MSG_UPD_Full;
-import it.polimi.ingsw.networking.message.updateMessages.middlesUpdate.MSG_UPD_LeaderBoard;
-import it.polimi.ingsw.server.controller.GameManager;
 import it.polimi.ingsw.server.model.*;
 import it.polimi.ingsw.server.model.enumerators.Resource;
 import it.polimi.ingsw.server.model.marbles.MarketMarble;
 import it.polimi.ingsw.server.model.middles.VendorCard;
-import it.polimi.ingsw.server.model.requirements.CardRequirements;
-import it.polimi.ingsw.server.model.requirements.ReqValue;
-import it.polimi.ingsw.server.model.requirements.ResourceRequirements;
-import it.polimi.ingsw.server.model.specialAbilities.DiscountResource;
 import it.polimi.ingsw.server.model.specialAbilities.ExtraDepot;
 
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -27,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
@@ -92,8 +83,7 @@ public class Board implements Runnable {
      */
     String lastRightCard;
 
-    static final String BACKPATH = "resources/cardsBack/BACK (1).png";
-
+    static final String BACKPATH = "/cardsBack/BACK (1).png";
 
     static final String DEVDECK = "Development Cards Deck";
     DevDeck_Panel devDeck_panel;                                                                    //<- updatable after a devdeck update
@@ -471,10 +461,8 @@ public class Board implements Runnable {
         private Image image;
 
         public MainPanel() {
-            try {
-                image = ImageIO.read(new File("resources/images/board_bg.png"));
-            } catch (IOException ignored) {
-            }
+
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/board_bg.png"));
 
             GridBagConstraints c;
             this.setLayout(new GridBagLayout());
@@ -942,7 +930,7 @@ public class Board implements Runnable {
         private void updateSpecificCard(LeaderCard leaderCard, JLabel labelUnderLeaderCard, JLabel leaderCardLabel, JLabel extraDepotLabel1, JLabel extraDepotLabel2) {
             ImageIcon t;
             if (leaderCard != null) {
-                t = scaleImage(new ImageIcon(leaderCard.getFrontPath()), 300);
+                t = scaleImage(leaderCard.getFrontPath(), 300);
                 if (leaderCard.isEnabled()) {
                     labelUnderLeaderCard.setText("ENABLED!");
                     leaderCardLabel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
@@ -951,8 +939,8 @@ public class Board implements Runnable {
                         int num = depot.getNumber();
                         Resource type = depot.getResourceType();
 
-                        ImageIcon presentIcon = scaleImage(new ImageIcon(type.getPathLittle()), 50);
-                        ImageIcon noneIcon = scaleImage(new ImageIcon(Resource.NONE.getPathLittle()), 50);
+                        ImageIcon presentIcon = scaleImage(type.getPathLittle(), 50);
+                        ImageIcon noneIcon = scaleImage(Resource.NONE.getPathLittle(), 50);
                         switch (num) {
                             case 1:
                                 extraDepotLabel1.setIcon(presentIcon);
@@ -973,7 +961,7 @@ public class Board implements Runnable {
                     labelUnderLeaderCard.setText("not enabled");
                 }
             } else {
-                t = scaleImage(new ImageIcon(BACKPATH), 300);
+                t = scaleImage(BACKPATH, 300);
                 labelUnderLeaderCard.setText("not present!");
             }
             leaderCardLabel.setIcon(t);
@@ -1281,7 +1269,7 @@ public class Board implements Runnable {
                 lorenzoPanel.add(lorenzoLabel, c);
 
                 JLabel lorenzoFace = new JLabel();
-                lorenzoFace.setIcon(scaleImage(new ImageIcon("resources/punchboard/lorenzo.png"), 110));
+                lorenzoFace.setIcon(scaleImage("/punchboard/lorenzo.png", 110));
                 c = new GridBagConstraints();
                 c.gridx = 0;
                 c.gridy = 1;
@@ -1318,11 +1306,11 @@ public class Board implements Runnable {
                 tokenSlideshow.setOpaque(false);
 
                 for (int i = 0; i < 7; i++) {
-                    String path = "resources/punchboard/cerchio";
+                    String path = "/punchboard/cerchio";
                     path += "" + (i + 1) + ".png";
 
                     JLabel label = new JLabel();
-                    label.setIcon(scaleImage(new ImageIcon(path), 65));
+                    label.setIcon(scaleImage(path, 65));
                     tokenSlideshow.add(label);
                 }
 
@@ -1421,16 +1409,13 @@ public class Board implements Runnable {
         private final ZonePanel[] zones;
 
         public TopPanel() {
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/upper_board.png"));
 
             this.positions = new CellPanel[25];
             this.zones = new ZonePanel[3];
-
             GridBagConstraints c;
-            try {
-                image = ImageIO.read(new File("resources/images/upper_board.png"));
-            } catch (IOException ignored) {
-            }
             this.setLayout(new GridBagLayout());
+
 
             Ark.addPadding(this, 239, 1221, 4, 4);
 
@@ -1728,17 +1713,17 @@ public class Board implements Runnable {
         public void update() {
             boolean[] flippedZones = Ark.myPlayerRef.getFaithTrackPanels();
             if (flippedZones[0])
-                this.zones[0].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor1_front.png"), 85));
+                this.zones[0].setIcon(scaleImage("/punchboard/pope_favor1_front.png", 85));
             else
-                this.zones[0].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor1_back.png"), 85));
+                this.zones[0].setIcon(scaleImage("/punchboard/pope_favor1_back.png", 85));
             if (flippedZones[1])
-                this.zones[1].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor2_front.png"), 85));
+                this.zones[1].setIcon(scaleImage("/punchboard/pope_favor2_front.png", 85));
             else
-                this.zones[1].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor2_back.png"), 85));
+                this.zones[1].setIcon(scaleImage("/punchboard/pope_favor2_back.png", 85));
             if (flippedZones[2])
-                this.zones[2].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor3_front.png"), 85));
+                this.zones[2].setIcon(scaleImage("/punchboard/pope_favor3_front.png", 85));
             else
-                this.zones[2].setIcon(scaleImage(new ImageIcon("resources/punchboard/pope_favor3_back.png"), 85));
+                this.zones[2].setIcon(scaleImage("/punchboard/pope_favor3_back.png", 85));
 
             int[] positionMap = new int[4];
             int numOfPlayers = Ark.game.getPlayerSimplifiedList().size();
@@ -1765,7 +1750,7 @@ public class Board implements Runnable {
 
             if (Ark.solo) {
                 if (this.positions[Ark.game.getBlackCrossPosition()].isEmpty) {
-                    this.positions[Ark.game.getBlackCrossPosition()].setIcon(scaleImage(new ImageIcon("resources/FaithTrackIcons/L.png"), 40));
+                    this.positions[Ark.game.getBlackCrossPosition()].setIcon(scaleImage("/FaithTrackIcons/L.png", 40));
                     this.positions[Ark.game.getBlackCrossPosition()].isEmpty = false;
                 }
             }
@@ -1793,10 +1778,10 @@ public class Board implements Runnable {
 
             if (Ark.solo) {
                 if (intmap[0] == Ark.game.getBlackCrossPosition()) {
-                    output = "resources/FaithTrackIcons/PL.png"; //Lorenzo and player sharing the same cell
+                    output = "/FaithTrackIcons/PL.png"; //Lorenzo and player sharing the same cell
                 } else
-                    output = "resources/FaithTrackIcons/P.png"; //player not sharing the same position as Lorenzo
-                return scaleImage(new ImageIcon(output), 40);
+                    output = "/FaithTrackIcons/P.png"; //player not sharing the same position as Lorenzo
+                return scaleImage(output, 40);
             }
 
             boolean[] p = new boolean[4];
@@ -1807,38 +1792,38 @@ public class Board implements Runnable {
             }
 
             if (p[0] && !p[1] && !p[2] && !p[3])      // 1
-                output = "resources/FaithTrackIcons/1.png";
+                output = "/FaithTrackIcons/1.png";
             else if (!p[0] && p[1] && !p[2] && !p[3])      //2
-                output = "resources/FaithTrackIcons/2.png";
+                output = "/FaithTrackIcons/2.png";
             else if (!p[0] && !p[1] && p[2] && !p[3])      // 3
-                output = "resources/FaithTrackIcons/3.png";
+                output = "/FaithTrackIcons/3.png";
             else if (!p[0] && !p[1] && !p[2] && p[3])      // 4
-                output = "resources/FaithTrackIcons/4.png";
+                output = "/FaithTrackIcons/4.png";
             else if (p[0] && p[1] && !p[2] && !p[3])      // 12
-                output = "resources/FaithTrackIcons/12.png";
+                output = "/FaithTrackIcons/12.png";
             else if (p[0] && !p[1] && p[2] && !p[3])      // 13
-                output = "resources/FaithTrackIcons/13.png";
+                output = "/FaithTrackIcons/13.png";
             else if (p[0] && !p[1] && !p[2] && p[3])      // 14
-                output = "resources/FaithTrackIcons/14.png";
+                output = "/FaithTrackIcons/14.png";
             else if (!p[0] && p[1] && p[2] && !p[3])      // 23
-                output = "resources/FaithTrackIcons/23.png";
+                output = "/FaithTrackIcons/23.png";
             else if (!p[0] && p[1] && !p[2] && p[3])      // 24
-                output = "resources/FaithTrackIcons/24.png";
+                output = "/FaithTrackIcons/24.png";
             else if (!p[0] && !p[1] && p[2] && p[3])      // 34
-                output = "resources/FaithTrackIcons/34.png";
+                output = "/FaithTrackIcons/34.png";
             else if (p[0] && p[1] && p[2] && !p[3])       // 123
-                output = "resources/FaithTrackIcons/123.png";
+                output = "/FaithTrackIcons/123.png";
             else if (p[0] && p[1] && !p[2] && p[3])      // 124
-                output = "resources/FaithTrackIcons/124.png";
+                output = "/FaithTrackIcons/124.png";
             else if (p[0] && !p[1] && p[2] && p[3])      // 134
-                output = "resources/FaithTrackIcons/134.png";
+                output = "/FaithTrackIcons/134.png";
             else if (!p[0] && p[1] && p[2] && p[3])       // 234
-                output = "resources/FaithTrackIcons/234.png";
+                output = "/FaithTrackIcons/234.png";
             else if (p[0] && p[1] && p[2] && p[3])      // 1234
-                output = "resources/FaithTrackIcons/1234.png";
+                output = "/FaithTrackIcons/1234.png";
 
 
-            return scaleImage(new ImageIcon(output), 40);
+            return scaleImage(output, 40);
         }
 
         /**
@@ -1992,10 +1977,8 @@ public class Board implements Runnable {
         private Image image;
 
         public CentralLeftPanel() {
-            try {
-                image = ImageIO.read(new File("resources/images/left_board.png"));
-            } catch (IOException ignored) {
-            }
+
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/left_board.png"));
 
             cardLayoutLeft = new CardLayout();
             this.setLayout(cardLayoutLeft);
@@ -2192,12 +2175,12 @@ public class Board implements Runnable {
             Resource[] shelf2r = depotRef.getShelf2();
             Resource[] shelf3r = depotRef.getShelf3();
 
-            this.shelf1.setIcon(scaleImage(new ImageIcon(shelf1r.getPathLittle()), 50));
-            this.shelf2[0].setIcon(scaleImage(new ImageIcon(shelf2r[0].getPathLittle()), 50));
-            this.shelf2[1].setIcon(scaleImage(new ImageIcon(shelf2r[1].getPathLittle()), 50));
-            this.shelf3[0].setIcon(scaleImage(new ImageIcon(shelf3r[0].getPathLittle()), 50));
-            this.shelf3[1].setIcon(scaleImage(new ImageIcon(shelf3r[1].getPathLittle()), 50));
-            this.shelf3[2].setIcon(scaleImage(new ImageIcon(shelf3r[2].getPathLittle()), 50));
+            this.shelf1.setIcon(scaleImage(shelf1r.getPathLittle(), 50));
+            this.shelf2[0].setIcon(scaleImage(shelf2r[0].getPathLittle(), 50));
+            this.shelf2[1].setIcon(scaleImage(shelf2r[1].getPathLittle(), 50));
+            this.shelf3[0].setIcon(scaleImage(shelf3r[0].getPathLittle(), 50));
+            this.shelf3[1].setIcon(scaleImage(shelf3r[1].getPathLittle(), 50));
+            this.shelf3[2].setIcon(scaleImage(shelf3r[2].getPathLittle(), 50));
 
             Integer num;
 
@@ -2296,7 +2279,6 @@ public class Board implements Runnable {
         public void updateCurrentPlayer() {
             this.update(Ark.game.getCurrentPlayerName());
         }
-
     }
 
     /**
@@ -2312,10 +2294,8 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
             GridBagConstraints c;
 
-            try {
-                image = ImageIO.read(new File("resources/images/right_board.png"));
-            } catch (IOException ignored) {
-            }
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/right_board.png"));
+
 
             Ark.addPadding(this, 601, 948, 6, 5);
 
@@ -2396,7 +2376,7 @@ public class Board implements Runnable {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
                     if (cards[row][col] != null) {
-                        grid[row][col].setIcon(scaleImage(new ImageIcon(cards[row][col].getFrontPath()), 250));
+                        grid[row][col].setIcon(scaleImage(cards[row][col].getFrontPath(), 250));
                         grid[row][col].setBorder(BorderFactory.createLineBorder(new Color(178, 49, 35), 3));
                     }
                 }
@@ -2426,10 +2406,8 @@ public class Board implements Runnable {
             this.setLayout(new GridBagLayout());
             GridBagConstraints c;
 
-            try {
-                image = ImageIO.read(new File("resources/images/right_board.png"));
-            } catch (IOException ignored) {
-            }
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/right_board.png"));
+
 
             Ark.addPadding(this, 601, 273, 5, 6);
 
@@ -2550,24 +2528,24 @@ public class Board implements Runnable {
 
             for (int i = 0; i < 2; i++) {
                 if (l[i] == null) {
-                    this.leadGrid[i].setIcon(scaleImage(new ImageIcon(BACKPATH), 234));
+                    this.leadGrid[i].setIcon(scaleImage(BACKPATH, 234));
                     this.leadLabel[i].setText("not present");
                 } else {
                     if (l[i].isEnabled()) {
-                        this.leadGrid[i].setIcon(scaleImage(new ImageIcon(l[i].getFrontPath()), 234));
+                        this.leadGrid[i].setIcon(scaleImage(l[i].getFrontPath(), 234));
                         this.leadLabel[i].setText("enabled");
                         this.leadGrid[i].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 1));
                     } else
                         this.leadLabel[i].setText("not enabled");
-                        this.leadGrid[i].setIcon(scaleImage(new ImageIcon(BACKPATH), 234));
+                        this.leadGrid[i].setIcon(scaleImage(BACKPATH, 234));
                 }
             }
 
             for (int i = 0; i < 3; i++) {
                 if (devCard[i] == null)
-                    this.devGrid[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 220));
+                    this.devGrid[i].setIcon(scaleImage("/cardsBack/BACK (1).png", 220));
                 else
-                    this.devGrid[i].setIcon(scaleImage(new ImageIcon(devCard[i].getFrontPath()), 220));
+                    this.devGrid[i].setIcon(scaleImage(devCard[i].getFrontPath(), 220));
             }
         }
 
@@ -2723,9 +2701,9 @@ public class Board implements Runnable {
                 for (int row = 0; row < 3; row++) {
                     ImageIcon cardIcon;
                     if (cards[row][col] == null)
-                        cardIcon = scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 175);
+                        cardIcon = scaleImage("/cardsBack/BACK (1).png", 175);
                     else
-                        cardIcon = scaleImage(new ImageIcon(cards[row][col].getFrontPath()), 175);
+                        cardIcon = scaleImage(cards[row][col].getFrontPath(), 175);
                     labels[row][col].setIcon(cardIcon);
                 }
             }
@@ -2751,10 +2729,7 @@ public class Board implements Runnable {
             this.labelGrid = new JLabel[3][4];
             this.labelSlide = new JLabel();
 
-            try {
-                image = ImageIO.read(new File("resources/images/market2.png"));
-            } catch (IOException ignored) {
-            }
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/market2.png"));
 
             Ark.addPadding(this, 599, 946, 100, 100);
 
@@ -2845,10 +2820,10 @@ public class Board implements Runnable {
 
             for (int col = 0; col < 4; col++) {
                 for (int row = 0; row < 3; row++) {
-                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 67));
+                    labelGrid[row][col].setIcon(scaleImage(grid[row][col].getPath(), 67));
                 }
             }
-            labelSlide.setIcon(scaleImage(new ImageIcon(slide.getPath()), 67));
+            labelSlide.setIcon(scaleImage(slide.getPath(), 67));
         }
 
         @Override
@@ -2956,7 +2931,7 @@ public class Board implements Runnable {
          */
         public void update() {
             for (int i = 0; i < 4; i++)
-                labelCards[i].setIcon(scaleImage(new ImageIcon(Ark.game.getLeaderCardsPicker().getCard(i).getFrontPath()), 300));
+                labelCards[i].setIcon(scaleImage(Ark.game.getLeaderCardsPicker().getCard(i).getFrontPath(), 300));
         }
 
         /**
@@ -3066,7 +3041,7 @@ public class Board implements Runnable {
                 button = new CustomResourceButton(resource);
                 button.setBackground(new Color(231, 210, 181));
                 button.setPreferredSize(new Dimension(130, 130));
-                button.setIcon(scaleImage(new ImageIcon(resource.getPathLittle()), 110));
+                button.setIcon(scaleImage(resource.getPathLittle(), 110));
                 button.addActionListener(init_resourcePicker_actionListener);
                 c = new GridBagConstraints();
                 c.gridx = i + 1;
@@ -3128,10 +3103,8 @@ public class Board implements Runnable {
             this.labelGrid = new JLabel[3][4];
             this.labelSlide = new JLabel();
 
-            try {
-                image = ImageIO.read(new File("resources/images/market2.png"));
-            } catch (IOException ignored) {
-            }
+            image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/market2.png"));
+
 
             Ark.addPadding(this, 599, 946, 100, 100);
 
@@ -3257,10 +3230,10 @@ public class Board implements Runnable {
 
             for (int col = 0; col < 4; col++) {
                 for (int row = 0; row < 3; row++) {
-                    labelGrid[row][col].setIcon(scaleImage(new ImageIcon(grid[row][col].getPath()), 67));
+                    labelGrid[row][col].setIcon(scaleImage(grid[row][col].getPath(), 67));
                 }
             }
-            labelSlide.setIcon(scaleImage(new ImageIcon(slideMarble.getPath()), 67));
+            labelSlide.setIcon(scaleImage(slideMarble.getPath(), 67));
         }
 
         @Override
@@ -3397,7 +3370,7 @@ public class Board implements Runnable {
                 this.resourceLabel[i].setBorder(null);
 
                 if (i < resources.size())
-                    this.resourceLabel[i].setIcon(scaleImage(new ImageIcon(resources.get(i).getPathLittle()), 50));
+                    this.resourceLabel[i].setIcon(scaleImage(resources.get(i).getPathLittle(), 50));
                 else
                     this.resourceLabel[i].setIcon(null);
             }
@@ -3562,10 +3535,10 @@ public class Board implements Runnable {
                 if (cards[i] == null) {
                     this.leaderCardButton[i].setEnabled(false);
                     this.labelsUnderTheLeaderCard[i].setText("not present");
-                    this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 375));
+                    this.leaderCardButton[i].setIcon(scaleImage("/cardsBack/BACK (1).png", 375));
                 } else {
                     this.leaderCardButton[i].setEnabled(!cards[i].isEnabled());
-                    this.leaderCardButton[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()), 375));
+                    this.leaderCardButton[i].setIcon(scaleImage(cards[i].getFrontPath(), 375));
                     if (cards[i].isEnabled())
                         this.labelsUnderTheLeaderCard[i].setText("can't discard anymore");
                     else
@@ -3707,15 +3680,15 @@ public class Board implements Runnable {
                 if (cards[i] == null) {
                     this.leaderCardButtons[i].setEnabled(false);
                     this.labelsUnderTheLeaderCard[i].setText("not present");
-                    this.leaderCardButtons[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 375));
+                    this.leaderCardButtons[i].setIcon(scaleImage("/cardsBack/BACK (1).png", 375));
                 } else if (cards[i].isEnabled()) {
                     this.leaderCardButtons[i].setEnabled(false);
                     this.labelsUnderTheLeaderCard[i].setText("already enabled");
-                    this.leaderCardButtons[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()), 375));
+                    this.leaderCardButtons[i].setIcon(scaleImage(cards[i].getFrontPath(), 375));
                 } else {
                     this.leaderCardButtons[i].setEnabled(true);
                     this.labelsUnderTheLeaderCard[i].setText("select this?");
-                    this.leaderCardButtons[i].setIcon(scaleImage(new ImageIcon(cards[i].getFrontPath()), 375));
+                    this.leaderCardButtons[i].setIcon(scaleImage(cards[i].getFrontPath(), 375));
                 }
             }
         }
@@ -4017,15 +3990,15 @@ public class Board implements Runnable {
             Resource[] shelf3r = Ark.myPlayerRef.getWarehouseDepot().getShelf3();
 
             this.shelf1type[0] = shelf1r;
-            this.shelf1label.setIcon(scaleImage(new ImageIcon(shelf1r.getPathBig()), 100));
+            this.shelf1label.setIcon(scaleImage(shelf1r.getPathBig(), 100));
 
             for(int i=0; i<2; i++) {
                 this.shelf2type[i] = shelf2r[i];
-                this.shelf2label[i].setIcon(scaleImage(new ImageIcon(shelf2r[i].getPathBig()), 100));
+                this.shelf2label[i].setIcon(scaleImage(shelf2r[i].getPathBig(), 100));
             }
             for(int i=0; i<3; i++) {
                 this.shelf3type[i] = shelf3r[i];
-                this.shelf3label[i].setIcon(scaleImage(new ImageIcon(shelf3r[i].getPathBig()), 100));
+                this.shelf3label[i].setIcon(scaleImage(shelf3r[i].getPathBig(), 100));
             }
             firstExtraDepotPanel.updateValues();
             secondExtraDepotPanel.updateValues();
@@ -4184,7 +4157,7 @@ public class Board implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 Resource nextResource = nextResource(arraySource[index]);
                 arraySource[index] = nextResource;
-                managedLabel.setIcon(scaleImage(new ImageIcon(nextResource.getPathBig()), 100));
+                managedLabel.setIcon(scaleImage(nextResource.getPathBig(), 100));
             }
 
             private Resource nextResource(Resource currentResource) {
@@ -4227,7 +4200,7 @@ public class Board implements Runnable {
                     currentCard = 0;
                 }
 
-                devCard.setIcon(scaleImage(new ImageIcon(devCards.get(currentCard).getCard().getFrontPath()), 450));
+                devCard.setIcon(scaleImage(devCards.get(currentCard).getCard().getFrontPath(), 450));
                 slot1.setEnabled(devCards.get(currentCard).isSlot1());
                 slot2.setEnabled(devCards.get(currentCard).isSlot2());
                 slot3.setEnabled(devCards.get(currentCard).isSlot3());
@@ -4243,7 +4216,7 @@ public class Board implements Runnable {
                 if (currentCard < 0) {
                     currentCard = devCards.size() - 1;
                 }
-                devCard.setIcon(scaleImage(new ImageIcon(devCards.get(currentCard).getCard().getFrontPath()), 450));
+                devCard.setIcon(scaleImage(devCards.get(currentCard).getCard().getFrontPath(), 450));
                 slot1.setEnabled(devCards.get(currentCard).isSlot1());
                 slot2.setEnabled(devCards.get(currentCard).isSlot2());
                 slot3.setEnabled(devCards.get(currentCard).isSlot3());
@@ -4374,7 +4347,7 @@ public class Board implements Runnable {
         public void update() {
             if (Ark.game.getDevelopmentCardsVendor().isEnabled()) {
                 List<VendorCard> devCards = Ark.game.getDevelopmentCardsVendor().getCards();
-                devCard.setIcon(scaleImage(new ImageIcon(devCards.get(0).getCard().getFrontPath()), 450));
+                devCard.setIcon(scaleImage(devCards.get(0).getCard().getFrontPath(), 450));
                 currentCard = 0;
                 slot1.setEnabled(devCards.get(0).isSlot1());
                 slot2.setEnabled(devCards.get(0).isSlot2());
@@ -4468,7 +4441,7 @@ public class Board implements Runnable {
             }
 
             basicProduction = new JToggleButton();
-            basicProduction.setIcon(scaleImage(new ImageIcon("resources/punchboard/basic_production.png"), 150));
+            basicProduction.setIcon(scaleImage("/punchboard/basic_production.png", 150));
             basicProduction.setBackground(new Color(231, 210, 181));
             basicProduction.setPreferredSize(new Dimension(150, 150));
             c = new GridBagConstraints();
@@ -4563,10 +4536,10 @@ public class Board implements Runnable {
 
             for (int i = 0; i < 3; i++) {
                 if (topCards[i] == null) {
-                    this.devCardButton[i].setIcon(scaleImage(new ImageIcon("resources/cardsBack/BACK (1).png"), 235));
+                    this.devCardButton[i].setIcon(scaleImage("/cardsBack/BACK (1).png", 235));
                     this.devCardButton[i].setEnabled(false);
                 } else {
-                    this.devCardButton[i].setIcon(scaleImage(new ImageIcon(topCards[i].getFrontPath()), 235));
+                    this.devCardButton[i].setIcon(scaleImage(topCards[i].getFrontPath(), 235));
                     this.devCardButton[i].setEnabled(true);
                 }
             }
@@ -4833,7 +4806,7 @@ public class Board implements Runnable {
             c.anchor = GridBagConstraints.WEST;
             this.add(next5, c);
 
-            ImageIcon cross = scaleImage(new ImageIcon("resources/punchboard/faith.png"), 80);
+            ImageIcon cross = scaleImage("/punchboard/faith.png", 80);
             JLabel faithPoint1 = new JLabel("+");
             faithPoint1.setIcon(cross);
             faithPoint1.setFont(new Font(PAPYRUS, Font.BOLD, 35));
@@ -4880,11 +4853,11 @@ public class Board implements Runnable {
             next4.setEnabled(productionSelection_panel.getLeaderCard1().isSelected());
             next5.setEnabled(productionSelection_panel.getLeaderCard2().isSelected());
 
-            basicFirstChoice.setIcon(scaleImage(new ImageIcon(Resource.STONE.getPathBig()), 80));
-            basicSecondChoice.setIcon(scaleImage(new ImageIcon(Resource.COIN.getPathBig()), 80));
-            basicOutputChoice.setIcon(scaleImage(new ImageIcon(Resource.SHIELD.getPathBig()), 80));
-            lc1OutputChoice.setIcon(scaleImage(new ImageIcon(Resource.COIN.getPathBig()), 80));
-            lc2OutputChoice.setIcon(scaleImage(new ImageIcon(Resource.SERVANT.getPathBig()), 80));
+            basicFirstChoice.setIcon(scaleImage(Resource.STONE.getPathBig(), 80));
+            basicSecondChoice.setIcon(scaleImage(Resource.COIN.getPathBig(), 80));
+            basicOutputChoice.setIcon(scaleImage(Resource.SHIELD.getPathBig(), 80));
+            lc1OutputChoice.setIcon(scaleImage(Resource.COIN.getPathBig(), 80));
+            lc2OutputChoice.setIcon(scaleImage(Resource.SERVANT.getPathBig(), 80));
 
             this.resources[0] = Resource.STONE;
             this.resources[1] = Resource.COIN;
@@ -4911,7 +4884,7 @@ public class Board implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 Resource nextResource = nextResource(arrayRef[index]);
                 arrayRef[index] = nextResource;
-                managedLabel.setIcon(scaleImage(new ImageIcon(nextResource.getPathBig()), 80));
+                managedLabel.setIcon(scaleImage(nextResource.getPathBig(), 80));
             }
 
             private Resource nextResource(Resource currentResource) {
@@ -5095,6 +5068,22 @@ public class Board implements Runnable {
         }
     }
 
+
+    /**
+     * Scales a given image path by imposing a square around the icon.
+     * <p>
+     * Uses the function below.
+     *
+     * @param path            the path to the Icon that will be created
+     * @param squareDimension the desired squared dimension
+     * @return a scaled ImageIcon from the input one
+     * @see #scaleImage(ImageIcon, int)
+     */
+    public ImageIcon scaleImage(String path, int squareDimension) {
+        ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource(path)));
+        return scaleImage(icon, squareDimension);
+    }
+
     /**
      * Scales a given ImageIcon by imposing a square around the icon.
      * <p>
@@ -5108,6 +5097,8 @@ public class Board implements Runnable {
     public ImageIcon scaleImage(ImageIcon icon, int squareDimension) {
         return scaleImage(icon, squareDimension, squareDimension);
     }
+
+
 
     /**
      * Scales a give ImageIcon by imposing a desired rectangle dimension.
