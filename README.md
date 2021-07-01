@@ -30,9 +30,9 @@ Non sono sorti problemi durante la prova, tuttavia non possiamo essere certi del
 
 ## Requisiti
 
-Il programma è stato scritto usando una JDK 15 Oracle. 
+Il programma è stato scritto usando una JDK 15 Oracle. È pertanto consigliato l'utilizzo di una JDK 15 o superiore. 
 
-È pertanto consigliato l'utilizzo di una JDK 15 o superiore. È inoltre richiesta una risoluzione dello schermo minima di 1920x1080p per l'utilizzo della GUI.
+Per giocare con interfaccia grafica, è richiesta una risoluzione dello schermo di almeno 1920x1080p.
 
 Per giocare in linea di comando, è necessario utilizzare un terminale che supporti i codici colori. Mac li supporta nativamente, Windows tramite il Windows Terminal li supporta.
 
@@ -44,9 +44,7 @@ Assicuratevi che il comando `java` sia funzionante nel terminale di sistema.
 
 Per eseguire il programma usando il JAR bisogna:
 
-- Scaricare e posizionare il [jar](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/deliverables/GC31-1.0-SNAPSHOT.jar) in una cartella sul vostro computer
-- Per permettere all'interfaccia grafica di accedere alle immagini, scaricare anche l'intera [cartella resources](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/tree/main/resources) e metterla accanto al JAR scaricato prima.
-   - Alla fine, nella vostra cartella destinazione dovreste avere sia il `JAR` sia la cartella `resources`.
+- Scaricare e posizionare il [jar](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/out/artifacts/GC31_jar/GC31.jar) in una cartella sul vostro computer
     
 ### esecuzione
 
@@ -128,9 +126,7 @@ Make sure the command `java` is working in the system terminal.
 
 To run the program using the JAR you must:
 
-- Download and place the [jar](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/deliverables/GC31-1.0-SNAPSHOT.jar) in a folder on your computer.
-- To allow the GUI to load properly the images, you should also download the [resource folder](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/tree/main/resources) and place it beside the JAR.
-  - In the end, in that folder there should be both the `JAR` and the `resource` folder.
+- Download and place the [jar](https://github.com/StefanoPelletti/ing-sw-2021-padovano-palu-pelletti/blob/main/out/artifacts/GC31_jar/GC31.jar) in a folder on your computer.
 
 ### run
 
