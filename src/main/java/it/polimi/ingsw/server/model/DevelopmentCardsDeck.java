@@ -351,7 +351,7 @@ public class DevelopmentCardsDeck extends ModelObservable {
                 Map.of(Resource.SERVANT, 2),
                 new Power(Map.of(Resource.STONE, 1),
                         Map.of(Resource.FAITH, 1)),
-                "ont/DFRONT (3).png", "/cardsBack/BACK (3)"
+                "/cardsFront/DFRONT (3).png", "/cardsBack/BACK (3)"
         );
 
         shuffle();
