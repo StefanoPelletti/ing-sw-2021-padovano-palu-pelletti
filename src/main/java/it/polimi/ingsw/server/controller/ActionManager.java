@@ -1077,6 +1077,10 @@ public class ActionManager {
     }
 
 
+    public boolean endTurn(Player player, boolean notify) {
+        return endTurn(player, notify, false);
+    }
+
     /**
      * Ends the turn for the Current Player.
      * As default this method notifies the other Players, but can be deactivated by setting the boolean parameter to False.
@@ -1090,11 +1094,13 @@ public class ActionManager {
      * @return True if the Game is continuing, False if the Game has ended by calling this method.
      * @see it.polimi.ingsw.server.controller.GameManager .endTurn()
      */
-    public boolean endTurn(Player player, boolean notify) {
+    public boolean endTurn(Player player, boolean notify, boolean disconnected) {
 //VALIDATION
-        if(gameManager.getStatus()==Status.STANDARD_TURN && !player.getAction()) {
-            gameManager.setErrorObject("Error! You must perform an action before ending the turn!");
-            return false;
+        if(!disconnected) {
+            if (gameManager.getStatus() == Status.STANDARD_TURN && !player.getAction()) {
+                gameManager.setErrorObject("Error! You must perform an action before ending the turn!");
+                return false;
+            }
         }
 
         player.resetPermittedAction();
@@ -1337,7 +1343,7 @@ public class ActionManager {
             }
             gameManager.resetErrorObject();
 
-            endTurn(player, false);
+            endTurn(player, false, true);
             messageHelper.setUpdateEnd();
         }
     }
